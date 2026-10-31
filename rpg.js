@@ -2354,6 +2354,33 @@ const APPROVED_DIALOGUE_MASTERS=Object.freeze({
 function dialogueMasterSource(id,expression){
  return expression==='neutral'?APPROVED_DIALOGUE_MASTERS[id]||null:null;
 }
+// Default neutral dialogue art for characters without a separately approved master.
+// Each path is an already existing front-facing (or closest idle) overworld pose.
+// Never use back views, seated sprites, or substitute another character's art.
+const OVERWORLD_DIALOGUE_DEFAULTS=Object.freeze({
+ akari:'/rpg-assets/characters/akari/overworld/standing-clipboard.png',
+ daisy:'/rpg-assets/characters/daisy/overworld/idle.png',
+ hana:'/rpg-assets/characters/hana/overworld/phone-standing.png',
+ jicy:'/rpg-assets/characters/jicy/overworld/standing.webp',
+ jinx:'/rpg-assets/characters/jinx/overworld/idle.png',
+ luna:'/rpg-assets/characters/luna/overworld/standing-front.png',
+ reina:'/rpg-assets/characters/reina/overworld/standing.png',
+ rina:'/rpg-assets/characters/rina/overworld/alternate-card-pose.png',
+ sierra:'/rpg-assets/characters/sierra/overworld/standing-wink.png',
+ sol:'/rpg-assets/characters/sol/standing-front.png',
+ yuna:'/rpg-assets/characters/yuna/overworld/gamer-idle.png'
+});
+// Laca's overworld uses separate casual / lifeguard outfit directories.
+const LACA_OVERWORLD_DIALOGUE_DEFAULTS=Object.freeze({
+ casual:'/rpg-assets/characters/laca/overworld/casual/reaching-out.png',
+ lifeguard:'/rpg-assets/characters/laca/overworld/lifeguard/front-leaning.png'
+});
+function defaultOverworldDialogueSource(id,expression,normal){
+ if(expression!=='neutral'||APPROVED_DIALOGUE_MASTERS[id]||id==='camila')return null;
+ if(id==='laca')return normal.some(src=>src.includes('/lifeguard/'))?
+  LACA_OVERWORLD_DIALOGUE_DEFAULTS.lifeguard:LACA_OVERWORLD_DIALOGUE_DEFAULTS.casual;
+ return OVERWORLD_DIALOGUE_DEFAULTS[id]||null;
+}
 
 const PERSONA_C_CROPS={
  akari:[.028,0,.943,.597],alma:[.075,0,.868,.55],barb:[.296,0,.429,.363],
@@ -2437,7 +2464,7 @@ function stagePortraitPaths(id,expression,sceneId){
  const normal=personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
  // Prefer approved full-body standing art in neutral dialogue scenes, while
  // preserving every original expression as a fallback if the master fails.
- const master=dialogueMasterSource(id,expression)||(id==='camila'?CAMILA_DIALOGUE_MASTER:null);
+ const master=dialogueMasterSource(id,expression)||defaultOverworldDialogueSource(id,expression,normal)||(id==='camila'?CAMILA_DIALOGUE_MASTER:null);
  const dialogue=master?[master,...normal.filter(path=>path!==master)]:normal;
  return alternate?[alternate,...dialogue.filter(path=>path!==alternate)]:dialogue;
 }
@@ -2451,7 +2478,9 @@ function applyPersonaCStageCrop(img,id){
  const alternate=/\/portraits\/special-day-\d+\.png(?:\?|$)/.test(src);
  const hanaVariant=id==='hana'&&src.includes('/overworld-variants/');
  const camilaMaster=id==='camila'&&src.includes(CAMILA_DIALOGUE_MASTER);
- const approvedMaster=APPROVED_DIALOGUE_MASTERS[id]&&src.includes(APPROVED_DIALOGUE_MASTERS[id]);
+ const approvedMaster=(APPROVED_DIALOGUE_MASTERS[id]&&src.includes(APPROVED_DIALOGUE_MASTERS[id]))||
+ (OVERWORLD_DIALOGUE_DEFAULTS[id]&&src.includes(OVERWORLD_DIALOGUE_DEFAULTS[id]))||
+ (id==='laca'&&Object.values(LACA_OVERWORLD_DIALOGUE_DEFAULTS).some(path=>src.includes(path)));
  // Show the head and torso down to the top of the waist without changing
  // any original full-body pixels. Special-day and expression art keeps its crop.
  const crop=camilaMaster?[.05,0,.90,.46]:approvedMaster?[.06,0,.88,.47]:alternate?(id==='barb'?[.10,0,.80,.60]:[.07,0,.86,.62]):hanaVariant?[.07,0,.86,.62]:PERSONA_C_CROPS[id];
@@ -2492,7 +2521,7 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    }
    // Allow Camila's new master to gracefully fall back to existing dialogue
    // expressions if its asset fails to load in the standalone overworld.
-   const sources=srcs?.length?srcs:((id==='camila'||APPROVED_DIALOGUE_MASTERS[id])?stagePortraitPaths(id,expression,context.sceneId):null);
+   const sources=srcs?.length?srcs:((id==='camila'||APPROVED_DIALOGUE_MASTERS[id]||OVERWORLD_DIALOGUE_DEFAULTS[id]||id==='laca')?stagePortraitPaths(id,expression,context.sceneId):null);
    return {id,name:cast[id].name,src,...(sources?.length?{srcs:[src,...sources.filter(path=>path!==src)]}:{})};
   }):[]
  };

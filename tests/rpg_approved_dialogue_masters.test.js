@@ -114,3 +114,37 @@ test('Kaede approved dialogue image is the exact transparent PNG uploaded by the
  assert.ok(rpg.includes("kaede:'/rpg-assets/characters/kaede/dialogue/neutral.png'"));
  assert.ok(world.includes('/'+approved));
 });
+
+
+test('neutral dialogue defaults reuse existing front or idle overworld assets for remaining characters',()=>{
+ const defaults={
+ akari:'rpg-assets/characters/akari/overworld/standing-clipboard.png',
+ daisy:'rpg-assets/characters/daisy/overworld/idle.png',
+ hana:'rpg-assets/characters/hana/overworld/phone-standing.png',
+ jicy:'rpg-assets/characters/jicy/overworld/standing.webp',
+ jinx:'rpg-assets/characters/jinx/overworld/idle.png',
+ luna:'rpg-assets/characters/luna/overworld/standing-front.png',
+ reina:'rpg-assets/characters/reina/overworld/standing.png',
+ rina:'rpg-assets/characters/rina/overworld/alternate-card-pose.png',
+ sierra:'rpg-assets/characters/sierra/overworld/standing-wink.png',
+ sol:'rpg-assets/characters/sol/standing-front.png',
+ yuna:'rpg-assets/characters/yuna/overworld/gamer-idle.png'
+ };
+ for(const [id,source] of Object.entries(defaults)){
+  assert.ok(fs.existsSync(path.join(root,source)),id+' missing overworld front source: '+source);
+  assert.ok(rpg.includes(id+":'/"+source+"'"),id+' not registered in RPG');
+  assert.ok(world.includes(id+":'/"+source+"'"),id+' not registered in standalone overworld');
+ }
+ const laca={casual:'rpg-assets/characters/laca/overworld/casual/reaching-out.png',lifeguard:'rpg-assets/characters/laca/overworld/lifeguard/front-leaning.png'};
+ for(const source of Object.values(laca)){
+  assert.ok(fs.existsSync(path.join(root,source)),"Laca's front variant missing: "+source);
+  assert.ok(rpg.includes('/'+source));
+  assert.ok(world.includes('/'+source));
+ }
+ // Explicit creator-approved masters and day outfits keep priority; expressions keep their originals.
+ assert.ok(rpg.includes("if(expression!=='neutral'||APPROVED_DIALOGUE_MASTERS[id]||id==='camila')return null;"));
+ assert.ok(rpg.includes('const master=dialogueMasterSource(id,expression)||defaultOverworldDialogueSource(id,expression,normal)||'));
+ assert.ok(rpg.includes('return alternate?[alternate,...dialogue.filter(path=>path!==alternate)]:dialogue;'));
+ assert.ok(rpg.includes('Object.values(LACA_OVERWORLD_DIALOGUE_DEFAULTS).some(path=>src.includes(path))'));
+ assert.ok(world.includes("person.classList.toggle('neo-ow-dialogue-front-master',isApprovedMaster)"));
+});
