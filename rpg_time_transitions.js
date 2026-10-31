@@ -60,9 +60,11 @@
     };
     function dismiss(notify=true){
       if(!current)return;
-      const {element,timer,onKey,finishAnimation,onDismiss}=current;
+      const {element,timer,coverTimer,onKey,finishAnimation,onDismiss,onCover}=current;
+      if(notify&&!current.covered){current.covered=true;clearTimer(coverTimer);onCover?.();}
       current=null;
       clearTimer(timer);
+      clearTimer(coverTimer);
       if(doc.removeEventListener)doc.removeEventListener('keydown',onKey,true);
       element.removeEventListener('animationend',finishAnimation);
       element.remove();
@@ -121,7 +123,11 @@
       doc.addEventListener?.('keydown',onKey,true);
       doc.body.append(element);
       const timer=setTimer(dismiss,(reduced?1200:result.durationMs)+100);
-      current={element,timer,onKey,finishAnimation,plan:result,onDismiss:options.onDismiss};
+      const coverTimer=setTimer(()=>{
+        if(current?.element!==element||current.covered)return;
+        current.covered=true;options.onCover?.();
+      },Math.max(0,result.durationMs*(reduced?0.1:0.32)));
+      current={element,timer,coverTimer,onKey,finishAnimation,plan:result,onDismiss:options.onDismiss,onCover:options.onCover,covered:false};
       return result;
     }
     return {present,presentTravel:(detail,options)=>present({...detail,kind:'travel'},options),dismiss,whenIdle,get active(){return !!current;}};
