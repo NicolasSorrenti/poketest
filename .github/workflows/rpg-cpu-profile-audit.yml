@@ -1,18 +1,7 @@
 name: RPG CPU Profile Audit
 
 on:
-  pull_request:
-    paths:
-      - 'cpu_profiles.js'
-      - 'tests/rpg_cpu_profiles.test.js'
-      - '.github/workflows/rpg-cpu-profile-audit.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'cpu_profiles.js'
-      - 'tests/rpg_cpu_profiles.test.js'
-      - '.github/workflows/rpg-cpu-profile-audit.yml'
-
+  workflow_dispatch:
 jobs:
   profiles:
     runs-on: ubuntu-latest

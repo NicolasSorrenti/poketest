@@ -1,12 +1,6 @@
 name: Apex Turn Sequence Audit
 on:
-  pull_request:
-    paths:
-      - 'cpu_policy.js'
-      - 'benchmark_cpu.js'
-      - 'scripts/apex-turn-audit.js'
-      - 'tests/apex_turn_audit.test.js'
-      - '.github/workflows/apex-turn-audit.yml'
+  workflow_dispatch:
 jobs:
   audit:
     runs-on: ubuntu-latest

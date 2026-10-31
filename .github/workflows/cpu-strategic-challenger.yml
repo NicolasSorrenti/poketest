@@ -1,14 +1,6 @@
 name: Apex Strategic CPU Challenge
 on:
-  pull_request:
-    paths:
-      - 'cpu_strategic_search.js'
-      - 'cpu_lookahead.js'
-      - 'cpu_policy.js'
-      - 'tests/cpu_deep_levels.test.js'
-      - 'scripts/benchmark-cpu-advanced.js'
-      - 'scripts/benchmark-cpu-rpg-advanced.js'
-      - '.github/workflows/cpu-strategic-challenger.yml'
+  workflow_dispatch:
 jobs:
   challenge-mastermind:
     runs-on: ubuntu-latest

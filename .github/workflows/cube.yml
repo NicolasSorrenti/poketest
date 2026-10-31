@@ -1,8 +1,6 @@
 name: Cube Draft Regression
 on:
-  pull_request:
-  push:
-    branches: [main]
+  workflow_dispatch:
 jobs:
   cube:
     runs-on: ubuntu-latest

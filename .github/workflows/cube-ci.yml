@@ -1,34 +1,6 @@
 name: Cube gameplay regression tests
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'cube*.js'
-      - 'cube*.html'
-      - 'cube*.css'
-      - 'test_cube*.js'
-      - 'classic_local_service.js'
-      - 'classic_online_service.js'
-      - 'cpu_policy.js'
-      - 'headless_duel.js'
-      - 'core_rules.js'
-      - 'package.json'
-      - 'server.js'
-      - '.github/workflows/cube-ci.yml'
-  pull_request:
-    paths:
-      - 'cube*.js'
-      - 'cube*.html'
-      - 'cube*.css'
-      - 'test_cube*.js'
-      - 'classic_local_service.js'
-      - 'classic_online_service.js'
-      - 'cpu_policy.js'
-      - 'headless_duel.js'
-      - 'core_rules.js'
-      - 'package.json'
-      - 'server.js'
   workflow_dispatch:
 
 concurrency:

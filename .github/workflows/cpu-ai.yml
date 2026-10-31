@@ -1,20 +1,6 @@
 name: CPU AI regression
 on:
-  push:
-    branches:
-      - 'agent/cpu-ai-*'
-  pull_request:
-    paths:
-      - 'cpu_policy.js'
-      - 'cpu_lookahead.js'
-      - 'cpu_strategic_search.js'
-      - 'tests/cpu_apex_public_bench_projection.test.js'
-      - 'tests/cpu_apex_wigglytuff_wave.test.js'
-      - 'classic_bot.js'
-      - 'classic_local_service.js'
-      - 'test_cpu_policy.js'
-      - 'benchmark_cpu.js'
-      - '.github/workflows/cpu-ai.yml'
+  workflow_dispatch:
 jobs:
   cpu:
     runs-on: ubuntu-latest

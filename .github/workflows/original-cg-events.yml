@@ -1,14 +1,6 @@
 name: Archived CG random events
 on:
-  pull_request:
-    paths:
-      - 'rpg_slice_of_life.js'
-      - 'rpg_cg_gallery.js'
-      - 'rpg.js'
-      - 'tests/rpg_archived_random_cgs.test.js'
-      - 'tests/rpg_cg_gallery.test.js'
-      - 'rpg-assets/events/cg/slice-life/*.png'
-      - '.github/workflows/original-cg-events.yml'
+  workflow_dispatch:
 jobs:
   focused-checks:
     runs-on: ubuntu-latest

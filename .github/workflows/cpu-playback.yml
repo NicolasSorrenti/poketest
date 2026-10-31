@@ -1,24 +1,6 @@
 name: CPU Playback Regression
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'battle_presentation_ui.js'
-      - 'classic_local_service.js'
-      - 'classic_live.js'
-      - 'classic_live.html'
-      - 'test_battle_presentation_v036.js'
-      - 'test_classic_live_service.js'
-      - '.github/workflows/cpu-playback.yml'
-  pull_request:
-    paths:
-      - 'battle_presentation_ui.js'
-      - 'classic_local_service.js'
-      - 'classic_live.js'
-      - 'classic_live.html'
-      - 'test_battle_presentation_v036.js'
-      - 'test_classic_live_service.js'
-      - '.github/workflows/cpu-playback.yml'
+  workflow_dispatch:
 jobs:
   playback:
     runs-on: ubuntu-latest

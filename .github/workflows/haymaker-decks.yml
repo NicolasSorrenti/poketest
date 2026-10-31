@@ -1,25 +1,5 @@
 name: Haymaker Basic-only Decks
 on:
-  pull_request:
-    paths:
-      - haymaker_decks.js
-      - classic_local_service.js
-      - classic_format.js
-      - deck_builder_core.js
-      - deck_builder.js
-      - test_haymaker_decks.js
-      - .github/workflows/haymaker-decks.yml
-  push:
-    branches:
-      - feature/haymaker-all-eras
-    paths:
-      - haymaker_decks.js
-      - classic_local_service.js
-      - classic_format.js
-      - deck_builder_core.js
-      - deck_builder.js
-      - test_haymaker_decks.js
-      - .github/workflows/haymaker-decks.yml
   workflow_dispatch:
 jobs:
   haymaker:

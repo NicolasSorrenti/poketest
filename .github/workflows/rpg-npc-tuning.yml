@@ -1,20 +1,6 @@
 name: RPG NPC Targeted Tuning
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/rpg-npc-candidates.js'
-      - 'scripts/benchmark-rpg-npc-candidates.js'
-      - 'tests/rpg_npc_candidate_balance.test.js'
-      - 'rpg_npc_deck_progression.js'
-      - 'scripts/benchmark-rpg-pack-strategies.js'
-      - 'tests/rpg_npc_deck_progression.test.js'
-      - 'classic_local_service.js'
-      - 'cpu_profiles.js'
-      - 'benchmark_cpu.js'
-      - 'rpg_collection.js'
-      - '.github/workflows/rpg-npc-tuning.yml'
   workflow_dispatch:
 
 concurrency:

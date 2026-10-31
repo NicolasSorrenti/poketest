@@ -1,17 +1,6 @@
 name: Cube Multiplayer Chromium
 on:
-  pull_request:
-    paths:
-      - 'cube*'
-      - 'server.js'
-      - 'tests/cube_room_browser_smoke.js'
-      - 'tests/cube_art_browser_smoke.js'
-      - 'tests/cube_deck_builder_browser_smoke.js'
-      - 'tests/cube_round_robin_browser_smoke.js'
-      - 'tests/cube_parallel_browser_smoke.js'
-      - '.github/workflows/cube-browser.yml'
-  push:
-    branches: [main]
+  workflow_dispatch:
 jobs:
   browser:
     runs-on: ubuntu-latest

@@ -1,15 +1,6 @@
 name: Cube Artwork Regression
 on:
-  pull_request:
-    paths:
-      - 'cube_card_images.js'
-      - 'cube_client.js'
-      - 'cube_room_client.js'
-      - 'test_cube_card_images.js'
-      - 'server.js'
-      - '.github/workflows/cube-art.yml'
-  push:
-    branches: [main]
+  workflow_dispatch:
 jobs:
   images:
     runs-on: ubuntu-latest

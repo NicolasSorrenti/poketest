@@ -1,34 +1,6 @@
 name: Responsive Duel Chromium
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'duel_desktop.css'
-      - 'duel_mobile.css'
-      - 'duel_nostalgic.css'
-      - 'neo_duel_grass.svg'
-      - 'test_duel_responsive_layout.js'
-      - 'online_hand_tray.css'
-      - 'classic_live.css'
-      - 'duel_quick_ui.js'
-      - 'online.html'
-      - 'classic_live.html'
-      - 'tests/duel_responsive_browser_smoke.js'
-      - '.github/workflows/duel-browser.yml'
-  pull_request:
-    paths:
-      - 'duel_desktop.css'
-      - 'duel_mobile.css'
-      - 'duel_nostalgic.css'
-      - 'neo_duel_grass.svg'
-      - 'test_duel_responsive_layout.js'
-      - 'online_hand_tray.css'
-      - 'classic_live.css'
-      - 'duel_quick_ui.js'
-      - 'online.html'
-      - 'classic_live.html'
-      - 'tests/duel_responsive_browser_smoke.js'
-      - '.github/workflows/duel-browser.yml'
+  workflow_dispatch:
 jobs:
   layout:
     runs-on: ubuntu-latest

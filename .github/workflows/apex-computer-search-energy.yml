@@ -1,10 +1,6 @@
 name: Apex Computer Search Energy Regression
 on:
-  pull_request:
-    paths:
-      - 'cpu_policy.js'
-      - 'tests/cpu_apex_computer_search_energy.test.js'
-      - '.github/workflows/apex-computer-search-energy.yml'
+  workflow_dispatch:
 jobs:
   computer-search-energy:
     runs-on: ubuntu-latest

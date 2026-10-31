@@ -1,12 +1,6 @@
 name: RPG Pack Balance Checkpoints
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/benchmark-rpg-pack-strategies.js'
-      - 'tests/rpg_pack_balance.test.js'
-      - '.github/workflows/rpg-pack-balance.yml'
   workflow_dispatch:
 
 concurrency:

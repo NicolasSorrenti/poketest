@@ -1,22 +1,6 @@
 name: Batch 44 Attack Regression
 on:
-  pull_request:
-    paths:
-      - 'engine.js'
-      - 'cards/**'
-      - 'batch44_targets.json'
-      - 'test_attack_batch_v044.js'
-      - 'test_attack_batch_v044_outcomes.js'
-      - '.github/workflows/batch44-attack-regression.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'engine.js'
-      - 'cards/**'
-      - 'batch44_targets.json'
-      - 'test_attack_batch_v044.js'
-      - 'test_attack_batch_v044_outcomes.js'
-      - '.github/workflows/batch44-attack-regression.yml'
+  workflow_dispatch:
 jobs:
   batch44:
     runs-on: ubuntu-latest

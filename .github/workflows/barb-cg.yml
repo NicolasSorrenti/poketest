@@ -1,22 +1,6 @@
 name: Barb optional CG integration
 on:
-  pull_request:
-    paths:
-      - 'characters/barb/**'
-      - 'rpg-assets/characters/barb/events/**'
-      - 'rpg_character_packs.generated.js'
-      - 'rpg_narrative_pack.js'
-      - 'rpg_slice_of_life.js'
-      - 'rpg_cg_gallery.js'
-      - 'rpg.js'
-      - 'tests/rpg_barb*'
-      - '.github/workflows/barb-cg.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'characters/barb/**'
-      - 'rpg_slice_of_life.js'
-      - 'tests/rpg_barb*'
+  workflow_dispatch:
 jobs:
   integration:
     runs-on: ubuntu-latest

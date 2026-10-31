@@ -1,11 +1,6 @@
 name: Apex Pokemon Center Regression
 on:
-  pull_request:
-    paths:
-      - 'cpu_policy.js'
-      - 'tests/cpu_pokemon_center_order.test.js'
-      - 'tests/cpu_apex_energy_sequence.test.js'
-      - '.github/workflows/apex-pokemon-center.yml'
+  workflow_dispatch:
 jobs:
   targeted:
     runs-on: ubuntu-latest

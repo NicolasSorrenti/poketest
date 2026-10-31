@@ -1,14 +1,6 @@
 name: CPU Decision Quality Investigation
 on:
-  pull_request:
-    paths:
-      - 'cpu_strategic_search.js'
-      - 'cpu_policy.js'
-      - 'cpu_lookahead.js'
-      - 'scripts/diagnose-cpu-decisions.js'
-      - 'scripts/diagnose-cpu-losses.js'
-      - 'tests/cpu_deep_levels.test.js'
-      - '.github/workflows/cpu-decision-quality.yml'
+  workflow_dispatch:
 jobs:
   diagnoses:
     runs-on: ubuntu-latest

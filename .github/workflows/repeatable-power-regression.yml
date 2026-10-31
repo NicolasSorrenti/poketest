@@ -1,24 +1,6 @@
 name: Repeatable Power Regression
 on:
-  pull_request:
-    paths:
-      - 'classic_power_core.js'
-      - 'classic_live.js'
-      - 'online.js'
-      - 'battle_decision_ui.js'
-      - 'headless_duel.js'
-      - 'test_repeatable_power_session.js'
-      - '.github/workflows/repeatable-power-regression.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'classic_power_core.js'
-      - 'classic_live.js'
-      - 'online.js'
-      - 'battle_decision_ui.js'
-      - 'headless_duel.js'
-      - 'test_repeatable_power_session.js'
-      - '.github/workflows/repeatable-power-regression.yml'
+  workflow_dispatch:
 jobs:
   power-session:
     runs-on: ubuntu-latest

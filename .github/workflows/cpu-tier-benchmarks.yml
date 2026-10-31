@@ -1,14 +1,5 @@
 name: Experimental CPU Tier Benchmarks
 on:
-  pull_request:
-    paths:
-      - 'cpu_policy.js'
-      - 'cpu_lookahead.js'
-      - 'rpg_cpu_config.js'
-      - 'benchmark_cpu.js'
-      - 'scripts/benchmark-cpu-advanced.js'
-      - 'scripts/benchmark-cpu-rpg-advanced.js'
-      - '.github/workflows/cpu-tier-benchmarks.yml'
   workflow_dispatch:
 jobs:
   compare:

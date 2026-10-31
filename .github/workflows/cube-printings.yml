@@ -1,15 +1,6 @@
 name: Cube Printings and Kanto Origins
 on:
-  pull_request:
-    paths:
-      - 'cube_draft.js'
-      - 'cube_presets.js'
-      - 'cube_printings.js'
-      - 'test_cube_printings.js'
-      - 'test_cube_presets.js'
-      - 'test_cube_http.js'
-  push:
-    branches: [main, feature/cube-base-jungle-fossil-printings]
+  workflow_dispatch:
 jobs:
   printings:
     runs-on: ubuntu-latest

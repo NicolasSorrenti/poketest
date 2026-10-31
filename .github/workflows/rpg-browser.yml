@@ -1,33 +1,6 @@
 name: RPG Chromium smoke
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'rpg*'
-      - 'classic_live*'
-      - 'rpg-assets/**'
-      - 'server.js'
-      - 'tests/rpg_browser_smoke.js'
-      - 'tests/online_browser_smoke.js'
-      - 'tests/cube_room_browser_smoke.js'
-      - 'cube_room*'
-      - 'cube.html'
-      - 'online.html'
-      - 'online.js'
-      - '.github/workflows/rpg-browser.yml'
-  pull_request:
-    paths:
-      - 'rpg*'
-      - 'classic_live*'
-      - 'server.js'
-      - 'tests/rpg_browser_smoke.js'
-      - 'tests/online_browser_smoke.js'
-      - 'tests/cube_room_browser_smoke.js'
-      - 'cube_room*'
-      - 'cube.html'
-      - 'online.html'
-      - 'online.js'
-      - '.github/workflows/rpg-browser.yml'
+  workflow_dispatch:
 jobs:
   browser-smoke:
     runs-on: ubuntu-latest

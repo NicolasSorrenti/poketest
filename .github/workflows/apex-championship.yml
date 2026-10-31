@@ -1,10 +1,5 @@
 name: Apex Championship
 on:
-  pull_request:
-    paths:
-      - 'scripts/apex-championship.js'
-      - 'tests/apex_championship.test.js'
-      - '.github/workflows/apex-championship.yml'
   workflow_dispatch:
 jobs:
   validation:

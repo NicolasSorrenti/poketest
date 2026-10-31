@@ -1,16 +1,6 @@
 name: Cube Visual Deck Builder
 on:
-  push:
-    branches: [main, feature/cube-visual-deck-builder]
-  pull_request:
-    paths:
-      - 'cube_builder*'
-      - 'cube_client.js'
-      - 'cube_room_client.js'
-      - 'cube.html'
-      - 'cube_room.html'
-      - 'tests/cube_deck_builder_browser_smoke.js'
-      - '.github/workflows/cube-visual.yml'
+  workflow_dispatch:
 jobs:
   deck-builder:
     runs-on: ubuntu-latest

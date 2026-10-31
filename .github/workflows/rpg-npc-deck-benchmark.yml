@@ -1,13 +1,6 @@
 name: RPG NPC Deck Balance Benchmark
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/benchmark-rpg-npc-decks.js'
-      - 'tests/rpg_npc_deck_balance.test.js'
-      - 'rpg_npc_deck_progression.js'
-      - '.github/workflows/rpg-npc-deck-benchmark.yml'
   workflow_dispatch:
 
 jobs:

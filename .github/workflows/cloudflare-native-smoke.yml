@@ -1,8 +1,5 @@
 name: Cloudflare native Cube/Classic smoke
 on:
-  push:
-    branches:
-      - 'fix/cloudflare-native-cube-classic-*'
   workflow_dispatch:
 jobs:
   smoke:

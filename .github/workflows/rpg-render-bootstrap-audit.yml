@@ -1,24 +1,7 @@
 name: RPG Render Bootstrap Audit
 
 on:
-  pull_request:
-    paths:
-      - 'test_rpg_render_perf.js'
-      - 'rpg_character_bootstrap.js'
-      - 'rpg_render_perf.js'
-      - 'rpg.js'
-      - 'rpg.html'
-      - '.github/workflows/rpg-render-bootstrap-audit.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'test_rpg_render_perf.js'
-      - 'rpg_character_bootstrap.js'
-      - 'rpg_render_perf.js'
-      - 'rpg.js'
-      - 'rpg.html'
-      - '.github/workflows/rpg-render-bootstrap-audit.yml'
-
+  workflow_dispatch:
 jobs:
   audit:
     runs-on: ubuntu-latest

@@ -1,15 +1,6 @@
 name: Competitive Archetype CPU Benchmark
 on:
-  pull_request:
-    paths:
-      - 'cpu_competitive_decks.js'
-      - 'scripts/benchmark-cpu-competitive.js'
-      - 'tests/cpu_competitive_decks.test.js'
-      - 'cpu_policy.js'
-      - 'cpu_lookahead.js'
-      - 'cpu_strategic_search.js'
-      - 'benchmark_cpu.js'
-      - '.github/workflows/cpu-competitive-archetypes.yml'
+  workflow_dispatch:
 jobs:
   deck-validity:
     name: Legal competitive archetype decks

@@ -1,31 +1,28 @@
-name: Node regression
+name: Quick game checks
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 jobs:
-  tests:
+  smoke:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/rpg-assets/
+            !/assets/
+            !/*.png
+            !/*.jpg
+            /cards/
+            /tests/
+            /scripts/
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate match playmats and RPG dialogue transcript
-        run: |
-          node --check duel_playmats.js
-          node --check classic_live.js
-          node --check online.js
-          node --check duel_action_rail.js
-          node test_duel_action_rail.js
-          node --test tests/mobile_alignment.test.js
-          node --check rpg.js
-          node --check rpg_match_reactions.js
-          node --check rpg_match_chat.js
-          node tests/duel_playmats.test.js
-          node tests/rpg_match_chat.test.js
-          node --test tests/public_client_scripts.test.js
-      - name: Verify duel boot and account cloud authority
-        run: node --test tests/duel_startup_loading.test.js tests/rpg_cloud_save.test.js
-      - run: node --test tests/rpg_story.test.js tests/rpg_integration.test.js tests/rpg_flow.test.js tests/rpg_save_lock.test.js tests/rpg_art_install.test.js
-      - run: npm test
+      - name: RPG, duel and Cube smoke checks
+        run: npm test

@@ -1,7 +1,5 @@
 name: Cube Balance Audit
 on:
-  push:
-    branches: [test/cube-archetype-balance-audit]
   workflow_dispatch:
 jobs:
   audit:

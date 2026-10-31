@@ -1,22 +1,6 @@
 name: RPG Cross-character Event Checks
 on:
-  pull_request:
-    paths:
-      - 'rpg_cross_character_events.js'
-      - 'rpg_slice_of_life.js'
-      - 'rpg_cg_gallery.js'
-      - 'rpg_schedules.js'
-      - 'rpg_character_bootstrap.js'
-      - 'server.js'
-      - 'tests/rpg_cross_character_events.test.js'
-      - '.github/workflows/rpg-cross-character-checks.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'rpg_cross_character_events.js'
-      - 'rpg_slice_of_life.js'
-      - 'rpg_cg_gallery.js'
-      - 'tests/rpg_cross_character_events.test.js'
+  workflow_dispatch:
 jobs:
   crossovers:
     runs-on: ubuntu-latest

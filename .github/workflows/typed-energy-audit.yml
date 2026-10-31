@@ -1,30 +1,6 @@
 name: Typed Energy Attack Audit
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'cards/**'
-      - 'headless_duel.js'
-      - 'attack_effects_core.js'
-      - 'neo_attack_batch_v048.js'
-      - 'neo_attack_batch_v083.js'
-      - 'neo_attack_batch_v092.js'
-      - 'test_typed_energy_discard_audit.js'
-      - 'test_typed_energy_missing_icons.js'
-      - 'test_card_fidelity_poliwrath.js'
-      - '.github/workflows/typed-energy-audit.yml'
-  pull_request:
-    paths:
-      - 'cards/**'
-      - 'headless_duel.js'
-      - 'attack_effects_core.js'
-      - 'neo_attack_batch_v048.js'
-      - 'neo_attack_batch_v083.js'
-      - 'neo_attack_batch_v092.js'
-      - 'test_typed_energy_discard_audit.js'
-      - 'test_typed_energy_missing_icons.js'
-      - 'test_card_fidelity_poliwrath.js'
-      - '.github/workflows/typed-energy-audit.yml'
+  workflow_dispatch:
 jobs:
   typed-costs:
     runs-on: ubuntu-latest

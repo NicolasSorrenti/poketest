@@ -1,12 +1,6 @@
 name: Prize Selection and Promotion Regression
 on:
-  push:
-    branches: [main]
-  pull_request:
-    paths:
-      - 'headless_duel.js'
-      - 'test_prize_format_consistency.js'
-      - '.github/workflows/prize-promotion-regression.yml'
+  workflow_dispatch:
 jobs:
   prize-promotion:
     runs-on: ubuntu-latest

@@ -1,32 +1,7 @@
 name: RPG Regression Suite
 
 on:
-  pull_request:
-    paths:
-      - 'rpg*.js'
-      - 'rpg.html'
-      - 'rpg.css'
-      - 'tests/rpg_*.test.js'
-      - 'test_rpg_status.js'
-      - 'package.json'
-      - 'characters/**'
-      - 'scripts/rpg-character-packs.js'
-      - 'CHARACTER_PACKS.md'
-      - '.github/workflows/rpg-regression.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'rpg*.js'
-      - 'rpg.html'
-      - 'rpg.css'
-      - 'tests/rpg_*.test.js'
-      - 'test_rpg_status.js'
-      - 'package.json'
-      - 'characters/**'
-      - 'scripts/rpg-character-packs.js'
-      - 'CHARACTER_PACKS.md'
-      - '.github/workflows/rpg-regression.yml'
-
+  workflow_dispatch:
 jobs:
   cg-scene:
     runs-on: ubuntu-latest

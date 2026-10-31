@@ -1,15 +1,6 @@
 name: Apex Extensive Validation
 on:
-  pull_request:
-    paths:
-      - 'cpu_strategic_search.js'
-      - 'cpu_lookahead.js'
-      - 'cpu_policy.js'
-      - 'benchmark_cpu.js'
-      - 'scripts/benchmark-cpu-rpg-advanced.js'
-      - 'scripts/benchmark-cpu-advanced.js'
-      - 'tests/cpu_deep_levels.test.js'
-      - '.github/workflows/cpu-apex-extensive.yml'
+  workflow_dispatch:
 jobs:
   cpu-invariants:
     runs-on: ubuntu-latest

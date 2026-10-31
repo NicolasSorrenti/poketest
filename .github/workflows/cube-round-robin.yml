@@ -1,20 +1,6 @@
 name: Cube Round Robin
 on:
-  push:
-    branches: [feature/cube-round-robin-online, main]
-  pull_request:
-    paths:
-      - 'cube_room_service.js'
-      - 'cube_room_client.js'
-      - 'cube_room.html'
-      - 'cube_round_robin.js'
-      - 'classic_online_service.js'
-      - 'classic_live.js'
-      - 'online.js'
-      - 'test_cube_round_robin.js'
-      - 'tests/cube_round_robin_browser_smoke.js'
-      - 'tests/cube_parallel_browser_smoke.js'
-      - '.github/workflows/cube-round-robin.yml'
+  workflow_dispatch:
 jobs:
   round-robin:
     runs-on: ubuntu-latest

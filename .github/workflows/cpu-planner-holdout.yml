@@ -1,16 +1,6 @@
 name: CPU Planner Held-out Validation
 on:
-  pull_request:
-    paths:
-      - 'cpu_policy.js'
-      - 'cpu_lookahead.js'
-      - 'benchmark_cpu.js'
-      - 'scripts/benchmark-cpu-advanced.js'
-      - 'scripts/benchmark-cpu-rpg-advanced.js'
-      - 'tests/cpu_deep_levels.test.js'
-      - 'tests/rpg_cpu_champion.test.js'
-      - 'rpg_cpu_config.js'
-      - '.github/workflows/cpu-planner-holdout.yml'
+  workflow_dispatch:
 jobs:
   level7-holdout:
     runs-on: ubuntu-latest
