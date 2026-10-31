@@ -50,6 +50,7 @@ class RpgDuelCheckpoint {
    token:session.token,revision:session.revision,game:session.game,
    deck:session.deck,opponent:session.opponent,cpuConfig:session.cpuConfig,
    npc:session.npc,npcDeckTier:session.npcDeckTier,
+   rpgDrawAssist:session.rpgDrawAssist,
    undoHistory:(session.undoHistory||[]).slice(-16)
   };
  }
