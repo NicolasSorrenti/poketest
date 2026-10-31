@@ -622,12 +622,14 @@ function prompt(g,plan,helpers){
   if(!chosen(d,'evolution')){
    const playable=hchoices(c=>c.subtypes?.includes('Stage 2')&&eligibleBasics(c).length);
    if(!playable.length)throw Error('Pokémon Breeder needs a matching Basic Pokémon already in play');
-   return single('evolution',side,playable,'Choose Stage 2 Pokémon');
+   if(playable.length===1)d.evolution=[playable[0].id];
+   else return single('evolution',side,playable,'Choose Stage 2 Pokémon');
   }
   if(!chosen(d,'target')){
    const evolved=get(p.hand[nums(d,'evolution')[0]]),targets=eligibleBasics(evolved);
    if(!targets.length)throw Error('Pokémon Breeder no longer has a compatible Basic Pokémon');
-   return single('target',side,targets,'Choose a Basic Pokémon to evolve');
+   if(targets.length===1)d.target=[targets[0].id];
+   else return single('target',side,targets,'Choose a Basic Pokémon to evolve');
   }
  }
  if(name==='Challenge!'){
