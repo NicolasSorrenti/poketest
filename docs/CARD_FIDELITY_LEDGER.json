@@ -1062,13 +1062,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Bite",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_raticate.js",
+      "Base Set and Base Set 2 text compared with Serebii Base/Base Set 2 and Limitless; official Pokémon errata PDF searched, no Raticate entry."
+     ],
+     "scope": "Bite: exact text, one-Colorless cost including Double Colorless payment, fixed 20 damage, and unpaid-cost rejection. Super Fang: exact text and three-Colorless cost; current remaining HP rather than printed maximum HP; rounding upward to the next 10 across every legal remainder from 10 to 120; exact 10-HP KO/Prize boundary; Double Colorless plus one Basic Energy payment; atomic underpayment rejection. Incoming Fighting Jab checks ×2 Weakness; Mewtwo Psychic checks -30 Resistance after attack damage calculation. Base and Base Set 2 attack texts compared for parity. 114 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. No discrepancy found in the tested scope; broader effects, historical rulings and browser/network integration remain pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Super Fang",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_raticate.js",
+      "Base Set and Base Set 2 text compared with Serebii Base/Base Set 2 and Limitless; official Pokémon errata PDF searched, no Raticate entry."
+     ],
+     "scope": "Bite: exact text, one-Colorless cost including Double Colorless payment, fixed 20 damage, and unpaid-cost rejection. Super Fang: exact text and three-Colorless cost; current remaining HP rather than printed maximum HP; rounding upward to the next 10 across every legal remainder from 10 to 120; exact 10-HP KO/Prize boundary; Double Colorless plus one Basic Energy payment; atomic underpayment rejection. Incoming Fighting Jab checks ×2 Weakness; Mewtwo Psychic checks -30 Resistance after attack damage calculation. Base and Base Set 2 attack texts compared for parity. 114 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. No discrepancy found in the tested scope; broader effects, historical rulings and browser/network integration remain pending."
     }
    ]
   },
@@ -5484,13 +5494,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Bite",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_raticate.js",
+      "Base Set and Base Set 2 text compared with Serebii Base/Base Set 2 and Limitless; official Pokémon errata PDF searched, no Raticate entry."
+     ],
+     "scope": "Bite: exact text, one-Colorless cost including Double Colorless payment, fixed 20 damage, and unpaid-cost rejection. Super Fang: exact text and three-Colorless cost; current remaining HP rather than printed maximum HP; rounding upward to the next 10 across every legal remainder from 10 to 120; exact 10-HP KO/Prize boundary; Double Colorless plus one Basic Energy payment; atomic underpayment rejection. Incoming Fighting Jab checks ×2 Weakness; Mewtwo Psychic checks -30 Resistance after attack damage calculation. Base and Base Set 2 attack texts compared for parity. 114 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. No discrepancy found in the tested scope; broader effects, historical rulings and browser/network integration remain pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Super Fang",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_raticate.js",
+      "Base Set and Base Set 2 text compared with Serebii Base/Base Set 2 and Limitless; official Pokémon errata PDF searched, no Raticate entry."
+     ],
+     "scope": "Bite: exact text, one-Colorless cost including Double Colorless payment, fixed 20 damage, and unpaid-cost rejection. Super Fang: exact text and three-Colorless cost; current remaining HP rather than printed maximum HP; rounding upward to the next 10 across every legal remainder from 10 to 120; exact 10-HP KO/Prize boundary; Double Colorless plus one Basic Energy payment; atomic underpayment rejection. Incoming Fighting Jab checks ×2 Weakness; Mewtwo Psychic checks -30 Resistance after attack damage calculation. Base and Base Set 2 attack texts compared for parity. 114 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. No discrepancy found in the tested scope; broader effects, historical rulings and browser/network integration remain pending."
     }
    ]
   },
