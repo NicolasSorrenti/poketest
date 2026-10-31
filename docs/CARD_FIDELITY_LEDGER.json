@@ -671,7 +671,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Pound",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dratini_pound.js: reprint text/cost parity; any single Energy or DCE pays, no-Energy attack rejects atomically, 10 damage and no choice; Dratini Psychic Resistance reduces Mewtwo's 40-damage Psychic attack to 10; damage prevention. Base Set Classic."
+     ]
     }
    ]
   },
@@ -4855,7 +4858,10 @@
      "kind": "attack",
      "index": 0,
      "name": "Pound",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dratini_pound.js: reprint text/cost parity; any single Energy or DCE pays, no-Energy attack rejects atomically, 10 damage and no choice; Dratini Psychic Resistance reduces Mewtwo's 40-damage Psychic attack to 10; damage prevention. Base Set 2 online-preview."
+     ]
     }
    ]
   },
