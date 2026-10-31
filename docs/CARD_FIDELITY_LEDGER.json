@@ -687,13 +687,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Leek Slap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_farfetchd.js"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed text/costs. Reducer scenarios: Leek Slap heads deals 30; tails deals 0 but consumes the once-while-this Pokémon-stays-in-play use; returning the same unit from Bench remains locked; a fresh replacement can use it. Pot Smash pays three Colorless units, including Double Colorless plus one Basic Energy; underpayment rejects atomically. Also checked printed Fighting Resistance against Hitmonchan Jab. Base Set tested in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize Cube configuration. No discrepancy found in this scope. Does not certify browser/network integration, other effects, or complete historical rulings."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Pot Smash",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_farfetchd.js"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed text/costs. Reducer scenarios: Leek Slap heads deals 30; tails deals 0 but consumes the once-while-this Pokémon-stays-in-play use; returning the same unit from Bench remains locked; a fresh replacement can use it. Pot Smash pays three Colorless units, including Double Colorless plus one Basic Energy; underpayment rejects atomically. Also checked printed Fighting Resistance against Hitmonchan Jab. Base Set tested in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize Cube configuration. No discrepancy found in this scope. Does not certify browser/network integration, other effects, or complete historical rulings."
     }
    ]
   },
@@ -4893,13 +4901,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Leek Slap",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_farfetchd.js"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed text/costs. Reducer scenarios: Leek Slap heads deals 30; tails deals 0 but consumes the once-while-this Pokémon-stays-in-play use; returning the same unit from Bench remains locked; a fresh replacement can use it. Pot Smash pays three Colorless units, including Double Colorless plus one Basic Energy; underpayment rejects atomically. Also checked printed Fighting Resistance against Hitmonchan Jab. Base Set tested in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize Cube configuration. No discrepancy found in this scope. Does not certify browser/network integration, other effects, or complete historical rulings."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Pot Smash",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_farfetchd.js"
+     ],
+     "scope": "Compared Base Set and Base Set 2 printed text/costs. Reducer scenarios: Leek Slap heads deals 30; tails deals 0 but consumes the once-while-this Pokémon-stays-in-play use; returning the same unit from Bench remains locked; a fresh replacement can use it. Pot Smash pays three Colorless units, including Double Colorless plus one Basic Energy; underpayment rejects atomically. Also checked printed Fighting Resistance against Hitmonchan Jab. Base Set tested in Classic; Base Set 2 in online-preview 60-card and 40-card/four-Prize Cube configuration. No discrepancy found in this scope. Does not certify browser/network integration, other effects, or complete historical rulings."
     }
    ]
   },
