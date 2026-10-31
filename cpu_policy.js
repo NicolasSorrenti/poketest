@@ -782,7 +782,8 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   if(rainbowDamage>=hpRemaining(unit))continue;
   seen.add(id);
   const after={...nextTurnUnit,damage:(nextTurnUnit.damage||0)+rainbowDamage,
-   energies:[...(unit.energies||[]),id]};
+   // Forecast from the post-expiry Energy pool: Miracle Energy is discarded.
+   energies:[...(nextTurnUnit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
   // Next attachment is on our next turn, after the opponent's turn.
@@ -1230,11 +1231,25 @@ function projectedPrep(board,action,round,turnSerial){
   if(c.name==='Rainbow Energy'&&hpRemaining(u)<=10)return null;
   u.energies=[...(u.energies||[]),id];
   if(c.name==='Rainbow Energy')u.damage=(u.damage||0)+10;
+  // Match the reducer: Full Heal Energy immediately clears all conditions,
+  // potentially unlocking a sleeping or paralyzed attack in this turn's plan.
+  if(c.name==='Full Heal Energy'){
+   u.status=null;u.poison=false;delete u.poisonDamage;
+  }
   next.energyUsed=true;
  }else if(type==='evolve'){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
   u.id=id;
   u.playedTurn=round;
+  // Match the authoritative evolve reducer: the new stage uses its own
+  // attacks, and evolution removes Asleep/Paralyzed/Confused and Poison.
+  // Keeping either stale field made an otherwise legal evolved attack look
+  // unusable (or falsely retained the Basic's cheaper attack) in the
+  // optional two-step preparation forecast.
+  delete u.effectiveAttacks;
+  u.status=null;
+  u.poison=false;
+  delete u.poisonDamage;
  }else{
   if(!isBasicPokemon(c))return null;
   next.bench.push({id,damage:0,energies:[],status:null,playedTurn:round});
