@@ -1618,13 +1618,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Bubble",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_squirtle.js: 58 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; checks both printings, printed stats/text parity, Bubble coin/status with Water weakness, Withdraw coin outcomes and damage-only prevention versus Thunder Wave, Defender reductions, and typed attack-cost rejection."
+     ],
+     "scope": "Bubble: typed Water cost, fixed 10 damage, weakness and paralysis coin; Withdraw: Water + Colorless cost, prevention coin and next-turn damage-only shield while attack status effects still resolve. Text compared across Base and Base Set 2."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Withdraw",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_squirtle.js: 58 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; checks both printings, printed stats/text parity, Bubble coin/status with Water weakness, Withdraw coin outcomes and damage-only prevention versus Thunder Wave, Defender reductions, and typed attack-cost rejection."
+     ],
+     "scope": "Bubble: typed Water cost, fixed 10 damage, weakness and paralysis coin; Withdraw: Water + Colorless cost, prevention coin and next-turn damage-only shield while attack status effects still resolve. Text compared across Base and Base Set 2."
     }
    ]
   },
@@ -6443,13 +6451,21 @@
      "kind": "attack",
      "index": 0,
      "name": "Bubble",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_squirtle.js: 58 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; checks both printings, printed stats/text parity, Bubble coin/status with Water weakness, Withdraw coin outcomes and damage-only prevention versus Thunder Wave, Defender reductions, and typed attack-cost rejection."
+     ],
+     "scope": "Bubble: typed Water cost, fixed 10 damage, weakness and paralysis coin; Withdraw: Water + Colorless cost, prevention coin and next-turn damage-only shield while attack status effects still resolve. Text compared across Base and Base Set 2."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Withdraw",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_squirtle.js: 58 reducer scenarios across Classic, Neo-theme, online-preview 60-card and 40-card setups; checks both printings, printed stats/text parity, Bubble coin/status with Water weakness, Withdraw coin outcomes and damage-only prevention versus Thunder Wave, Defender reductions, and typed attack-cost rejection."
+     ],
+     "scope": "Bubble: typed Water cost, fixed 10 damage, weakness and paralysis coin; Withdraw: Water + Colorless cost, prevention coin and next-turn damage-only shield while attack status effects still resolve. Text compared across Base and Base Set 2."
     }
    ]
   },
