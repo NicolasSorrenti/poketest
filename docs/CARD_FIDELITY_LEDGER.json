@@ -1947,7 +1947,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_maintenance.js: Base/Base Set 2 English text parity; mandatory cost underpayment rejects atomically; forced exactly-two pair and all-identical choices auto-resolve; distinct options stay player-controlled; shuffle-before-draw from an empty deck; ten reducer scenarios passed locally.",
+            "Archived WotC chat logs Q143: Maintenance cannot be used when it is the only card in hand; official errata PDF searched, no Base/BS2 Maintenance entry found."
+          ],
+          "scope": "Base #83 in Classic and Base Set 2 #112 in online-preview. Ten scenarios cover parity, WotC minimum hand requirement, atomic rejection, exact-two forced payment, identical-copy automatic payment, distinct choice ownership, and shuffle-before-draw. Other interactions, later reprints, and live client/network behavior remain unchecked."
         }
       ]
     },
@@ -6835,7 +6840,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_maintenance.js: Base/Base Set 2 English text parity; mandatory cost underpayment rejects atomically; forced exactly-two pair and all-identical choices auto-resolve; distinct options stay player-controlled; shuffle-before-draw from an empty deck; ten reducer scenarios passed locally.",
+            "Archived WotC chat logs Q143: Maintenance cannot be used when it is the only card in hand; official errata PDF searched, no Base/BS2 Maintenance entry found."
+          ],
+          "scope": "Base #83 in Classic and Base Set 2 #112 in online-preview. Ten scenarios cover parity, WotC minimum hand requirement, atomic rejection, exact-two forced payment, identical-copy automatic payment, distinct choice ownership, and shuffle-before-draw. Other interactions, later reprints, and live client/network behavior remain unchecked."
         }
       ]
     },
