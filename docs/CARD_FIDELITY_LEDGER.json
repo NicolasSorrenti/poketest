@@ -1822,7 +1822,13 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_impostor_professor_oak.js: Base/Base Set 2 text parity; four same-turn plays; opponent hand/deck card conservation; hidden-hand protocol projection; draw when fewer than seven cards remain; empty-hand shuffle. Base card fidelity run 41193423882 passed at code head 98fb52a4.",
+            "Archived WotC chat logs Q105: up to four Impostor Professor Oak cards may be played in one turn; Q14 describes interaction with Tickling Machine's face-down set-aside hand, which this test does not cover.",
+            "Official Pokémon TCG errata PDF searched for Impostor/Impostor Professor Oak; no matching entry found."
+          ],
+          "scope": "Base #73 and Base Set 2 #102; four Classic reducer/protocol scenarios: print parity, four plays in one turn, hand/deck conservation and hidden-hand projection, short-deck partial draw, and empty-hand shuffle before drawing. Tickling Machine face-down cards, Chaos Gym, Sabrina's Psychic Control, other Trainer interactions, and live browser/network integration remain unchecked."
         }
       ]
     },
@@ -6703,7 +6709,13 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "test_card_fidelity_impostor_professor_oak.js: Base/Base Set 2 text parity; four same-turn plays; opponent hand/deck card conservation; hidden-hand protocol projection; draw when fewer than seven cards remain; empty-hand shuffle. Base card fidelity run 41193423882 passed at code head 98fb52a4.",
+            "Archived WotC chat logs Q105: up to four Impostor Professor Oak cards may be played in one turn; Q14 describes interaction with Tickling Machine's face-down set-aside hand, which this test does not cover.",
+            "Official Pokémon TCG errata PDF searched for Impostor/Impostor Professor Oak; no matching entry found."
+          ],
+          "scope": "Base #73 and Base Set 2 #102; four Classic reducer/protocol scenarios: print parity, four plays in one turn, hand/deck conservation and hidden-hand projection, short-deck partial draw, and empty-hand shuffle before drawing. Tickling Machine face-down cards, Chaos Gym, Sabrina's Psychic Control, other Trainer interactions, and live browser/network integration remain unchecked."
         }
       ]
     },
