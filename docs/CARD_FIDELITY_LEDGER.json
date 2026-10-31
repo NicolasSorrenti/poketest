@@ -1435,7 +1435,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Horn Hazard",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_nidoran_male.js: 30 reducer scenarios compare Base Set #55 and Base Set 2 #83 across Classic, Neo-theme, and online-preview 60/40; checks exact Horn Hazard text, cost, 30-on-heads/zero-on-tails, retained Energy, and atomic rejection of Colorless-only or missing payment.",
+      "Horn Hazard text and both printing numbers checked against Serebii Base #55 and Bulbapedia (which identifies Base Set 2 #83). Official errata index has no Nidoran♂ entry. Wider interactions and full client/network behavior remain unreviewed."
+     ],
+     "scope": "Horn Hazard: printed data and one-Grass cost; heads deals 30 and tails does nothing; Grass remains attached; DCE-only and absent Energy are atomically rejected. Other interactions and browser/network behavior remain unreviewed."
     }
    ]
   },
@@ -6170,7 +6175,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Horn Hazard",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_nidoran_male.js: 30 reducer scenarios compare Base Set #55 and Base Set 2 #83 across Classic, Neo-theme, and online-preview 60/40; checks exact Horn Hazard text, cost, 30-on-heads/zero-on-tails, retained Energy, and atomic rejection of Colorless-only or missing payment.",
+      "Horn Hazard text and both printing numbers checked against Serebii Base #55 and Bulbapedia (which identifies Base Set 2 #83). Official errata index has no Nidoran♂ entry. Wider interactions and full client/network behavior remain unreviewed."
+     ],
+     "scope": "Horn Hazard: printed data and one-Grass cost; heads deals 30 and tails does nothing; Grass remains attached; DCE-only and absent Energy are atomically rejected. Other interactions and browser/network behavior remain unreviewed."
     }
    ]
   },
