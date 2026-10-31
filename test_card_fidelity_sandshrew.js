@@ -74,7 +74,7 @@ for(const {format,size} of configs)for(const sandshrew of ['base1-62','base4-91'
 ]){
  const g=game(format,size),defender=unit(entry.id,entry.energies);
  if(entry.trainer)g.players[1].discard.push(entry.trainer);
- sandshrewTurn(g,sandshrew,defender);g.rngState=rngStateFor(false);
+ sandshrewTurn(g,sandshrew,defender);const handBefore=g.players[1].hand.length;g.rngState=rngStateFor(false);
  const attackIndex=CATALOG.get(entry.id).attacks.findIndex(a=>a.name===entry.name);
  act(g,1,'attack',{attackIndex});assert.equal(g.pendingDecision.actor,1);
  choose(g,1,[entry.choice]);
@@ -83,7 +83,7 @@ for(const {format,size} of configs)for(const sandshrew of ['base1-62','base4-91'
  assert.equal(g.pendingDecision,null,entry.name+' prevention resolves before follow-up choices');
  assert.equal(g.turn,0);
  if(entry.trainer)assert.ok(g.players[1].discard.includes(entry.trainer),'Scavenge does not recover after prevention');
- if(entry.name==='Third Eye')assert.equal(g.players[1].hand.length,0,'Third Eye draws nothing after prevention');
+ if(entry.name==='Third Eye')assert.equal(g.players[1].hand.length,handBefore,'Third Eye adds no cards after prevention');
  scenarios++;
 }
 assert.equal(scenarios,91);
