@@ -351,3 +351,12 @@ The print records agree on Ponyta's Base Set stats, attack costs/damage, Water w
 | Bite (base1-61, base4-89) | One-Colorless cost paid by Basic or Double Colorless Energy; fixed 20 damage with surplus Energy; insufficient payment rejection; incoming Fighting Weakness and Psychic Resistance, including Weakness then Defender order | `test_card_fidelity_rattata.js` (50 reducer scenarios); [Serebii Base #61](https://www.serebii.net/card/base/061.shtml) and [Base Set 2 #89](https://www.serebii.net/card/baseset2/089.shtml); [Bulbapedia print record](https://bulbapedia.bulbagarden.net/wiki/Rattata_%28Base_Set_61%29); [Limitless Base #61](https://limitlesstcg.com/cards/BS/61) and [Base Set 2 #89](https://limitlesstcg.com/cards/BS2/89); official Pokémon TCG errata index search found no Rattata entry | Partial; remaining interactions unreviewed |
 
 The two printings match on the tested attack and combat data: 30 HP, Colorless Bite for 20, Fighting Weakness, Psychic Resistance of -30, and no Retreat cost. Reducer coverage spans Classic, Neo-theme, and online-preview 60/40-card setups; browser/network behavior and other interactions remain unchecked.
+
+
+## Sandshrew (Base #62 and Base Set 2 #91)
+
+| Cards | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Sandshrew (`base1-62` and `base4-91`) | Printed Sand-attack cost/text and Base reprint parity; early “this attack” text parses; prevention coin versus Swift; prevention coin precedes Confusion; Mewtwo Barrier’s Psychic discard is paid before the prevention coin | `test_card_fidelity_sandshrew.js`; [Serebii Base #62](https://www.serebii.net/card/base/062.shtml); [Serebii Base Set 2 #91](https://www.serebii.net/card/baseset2/091.shtml); archived WotC rulings compendium Q20, Q328 and Q39 | Partial; 43 reducer scenarios. Other attack costs/modifiers, effect expiry on retreat/evolution, and browser/network integration remain unchecked |
+
+Regression verification: `node test_card_fidelity_sandshrew.js` passes 43 scenarios across Classic, Neo-theme, online-preview 60-card and 40-card reducers. It checks both catalog records, the early wording variant, Sand-attack tails preventing Misty’s Staryu’s Swift and heads allowing Swift, Mewtwo Barrier’s Psychic discard before the prevention coin, and separate Sand-attack and Confusion flips in the WotC ruling order. This does not certify other attack-cost programs or client/network play.

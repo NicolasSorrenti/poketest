@@ -424,10 +424,10 @@ function themeAttackPlan(g,plan){
  const bench=(owner)=>owner.bench.map((x,i)=>({id:`bench:${i}`,label:publicName(g,x)}));
  const top=(ids,pred)=>ids.flatMap((id,i)=>pred(card(g,id))?[{id:`deck:${i}`,label:card(g,id).name,cardId:id}]:[]);
  const activeOptions=()=>[{id:'slot:-1',label:'Active: '+card(g,f.active.id).name},...f.bench.map((x,i)=>({id:`slot:${i}`,label:'Bench: '+card(g,x.id).name}))];
- // Announce Confusion/Smokescreen checks *before* attack-specific coin flips.
+ // Attack-prevention effects take priority over Confusion and attack-specific effects.
  if(!data.checked){data.checked=true;
+  if(hasActiveEffect(u,'attackPenalty',g)&&next(g,2)===0){log(g,`Attack failed due to ${u.attackPenalty?.sourceName||'Smokescreen'}.`);finishTurn(g);return;}
   if(u.status==='Confused'&&next(g,2)===0){u.damage+=20;log(g,'Attack failed due to Confusion.');if(!knockOuts(g,'checkup'))finishTurn(g);return;}
-  if(hasActiveEffect(u,'attackPenalty',g)&&next(g,2)===0){log(g,'Attack failed due to Smokescreen.');finishTurn(g);return;}
  }
  const allEnergies=()=>[-1,...p.bench.map((_,i)=>i)].flatMap(slot=>energy(p,slot).map(e=>({id:`source:${slot}:${e.id.slice(7)}`,label:`${card(g,located(p,slot).id).name} — ${e.label}`})));
  if(kind==='rushing-flames'&&!data.sources&&prompt('sources',side,allEnergies(),0,allEnergies().length,'Rushing Flames: discard any attached Energy',true))return;
@@ -1571,24 +1571,43 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
    if(owner.bench.length===1&&chosenBench!==undefined&&chosenBench!==0)fail('Invalid sole attack target');
    if(!owner.bench.length&&chosenBench!==undefined)fail('No valid attack target');}
  }
- // Historical Confusion: failed roll prevents ALL attack effects.
+ // An attack lock makes the attack illegal, so reject before committing a discard.
+ if(hasActiveEffect(u,'attackLock',g)&&f.active?.id===u.attackLock.targetId)fail('Cannot attack this Pokémon this turn');
+ // WotC Q20: pay required discard costs before the Sand-attack/Smokescreen prevention flip.
+ // WotC Q328: if the attack survives, check that prevention before Confusion.
+ let attackPenaltyPaymentCommitted=false;
+ if(hasActiveEffect(u,'attackPenalty',g)&&!extra.attackPenaltyChecked){
+  if(!extra.gymCharityApproved&&!extra.gymESPResuming){
+   const genericCost=['energy-discard','recover-discard'].includes(program.kind);
+   const finalCost=['barrier','destiny-bond','scavenge','third-eye'].includes(program.kind);
+   if(genericCost||finalCost){
+    const quantity=program.kind==='recover-discard'?1:program.kind==='energy-discard'?program.quantity:1;
+    const picks=energyPicks;
+    const type=program.onlyType||(['barrier','destiny-bond'].includes(program.kind)?'Psychic':null);
+    if(!Array.isArray(picks)||picks.length!==quantity||new Set(picks).size!==quantity||
+       picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||type&&!attachedEnergyMatchesType(g,u.energies[i],type)))fail('Illegal attack Energy payment');
+    const discarded=[];
+    for(const i of [...picks].sort((a,b)=>b-a)){const id=u.energies.splice(i,1)[0];p.discard.push(id);discarded.unshift(id);}
+    if(FINAL_KINDS.has(program.kind)&&discarded.length)log(g,`${c.name} discarded ${discarded.map(id=>card(g,id).name).join(', ')} to use ${a.name}.`);
+    attackPenaltyPaymentCommitted=true;
+   }
+  }
+  if(next(g,2)===0){log(g,`${c.name}'s attack failed due to ${u.attackPenalty.sourceName||'Smokescreen'}.`);finishTurn(g);return;}
+ }
+ // Historical Confusion: after the prevention coin, a failed roll prevents ALL attack effects.
  if(u.status==='Confused'&&!extra.confusionChecked&&next(g,2)===0){
   const self=calculateDamage(c,c,20)+(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,u,'Frenzy')?30:0);u.damage+=self;
   log(g,`${c.name} hurts itself in Confusion for ${self} damage.`);
   if(!knockOuts(g,'checkup'))finishTurn(g);return;
  }
- if(hasActiveEffect(u,'attackPenalty',g)&&!extra.attackPenaltyChecked&&next(g,2)===0){log(g,`${c.name}'s attack failed due to Smokescreen.`);finishTurn(g);return;}
- if(hasActiveEffect(u,'attackLock',g)&&f.active?.id===u.attackLock.targetId)fail('Cannot attack this Pokémon this turn');
- // When Confusion allows the attack to resolve, pay printed Energy-discard costs.
- // Select exact cards when
- // more are attached than required. Energy payment is a committed part of
- // announcing an attack and is never silently chosen by the engine.
- if(!extra.gymCharityApproved&&!extra.gymESPResuming&&(program.kind==='energy-discard'||program.kind==='recover-discard')){
+ // If no prevention effect failed, retain the ordinary attack-cost path.
+ // Costs already committed before the prevention coin must not be paid twice.
+ if(!attackPenaltyPaymentCommitted&&!extra.gymCharityApproved&&!extra.gymESPResuming&&(program.kind==='energy-discard'||program.kind==='recover-discard')){
   const picks=energyPicks,quantity=program.kind==='recover-discard'?1:program.quantity;
-  if(!Array.isArray(picks)||picks.length!==quantity||new Set(picks).size!==picks.length||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||program.onlyType&&!attachedEnergyMatchesType(g,u.energies[i],program.onlyType)))fail('Illegal attack Energy payment');
+  if(!Array.isArray(picks)||picks.length!==quantity||new Set(picks).size!==quantity||picks.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||program.onlyType&&!attachedEnergyMatchesType(g,u.energies[i],program.onlyType)))fail('Illegal attack Energy payment');
   for(const i of [...picks].sort((a,b)=>b-a))p.discard.push(u.energies.splice(i,1)[0]);
  }
- if(!extra.gymCharityApproved&&!extra.gymESPResuming&&FINAL_KINDS.has(program.kind)&&program.kind!=='flame-pillar'&&Array.isArray(energyPicks)){
+ if(!attackPenaltyPaymentCommitted&&!extra.gymCharityApproved&&!extra.gymESPResuming&&FINAL_KINDS.has(program.kind)&&program.kind!=='flame-pillar'&&Array.isArray(energyPicks)){
   const discarded=[];
   for(const i of [...energyPicks].sort((a,b)=>b-a)){const id=u.energies.splice(i,1)[0];p.discard.push(id);discarded.unshift(id);}
   if(discarded.length)log(g,`${c.name} discarded ${discarded.map(id=>card(g,id).name).join(', ')} to use ${a.name}.`);
@@ -2358,7 +2377,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.millSelf)for(let i=0;i<roll.millSelf&&p.deck.length;i++)p.discard.push(p.deck.pop());
  if(roll.healSelf)u.damage=Math.max(0,u.damage-roll.healSelf);
  if(roll.shield)u.shield={...roll.shield,expires:g.turnSerial+2};
- if(roll.attackPenalty)f.active.attackPenalty={expires:g.turnSerial+2};
+ if(roll.attackPenalty)f.active.attackPenalty={expires:g.turnSerial+2,sourceName:`${c.name}'s ${a.name}`};
  if(roll.noRetreat)f.active.noRetreat={expires:g.turnSerial+2};
  if(roll.attackLock)f.active.attackLock={expires:g.turnSerial+2,targetId:u.id};
  if(roll.shuffleEnemy)f.deck=shuffle(g,f.deck);
