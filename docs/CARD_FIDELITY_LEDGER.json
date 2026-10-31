@@ -646,13 +646,19 @@
      "kind": "attack",
      "index": 0,
      "name": "Aurora Beam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dewgong.js: Base/Base Set 2 text and cost parity; attack payment and damage, Aurora Beam typed/DCE Colorless payment; Ice Beam heads/tails, fixed damage and Paralyzed status timing; damage-only vs all-effects prevention; no choice pending. Base Set Classic."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Ice Beam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dewgong.js: Base/Base Set 2 text and cost parity; attack payment and damage, Aurora Beam typed/DCE Colorless payment; Ice Beam heads/tails, fixed damage and Paralyzed status timing; damage-only vs all-effects prevention; no choice pending. Base Set Classic."
+     ]
     }
    ]
   },
@@ -4805,13 +4811,19 @@
      "kind": "attack",
      "index": 0,
      "name": "Aurora Beam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dewgong.js: Base/Base Set 2 text and cost parity; attack payment and damage, Aurora Beam typed/DCE Colorless payment; Ice Beam heads/tails, fixed damage and Paralyzed status timing; damage-only vs all-effects prevention; no choice pending. Base Set 2 online-preview."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Ice Beam",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_dewgong.js: Base/Base Set 2 text and cost parity; attack payment and damage, Aurora Beam typed/DCE Colorless payment; Ice Beam heads/tails, fixed damage and Paralyzed status timing; damage-only vs all-effects prevention; no choice pending. Base Set 2 online-preview."
+     ]
     }
    ]
   },
