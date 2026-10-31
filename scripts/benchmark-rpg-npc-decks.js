@@ -15,7 +15,7 @@ const MATCHUPS=Object.freeze({
  kaede:'rocket_lab',jun:'fossil_lab',teo:'hotfoot',
  iris:'cold_fusion',elio:'bodyguard',alma:'lockdown',nereo:'cold_fusion',
  barb:'zap',laca:'water_blast',daisy:'water_blast',rina:'overgrowth',
- sol:'hotfoot',jinx:'zap',luna:'water_blast',elena:'overgrowth',sierra:'blackout',jicy:'cold_fusion'
+ sol:'hotfoot',jinx:'zap',luna:'water_blast',elena:'overgrowth',sierra:'blackout',jicy:'cold_fusion',lyla:'lockdown'
 });
 const STAGES=Object.freeze([
  {id:'early',day:15,tier:1,shopPacks:0,miniPacks:2},
