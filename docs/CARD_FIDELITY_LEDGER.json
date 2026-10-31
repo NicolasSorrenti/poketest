@@ -1310,13 +1310,25 @@
      "kind": "attack",
      "index": 0,
      "name": "Sleeping Gas",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "One Psychic cost; heads applies Sleep over Confusion, Sleep persists through tails checkup and ends on heads at the opposing turn's checkup; tails has no damage/status.",
+     "evidence": [
+      "test_card_fidelity_gastly.js: 60 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60/40 and Base Set 2 online-preview 60/40.",
+      "Serebii Base, Bulbapedia Base Set 50, and Limitless Base text/cost listings compared.",
+      "WotC rulings compendium Q78: Poison/burn damage KOs do not activate Destiny Bond. Official errata PDF searched with no Gastly/Destiny Bond entry. Other edge interactions and client/network integration remain unchecked."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Destiny Bond",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Psychic + Colorless attack cost plus one Psychic-providing Energy discard; identical Basic Psychic copies auto-select, attacker chooses among distinct eligible Psychic Energy including Rainbow; effect expires after opponent's next turn; attack-caused KO returns KO, Poison-checkup KO does not.",
+     "evidence": [
+      "test_card_fidelity_gastly.js: 60 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60/40 and Base Set 2 online-preview 60/40.",
+      "Serebii Base, Bulbapedia Base Set 50, and Limitless Base text/cost listings compared.",
+      "WotC rulings compendium Q78: Poison/burn damage KOs do not activate Destiny Bond. Official errata PDF searched with no Gastly/Destiny Bond entry. Other edge interactions and client/network integration remain unchecked."
+     ]
     }
    ]
   },
@@ -5957,13 +5969,25 @@
      "kind": "attack",
      "index": 0,
      "name": "Sleeping Gas",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "One Psychic cost; heads applies Sleep over Confusion, Sleep persists through tails checkup and ends on heads at the opposing turn's checkup; tails has no damage/status.",
+     "evidence": [
+      "test_card_fidelity_gastly.js: 60 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60/40 and Base Set 2 online-preview 60/40.",
+      "Serebii Base Set 2 and Limitless Base Set 2 compared with Base Set text/cost.",
+      "WotC rulings compendium Q78: Poison/burn damage KOs do not activate Destiny Bond. Official errata PDF searched with no Gastly/Destiny Bond entry. Other edge interactions and client/network integration remain unchecked."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Destiny Bond",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Psychic + Colorless attack cost plus one Psychic-providing Energy discard; identical Basic Psychic copies auto-select, attacker chooses among distinct eligible Psychic Energy including Rainbow; effect expires after opponent's next turn; attack-caused KO returns KO, Poison-checkup KO does not.",
+     "evidence": [
+      "test_card_fidelity_gastly.js: 60 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60/40 and Base Set 2 online-preview 60/40.",
+      "Serebii Base Set 2 and Limitless Base Set 2 compared with Base Set text/cost.",
+      "WotC rulings compendium Q78: Poison/burn damage KOs do not activate Destiny Bond. Official errata PDF searched with no Gastly/Destiny Bond entry. Other edge interactions and client/network integration remain unchecked."
+     ]
     }
    ]
   },
