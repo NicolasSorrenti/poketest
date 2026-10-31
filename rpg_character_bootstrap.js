@@ -48,7 +48,7 @@
  "/duel_playmats.js?v=2",
  "/rpg_bond_rewards.js",
  "/rpg_partner_decks.js",
- "/rpg_npc_deck_progression.js",
+ "/rpg_npc_deck_progression.js?v=lyla-legal-deck-20261031-1",
  "/rpg_mandatory_events.js",
  "/rpg_season_events.js",
  "/rpg_audio.js",
@@ -65,7 +65,7 @@
  "/rpg_cloud_save.js?v=cloud-login-visible-20261030",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=mobile-action-ids-20261031"
+ "/rpg.js?v=lyla-legal-deck-20261031-1"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
