@@ -460,12 +460,25 @@
             elio:'/rpg-assets/characters/elio/dialogue/neutral.png',
  kaede:'/rpg-assets/characters/kaede/dialogue/neutral.png',
             shiori:'/rpg-assets/characters/shiori/dialogue/neutral.png',
-            marina:'/rpg-assets/characters/marina/dialogue/neutral.png'
+            marina:'/rpg-assets/characters/marina/dialogue/neutral.png',
+            akari:'/rpg-assets/characters/akari/overworld/standing-clipboard.png',
+            daisy:'/rpg-assets/characters/daisy/overworld/idle.png',
+            hana:'/rpg-assets/characters/hana/overworld/phone-standing.png',
+            jicy:'/rpg-assets/characters/jicy/overworld/standing.webp',
+            jinx:'/rpg-assets/characters/jinx/overworld/idle.png',
+            luna:'/rpg-assets/characters/luna/overworld/standing-front.png',
+            reina:'/rpg-assets/characters/reina/overworld/standing.png',
+            rina:'/rpg-assets/characters/rina/overworld/alternate-card-pose.png',
+            sierra:'/rpg-assets/characters/sierra/overworld/standing-wink.png',
+            sol:'/rpg-assets/characters/sol/standing-front.png',
+            yuna:'/rpg-assets/characters/yuna/overworld/gamer-idle.png'
           };
           const source=image.currentSrc||image.src||'';
           const isApprovedMaster=participant.id==='camila'
             ?source.includes('/rpg-assets/characters/camila/overworld/standing-front.png')
-            :!!otherApprovedMasters[participant.id]&&source.includes(otherApprovedMasters[participant.id]);
+            :participant.id==='laca'
+              ?(source.includes('/rpg-assets/characters/laca/overworld/casual/reaching-out.png')||source.includes('/rpg-assets/characters/laca/overworld/lifeguard/front-leaning.png'))
+              :!!otherApprovedMasters[participant.id]&&source.includes(otherApprovedMasters[participant.id]);
           person.classList.toggle('neo-ow-dialogue-front-master',isApprovedMaster);
         });
         // A missing portrait must never display a different character's face.
