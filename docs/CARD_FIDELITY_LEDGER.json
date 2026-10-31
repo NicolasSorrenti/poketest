@@ -919,13 +919,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Tackle",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magikarp.js",
+      "Text compared with Bulbapedia, Serebii Base, Serebii Base Set 2 and Limitless; official errata index searched, no Magikarp entry."
+     ],
+     "scope": "Tackle: Colorless cost accepted by any single Energy and 10 damage. Flail: printed counter text and compiler recognition, Water-only cost, damage at zero/one/two counters, rejection of Double Colorless in place of Water, Water Weakness ordering, Poison Checkup interaction, and incoming Lightning Weakness. 66 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Flail",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magikarp.js",
+      "Text compared with Bulbapedia, Serebii Base, Serebii Base Set 2 and Limitless; official errata index searched, no Magikarp entry."
+     ],
+     "scope": "Tackle: Colorless cost accepted by any single Energy and 10 damage. Flail: printed counter text and compiler recognition, Water-only cost, damage at zero/one/two counters, rejection of Double Colorless in place of Water, Water Weakness ordering, Poison Checkup interaction, and incoming Lightning Weakness. 66 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration pending."
     }
    ]
   },
@@ -5249,13 +5259,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Tackle",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magikarp.js",
+      "Text compared with Bulbapedia, Serebii Base, Serebii Base Set 2 and Limitless; official errata index searched, no Magikarp entry."
+     ],
+     "scope": "Tackle: Colorless cost accepted by any single Energy and 10 damage. Flail: printed counter text and compiler recognition, Water-only cost, damage at zero/one/two counters, rejection of Double Colorless in place of Water, Water Weakness ordering, Poison Checkup interaction, and incoming Lightning Weakness. 66 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration pending."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Flail",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_magikarp.js",
+      "Text compared with Bulbapedia, Serebii Base, Serebii Base Set 2 and Limitless; official errata index searched, no Magikarp entry."
+     ],
+     "scope": "Tackle: Colorless cost accepted by any single Energy and 10 damage. Flail: printed counter text and compiler recognition, Water-only cost, damage at zero/one/two counters, rejection of Double Colorless in place of Water, Water Weakness ordering, Poison Checkup interaction, and incoming Lightning Weakness. 66 reducer scenarios: Base Set Classic, Neo-theme, online-preview 60-card and 40-card; Base Set 2 online-preview 60-card and 40-card. Browser/network integration pending."
     }
    ]
   },
