@@ -1058,7 +1058,16 @@ function score(a,o,cfg,used){
   if(name==='Switch')return p.active?.status?210*style.survival:55;
   if(/Search|Computer|Ball|Trader|Elm/i.test(name))return 130*style.setup;
   if(name==='PlusPower'){
-   const damage=strongestAffordableAttack(p.active,q.active,p.bench.length),needed=hpRemaining(q.active)-damage;
+   // Energy payment alone does not make an attack usable. Apex should not
+   // spend PlusPower for an imaginary KO while the Active is Asleep,
+   // Paralyzed, Amnesia-locked or barred from repeating a Gym attack.
+   // Use only the publicly legal attack set; preserve lower-level scoring.
+   const damage=cfg.level===8?
+    (p.active?.effectiveAttacks||card(p.active?.id)?.attacks||[]).reduce((best,attack,index)=>
+     eligibleAttack(o,p.active,attack,index)?
+      Math.max(best,estimatedDamage(attack,p.active,q.active,p.bench.length)):best,0):
+    strongestAffordableAttack(p.active,q.active,p.bench.length);
+   const needed=hpRemaining(q.active)-damage;
    // PlusPower only boosts an attack that can actually be paid for.
    // Preserve the card when the Active cannot attack this turn.
    return (damage>0&&needed>0&&needed<=10?300:

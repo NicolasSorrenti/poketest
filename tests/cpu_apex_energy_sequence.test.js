@@ -999,3 +999,34 @@ test('Apex does not carry spent Miracle Energy into next-turn attacks',()=>{
   AI.energyHorizonBonus(attachActive,withoutDce,cfg));
 });
 
+
+test('Apex only spends PlusPower for an attack it can legally declare',()=>{
+ const action={type:'play_trainer',payload:{handIndex:0}};
+ const ready=board();
+ Object.assign(ready,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+ ready.self.hand=['base1-84']; // PlusPower
+ ready.opponent.active={id:MACHOP,energies:[],damage:20,status:null};
+ // Hitmonchan's funded Jab deals 20; Machop has 30 HP remaining,
+ // so PlusPower creates a real 30-damage knockout only while Jab is legal.
+ const readyScore=AI.score(action,ready,cfg,{});
+ const asleep=structuredClone(ready);
+ asleep.self.active.status='Asleep';
+ const paralyzed=structuredClone(ready);
+ paralyzed.self.active.status='Paralyzed';
+ const amnesia=structuredClone(ready);
+ amnesia.self.active.amnesia={index:0,expires:12};
+ const gymOnce=structuredClone(ready);
+ gymOnce.self.active.gymAttackOnce=[0];
+ for(const [label,blocked] of [['Asleep',asleep],['Paralyzed',paralyzed],
+  ['Amnesia',amnesia],['Gym once-used',gymOnce]]){
+  assert.ok(readyScore>AI.score(action,blocked,cfg,{})+200,
+   label+' must not make PlusPower look like an immediate knockout');
+ }
+ const confused=structuredClone(ready);
+ confused.self.active.status='Confused';
+ assert.equal(AI.score(action,confused,cfg,{}),readyScore,
+  'Confusion allows attack declaration; it is not an absolute attack lock');
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(action,ready,lower,{}),AI.score(action,asleep,lower,{}),
+  'Level 7 retains its existing PlusPower evaluation');
+});
