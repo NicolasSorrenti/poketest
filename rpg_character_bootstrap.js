@@ -63,7 +63,7 @@
  "/rpg_status.js?v=4",
  "/rpg_cloud_save.js?v=cloud-login-visible-20261030",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=battle-ready-handshake-20261030"
+ "/rpg.js?v=dialogue-special-outfit-priority-20261031"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
