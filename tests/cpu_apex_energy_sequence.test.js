@@ -936,3 +936,32 @@ test('Apex delays an unready rescue evolution when the KO requires a Confusion f
   AI.score(evolveActive,confused,cfg,{})+200,
   'a guaranteed rescue should beat a speculative Confusion-flip rescue');
 });
+
+test('Apex values Full Heal Energy curing an Active into an immediate legal attack',()=>{
+ const fullHeal='base5-81',potion='base5-82';
+ const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const make=(energy,status,energies=[FIGHT])=>{
+  const o=board();
+  Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+  o.self.active.status=status;
+  o.self.active.energies=energies;
+  o.self.hand=[energy];
+  o.opponent.active={id:MACHOP,energies:[],damage:0,status:null};
+  return o;
+ };
+ for(const status of ['Asleep','Paralyzed','Confused']){
+  assert.ok(AI.score(attachActive,make(fullHeal,status),cfg,{})>
+   AI.score(attachActive,make(potion,status),cfg,{}),
+   'Full Heal Energy must reward curing '+status+' when Jab is already funded');
+ }
+ assert.equal(AI.score(attachActive,make(fullHeal,null),cfg,{}),
+  AI.score(attachActive,make(potion,null),cfg,{}),
+  'no status-cure tempo bonus should be awarded to a healthy Active');
+ assert.equal(AI.score(attachActive,make(fullHeal,'Asleep',[]),cfg,{}),
+  AI.score(attachActive,make(potion,'Asleep',[]),cfg,{}),
+  'do not claim an immediate attack if Full Heal Energy cannot fund it');
+ const bench={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ assert.equal(AI.score(bench,make(fullHeal,'Asleep'),cfg,{}),
+  AI.score(bench,make(potion,'Asleep'),cfg,{}),
+  'attaching Full Heal Energy to the Bench does not cure the Active');
+});
