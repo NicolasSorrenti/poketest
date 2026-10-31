@@ -37,6 +37,36 @@ test('Apex does not treat a Confused last-opponent KO as certain',()=>{
  o.self.active.status='Confused';
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach]);
 });
+test('Apex cures Confusion with Full Heal Energy before a funded damaging attack',()=>{
+ const o=board();
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ // Three Fighting Energy already fund Hitmonchan's attacks; an extra
+ // Colorless Energy has no offensive value. The status cure is the benefit.
+ o.self.active.energies=[FIGHT,FIGHT,FIGHT];
+ o.self.active.status='Confused';
+ o.self.hand=['base5-81']; // Full Heal Energy
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'cure the mandatory 50% Confusion attack failure first');
+ // The opponent's next-turn KO does not erase the value of curing now.
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ o.self.active.damage=50; // opposing Jab can KO on the following turn
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'a future KO must not suppress the immediate Confusion cure');
+ o.self.active.damage=0;
+ o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+ o.self.active.status=null;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'do not spend a redundant Energy on a healthy Active');
+ o.self.active.status='Confused';
+ o.self.hand=['base5-82']; // Potion Energy does not cure Confusion
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'ordinary surplus Energy must not suppress an attack');
+ o.self.hand=['base5-81'];
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),
+  [attack,activeAttach]),[attack,activeAttach],
+  'the sequencing change is restricted to Apex');
+});
+
 test('Apex does not force attachment when Energy was already used',()=>{
  const o=board();o.self.energyUsed=true;
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
@@ -1092,3 +1122,35 @@ test('Apex recognizes Potion Energy preventing a public next-turn knockout',()=>
   'existing Level 7 attachment scoring remains unchanged');
 });
 
+function evolutionForecastBoard(status=null){
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ o.self.active={id:MACHOP,energies:[FIGHT,FIGHT,FIGHT],damage:0,status,playedTurn:2};
+ o.self.bench=[];
+ o.self.hand=['base1-34']; // Machoke: Karate Chop is affordable after evolving.
+ o.self.energyUsed=true;
+ o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+ return o;
+}
+test('optional Apex two-step forecast recognizes evolution curing disabling conditions',()=>{
+ const planning={...cfg,planning:true};
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ for(const status of ['Asleep','Paralyzed']){
+  const o=evolutionForecastBoard(status);
+  assert.ok(AI.planningBonus(evolve,o,planning)>0,
+   'evolution should cure '+status+' and unlock Machoke\'s attack');
+ }
+});
+test('optional Apex evolution forecast does not retain Basic effectiveAttacks',()=>{
+ const planning={...cfg,planning:true};
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ // Start with Sleep so evolution must unlock the new stage's attacks.
+ // A healthy Machop can already attack, making its improvement score zero.
+ const normal=evolutionForecastBoard('Asleep');
+ const inherited=structuredClone(normal);
+ inherited.self.active.effectiveAttacks=require('../headless_duel').CATALOG.get(MACHOP).attacks;
+ const baseline=AI.planningBonus(evolve,normal,planning);
+ assert.ok(baseline>0,'Machoke should upgrade Machop\'s attack');
+ assert.equal(AI.planningBonus(evolve,inherited,planning),baseline,
+  'evolved Machoke must use its own attack list');
+});
