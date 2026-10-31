@@ -20,11 +20,11 @@ check('all 40 distinct Trainer names registered',()=>{
  assert.ok(SUPPORTED.size>=names.size,'Future retail Trainers may extend this supported set');
 });
 check('Trainer selection and card consumption',()=>{const g=ready();g.players[0].hand=['base1-71','base1-91','base1-94'];
- ok(g,0,'play_trainer',{handIndex:0});assert.ok(g.pendingDecision);assert.deepEqual(g.players[0].hand,['base1-71','base1-91','base1-94']);
- answer(g,['n:1','n:2']);assert.ok(g.pendingDecision);assert.equal(g.players[0].discard.includes('base1-71'),false);
+ ok(g,0,'play_trainer',{handIndex:0});assert.equal(g.pendingDecision?.kind,'find','The forced two-card cost pair should auto-resolve');assert.deepEqual(g.players[0].hand,['base1-71','base1-91','base1-94']);
+ assert.equal(g.players[0].discard.includes('base1-71'),false,'Trainer and staged costs remain until its effect resolves');
  answer(g,['deck:2']);assert.equal(g.pendingDecision,null);assert.equal(g.players[0].discard.includes('base1-71'),true);assert.equal(g.players[0].hand.includes('base1-91'),true);
 });
-check('wrong answer to trainer choice is atomic',()=>{const g=ready();g.players[0].hand=['base1-71','base1-91','base1-94'];ok(g,0,'play_trainer',{handIndex:0});const d=g.pendingDecision;
+check('wrong answer to trainer choice is atomic',()=>{const g=ready();g.players[0].hand=['base1-71','base1-91','base1-94','base1-98'];ok(g,0,'play_trainer',{handIndex:0});const d=g.pendingDecision;
  bad(g,1,'choose',{decisionId:d.id,selected:['n:1','n:2']},/another player/);
  bad(g,0,'choose',{decisionId:d.id,selected:['n:1','n:1']},/Duplicate/);
 });
