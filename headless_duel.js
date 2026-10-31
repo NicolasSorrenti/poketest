@@ -77,6 +77,14 @@ function allPokemon(p){return [p.active,...p.bench].filter(Boolean);}
 function hasActiveEffect(u,key,g){return Boolean(u&&u[key]&&u[key].expires>g.turnSerial);}
 function clearBenchEffects(u){
  for(const key of ['shield','attackPenalty','noRetreat','attackLock','reactiveShield','swordsDance','amnesia','mirrorShell','destinyBond','lastAttackImpact','screech','noSwitch','gymGiantGrowth','gymInkSpurt','gymShadowImages','gymFireWall','gymCrosscounter','neo48Growl','neo48Slime','neo48PollenShieldUntil','neo48Endure','neo48MeanLook','neo48EndureUsed','neo48SlimeUntil','neo48CrunchUntil','neo49LockOn','neo49LockTarget','neo49Pursuit','neo49CounterUntil','neo49PoisonUntil','neo50LastAttack','neo50Observed','neo91IonGuard','neo91IonAttack','neo91CharmGuard','neo91CharmAttack'])delete u[key];
+ // Conversion 1 changes the Defending Pokémon's Weakness, and Conversion 2
+ // changes Porygon's Resistance. The WotC Conversion ruling scopes each effect
+ // to the Pokémon named by its text: benching the affected unit ends the
+ // override, while benching the Conversion 1 attacker does not clear the
+ // defending unit's Weakness change. These overrides live on their affected
+ // unit, so clear them when that unit leaves the Active Spot.
+ delete u.weaknessOverride;
+ delete u.resistanceOverride;
 }
 function familyCandidates(g,side,restriction){
  const p=g.players[side];return p.deck.flatMap((id,i)=>{
@@ -1187,8 +1195,11 @@ function performAction(g,side,cmd){
    planFinalAttack(g,side,index,program,plan);return;
   }
   if(program.kind==='fling'&&!f.bench.length)fail('Fling requires an opponent Benched Pokémon');
-  if(program.kind==='conversion1'&&!card(g,f.active.id).weaknesses?.length&&!f.active.weaknessOverride)fail('Target has no Weakness');
   if(['conversion1','conversion2'].includes(program.kind)){
+   // Conversion 1 may have no effect when the Defending Pokémon has no
+   // Weakness; the card does not prohibit using the attack in that case.
+   // Resolve it without presenting a choice that cannot change the game.
+   if(program.kind==='conversion1'&&!card(g,f.active.id).weaknesses?.length&&!f.active.weaknessOverride){resolveAttack(g,side,index,undefined,undefined,{});return;}
    const colors=['Grass','Fire','Water','Lightning','Psychic','Fighting'];
    g.nextDecisionId++;g.pendingDecision=makeDecision({id:`conversion:${g.nextDecisionId}`,actor:side,kind:'energy-type',label:'Choose a Pokémon type',options:colors.map(x=>({id:`type:${x}`,label:x})),min:1,max:1,optional:program.kind==='conversion1'});
    g.pendingAction={kind:'attack_color',side,attackIndex:index};return;
@@ -1332,7 +1343,6 @@ function performAction(g,side,cmd){
     g.pendingAction={kind:program.kind==='rapid-evolution'?'attack_search_evolution':'attack_search_energy',side,attackIndex:index};return;}
   }
   if(program.kind==='fling'&&!f.bench.length)fail('Fling requires opposing Bench');
- if(program.kind==='conversion1'&&!card(g,f.active.id).weaknesses?.length&&!f.active.weaknessOverride)fail('Target has no Weakness');
  if(['conversion1','conversion2'].includes(program.kind)&&!['Grass','Fire','Water','Lightning','Psychic','Fighting'].includes(extra.color))fail('Invalid conversion type');
  if(program.kind==='wildfire'&&(!Array.isArray(extra.fireIndices)&&(u.energies.some(id=>card(g,id).name==='Fire Energy'))))fail('Fire Energy choice is required');
  if(program.kind==='wildfire'&&extra.fireIndices&&(!Array.isArray(extra.fireIndices)||new Set(extra.fireIndices).size!==extra.fireIndices.length||extra.fireIndices.some(i=>!Number.isInteger(i)||i<0||i>=u.energies.length||card(g,u.energies[i]).name!=='Fire Energy')))fail('Invalid Wildfire payment');
@@ -2228,7 +2238,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  if(roll.spreadExcludeType){for(const owner of g.players)for(const target of allPokemon(owner))if(!card(g,target.id).types?.includes(roll.spreadExcludeType)){if(target===owner.active)target.damage+=roll.spreadAmount||0;else hitBench(owner,target,roll.spreadAmount||0);}}
  if(roll.poisonDamage&&(!shield?.allEffects||roll.ignoreDefendingEffects))f.active.poisonDamage=roll.poisonDamage;
  if(roll.markOnce)u.leekSlapUsed=true;
- if(roll.convertWeakness)f.active.weaknessOverride=extra.color;
+ if(roll.convertWeakness&&extra.color)f.active.weaknessOverride=extra.color;
  if(roll.convertResistance)u.resistanceOverride=extra.color;
  if(roll.millFromFire){
   const picks=extra.fireIndices||[];

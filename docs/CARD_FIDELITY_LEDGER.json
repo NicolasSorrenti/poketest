@@ -1033,13 +1033,23 @@
      "kind": "attack",
      "index": 0,
      "name": "Conversion 1",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_porygon.js",
+      "Base Set card text compared with Bulbapedia and Serebii/Pokéos; WotC Q&A transcript, Conversion rulings 45, 93 and 95 (Feb–Nov 2000 chat archive); official Pokémon errata PDF searched, no Porygon match."
+     ],
+     "scope": "Conversion 1: exact printed text and one-Colorless cost; attacker-owned non-Colorless choice when the Defending Pokémon has a Weakness; no damage; optional change may be declined; conditional no-Weakness case resolves without a prompt; Weakness applies to a later attack; WotC Q&A scope verified by leaving Porygon Active-to-Bench while preserving the Defending Pokémon's override; override ends when that Defending Pokémon is benched. Conversion 2: exact printed text and two-Colorless cost; attacker-owned non-Colorless choice; printed Weakness is applied before converted -30 Resistance; override ends when Porygon retreats and remains cleared if it returns Active. Both attacks reject unpaid costs atomically. 24 reducer scenarios across Base Set Classic and online-preview 60-card and 40-card games. Browser/network integration, additional external effects and remaining Pokémon interactions are not certified."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Conversion 2",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_porygon.js",
+      "Base Set card text compared with Bulbapedia and Serebii/Pokéos; WotC Q&A transcript, Conversion rulings 45, 93 and 95 (Feb–Nov 2000 chat archive); official Pokémon errata PDF searched, no Porygon match."
+     ],
+     "scope": "Conversion 1: exact printed text and one-Colorless cost; attacker-owned non-Colorless choice when the Defending Pokémon has a Weakness; no damage; optional change may be declined; conditional no-Weakness case resolves without a prompt; Weakness applies to a later attack; WotC Q&A scope verified by leaving Porygon Active-to-Bench while preserving the Defending Pokémon's override; override ends when that Defending Pokémon is benched. Conversion 2: exact printed text and two-Colorless cost; attacker-owned non-Colorless choice; printed Weakness is applied before converted -30 Resistance; override ends when Porygon retreats and remains cleared if it returns Active. Both attacks reject unpaid costs atomically. 24 reducer scenarios across Base Set Classic and online-preview 60-card and 40-card games. Browser/network integration, additional external effects and remaining Pokémon interactions are not certified."
     }
    ]
   },
