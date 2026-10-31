@@ -310,8 +310,11 @@ function planFinalAttack(g,side,attackIndex,program,plan={side,attackIndex,data:
   data.energyPicks=[Number(psychicEnergy[0].id.slice(7))];
  }
  if(['third-eye','scavenge'].includes(kind)&&!data.energyPicks){
-  if(!u.energies.length)fail('An attached Energy is required for this attack');
-  finalChoice(g,plan,'pay-energy',side,energyOptions(),{label:`${a.name}: choose an Energy to discard`});return;
+  const options=energyOptions();
+  if(!options.length)fail('An attached Energy is required for this attack');
+  const cardNames=new Set(options.map(option=>card(g,u.energies[Number(option.id.slice(7))]).name));
+  if(cardNames.size===1)data.energyPicks=[Number(options[0].id.slice(7))];
+  else{finalChoice(g,plan,'pay-energy',side,options,{label:a.name+': choose an Energy to discard'});return;}
  }
  if(kind==='scavenge'&&!Object.hasOwn(data,'discardTrainer')){
   const options=p.discard.flatMap((id,i)=>card(g,id).supertype==='Trainer'?[{id:`discard:${i}`,label:card(g,id).name}]:[]);
