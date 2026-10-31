@@ -1261,7 +1261,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Fury Attack",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Fury Attack: one Colorless cost; exactly two coin flips; 10 damage per heads (0, 10 or 20); all four ordered outcomes tested; one Double Colorless card pays the cost but adds no damage; no interactive coin/result choice. Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and online-preview 40-card reducer configurations.",
+     "evidence": [
+      "`test_card_fidelity_doduo.js`: 48 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Tests printed text/cost parity, ordered outcomes TT/TH/HT/HH for 0/1/1/2 heads and 0/10/10/20 damage, Double Colorless payment, and no-Energy rejection.",
+      "Base Set and Base Set 2 text/cost compared with [Limitless Base](https://limitlesstcg.com/cards/BS/48), [Limitless Base Set 2](https://limitlesstcg.com/cards/BS2/72), [Serebii Base](https://www.serebii.net/card/base/048.shtml), and [Serebii Base Set 2](https://www.serebii.net/card/baseset2/072.shtml). The official Pokémon TCG errata PDF was searched with no Doduo entry. Remaining interactions and client/network integration are pending."
+     ]
     }
    ]
   },
@@ -5872,7 +5877,12 @@
      "kind": "attack",
      "index": 0,
      "name": "Fury Attack",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Fury Attack: one Colorless cost; exactly two coin flips; 10 damage per heads (0, 10 or 20); all four ordered outcomes tested; one Double Colorless card pays the cost but adds no damage; no interactive coin/result choice. Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card and online-preview 40-card reducer configurations.",
+     "evidence": [
+      "`test_card_fidelity_doduo.js`: 48 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Tests printed text/cost parity, ordered outcomes TT/TH/HT/HH for 0/1/1/2 heads and 0/10/10/20 damage, Double Colorless payment, and no-Energy rejection.",
+      "Base Set and Base Set 2 text/cost compared with [Limitless Base](https://limitlesstcg.com/cards/BS/48), [Limitless Base Set 2](https://limitlesstcg.com/cards/BS2/72), [Serebii Base](https://www.serebii.net/card/base/048.shtml), and [Serebii Base Set 2](https://www.serebii.net/card/baseset2/072.shtml). The official Pokémon TCG errata PDF was searched with no Doduo entry. Remaining interactions and client/network integration are pending."
+     ]
     }
    ]
   },
