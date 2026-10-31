@@ -745,7 +745,12 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
  if(remaining===0)return immediate;
  // Paralysis expires at the end of the affected turn; unlike Sleep, recovery
  // is guaranteed by our next turn. Do not treat it as a permanent attack lock.
- const nextTurnUnit=unit.status==='Paralyzed'?{...unit,status:null}:unit;
+ // Miracle Energy is discarded at the end of its owner's turn by the
+ // authoritative reducer. Keep its same-turn attack value, but never carry
+ // it into a future attack forecast or stack another Energy on top of it.
+ const nextTurnUnit={...unit,
+  ...(unit.status==='Paralyzed'?{status:null}:{}),
+  energies:(unit.energies||[]).filter(id=>card(id)?.name!=='Miracle Energy')};
  const recovered=unit.status==='Paralyzed'?
   projectedAttackValue(nextTurnUnit,defender,turnSerial+2,benchCount)*.48:0;
  const seen=new Set();
@@ -757,7 +762,7 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit,
    round:futureRound,cardName:card(unit.id)?.name||''}))continue;
   seen.add(id);
-  const after={...nextTurnUnit,energies:[...(unit.energies||[]),id]};
+  const after={...nextTurnUnit,energies:[...nextTurnUnit.energies,id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
   // Next attachment is on our next turn, after the opponent's turn.
