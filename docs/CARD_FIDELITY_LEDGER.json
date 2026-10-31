@@ -525,13 +525,27 @@
      "kind": "attack",
      "index": 0,
      "name": "Thundershock",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_electabuzz.js",
+      "https://limitlesstcg.com/cards/BS/20",
+      "https://www.serebii.net/card/base/020.shtml",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf (searched; no Electabuzz entry)"
+     ],
+     "scope": "10 damage; heads/tails Paralysis; Lightning Weakness; damage-only shield still permits Paralysis; target cannot attack while Paralyzed; Paralyzed clears after its turn. Base Set test matrix: Classic/Neo/online-preview 60-card and online-preview 40-card; Base Set 2: online-preview 60-card and 40-card."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Thunderpunch",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_electabuzz.js",
+      "https://limitlesstcg.com/cards/BS/20",
+      "https://www.serebii.net/card/base/020.shtml",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf (searched; no Electabuzz entry)"
+     ],
+     "scope": "heads/tails damage and self-recoil; Lightning Weakness; shield blocks target damage but not recoil; self-KO awards a Prize; simultaneous active Knock Outs queue both Prize claims; Lightning plus Colorless cost and missing-cost rejection. Base Set test matrix: Classic/Neo/online-preview 60-card and online-preview 40-card; Base Set 2: online-preview 60-card and 40-card."
     }
    ]
   },
@@ -4531,13 +4545,27 @@
      "kind": "attack",
      "index": 0,
      "name": "Thundershock",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_electabuzz.js",
+      "https://limitlesstcg.com/cards/BS2/24",
+      "https://www.serebii.net/card/baseset2/024.shtml",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf (searched; no Electabuzz entry)"
+     ],
+     "scope": "22 Base Set 2 scenario runs (same 11 case types as Base Set), after comparing its attack text and costs. Base Set test matrix: Classic/Neo/online-preview 60-card and online-preview 40-card; Base Set 2: online-preview 60-card and 40-card."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Thunderpunch",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_electabuzz.js",
+      "https://limitlesstcg.com/cards/BS2/24",
+      "https://www.serebii.net/card/baseset2/024.shtml",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf (searched; no Electabuzz entry)"
+     ],
+     "scope": "22 Base Set 2 scenario runs (same 11 case types as Base Set), after comparing its attack text and costs. Base Set test matrix: Classic/Neo/online-preview 60-card and online-preview 40-card; Base Set 2: online-preview 60-card and 40-card."
     }
    ]
   },
@@ -7686,13 +7714,27 @@
      "kind": "attack",
      "index": 0,
      "name": "Light Screen",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_electabuzz_promo.js",
+      "https://limitlesstcg.com/cards/WP/2",
+      "https://www.serebii.net/card/wizardspromos/002.shtml",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf (searched; no Electabuzz entry)"
+     ],
+     "scope": "Next-opponent-turn half damage after Weakness/Resistance (10 reduced to 0), expiry after that turn, and a Thundershock Paralysis effect still resolves; tested active-target damage only. Promo attacks tested in unrestricted reducer setup only; the included promos are outside the curated online/Cube card pool."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Quick Attack",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_electabuzz_promo.js",
+      "https://limitlesstcg.com/cards/WP/2",
+      "https://www.serebii.net/card/wizardspromos/002.shtml",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf (searched; no Electabuzz entry)"
+     ],
+     "scope": "Heads/tails gives 30/10 damage; Double Colorless pays the two-Colorless cost; Lightning alone is rejected. Promo attacks tested in unrestricted reducer setup only; the included promos are outside the curated online/Cube card pool."
     }
    ]
   },
@@ -8412,13 +8454,31 @@
      "kind": "attack",
      "index": 0,
      "name": "Lightning Rod",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_electabuzz_promo.js",
+      "https://limitlesstcg.com/cards/WP/46",
+      "https://www.serebii.net/card/wizardspromos/046.shtml",
+      "https://forum.tcgone.net/t/changelog-archive-2012-2018/27 (historical target/Benched Weakness-Resistance implementation fix; not official ruling)",
+      "https://forum.tcgone.net/t/br-porygon-unnumbered-24-electabuzz-wbsp-46-lightning-rod-was-not-removed-wi/17221 (marker removal on evolution; implementation evidence, not official ruling)",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf (searched; no Electabuzz entry)"
+     ],
+     "scope": "Attacker-owned target prompt across Active/Bench; sole target auto-resolves; selected Pokémon receives one marker; marker persists when that Pokémon retreats to Bench and clears on ordinary and tested evolution. Promo attacks tested in unrestricted reducer setup only; the included promos are outside the curated online/Cube card pool."
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Lightning Bolt",
-     "status": "unreviewed"
+     "status": "partial",
+     "evidence": [
+      "test_card_fidelity_electabuzz_promo.js",
+      "https://limitlesstcg.com/cards/WP/46",
+      "https://www.serebii.net/card/wizardspromos/046.shtml",
+      "https://forum.tcgone.net/t/changelog-archive-2012-2018/27 (historical target/Benched Weakness-Resistance implementation fix; not official ruling)",
+      "https://forum.tcgone.net/t/br-porygon-unnumbered-24-electabuzz-wbsp-46-lightning-rod-was-not-removed-wi/17221 (marker removal on evolution; implementation evidence, not official ruling)",
+      "https://www.pokemon.com/static-assets/content-assets/cms2/pdf/trading-card-game/tcg_errata.pdf (searched; no Electabuzz entry)"
+     ],
+     "scope": "Printed 10 to Defending Active plus 20 to one marked Pokémon; no marker means no extra-target prompt; sole marked target auto-resolves; multiple marked targets prompt the attacker and filter to marked Pokémon; marked Active/Bench damage and Weakness (including Bench); Lightning cost rejection; explicit Resistance suppression and marked-Bench Knock Out/Prize flow. Resistance, defensive protection interactions, KO/Prize, and network/UI remain untested. Promo attacks tested in unrestricted reducer setup only; the included promos are outside the curated online/Cube card pool."
     }
    ]
   },
