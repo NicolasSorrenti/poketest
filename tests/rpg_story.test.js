@@ -2,6 +2,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const STORY=require('../rpg_story');
+const CHARPACKS=require('../rpg_character_packs.generated');
 const heroes=['hana','reina','shiori','yuna','akari','camila','marina','kaede'];
 const sample=()=>STORY.normalize({day:1,slot:0,location:'home',storyDone:{},storyMissed:{},relationships:{},partner:null});
 test('authored event graph is valid and every adult route has five scenes',()=>{
@@ -104,4 +105,16 @@ test('a second guest commitment is blocked without preventing friendship',()=>{
  assert.throws(()=>STORY.resolve(st,second.id,1),/Already committed/);
  assert.equal(STORY.resolve(st,second.id,0).choice.kind,'friend');
  assert.equal(st.partner,'jinx');
+});
+
+test('generated guest routes register once; ambient slice encounters are not calendar events',()=>{
+ const ids=STORY.events.map(e=>e.id);
+ const counts=new Map();
+ for(const id of ids)counts.set(id,(counts.get(id)||0)+1);
+ assert.equal(counts.size,ids.length,'every authored story event ID must be unique');
+ for(const event of CHARPACKS.events){
+  const count=counts.get(event.id)||0;
+  if(event.encounterType==='slice')assert.equal(count,0,'ambient encounter leaked into calendar: '+event.id);
+  else assert.equal(count,1,'generated route or crossover duplicated/missing: '+event.id);
+ }
 });
