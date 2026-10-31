@@ -306,3 +306,12 @@ The test compares the two printings and runs Classic, Neo-theme, and online-prev
 | Harden (base1-56, base4-84) | Two-Fighting cost; inclusive 30-damage shield after Weakness/Resistance; 40 after Grass Weakness passes; other attack effect occurs; one-turn duration | Same test; [WotC Advanced Rulebook v8](https://www.judgeball.com/files/archives/tcg-rulebooks/en/WOTCE1.pdf); [official errata index](https://play.pokemon.com/en-ca/resources/documents/tcg-errata/) contains no Base Onix attack correction | Partial |
 
 The 48 scenarios compare both printings in Classic, Neo-theme, and online-preview 60/40. Harden is checked against damage of exactly 30, damage of 40 after Weakness, and a Koffing attack whose Confusion effect applies while damage is prevented. The next opponent-turn window is tested across two opponent attacks. Poison checkup under Harden, other modifiers, and browser/network behavior remain unchecked.
+
+
+## Pidgey (Base Set #57 and Base Set 2 #86)
+
+| Effect | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Whirlwind (base1-57, base4-86) | Two-Colorless cost, fixed 10 damage; opponent-owned switch choice after damage; automatic switch with one Benched Pokémon; no effect with an empty Bench; Knock Out and promotion handling | \u0060test_card_fidelity_pidgey.js\u0060 (42 reducer scenarios); [Serebii Base #57](https://www.serebii.net/card/base/057.shtml); [Bulbapedia Base and Base Set 2 print record](https://bulbapedia.bulbagarden.net/wiki/Pidgey_%28Base_Set_57%29); [Limitless Base Set 2 #86](https://limitlesstcg.com/cards/BS2/86); [official errata index](https://play.pokemon.com/en-us/resources/documents/tcg-errata/) has no Pidgey/Pidgeotto entry | Partial; other interactions remain unreviewed |
+
+Regression verification: \u0060node test_card_fidelity_pidgey.js\u0060 passes 42 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60-card/40-card and Base Set 2 online-preview 60-card/40-card. The test checks exact catalogue parity, a single Double Colorless paying the attack without changing fixed damage, underpayment rejection, damage on the original Active before the defending player selects a replacement, rejection of the attacker's attempt to choose, Confusion clearing when switched out, one-Bench automatic resolution, empty-Bench no-op, and the Knock Out → Prize → promotion path without an extra Whirlwind switch. The official errata index has no Pidgey or Pidgeotto entry; no card-specific historical ruling was located. Other modifiers and client/network behavior remain unchecked.
