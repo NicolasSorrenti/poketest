@@ -1279,13 +1279,25 @@
      "kind": "attack",
      "index": 0,
      "name": "Pound",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Pound generic cost, fixed 10 damage, Double Colorless payment without damage bonus, and atomic rejection without Energy.",
+     "evidence": [
+      "test_card_fidelity_drowzee.js: 48 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60/40 and Base Set 2 online-preview 60/40.",
+      "Printed text/costs compared with Serebii and Limitless listings; Base Set 2 wording compared with Base Set and Bulbapedia card entry.",
+      "Official TCG errata PDF searched; no Drowzee-specific entry. General WotC-era Confused rule checked against the 1999–2002 rules guide. Image-level comparison, further rulings/interactions and client/network integration remain unchecked."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Confuse Ray",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Confuse Ray two-Psychic cost, fixed 10 damage on heads/tails, heads-only Confusion through Psychic Resistance to 0 damage and Sleep replacement, tails preserves Paralysis with Psychic Weakness damage; follow-up Confusion coin outcomes.",
+     "evidence": [
+      "test_card_fidelity_drowzee.js: 48 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60/40 and Base Set 2 online-preview 60/40.",
+      "Printed text/costs compared with Serebii and Limitless listings; Base Set 2 wording compared with Base Set and Bulbapedia card entry.",
+      "Official TCG errata PDF searched; no Drowzee-specific entry. General WotC-era Confused rule checked against the 1999–2002 rules guide. Image-level comparison, further rulings/interactions and client/network integration remain unchecked."
+     ]
     }
    ]
   },
@@ -5895,13 +5907,25 @@
      "kind": "attack",
      "index": 0,
      "name": "Pound",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Pound generic cost, fixed 10 damage, Double Colorless payment without damage bonus, and atomic rejection without Energy.",
+     "evidence": [
+      "test_card_fidelity_drowzee.js: 48 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60/40 and Base Set 2 online-preview 60/40.",
+      "Printed text/costs compared with Serebii and Limitless listings; Base Set 2 wording compared with Base Set and Bulbapedia card entry.",
+      "Official TCG errata PDF searched; no Drowzee-specific entry. General WotC-era Confused rule checked against the 1999–2002 rules guide. Image-level comparison, further rulings/interactions and client/network integration remain unchecked."
+     ]
     },
     {
      "kind": "attack",
      "index": 1,
      "name": "Confuse Ray",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "Confuse Ray two-Psychic cost, fixed 10 damage on heads/tails, heads-only Confusion through Psychic Resistance to 0 damage and Sleep replacement, tails preserves Paralysis with Psychic Weakness damage; follow-up Confusion coin outcomes.",
+     "evidence": [
+      "test_card_fidelity_drowzee.js: 48 reducer scenarios across Base Set Classic, Neo-theme, online-preview 60/40 and Base Set 2 online-preview 60/40.",
+      "Printed text/costs compared with Serebii and Limitless listings; Base Set 2 wording compared with Base Set and Bulbapedia card entry.",
+      "Official TCG errata PDF searched; no Drowzee-specific entry. General WotC-era Confused rule checked against the 1999–2002 rules guide. Image-level comparison, further rulings/interactions and client/network integration remain unchecked."
+     ]
     }
    ]
   },
