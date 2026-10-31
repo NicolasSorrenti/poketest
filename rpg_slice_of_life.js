@@ -1138,10 +1138,13 @@
 ];
  scenes.push(...originalRandomCGs);
  // The browser registry contains only packs authorized by the server for this account.
- for(const pack of PACKS?.packs||[])for(const e of pack.events.filter(e=>e.encounterType==='slice')){
-  const image=pack.art.eventImages.find(a=>a.sceneId===e.id);
-  scenes.push({...e,minAffection:e.minBond,image:image?.path,
-   intro:e.lines[0].text,line:e.lines[1].text,close:e.lines[e.lines.length-1].text,
+ for(const pack of PACKS?.packs||[])for(const e of Array.isArray(pack.events)?pack.events:[]){
+  if(e?.encounterType!=='slice')continue;
+  const image=(pack.art?.eventImages||[]).find(a=>a.sceneId===e.id);
+  const lines=Array.isArray(e.lines)?e.lines:[];
+  if(lines.length<2)continue;
+  scenes.push({...e,minAffection:e.minBond,image:image?.path||e.image,
+   intro:lines[0].text,line:lines[1].text,close:lines[lines.length-1].text,
    art:{scene:e.title,composition:'Approved single horizontal story CG',outfit:'Approved character outfit',
     expression:'Authored everyday expression',environment:e.place,mood:'everyday',fanservice:0}});
  }
@@ -1149,7 +1152,7 @@
  // Exclusive character packs must remain server-authorized: no absent guest, no leaked CG.
  scenes.push(...(CROSS?.events||[]).filter(e=>e.participants.every(id=>Object.prototype.hasOwnProperty.call(SCHEDULES.start,id))));
  const index=new Map(scenes.map(e=>[e.id,e]));
- const authored=(PACKS?.packs||[]).flatMap(p=>p.events);
+ const authored=(PACKS?.packs||[]).flatMap(p=>Array.isArray(p.events)?p.events:[]);
  function scheduleOverrides(state){
   if(!state||state.day<1||state.day>90||state.sliceOfLifeLastDay===state.day||
    state.activeSliceOfLife||state.pendingDuel||state.mandatoryEventState?.active)return [];
