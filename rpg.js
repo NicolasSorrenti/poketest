@@ -3058,6 +3058,8 @@ function render(){
     const button=document.createElement('button');
     button.type='button';button.className='character-action-btn';
     button.textContent=label;button.title=title;button.onclick=action;
+    // Stable action ID lets the mobile layout hide Scout without changing PC.
+    button.dataset.characterAction=label.includes('Scout')?'scout':label.includes('Glance at')?'glance':label.includes('Deck')?'deck':'other';
     characterActions.append(button);
    }
   }
