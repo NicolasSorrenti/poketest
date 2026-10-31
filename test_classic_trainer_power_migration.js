@@ -47,7 +47,7 @@ check('Goop Gas Attack and Hay Fever block powers/trainers',()=>{const g=ready()
 check('pre-historic evolution lock',()=>{const g=ready();g.players[1].bench.push(unit('base3-1'));g.players[0].hand=['base1-34'];g.players[0].active=unit('base1-52');bad(g,0,'evolve',{handIndex:0,slot:-1},/Prehistoric/);});
 check('normal evolution still works while Powers exist',()=>{const g=ready();g.players[1].bench.push(unit('base2-11'));g.players[0].hand=['base1-34'];g.players[0].active=unit('base1-52');ok(g,0,'evolve',{handIndex:0,slot:-1});assert.equal(g.players[0].active.id,'base1-34');});
 check('Rain Dance attaches additional Water Energy',()=>{const g=ready();g.players[0].active=unit('base1-2');g.players[0].bench=[unit('base1-41')];g.players[0].hand=['base1-102'];
- ok(g,0,'use_power',{slot:-1});assert.equal(g.pendingDecision,null,'one Water Pokémon and one Water Energy have equivalent choices and should resolve automatically');assert.deepEqual(g.players[0].bench[0].energies,['base1-102']);assert.equal(g.players[0].energyUsed,false);
+ ok(g,0,'use_power',{slot:-1});assert.equal(g.pendingDecision.kind,'target','Blastoise and Seel are both legal, so the player chooses the recipient');answer(g,['slot:0']);assert.equal(g.pendingDecision,null,'the only Water Energy is selected automatically');assert.deepEqual(g.players[0].bench[0].energies,['base1-102']);assert.equal(g.players[0].energyUsed,false);
 });
 check('Venusaur Energy Trans moves its own Grass Energy and can be repeated',()=>{
  const g=ready(),p=g.players[0];p.active=unit('base1-15',['base1-99','base1-99','base1-102']);
