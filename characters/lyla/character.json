@@ -30,6 +30,48 @@
       "You accompany Lyla to a park editorial and spend the breaks searching for an elusive Neo card.",
       "After a sportswear campaign, Lyla swaps into her usual jeans and challenges you to an arcade match.",
       "Lyla asks you to hold a reflector for a casual lookbook, then thanks you for not directing her poses."
+    ],
+    "firstMeeting": [
+      {
+        "speaker": "Narrator",
+        "text": "At the card shop, a very petite blonde woman in loose patterned jeans and a sleeveless cat-print top is carefully comparing two Neo cards. A garment bag rests beside her deck case."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "Hey. Is that Umbreon you're looking for?"
+      },
+      {
+        "speaker": "lyla",
+        "text": "Yeah. The artwork's good. And the attack is nastier than it looks."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "The garment bag makes me think you're coming from work."
+      },
+      {
+        "speaker": "lyla",
+        "text": "A catalog shoot. I'm Lyla. Modeling pays my rent and, when I'm lucky, for the cards behind that glass."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "You don't sound thrilled about the modeling part."
+      },
+      {
+        "speaker": "lyla",
+        "text": "I like the photographs. Not the early calls, and definitely not being told to smile. I'm better at keeping a straight face."
+      },
+      {
+        "speaker": "Protagonist",
+        "text": "Maybe we could play a match sometime."
+      },
+      {
+        "speaker": "lyla",
+        "text": "Maybe. If you're as good at playing as you are at interrupting my shopping."
+      },
+      {
+        "speaker": "Narrator",
+        "text": "She looks back to Umbreon, but shifts her deck case to make room beside her. It's a small invitation, and unmistakably deliberate."
+      }
     ]
   },
   "appearance": {

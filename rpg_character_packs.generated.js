@@ -6252,6 +6252,48 @@ const packs=[
     "After a sportswear campaign, Lyla swaps into her usual jeans and challenges you to an arcade match.",
     "Lyla asks you to hold a reflector for a casual lookbook, then thanks you for not directing her poses."
    ],
+   "firstMeeting": [
+    {
+     "speaker": "Narrator",
+     "text": "At the card shop, a very petite blonde woman in loose patterned jeans and a sleeveless cat-print top is carefully comparing two Neo cards. A garment bag rests beside her deck case."
+    },
+    {
+     "speaker": "Protagonist",
+     "text": "Hey. Is that Umbreon you're looking for?"
+    },
+    {
+     "speaker": "lyla",
+     "text": "Yeah. The artwork's good. And the attack is nastier than it looks."
+    },
+    {
+     "speaker": "Protagonist",
+     "text": "The garment bag makes me think you're coming from work."
+    },
+    {
+     "speaker": "lyla",
+     "text": "A catalog shoot. I'm Lyla. Modeling pays my rent and, when I'm lucky, for the cards behind that glass."
+    },
+    {
+     "speaker": "Protagonist",
+     "text": "You don't sound thrilled about the modeling part."
+    },
+    {
+     "speaker": "lyla",
+     "text": "I like the photographs. Not the early calls, and definitely not being told to smile. I'm better at keeping a straight face."
+    },
+    {
+     "speaker": "Protagonist",
+     "text": "Maybe we could play a match sometime."
+    },
+    {
+     "speaker": "lyla",
+     "text": "Maybe. If you're as good at playing as you are at interrupting my shopping."
+    },
+    {
+     "speaker": "Narrator",
+     "text": "She looks back to Umbreon, but shifts her deck case to make room beside her. It's a small invitation, and unmistakably deliberate."
+    }
+   ],
    "portrait": "/rpg-assets/characters/lyla/overworld/front.png"
   },
   "looks": {
@@ -7184,9 +7226,689 @@ const packs=[
       }
      }
     ]
+   },
+   {
+    "id": "lyla_random_late_invoice",
+    "npc": "lyla",
+    "title": "The Invoice Arrives",
+    "start": 12,
+    "end": 89,
+    "place": "shop",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "A delayed payment notice lights up Lyla's phone while she's pricing a Neo booster."
+     },
+     {
+      "speaker": "lyla",
+      "text": "They can book me three months ahead but take forever to pay. I'm charging them for the reminder."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Sounds like you know what you want."
+     },
+     {
+      "speaker": "lyla",
+      "text": "She closes the invoice and returns to comparing cards, a little less tense now."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stay with her for a moment",
+      "reply": "You can stay. I wasn't in a hurry to be alone.",
+      "kind": "support",
+      "flag": "lyla_random_late_invoice_company",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Respect her decision",
+      "reply": "Thanks. It's nice not having to explain every choice.",
+      "kind": "honest",
+      "flag": "lyla_random_late_invoice_respect",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_summer_fitting",
+    "npc": "lyla",
+    "title": "Perfectly Petite",
+    "start": 18,
+    "end": 86,
+    "place": "center",
+    "slot": 0,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "At a summer catalog fitting, Lyla stands beside a rack of light dresses and cropped jackets."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Petite is a clothing category, not an invitation to treat me like a little girl. The second jacket fits, at least."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Sounds like you know what you want."
+     },
+     {
+      "speaker": "lyla",
+      "text": "She chooses an adult streetwear combination and leaves the first jacket on the rack."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stay with her for a moment",
+      "reply": "You can stay. I wasn't in a hurry to be alone.",
+      "kind": "support",
+      "flag": "lyla_random_summer_fitting_company",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Respect her decision",
+      "reply": "Thanks. It's nice not having to explain every choice.",
+      "kind": "honest",
+      "flag": "lyla_random_summer_fitting_respect",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_sneaker_campaign",
+    "npc": "lyla",
+    "title": "Sneaker Take",
+    "start": 26,
+    "end": 88,
+    "place": "park",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla has been shooting sneakers in a bright windbreaker and loose shorts. The stylist resets the laces for the sixth time."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Apparently the left shoelace is the main character. I thought they hired me for the shoes."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Sounds like you know what you want."
+     },
+     {
+      "speaker": "lyla",
+      "text": "You help retrieve a runaway lace clip, and she awards you a silent nod."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stay with her for a moment",
+      "reply": "You can stay. I wasn't in a hurry to be alone.",
+      "kind": "support",
+      "flag": "lyla_random_sneaker_campaign_company",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Respect her decision",
+      "reply": "Thanks. It's nice not having to explain every choice.",
+      "kind": "honest",
+      "flag": "lyla_random_sneaker_campaign_respect",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_retouch_request",
+    "npc": "lyla",
+    "title": "The Retouch List",
+    "start": 35,
+    "end": 90,
+    "place": "cafe",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla scrolls through proofs from a studio campaign, pausing on an over-edited portrait."
+     },
+     {
+      "speaker": "lyla",
+      "text": "That doesn't look like my face anymore. The lighting was beautiful. Why erase it?"
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Sounds like you know what you want."
+     },
+     {
+      "speaker": "lyla",
+      "text": "She sends a concise note requesting a natural edit and finally puts away her phone."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stay with her for a moment",
+      "reply": "You can stay. I wasn't in a hurry to be alone.",
+      "kind": "support",
+      "flag": "lyla_random_retouch_request_company",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Respect her decision",
+      "reply": "Thanks. It's nice not having to explain every choice.",
+      "kind": "honest",
+      "flag": "lyla_random_retouch_request_respect",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_umbreon_sleeves",
+    "npc": "lyla",
+    "title": "A Darker Shade",
+    "start": 44,
+    "end": 90,
+    "place": "arcade",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla spreads two sleeve designs across the arcade table: matte charcoal and glossy violet."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The dark ones make Umbreon look terrifying. The violet ones look like I'm trying too hard."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Sounds like you know what you want."
+     },
+     {
+      "speaker": "lyla",
+      "text": "You settle on charcoal and she slides one sleeve across the table for you to test."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stay with her for a moment",
+      "reply": "You can stay. I wasn't in a hurry to be alone.",
+      "kind": "support",
+      "flag": "lyla_random_umbreon_sleeves_company",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Respect her decision",
+      "reply": "Thanks. It's nice not having to explain every choice.",
+      "kind": "honest",
+      "flag": "lyla_random_umbreon_sleeves_respect",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_catalog_break",
+    "npc": "lyla",
+    "title": "Ten Minutes Off",
+    "start": 24,
+    "end": 82,
+    "place": "center",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "A stylist calls for a reset. Lyla sits on a folding chair in a tailored vest and wide-leg trousers, quietly eating a sandwich."
+     },
+     {
+      "speaker": "lyla",
+      "text": "They asked me to be 'effortless' again. This sandwich is the only effortless thing here."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Sounds like you know what you want."
+     },
+     {
+      "speaker": "lyla",
+      "text": "She goes back to work when the break ends, but slips you a spare fruit juice first."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stay with her for a moment",
+      "reply": "You can stay. I wasn't in a hurry to be alone.",
+      "kind": "support",
+      "flag": "lyla_random_catalog_break_company",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Respect her decision",
+      "reply": "Thanks. It's nice not having to explain every choice.",
+      "kind": "honest",
+      "flag": "lyla_random_catalog_break_respect",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_window_reflection",
+    "npc": "lyla",
+    "title": "The Other Portrait",
+    "start": 47,
+    "end": 90,
+    "place": "shop",
+    "slot": 2,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "entry",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "An advertisement featuring Lyla shines from the shop window while the real Lyla walks past carrying a deck box."
+     },
+     {
+      "speaker": "lyla",
+      "text": "That version of me has flawless lighting. This version has a winning hand. I know which one I'd pick."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Sounds like you know what you want."
+     },
+     {
+      "speaker": "lyla",
+      "text": "She taps the window once, then heads inside with you."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stay with her for a moment",
+      "reply": "You can stay. I wasn't in a hurry to be alone.",
+      "kind": "support",
+      "flag": "lyla_random_window_reflection_company",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Respect her decision",
+      "reply": "Thanks. It's nice not having to explain every choice.",
+      "kind": "honest",
+      "flag": "lyla_random_window_reflection_respect",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
+   },
+   {
+    "id": "lyla_random_quiet_casting",
+    "npc": "lyla",
+    "title": "Casting Call",
+    "start": 15,
+    "end": 90,
+    "place": "cafe",
+    "slot": 0,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla studies two offers on her phone: a large campaign with poor terms, and a smaller shoot with creative input."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The smaller client pays on time and doesn't call me 'adorably tiny.' Not a hard choice."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Sounds like you know what you want."
+     },
+     {
+      "speaker": "lyla",
+      "text": "She declines the larger offer and orders another coffee without looking back."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Stay with her for a moment",
+      "reply": "You can stay. I wasn't in a hurry to be alone.",
+      "kind": "support",
+      "flag": "lyla_random_quiet_casting_company",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 0,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Respect her decision",
+      "reply": "Thanks. It's nice not having to explain every choice.",
+      "kind": "honest",
+      "flag": "lyla_random_quiet_casting_respect",
+      "delta": {
+       "affection": 1,
+       "trust": 1,
+       "respect": 2,
+       "attraction": 0
+      }
+     }
+    ]
    }
   ],
-  "mandatoryEvents": [],
+  "mandatoryEvents": [
+   {
+    "id": "lyla_invoice_deadline",
+    "title": "A Payment Worth Chasing",
+    "kind": "bond",
+    "priority": 55,
+    "earliestDay": 25,
+    "trigger": {
+     "all": [
+      {
+       "storyDone": "lyla_route_2"
+      },
+      {
+       "relationship": {
+        "npc": "lyla",
+        "metric": "trust",
+        "gte": 2
+       }
+      }
+     ]
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "lyla",
+      "text": "The lookbook client paid. After two reminders and a very polite legal-sounding email."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Does that mean the Umbreon fund is safe?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "Rent first. Umbreon second. But yes. I wanted someone to tell."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Celebrate with a card shop visit",
+      "reply": "That is, surprisingly, exactly what I wanted to hear.",
+      "flag": "lyla_invoice_cards",
+      "effects": {
+       "flags": [
+        "lyla_invoice_cards"
+       ]
+      }
+     },
+     {
+      "label": "Tell her she earned every cent",
+      "reply": "I did. It feels good to hear that said plainly.",
+      "flag": "lyla_invoice_worth",
+      "effects": {
+       "flags": [
+        "lyla_invoice_worth"
+       ]
+      }
+     }
+    ],
+    "characterId": "lyla"
+   },
+   {
+    "id": "lyla_campaign_correction",
+    "title": "The Revised Campaign",
+    "kind": "bond",
+    "priority": 65,
+    "earliestDay": 40,
+    "trigger": {
+     "storyDone": "lyla_route_3"
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "lyla",
+      "text": "Remember the sportswear advertisement? They accepted the new wording."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "So no more miracle abs in ten days?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "Just comfortable clothes and actual movement. Almost revolutionary."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Congratulate her on standing firm",
+      "reply": "Thanks. It was a small fight. Still worth winning.",
+      "flag": "lyla_ad_truth",
+      "effects": {
+       "flags": [
+        "lyla_ad_truth"
+       ]
+      }
+     },
+     {
+      "label": "Ask her to show you the finished ad",
+      "reply": "Sure. I like the photo now that I can stand behind the words.",
+      "flag": "lyla_ad_preview",
+      "effects": {
+       "flags": [
+        "lyla_ad_preview"
+       ]
+      }
+     }
+    ],
+    "characterId": "lyla"
+   },
+   {
+    "id": "lyla_print_kept_private",
+    "title": "Not for the Portfolio",
+    "kind": "bond",
+    "priority": 70,
+    "earliestDay": 66,
+    "trigger": {
+     "storyDone": "lyla_route_5"
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "lyla",
+      "text": "They asked if I wanted the laughing picture in my portfolio. The one from the park."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "What did you say?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "No. I asked for a print for myself. That's different."
+     }
+    ],
+    "choices": [
+     {
+      "label": "You don't owe anyone that moment",
+      "reply": "Exactly. Some things can just be mine.",
+      "flag": "lyla_private_smile",
+      "effects": {
+       "flags": [
+        "lyla_private_smile"
+       ]
+      }
+     },
+     {
+      "label": "I'd like to see the print someday",
+      "reply": "Maybe. I'll decide when.",
+      "flag": "lyla_private_print",
+      "effects": {
+       "flags": [
+        "lyla_private_print"
+       ]
+      }
+     }
+    ],
+    "characterId": "lyla"
+   },
+   {
+    "id": "lyla_final_booking",
+    "title": "A Better Contract",
+    "kind": "bond",
+    "priority": 75,
+    "earliestDay": 82,
+    "trigger": {
+     "storyDone": "lyla_route_6"
+    },
+    "delivery": "remote_or_present",
+    "timeCost": 0,
+    "fallback": "queue",
+    "expiry": "never",
+    "lines": [
+     {
+      "speaker": "lyla",
+      "text": "The agency offered me another contract. Fewer hours and approval over the photos."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Are you taking it?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "I think so. Not because I love the work. Because it finally leaves me room to love other things."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Then there'll be more time for cards",
+      "reply": "The best clause in the contract, actually.",
+      "flag": "lyla_time_for_cards",
+      "effects": {
+       "flags": [
+        "lyla_time_for_cards"
+       ]
+      }
+     },
+     {
+      "label": "I'm happy you get to choose",
+      "reply": "Me too. I needed that more than a bigger fee.",
+      "flag": "lyla_contract_choice",
+      "effects": {
+       "flags": [
+        "lyla_contract_choice"
+       ]
+      }
+     }
+    ],
+    "characterId": "lyla"
+   }
+  ],
   "art": {
    "schemaVersion": 1,
    "characterId": "lyla",

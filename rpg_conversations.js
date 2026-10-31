@@ -21,6 +21,7 @@
  function dialogueEntry(state,npc,character,dialogueModule,{first=false,present=[]}={}){
   const lines=Array.isArray(character?.talk)&&character.talk.length?character.talk:[character?.repeat||character?.intro||'Good to see you.'];
   if(first){
+   if(Array.isArray(character?.firstMeeting)&&character.firstMeeting.length>=3)return {lines:character.firstMeeting,id:null,source:'intro'};
    const greeting=dialogueModule?.greetingLines?.(npc,character.intro||lines[0]);
    if(Array.isArray(greeting)&&greeting.length>=3)return {lines:greeting,id:null,source:'intro'};
    // Unknown/new packs still get a coherent first meeting, not an unrelated

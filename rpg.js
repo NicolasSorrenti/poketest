@@ -500,7 +500,7 @@ function selectPerson(id,{skipInvitation=false}={}){
  state.selected=id;
  const memories=recordCG('meet',id);
  persist();
- const invite=skipInvitation?null:availableInvitation(id);
+ const invite=skipInvitation||(first&&Array.isArray(c.firstMeeting))?null:availableInvitation(id);
  // Preserve first meetings and important invitations before a casual surprise.
  if(!first&&!invite&&beginSliceOfLife('talk',id))return;
  if(invite){
