@@ -958,13 +958,14 @@
   box-sizing:border-box!important;display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
   grid-template-rows:minmax(190px,36dvh) auto auto auto!important;
-  gap:8px!important;padding:6px!important;width:100%!important;min-width:0!important;
+  gap:0!important;padding:0!important;width:100%!important;min-width:0!important;
   overflow:visible!important;
  }
  #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #scene{
   box-sizing:border-box!important;grid-column:1!important;grid-row:1!important;
   width:100%!important;min-width:0!important;max-width:100%!important;
   height:36dvh!important;min-height:190px!important;max-height:36dvh!important;
+  margin:0!important;padding:0!important;
   overflow:hidden!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;
  }
  #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){
@@ -990,6 +991,7 @@
   display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
   grid-auto-rows:minmax(46px,auto)!important;align-items:stretch!important;
   justify-items:stretch!important;gap:7px!important;
+  margin-top:0!important;
   position:relative!important;inset:auto!important;transform:none!important;
   width:100%!important;min-width:0!important;max-width:100%!important;
   max-height:none!important;overflow:visible!important;
@@ -1008,9 +1010,19 @@
   grid-column:1!important;grid-row:3!important;min-width:0!important;
   padding:9px 12px!important;font-size:12px!important;
  }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions>button[data-character-action="scout"]{
+  display:none!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions>button[data-character-action="glance"]{
+  background:#29243b!important;color:#fff!important;
+  border:1px solid #9b819f!important;box-shadow:none!important;
+ }
+ #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions>button[data-character-action="deck"]{
+  order:7!important;
+ }
  #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #characterActions #neoOverworldInteractionBack{
   box-sizing:border-box!important;display:flex!important;grid-column:auto!important;
-  grid-row:auto!important;align-items:center!important;justify-content:flex-start!important;
+  grid-row:auto!important;order:6!important;align-items:center!important;justify-content:flex-start!important;
   width:100%!important;min-width:0!important;max-width:100%!important;
   min-height:46px!important;padding:9px 10px!important;
   text-align:left!important;font-size:13px!important;
