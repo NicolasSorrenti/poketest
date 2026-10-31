@@ -47,6 +47,13 @@ test('Apex cures Confusion with Full Heal Energy before a funded damaging attack
  o.self.hand=['base5-81']; // Full Heal Energy
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
   [activeAttach],'cure the mandatory 50% Confusion attack failure first');
+ // The opponent's next-turn KO does not erase the value of curing now.
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ o.self.active.damage=50; // opposing Jab can KO on the following turn
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'a future KO must not suppress the immediate Confusion cure');
+ o.self.active.damage=0;
+ o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
  o.self.active.status=null;
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
   [attack,activeAttach],'do not spend a redundant Energy on a healthy Active');
