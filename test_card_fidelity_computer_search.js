@@ -24,7 +24,7 @@ check('Computer Search auto-pays its only cost pair and keeps deck search privat
 });
 check('Two cards with the same printing auto-resolve the pair when more than two are available',()=>{
  const g=game();player(g,0).hand=['base1-71','base1-99','base1-99','base1-99'];player(g,0).deck=['base1-46','base1-27'];
- act(g,0,'play_trainer',{handIndex:0});assert.equal(g.pendingDecision?.kind,'find','Equivalent discard pairs should resolve without a cost prompt');assert.equal(player(g,0).hand.filter(id=>id==='base1-99').length,1);assert.equal(player(g,0).discard.filter(id=>id==='base1-99').length,2);
+ act(g,0,'play_trainer',{handIndex:0});assert.equal(g.pendingDecision?.kind,'find','Equivalent discard pairs should resolve without a cost prompt');choose(g,0,['deck:0']);assert.equal(player(g,0).hand.filter(id=>id==='base1-99').length,1);assert.equal(player(g,0).discard.filter(id=>id==='base1-99').length,2);
 });
 check('A sole deck card is selected automatically, including the Base Set 2 printing',()=>{
  const g=game();player(g,0).hand=['base4-101','base1-98','base1-99'];player(g,0).deck=['base1-94'];
