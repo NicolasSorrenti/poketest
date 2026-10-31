@@ -1186,7 +1186,12 @@
      "kind": "attack",
      "index": 0,
      "name": "String Shot",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "String Shot: one Grass Energy cost and Fire Energy rejection; 10 damage; coin heads applies Paralysis, tails does not apply the attack's condition; attack does not prompt the players; damage-only prevention does not prevent the paralysis effect, while effect prevention does; heads replaces Sleep; paralysis persists into the affected player's next turn, blocks attacks, and clears at that player's end-of-turn checkup; both Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card, and online-preview 40-card reducer configurations.",
+     "evidence": [
+      "`test_card_fidelity_caterpie.js`: 42 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers text/cost/damage, heads/tails, existing Sleep replacement, damage-only versus attack-effect prevention, typed-cost rejection, automatic resolution, and paralysis timing through the affected player's next-turn attack restriction and end-of-turn recovery.",
+      "Base Set and Base Set 2 text/cost compared with Limitless, Serebii and Bulbapedia transcriptions; both printings have identical String Shot text and cost. The current official Pokémon TCG errata index was searched and contains no Caterpie-specific entry. Other interactions and client/network integration remain pending."
+     ]
     }
    ]
   },
@@ -5758,7 +5763,12 @@
      "kind": "attack",
      "index": 0,
      "name": "String Shot",
-     "status": "unreviewed"
+     "status": "partial",
+     "scope": "String Shot: one Grass Energy cost and Fire Energy rejection; 10 damage; coin heads applies Paralysis, tails does not apply the attack's condition; attack does not prompt the players; damage-only prevention does not prevent the paralysis effect, while effect prevention does; heads replaces Sleep; paralysis persists into the affected player's next turn, blocks attacks, and clears at that player's end-of-turn checkup; both Base Set and Base Set 2; Classic, Neo-theme, online-preview 60-card, and online-preview 40-card reducer configurations.",
+     "evidence": [
+      "`test_card_fidelity_caterpie.js`: 42 reducer scenarios across Base Set in Classic, Neo-theme, online-preview 60-card and 40-card modes, and Base Set 2 in online-preview 60-card and 40-card modes. Covers text/cost/damage, heads/tails, existing Sleep replacement, damage-only versus attack-effect prevention, typed-cost rejection, automatic resolution, and paralysis timing through the affected player's next-turn attack restriction and end-of-turn recovery.",
+      "Base Set and Base Set 2 text/cost compared with Limitless, Serebii and Bulbapedia transcriptions; both printings have identical String Shot text and cost. The current official Pokémon TCG errata index was searched and contains no Caterpie-specific entry. Other interactions and client/network integration remain pending."
+     ]
     }
    ]
   },
