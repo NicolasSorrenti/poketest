@@ -1913,7 +1913,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   // its printed text. The substituted attack uses the copier's own type.
   roll=ATTACK.resolve(copiedProgram,()=>next(g,2)===1,coreContext);
  }
- if(program.kind==='mirror-move'){const impact=u.lastAttackImpact;roll={damage:impact.damage||0,status:impact.status||null,flips:[],ignoreWR:true};}
+ if(program.kind==='mirror-move'){const impact=u.lastAttackImpact;roll={damage:impact.damage||0,status:impact.status||(impact.poison?'Poisoned':null),poisonDamage:impact.poisonDamage||0,flips:[],ignoreWR:true};}
 
  // Dark Gengar Pull In replaces the defender BEFORE damage and Sleep.
  if(program.kind==='neo92:pull-in'&&extra.neo92PullIndex!==null&&extra.neo92PullIndex!==undefined){
@@ -2454,7 +2454,7 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
  }
  // Track damage/status on a Pokémon so Mirror Move can reproduce what the
  // opponent's attack actually did, rather than its printed base damage.
- if(priorDefender&&(dmg>0||priorDefender.status!==priorDefStatus))priorDefender.lastAttackImpact={serial:g.turnSerial,damage:priorDefender.damage-priorDefDamage,status:priorDefender.status!==priorDefStatus?priorDefender.status:null};
+ if(priorDefender&&(dmg>0||priorDefender.status!==priorDefStatus))priorDefender.lastAttackImpact={serial:g.turnSerial,damage:priorDefender.damage-priorDefDamage,status:priorDefender.status!==priorDefStatus?priorDefender.status:null,poison:Boolean(priorDefender.poison),poisonDamage:priorDefender.poison?(priorDefender.poisonDamage||10):0};
  if(f.active&&hasActiveEffect(f.active,'mirrorShell',g)&&dmg>0){
   u.damage+=calculateDamage(card(g,f.active.id),c,dmg,u);
   log(g,`${card(g,f.active.id).name} reflected ${dmg} attack damage.`);
