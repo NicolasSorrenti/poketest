@@ -21,6 +21,17 @@ jobs:
           node-version: '20'
       - name: Validate player growth and NPC deck legality
         run: node --test tests/rpg_npc_deck_balance.test.js
+      - name: Evaluate Lyla versus three campaign starter decks
+        run: |
+          node scripts/benchmark-rpg-npc-decks.js --npcs lyla --starters ember_garden,tidal_circuit,mind_and_muscle --stages early,mid,late --pairs 2 --max-turns 75 > lyla-deck-benchmark.json
+          node -e 'const x=require("./lyla-deck-benchmark.json"); for(const r of x.totals) console.log("LYLA "+r.stage+": "+r.cpuWins+" wins / "+r.playerWins+" losses / "+r.draws+" draws/timeouts; win rate "+r.npcWinRateDecisive); for(const e of x.errors)console.error(JSON.stringify(e));'
+      - name: Upload Lyla deck benchmark
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lyla-deck-benchmark
+          path: lyla-deck-benchmark.json
+          if-no-files-found: ignore
       - name: Simulate paired headless Classic duels
         run: |
           set +e
