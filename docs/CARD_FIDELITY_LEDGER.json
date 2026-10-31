@@ -1870,7 +1870,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Base Set Pokémon Breeder: Stage 2 from hand, matching Basic eligibility, ordinary evolution timing, and sole-option auto-selection; multiple valid choices remain player-controlled.",
+          "evidence": [
+            "Manual source review (2026-10-31): card text compared with Bulbapedia; current resolver checks the Stage 2 evolution line against an eligible Basic and normal timing. PR #375 auto-selects only a sole legal evolution/target option; broader card interactions, printed-image review, and full client/network behavior remain unchecked. No tests added or run, per user instruction."
+          ]
         }
       ]
     },
