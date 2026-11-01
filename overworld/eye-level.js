@@ -69,7 +69,7 @@ window.NeoOverworldEyeLevel = (() => {
       '#neoEyeLevelArrows button{pointer-events:auto;position:absolute;top:52%;transform:translateY(-50%);width:38px;height:66px;padding:0;border:1px solid #d9add5aa;border-radius:11px;background:#20182db8;color:white;font:700 38px system-ui}',
       '#neoEyeLevelArrows .neo-eye-left{left:8px}#neoEyeLevelArrows .neo-eye-right{right:8px}',
       'body.neo-eye-level #neoEyeLevelToggle{background:#594060;border-color:#f3b5dc}',
-      'body.neo-overworld-dialogue #neoEyeLevelStage .neo-eye-character,body.neo-overworld-dialogue #neoEyeLevelArrows{display:none!important}',
+      'body.neo-overworld-dialogue #neoEyeLevelStage .neo-eye-character,body.neo-overworld-dialogue #neoEyeLevelArrows,body.neo-overworld-dialogue #neoEyeLevelToggle{display:none!important}',
       '@media(max-width:650px){#neoEyeLevelArrows button{width:28px;height:54px;font-size:30px;background:#20182d91}#neoEyeLevelArrows .neo-eye-left{left:3px}#neoEyeLevelArrows .neo-eye-right{right:3px}#neoEyeLevelStage .neo-eye-character .neo-eye-name{font-size:12px;padding:3px 8px}}',
       '@media(prefers-reduced-motion:reduce){#neoEyeLevelStage .neo-eye-cast,#neoEyeLevelStage .neo-eye-background,#neoEyeLevelStage .neo-eye-ground-shade{transition:none!important}}'
     ].join('\n');
@@ -130,8 +130,8 @@ window.NeoOverworldEyeLevel = (() => {
       for (const {p,art,button,img} of sprites) {
         button.classList.remove('is-missing');
         if (useChibi) {
+          // loadChibi owns the error chain across the existing fallback sprites.
           loadChibi(img,p.id);
-          img.onerror = () => button.classList.add('is-missing');
         } else if (art?.src) {
           img.onerror = () => button.classList.add('is-missing');
           img.src = art.src;
