@@ -62,7 +62,7 @@
  "/rpg_victory_presentation.js",
  "/rpg_tournament_presentation.js",
  "/rpg_tutorials.js?v=1",
- "/rpg_status.js?v=4",
+ "/rpg_status.js?v=persona-ranks-20261101",
  "/rpg_cloud_save.js?v=cloud-login-visible-20261030",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
