@@ -75,7 +75,7 @@
  "/rpg_tournament_presentation.js",
  "/rpg_tutorials.js?v=1",
  "/rpg_status.js?v=persona-ranks-20261101",
- "/rpg_cloud_save.js?v=auth-recovery-20261101",
+ "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
  "/rpg.js?v=rpg-scene-wipe-20261031-1"
@@ -207,7 +207,7 @@
       try{
         await new Promise((resolve,reject)=>{
           const script=document.createElement('script');
-          script.src='/rpg_cloud_save.js?v=auth-recovery-20261101';script.onload=resolve;script.onerror=reject;document.body.append(script);
+          script.src='/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1';script.onload=resolve;script.onerror=reject;document.body.append(script);
         });
         await window.NeoRpgCloudSave.mount({showButton:true,recoveryOnly:true,getSave:()=>null});
         window.NeoRpgCloudSave.show();
