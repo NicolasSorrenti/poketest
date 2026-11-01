@@ -12,6 +12,32 @@ function board(){
    energyUsed:false,prizeCount:3},
   opponent:{active:{id:RATTATA,energies:[],damage:0},bench:[{id:RATTATA,energies:[],damage:0}]}};
 }
+test('Apex values Buzzap Electrode as two Energy of its chosen type',()=>{
+ const electrode='base1-21';
+ const host={id:HITMONCHAN,energies:[electrode],buzzapTypes:{[electrode]:'Fighting'},damage:0};
+ const target={id:RATTATA,energies:[],damage:0};
+ assert.equal(AI.strongestAffordableAttack(host,target),40,
+  'two Fighting from Buzzap fund Jab against Fighting-weak Rattata');
+ assert.equal(AI.strongestAffordableAttack({...host,buzzapTypes:{[electrode]:'Water'}},target),0,
+  'a different public Buzzap type cannot pay Fighting costs');
+ assert.equal(AI.strongestAffordableAttack({...host,buzzapTypes:{}},target),0,
+  'an ordinary Electrode card is not automatically Energy');
+ assert.ok(AI.energyValue(host,FIGHT)>90,
+  'one more Fighting Energy unlocks Special Punch after two Buzzap units');
+ const charged={...host,energies:[electrode,FIGHT]};
+ assert.equal(AI.strongestAffordableAttack(charged,target),80,
+  'Special Punch is affordable and doubled against Fighting-weak Rattata');
+ assert.ok(AI.energyValue(charged,FIGHT)<12,
+  'Apex must not waste an attachment trying to unlock an already-funded attack');
+ const withoutBuzzap={...charged,buzzapTypes:{}};
+ assert.equal(AI.strongestAffordableAttack(withoutBuzzap,target),40,
+  'without Buzzap, only the single Fighting Energy funds Jab');
+ const o=board();
+ o.opponent.active=charged;
+ assert.equal(AI.strongestUsableOpponentAttack(o,o.self.active),40,
+  'opponent threat estimates also count Buzzap-funded Special Punch');
+});
+
 test('Apex does not attach Rainbow Energy for an immediate self-knockout',()=>{
  const o=board(),rainbow='base5-80';
  const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
