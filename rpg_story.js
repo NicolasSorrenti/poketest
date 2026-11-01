@@ -251,7 +251,7 @@
  function recommendedBondRank(event){
   if(/_route_bridge_4$/.test(event.id))return 3;
   if(/_route_early_1$/.test(event.id))return 0;
-  const route=event.id.match(/^.+_route_(\\d+)$/);
+  const route=event.id.match(/^.+_route_(\d+)$/);
   if(route){
    const number=Number(route[1]);
    const hasRouteFive=E.some(candidate=>candidate.npc===event.npc&&candidate.id===event.npc+'_route_5');
@@ -261,12 +261,12 @@
    if(number===4)return hasRouteFive?3:4;
    return 4;
   }
-  const guest=event.id.match(/^.+_(?:guest|bond)_(\\d+)$/);
+  const guest=event.id.match(/^.+_(?:guest|bond)_(\d+)$/);
   if(guest){
    const number=Number(guest[1]);
    return number===1?0:number===2?1:number===3?2:number===4?3:4;
   }
-  if(/_cross_\\d+$/.test(event.id))return Math.min(2,Math.max(0,Number(event.minBond)||0));
+  if(/_cross_\d+$/.test(event.id))return Math.min(2,Math.max(0,Number(event.minBond)||0));
   return null;
  }
  for(const event of E){
