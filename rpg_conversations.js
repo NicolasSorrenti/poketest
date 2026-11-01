@@ -12,7 +12,14 @@
  const MEMORY=typeof module==='object'&&module.exports?require('./rpg_dialogue_memory'):window.NeoRpgDialogueMemory;
  const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  function availableTalk(state,npc,character){
-  const rank=REL?.bondRank?.(state,npc)||0;
+  // bondRank normalizes relationship buckets, so isolate those writes from the
+  // live save: opening a casual conversation must remain a read-only action.
+  const rankState=state&&typeof state==='object'?{
+   ...state,
+   relationships:{...(state.relationships||{}),[npc]:{...(state.relationships?.[npc]||{})}},
+   bonds:{...(state.bonds||{}),[npc]:{...(state.bonds?.[npc]||{})}}
+  }:state;
+  const rank=REL?.bondRank?.(rankState,npc)||0;
   return (Array.isArray(character?.talk)?character.talk:[])
    .map((entry,index)=>({entry,index}))
    .filter(({entry})=>typeof entry==='string'||(entry&&typeof entry.text==='string'&&
