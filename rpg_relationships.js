@@ -11,7 +11,7 @@
   :window.NeoRpgRelationshipProfiles;
  const shared=['affection','trust','duels'],metrics=[...shared,'respect','attraction'];
  const bondMetrics=['affection','trust','respect','attraction'];
- const rankThresholds=Object.freeze([0,18,42,70,105,140]);
+ const rankThresholds=Object.freeze([0,8,18,28,40,55]);
  const plain=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
  const score=v=>Number.isFinite(v)&&v>=0?Math.min(999,Math.floor(v)):0;
  function buckets(s){
