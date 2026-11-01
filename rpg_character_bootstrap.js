@@ -104,6 +104,14 @@
     return data.access_token;
   }
   try {
+    const playFresh=sessionStorage.getItem('neoRpgPlayFreshWithoutCloud')==='1';
+    if(playFresh){
+      const response=await timedFetch('/rpg-character-packs.public.json',{cache:'no-store'});
+      const data=response.ok?await response.json():null;
+      if(!Array.isArray(data?.packs)||!data.packs.length)throw Error('Public character roster unavailable.');
+      window.NeoRpgCharacterPacks=registry(data.packs);
+      window.NeoRpgExclusiveRosterLoaded=true;
+    }else{
     const cached=JSON.parse(localStorage.getItem('neoRpgCloudSessionV1')||'null');
     let token=cached?.access_token||'';
     // Refresh stale sessions through the same Supabase identity provider as cloud saves.
@@ -145,6 +153,7 @@
     if(!Array.isArray(data?.packs)||!data.packs.length)throw Error('Character roster unavailable (invalid public registry)');
     window.NeoRpgCharacterPacks=registry(data.packs||[]);
     window.NeoRpgExclusiveRosterLoaded=true;
+    }
   } catch(error) {
     // Fail closed: never load an unfiltered registry as a fallback.
     document.documentElement.classList.remove('rpg-cloud-loading');
@@ -155,7 +164,20 @@
     message.textContent=error.message+' Your saved campaign has not been changed.';
     const retry=document.createElement('button');retry.textContent='Retry loading';retry.onclick=()=>location.reload();
     const signIn=document.createElement('button');signIn.textContent='Sign in again';
-    panel.append(message,retry,signIn);document.body.append(panel);
+    const fresh=document.createElement('button');fresh.textContent='Play new without loading cloud save';
+    fresh.onclick=()=>{
+      if(!confirm('Start a temporary new campaign without loading your cloud save? Progress in this session will not sync to your account.'))return;
+      const key='neoHarborRpgV1',backup='neoRpgFreshPreviousLocal';
+      if(sessionStorage.getItem('neoRpgPlayFreshWithoutCloud')!=='1'){
+        const previous=localStorage.getItem(key);
+        if(previous!==null)sessionStorage.setItem(backup,previous);
+        else sessionStorage.removeItem(backup);
+        sessionStorage.setItem('neoRpgFreshHadPreviousLocal',previous===null?'0':'1');
+      }
+      sessionStorage.setItem('neoRpgPlayFreshWithoutCloud','1');
+      localStorage.removeItem(key);location.reload();
+    };
+    panel.append(message,retry,signIn,fresh);document.body.append(panel);
     signIn.onclick=async()=>{
       signIn.disabled=true;
       try{
