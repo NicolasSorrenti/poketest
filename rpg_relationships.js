@@ -6,7 +6,12 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgRelationships=api;
 })(typeof window!=='undefined'?window:null,function(){
+ const PROFILE=typeof module==='object'&&module.exports
+  ?require('./rpg_relationship_profiles')
+  :window.NeoRpgRelationshipProfiles;
  const shared=['affection','trust','duels'],metrics=[...shared,'respect','attraction'];
+ const bondMetrics=['affection','trust','respect','attraction'];
+ const rankThresholds=Object.freeze([0,18,42,70,105,140]);
  const plain=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
  const score=v=>Number.isFinite(v)&&v>=0?Math.min(999,Math.floor(v)):0;
  function buckets(s){
@@ -55,5 +60,26 @@
   }
   return r;
  }
- return Object.freeze({hydrate,ensure,apply,metrics,shared});
+ function bondScore(s,id){
+  const r=ensure(s,id),profile=PROFILE?.profileFor?.(id)||{weights:{affection:2,trust:2,respect:2,attraction:2}};
+  return bondMetrics.reduce((total,metric)=>total+(r[metric]||0)*(profile.weights[metric]||0),0);
+ }
+ function bondRank(s,id){
+  const value=bondScore(s,id);
+  let rank=0;
+  for(let index=1;index<rankThresholds.length;index++){
+   if(value>=rankThresholds[index])rank=index;
+   else break;
+  }
+  return rank;
+ }
+ function meets(s,id,{minScore=0,minRank=0}={}){
+  return bondScore(s,id)>=Math.max(0,Number(minScore)||0)&&bondRank(s,id)>=Math.max(0,Number(minRank)||0);
+ }
+ return Object.freeze({
+  hydrate,ensure,apply,metrics,shared,
+  bondMetrics,profileFor:PROFILE?.profileFor||(()=>null),
+  profiles:PROFILE?.profiles||Object.freeze({}),
+  rankThresholds,bondScore,bondRank,meets
+ });
 });

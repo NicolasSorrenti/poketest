@@ -6,6 +6,7 @@
  "/overworld/manifest.js?v=global-pose-triggers-20261030-1",
  "/rpg_sol_character.js",
  "/rpg_narrative_pack.js",
+ "/rpg_relationship_profiles.js?v=bond-profiles-20261101",
  "/rpg_relationships.js",
  "/rpg_side_quests.js",
  "/rpg_bond_chapters.js",
