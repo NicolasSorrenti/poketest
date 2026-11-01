@@ -104,7 +104,9 @@ function energyValue(pokemon,energyId){
  if(!source)return 0;
  const pool=energyPool(pokemon);
  const added=energyPool({energies:[energyId]});
- const moves=source.attacks||[];
+ // Public copied attacks (for example Psylink) are the actual playable set.
+ // Valuing only printed attacks can strand Energy needed for a copied attack.
+ const moves=pokemon?.effectiveAttacks||source.attacks||[];
  let value=0;
  for(const attack of moves){
   const cost=attack.cost||[];
@@ -1445,4 +1447,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,estimatedDamage,strongestAffordableAttack,strongestUsableOpponentAttack,projectedAttackValue,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,centerSafeActions,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,energyValue,estimatedDamage,strongestAffordableAttack,strongestUsableOpponentAttack,projectedAttackValue,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,centerSafeActions,chooseAction,driveSide,driveBot,propose};
