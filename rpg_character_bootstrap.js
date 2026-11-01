@@ -124,7 +124,7 @@
       }
       if(response.ok&&response.headers.get('content-type')?.includes('application/json')){
         data=await response.json();
-        if(token&&data?.authStatus==='unavailable')throw Error('Cloud identity could not be verified. Please retry.');
+        if(token&&data?.authStatus==='unavailable')throw Error('Cloud identity could not be verified ('+(data.code||'AUTH_UNAVAILABLE')+'). Please retry.');
       }else if(response.ok&&!response.headers.get('content-type')?.includes('application/json')){
         // Static Pages can return its HTML fallback with HTTP 200 for an
         // unimplemented API route. Use the filtered public JSON instead.
