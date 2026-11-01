@@ -54,7 +54,7 @@ test('guest romantic finale choices record a committed partner',()=>{
   assert.deepEqual(e.choices.map(c=>c.kind),['friend','commit','honest']);
   const st=sample();st.day=e.start;st.slot=e.slot;st.location=e.place;
   st.storyDone[e.prerequisite]={choice:0,day:e.start-1};
-  st.relationships[npc].affection=9;st.relationships[npc].trust=5;
+  st.relationships[npc]={affection:12,trust:8,respect:4,attraction:4};
   STORY.resolve(st,e.id,1);
   assert.equal(st.partner,npc);
   assert.equal(st.routeOutcomes[npc],'romance');
