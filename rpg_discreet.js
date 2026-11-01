@@ -22,12 +22,14 @@
   const active=root.dataset.rpgDiscreet==='on';
   const button=document.getElementById('rpgDiscreetToggle');
   if(button){
-   button.textContent=active?'◈ DISCREET ON':'◇ DISCREET OFF';
+   const label=active?'◈ DISCREET ON':'◇ DISCREET OFF';
+   if(button.textContent!==label)button.textContent=label;
    button.setAttribute('aria-pressed',String(active));
    button.title=active?'Show character and event illustrations':'Hide character and event illustrations (no change to gameplay)';
   }
   document.querySelectorAll('.rpg-discreet-popup-toggle').forEach(control=>{
-   control.textContent=active?'◈ Discreet on':'◇ Discreet off';
+   const label=active?'◈ Discreet on':'◇ Discreet off';
+   if(control.textContent!==label)control.textContent=label;
    control.setAttribute('aria-pressed',String(active));
    control.title=active?'Show character and event illustrations':'Hide character and event illustrations throughout the game';
   });
