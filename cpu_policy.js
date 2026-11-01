@@ -100,16 +100,21 @@ function energyPool(unit){
  });
 }
 // Darkness Energy damages non-Dark Bench hosts at the end of BOTH players'
-// turns (headless_duel.js). After attaching, a Bench Pokemon must survive
-// our checkup AND the opponent's checkup before we can use it next turn.
-// Do not spend an attachment on a host that will faint before that turn.
+// turns (headless_duel.js). A Bench Energy investment is wasted if its host
+// will faint at either checkup before our next turn, whether the new card is
+// Darkness itself or another Energy added to an already-doomed Bench.
+// Potion Energy heals immediately; count that heal before checking survival.
 // Keep Active attachments available: a final-Prize attack can win immediately.
 function lethalDarknessBenchAttachment(unit,energyId,slot){
- if(slot===-1||!unit||card(energyId)?.name!=='Darkness Energy')return false;
+ if(slot===-1||!unit||!isEnergy(card(energyId)))return false;
  const species=card(unit.id);
  if(!species||species.types?.includes('Darkness')||species.name?.startsWith('Dark '))return false;
- const darkness=(unit.energies||[]).filter(id=>card(id)?.name==='Darkness Energy').length+1;
- return hpRemaining(unit)<=darkness*20;
+ const energyName=card(energyId)?.name;
+ const darkness=(unit.energies||[]).filter(id=>card(id)?.name==='Darkness Energy').length+
+  (energyName==='Darkness Energy'?1:0);
+ if(!darkness)return false;
+ const potionHeal=energyName==='Potion Energy'?Math.min(10,unit.damage||0):0;
+ return hpRemaining(unit)+potionHeal<=darkness*20;
 }
 // Potion Energy heals one counter on attachment. If a non-Dark Bench host
 // already carries Darkness Energy, that heal may be the difference between
