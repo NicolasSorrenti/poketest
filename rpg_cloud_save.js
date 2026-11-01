@@ -314,7 +314,12 @@
   }catch(error){stateLabel('Cloud unavailable; browser progress is safe. '+errorText(error));}
  }
  async function mount(options){
-  if(sessionStorage.getItem('neoRpgPlayFreshWithoutCloud')==='1'||sessionStorage.getItem('neoRpgRosterDegraded')==='1')return;
+  if(sessionStorage.getItem('neoRpgPlayFreshWithoutCloud')==='1'||sessionStorage.getItem('neoRpgRosterDegraded')==='1'){
+   // Auth degraded/fresh-play intentionally skips cloud reconciliation.
+   // Still release the startup overlay added for a cached signed-in session.
+   document.documentElement?.classList.remove('rpg-cloud-loading');
+   return;
+  }
   if(adapter)return;
   adapter=options;ui();
   window.addEventListener('online',()=>{if(!config?.enabled)return connect();if(session&&!blocked)return reconcile();});
