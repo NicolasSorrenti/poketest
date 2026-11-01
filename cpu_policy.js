@@ -114,7 +114,10 @@ function lethalDarknessBenchAttachment(unit,energyId,slot){
   (energyName==='Darkness Energy'?1:0);
  if(!darkness)return false;
  const potionHeal=energyName==='Potion Energy'?Math.min(10,unit.damage||0):0;
- return hpRemaining(unit)+potionHeal<=darkness*20;
+ // Rainbow also deals 10 immediately, BEFORE either Darkness checkup.
+ // A Bench that survives recoil alone can still faint before our next turn.
+ const rainbowDamage=energyName==='Rainbow Energy'?10:0;
+ return hpRemaining(unit)+potionHeal-rainbowDamage<=darkness*20;
 }
 // Potion Energy heals one counter on attachment. If a non-Dark Bench host
 // already carries Darkness Energy, that heal may be the difference between
