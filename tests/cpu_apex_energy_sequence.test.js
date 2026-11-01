@@ -82,6 +82,29 @@ test('Apex avoids Darkness Energy that will KO a non-Dark Bench at checkup',()=>
  assert.ok(AI.score(activeAttach,o,cfg,{})>-1000);
 });
 
+test('Apex counts Rainbow attachment damage before two Darkness Bench checkups',()=>{
+ const o=board(),darkness='neo1-104',rainbow='base5-80';
+ const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.bench[0]={id:MACHOP,energies:[darkness],damage:20,status:null,playedTurn:2};
+ o.self.hand=[rainbow]; // 30 HP; Rainbow costs 10, then Darkness deals 10 twice.
+ const hasBench=level=>AI.candidates(o,level,{trainers:0,powers:0,powerKeys:new Set(),stadium:false})
+  .some(a=>a.type==='attach_energy'&&a.payload.slot===0);
+ assert.equal(hasBench(cfg),false,'Rainbow plus two Darkness checkups would KO the Bench');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack],
+  'strategic root filtering must not override the combined damage');
+ assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000);
+ o.self.bench[0].damage=10; // 40 HP: 10 Rainbow + 20 Darkness leaves 10 HP.
+ assert.equal(hasBench(cfg),true,'a Bench that survives all three damage ticks remains eligible');
+ assert.ok(AI.score(benchAttach,o,cfg,{})>-1000);
+ o.self.bench[0].damage=20;
+ o.self.bench[0].energies=[]; // No Darkness recoil; 30 HP survives Rainbow alone.
+ assert.equal(hasBench(cfg),true,'Rainbow alone remains legal when nonlethal');
+ o.self.bench[0].energies=[darkness];
+ assert.equal(hasBench(AI.configuration({side:1,level:7})),true,
+  'Level 7 keeps its existing attachment candidates');
+});
+
 test('Apex avoids investing other Energy in a Bench already doomed by Darkness',()=>{
  const o=board(),darkness='neo1-104',potion='base5-82';
  const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
