@@ -196,3 +196,8 @@
 /* The late overworld bust-crop rule has higher specificity; discrete mode must still leave only the safe chibi visible. */
 :root[data-rpg-discreet="on"] #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>img:not(.rpg-safe-avatar){display:none!important;visibility:hidden!important;opacity:0!important}
 :root[data-rpg-discreet="on"] #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>.rpg-safe-avatar{display:block!important;visibility:visible!important;opacity:1!important}
+
+/* Reuse the app-wide discreet preference inside event and CG dialogs. */
+.rpg-discreet-popup-toggle{flex:none;white-space:nowrap;padding:7px 10px;border:1px solid #b38bb8;border-radius:9px;background:#322643;color:#fff;font:700 12px system-ui,sans-serif;cursor:pointer}
+.rpg-discreet-popup-toggle[aria-pressed="true"]{background:#224e60;border-color:#8cbacc;color:#e9f9ff}
+@media(max-width:520px){.rpg-discreet-popup-toggle{padding:6px 7px;font-size:10px}}
