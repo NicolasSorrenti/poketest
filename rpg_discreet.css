@@ -189,3 +189,6 @@
 
 /* Keep the discreet avatar in battle chat at the same compact size as the original portrait. */
 :root[data-rpg-discreet="on"] .rpg-dialogue-message>.rpg-safe-avatar{position:relative!important;inset:auto!important;flex:0 0 38px!important;width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;max-width:38px!important;max-height:38px!important;object-fit:cover!important;border-radius:7px!important;background:#102538;box-shadow:none!important}
+
+/* Discreet mode may only show the explicitly injected safe avatar; hide the full dialogue CG layer. */
+:root[data-rpg-discreet="on"] #rpgSceneCG{display:none!important;visibility:hidden!important;opacity:0!important}
