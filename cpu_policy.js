@@ -91,6 +91,11 @@ const slotUnit=(p,slot)=>slot===-1?p.active:p.bench[slot];
 const slots=p=>[-1,...p.bench.map((_,i)=>i)];
 function energyPool(unit){
  return (unit?.energies||[]).flatMap(id=>{
+  // Buzzap turns an attached Electrode into two Energy of its chosen type.
+  // The reducer uses the public buzzapTypes mapping before reading card names;
+  // otherwise Apex undercounts attacks and values unnecessary attachments.
+  const buzzapType=unit?.buzzapTypes?.[id];
+  if(buzzapType)return [buzzapType,buzzapType];
   const n=card(id)?.name||'';
   if(n==='Double Colorless Energy')return ['Colorless','Colorless'];
   if(n==='Miracle Energy')return ['Any','Any'];
