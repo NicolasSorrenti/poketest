@@ -11,6 +11,14 @@
  const GROUP=typeof module==='object'&&module.exports?require('./rpg_group_chats'):window.NeoRpgGroupChats;
  const MEMORY=typeof module==='object'&&module.exports?require('./rpg_dialogue_memory'):window.NeoRpgDialogueMemory;
  const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
+ function availableTalk(state,npc,character){
+  const rank=REL?.bondRank?.(state,npc)||0;
+  return (Array.isArray(character?.talk)?character.talk:[])
+   .map((entry,index)=>({entry,index}))
+   .filter(({entry})=>typeof entry==='string'||(entry&&typeof entry.text==='string'&&
+     (Number(entry.minBondRank)||0)<=rank))
+   .map(({entry,index})=>({text:typeof entry==='string'?entry:entry.text,index}));
+ }
  function hash(text){
   let n=2166136261;
   for(const ch of String(text)){n=Math.imul(n^ch.charCodeAt(0),16777619)>>>0;}
@@ -20,7 +28,9 @@
   return length>0?hash(npc+':'+state.day+':'+state.slot)%length:0;
  }
  function dialogueEntry(state,npc,character,dialogueModule,{first=false,present=[]}={}){
-  const lines=Array.isArray(character?.talk)&&character.talk.length?character.talk:[character?.repeat||character?.intro||'Good to see you.'];
+  const authoredTalk=availableTalk(state,npc,character);
+  const lines=authoredTalk.length?authoredTalk.map(entry=>entry.text):
+   [character?.repeat||character?.intro||'Good to see you.'];
   if(first){
    if(Array.isArray(character?.firstMeeting)&&character.firstMeeting.length>=3)return {lines:character.firstMeeting,id:null,source:'intro'};
    const greeting=dialogueModule?.greetingLines?.(npc,character.intro||lines[0]);
@@ -55,8 +65,9 @@
    }
   }
   const index=topic(state,npc,lines.length);
-  const authored=dialogueModule?.talkLines?.(npc,index,lines[index]);
-  if(Array.isArray(authored)&&authored.length>=3)return {lines:authored,id:MEMORY?.casualId('classic',npc,index)||null,source:'classic'};
+  const sourceIndex=authoredTalk[index]?.index??index;
+  const authored=dialogueModule?.talkLines?.(npc,sourceIndex,lines[index]);
+  if(Array.isArray(authored)&&authored.length>=3)return {lines:authored,id:MEMORY?.casualId('classic',npc,sourceIndex)||null,source:'classic'};
   // Last-resort conversation for an NPC with no authored `talkLines`.
   // NEVER attach another random, unrelated topic to the NPC's opening.
   // Varied but connected listening responses avoid the previous repetitive
@@ -70,7 +81,7 @@
   const exchange=fallbacks[hash(npc+':fallback:'+state.day+':'+state.slot)%fallbacks.length];
   return {lines:[{speaker:npc,text:lines[index]},
    {speaker:'Protagonist',text:exchange[0]},
-   {speaker:npc,text:exchange[1]}],id:MEMORY?.casualId('classic',npc,index)||null,source:'classic'};
+   {speaker:npc,text:exchange[1]}],id:MEMORY?.casualId('classic',npc,sourceIndex)||null,source:'classic'};
  }
  function dialogue(state,npc,character,dialogueModule,options){
   return dialogueEntry(state,npc,character,dialogueModule,options).lines;
