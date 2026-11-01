@@ -16,11 +16,11 @@ test('Apex values Buzzap Electrode as two Energy of its chosen type',()=>{
  const electrode='base1-21';
  const host={id:HITMONCHAN,energies:[electrode],buzzapTypes:{[electrode]:'Fighting'},damage:0};
  const target={id:RATTATA,energies:[],damage:0};
- assert.deepEqual(AI.energyPool(host),['Fighting','Fighting'],
-  'the attached Electrode provides two Fighting, not zero Energy');
- assert.deepEqual(AI.energyPool({...host,buzzapTypes:{[electrode]:'Water'}}),['Water','Water'],
-  'the publicly chosen Buzzap type, not the Electrode printing, determines Energy');
- assert.deepEqual(AI.energyPool({...host,buzzapTypes:{}}),[],
+ assert.equal(AI.strongestAffordableAttack(host,target),40,
+  'two Fighting from Buzzap fund Jab against Fighting-weak Rattata');
+ assert.equal(AI.strongestAffordableAttack({...host,buzzapTypes:{[electrode]:'Water'}},target),0,
+  'a different public Buzzap type cannot pay Fighting costs');
+ assert.equal(AI.strongestAffordableAttack({...host,buzzapTypes:{}},target),0,
   'an ordinary Electrode card is not automatically Energy');
  assert.ok(AI.energyValue(host,FIGHT)>90,
   'one more Fighting Energy unlocks Special Punch after two Buzzap units');
