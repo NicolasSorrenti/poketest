@@ -126,7 +126,7 @@ class ClassicLocalService {
   const eligible=!!s.rpgDrawAssist&&cmd.type==='end_turn'&&s.game.phase==='game'&&s.game.turn===0;
   const input=eligible?structuredClone(s.game):s.game;
   const rescue=eligible?{...s.rpgDrawAssist}:null;
-  if(eligible)RPG_DRAW.assist(input,rescue);
+  if(eligible)RPG_DRAW.assist(input,rescue,Math.random,NPC_DECKS.PROFILES[s.npc]);
   const result=reduce(input,0,cmd);
   if(!result.ok)throw Error(result.error||'Illegal command');
   // Preserve the single authoritative CPU result, but return safe public
