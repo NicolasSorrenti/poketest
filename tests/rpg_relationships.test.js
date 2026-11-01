@@ -67,3 +67,16 @@ test('duel receipt grants one mirrored trust change and resists duplicate settle
  assert.equal(BRIDGE.settle(s,d,0,'Reina'),null);
  assert.equal(s.bonds.reina.trust,3);
 });
+
+test('character preferences produce weighted bond scores and ranks',()=>{
+ const hana={relationships:{},bonds:{}},yuna={relationships:{},bonds:{}};
+ REL.apply(hana,'hana',{trust:2});
+ REL.apply(yuna,'yuna',{trust:2});
+ assert.deepEqual(REL.profileFor('hana').weights,{trust:4,respect:3,affection:2,attraction:1});
+ assert.deepEqual(REL.profileFor('yuna').weights,{affection:4,attraction:3,trust:2,respect:1});
+ assert.equal(REL.bondScore(hana,'hana'),8);
+ assert.equal(REL.bondScore(yuna,'yuna'),4);
+ assert.equal(REL.bondRank(hana,'hana'),0);
+ REL.apply(hana,'hana',{trust:3,respect:3,affection:3});
+ assert.equal(REL.bondRank(hana,'hana'),2);
+});
