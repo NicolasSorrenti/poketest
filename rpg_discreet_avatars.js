@@ -39,7 +39,7 @@
  const cache=new Map();
  const isOverworld=()=>win?.location?.pathname==='/rpg-overworld.html';
  // Prefer the approved full-body chibi over portrait-only discreet crops.
- const chibiCandidates=id=>['/rpg-assets/characters/'+id+'/chibi/front.png','/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png'];
+ const chibiCandidates=id=>['/rpg-assets/characters/'+id+'/chibiv2.png','/rpg-assets/characters/'+id+'/chibi/front.png','/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png'];
  function probeChibi(id){
   if(!win?.Image)return Promise.resolve(null);
   const paths=[...chibiCandidates(id),...(id==='reina'?[]:chibiCandidates('reina'))];
