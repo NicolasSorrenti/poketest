@@ -17,7 +17,37 @@
       "When I'm nervous, I sway a little. When I get excited, my feet seem to forget they're supposed to stay still.",
       "I keep a list of small things people mention so I can remember what makes their day easier. Is that strange? I hope it's the good kind of strange.",
       "Reading together is nice. We don't have to fill every quiet moment with words.",
-      "I practiced asking you to hang out. The sentence was only six words long, and I still practiced it three times."
+      "I practiced asking you to hang out. The sentence was only six words long, and I still practiced it three times.",
+      "I keep emergency snacks in my bag for other people. I am working on remembering that I am also a person.",
+      "The card shop is easier to navigate when I have a job to do. Standing around and just enjoying myself still feels like a new skill.",
+      "I like stories where the quiet character notices the important thing first.",
+      "Sometimes I rehearse a conversation because I want to be considerate, and then the real conversation goes somewhere better.",
+      "I am very good at remembering everyone else's favorite cards. I am learning that people might remember mine too.",
+      "When someone says they are proud of me, my brain immediately starts looking for the part where I disappointed them.",
+      "A small act of courage still counts if your hands are shaking while you do it.",
+      "I like the sound of people sorting cards together. It makes silence feel shared instead of empty.",
+      "I used to think asking someone to stay was selfish. Now I am trying to ask before deciding for them.",
+      "If I make a mistake in front of you, I might blush for ten minutes, but I will try again.",
+      {
+        "text": "I practiced saying that I wanted to see you. The practice was embarrassing. The wanting was not.",
+        "minBondRank": 2
+      },
+      {
+        "text": "You make it easier to say what I mean instead of offering the most useful answer.",
+        "minBondRank": 2
+      },
+      {
+        "text": "I notice when you look for me in a room. I pretend I do not, but I notice.",
+        "minBondRank": 2
+      },
+      {
+        "text": "I trust you enough to be quiet without trying to make myself useful every second.",
+        "minBondRank": 3
+      },
+      {
+        "text": "When I imagine a good day now, you are sometimes already in it. That still surprises me.",
+        "minBondRank": 3
+      }
     ],
     "hangouts": [
       "You and Jicy spend a quiet afternoon comparing favorite cards and making up stories for the art.",

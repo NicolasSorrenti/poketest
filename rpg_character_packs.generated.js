@@ -1901,7 +1901,32 @@ const packs=[
     "There's this half-second before someone draws the last Prize where I can hear the whole room go quiet.",
     "I can admit I was wrong. I just prefer to do it with a dramatic entrance.",
     "If I look confident, it means I decided not to wait for permission.",
-    "My glasses aren't a disguise. They just make it easier to stare at a tiny card and pretend I'm studying."
+    "My glasses aren't a disguise. They just make it easier to stare at a tiny card and pretend I'm studying.",
+    "I collect little proofs that a day happened: café receipts, ticket stubs, a note someone left in a sleeve.",
+    "My jokes are usually doing two jobs. They make the room lighter, and they give me a second to decide how honest I want to be.",
+    "The best card art looks like it knows something the player hasn't noticed yet.",
+    "I used to think confidence meant never checking whether people were having a good time. I was wrong about that.",
+    "A dramatic entrance is only useful if you still know how to stay when the applause stops.",
+    {
+     "text": "You catch the things I leave between the jokes. That is either flattering or extremely inconvenient.",
+     "minBondRank": 2
+    },
+    {
+     "text": "There are days when I would rather be understood than admired. I do not say that very often.",
+     "minBondRank": 2
+    },
+    {
+     "text": "If I let you see me hesitate, it is because I trust you not to turn it into a story for everyone else.",
+     "minBondRank": 2
+    },
+    {
+     "text": "I am not always performing when I tease you. Sometimes I am just trying to find out whether you will stay in the conversation.",
+     "minBondRank": 3
+    },
+    {
+     "text": "You have become one of the people I look for before I decide what kind of day this is going to be.",
+     "minBondRank": 3
+    }
    ],
    "hangouts": [
     "Daisy holds two translucent skirt layers against the window and asks which moves better when she walks.",
@@ -3042,7 +3067,37 @@ const packs=[
     "When I'm nervous, I sway a little. When I get excited, my feet seem to forget they're supposed to stay still.",
     "I keep a list of small things people mention so I can remember what makes their day easier. Is that strange? I hope it's the good kind of strange.",
     "Reading together is nice. We don't have to fill every quiet moment with words.",
-    "I practiced asking you to hang out. The sentence was only six words long, and I still practiced it three times."
+    "I practiced asking you to hang out. The sentence was only six words long, and I still practiced it three times.",
+    "I keep emergency snacks in my bag for other people. I am working on remembering that I am also a person.",
+    "The card shop is easier to navigate when I have a job to do. Standing around and just enjoying myself still feels like a new skill.",
+    "I like stories where the quiet character notices the important thing first.",
+    "Sometimes I rehearse a conversation because I want to be considerate, and then the real conversation goes somewhere better.",
+    "I am very good at remembering everyone else's favorite cards. I am learning that people might remember mine too.",
+    "When someone says they are proud of me, my brain immediately starts looking for the part where I disappointed them.",
+    "A small act of courage still counts if your hands are shaking while you do it.",
+    "I like the sound of people sorting cards together. It makes silence feel shared instead of empty.",
+    "I used to think asking someone to stay was selfish. Now I am trying to ask before deciding for them.",
+    "If I make a mistake in front of you, I might blush for ten minutes, but I will try again.",
+    {
+     "text": "I practiced saying that I wanted to see you. The practice was embarrassing. The wanting was not.",
+     "minBondRank": 2
+    },
+    {
+     "text": "You make it easier to say what I mean instead of offering the most useful answer.",
+     "minBondRank": 2
+    },
+    {
+     "text": "I notice when you look for me in a room. I pretend I do not, but I notice.",
+     "minBondRank": 2
+    },
+    {
+     "text": "I trust you enough to be quiet without trying to make myself useful every second.",
+     "minBondRank": 3
+    },
+    {
+     "text": "When I imagine a good day now, you are sometimes already in it. That still surprises me.",
+     "minBondRank": 3
+    }
    ],
    "hangouts": [
     "You and Jicy spend a quiet afternoon comparing favorite cards and making up stories for the art.",
@@ -6242,7 +6297,38 @@ const packs=[
     "At work I'll wear whatever fits the brief. On my days off, picking an outfit sounds like more work, so I just grab my favorite top and jeans.",
     "I once got to the shop before noticing I'd missed a button. Another morning I forgot my bra. Apparently getting dressed before coffee is a gamble.",
     "Umbreon looks like it could wait all night and still win. That's the energy I want.",
-    "If I'm quiet with you, that usually means I'm comfortable. Please don't fill every second."
+    "If I'm quiet with you, that usually means I'm comfortable. Please don't fill every second.",
+    "A good photo is not always the prettiest one. Sometimes it is just the one where nobody is pretending too hard.",
+    "I can tell when a stylist wants a smile and when they want a person. The second request is rarer.",
+    "I keep my favorite cards in a case that looks boring. It discourages people from asking to borrow them.",
+    "The best part of a shoot is usually the ten minutes when everyone stops giving instructions.",
+    "I do not hate attention. I hate being treated like attention is the only thing I am good for.",
+    "I am better at noticing a bad contract than I used to be. Experience is expensive, but it does teach you.",
+    "If I say I am tired, I am not asking you to fix it. Sitting nearby is usually enough.",
+    "I like clothes that do not require a decision. A good pair of jeans can save an entire morning.",
+    "People think being quiet means I have nothing to say. It usually means I am deciding whether it is worth saying.",
+    "I once kept a terrible photograph because I was laughing in it. The picture was awful. I still like it.",
+    "Umbreon is easier than people. It never asks me to look enthusiastic on command.",
+    {
+     "text": "You ask about the parts of the day nobody photographs. That is why I keep answering.",
+     "minBondRank": 2
+    },
+    {
+     "text": "I do not mind you seeing me without the work version of my face. Just do not make a big ceremony out of it.",
+     "minBondRank": 2
+    },
+    {
+     "text": "When I tell you I am comfortable, I mean I am choosing to stay—not that I ran out of places to go.",
+     "minBondRank": 2
+    },
+    {
+     "text": "I am not used to someone remembering what I said after the shoot is over. It is a good habit. Keep it.",
+     "minBondRank": 3
+    },
+    {
+     "text": "You have become the person I can sit beside without turning the silence into a performance.",
+     "minBondRank": 3
+    }
    ],
    "hangouts": [
     "You help Lyla review contact sheets; she chooses the candid frame over the perfectly posed one.",

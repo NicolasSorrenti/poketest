@@ -25,7 +25,10 @@ function validate(p,legalDecks=decks()){
  ensure(d.stories==='stories.json'&&d.artManifest==='art_manifest.json'&&d.bible==='bible.md',id+': standard linked filenames required');
  ensure(plain(d.dialogue),id+': missing dialogue');
  for(const key of ['intro','repeat','flirt','duelWin','duelLose'])ensure(words(d.dialogue[key]),id+': missing '+key);
- for(const key of ['talk','hangouts'])ensure(Array.isArray(d.dialogue[key])&&d.dialogue[key].length>=2&&d.dialogue[key].every(words),id+': '+key+' needs at least two entries');
+ const validTalkEntry=x=>words(x)||(plain(x)&&words(x.text)&&
+  (x.minBondRank===undefined||(Number.isInteger(x.minBondRank)&&x.minBondRank>=0&&x.minBondRank<=5)));
+ for(const key of ['talk','hangouts'])ensure(Array.isArray(d.dialogue[key])&&d.dialogue[key].length>=2&&
+  d.dialogue[key].every(key==='talk'?validTalkEntry:words),id+': '+key+' needs at least two entries');
  ensure(plain(d.appearance),id+': missing appearance');
  for(const key of ['silhouette','palette','hair','expressions','renderNotes'])ensure(words(d.appearance[key]),id+': missing appearance.'+key);
  ensure(Array.isArray(d.schedule)&&d.schedule.length===7&&d.schedule.every(day=>Array.isArray(day)&&day.length===3&&day.every(loc=>places.has(loc))),id+': schedule needs 7 days × 3 known places');
