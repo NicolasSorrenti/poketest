@@ -58,11 +58,18 @@ test('Apex avoids Darkness Energy that will KO a non-Dark Bench at checkup',()=>
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack],
   'root preparation must also reject the doomed attachment');
  assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000);
- o.self.bench[0].damage=30; // 20 HP survives one Darkness checkup.
- assert.equal(hasBench(cfg),true,'a surviving non-Dark Bench remains eligible');
+ o.self.bench[0].damage=30; // 20 HP survives ours, but faints on opponent's checkup.
+ assert.equal(hasBench(cfg),false,'Bench must survive both checkups before our next turn');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack],
+  'root preparation must not override the two-checkup survival guard');
+ assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000);
+ o.self.bench[0].damage=20; // 30 HP survives two 10-damage checkups.
+ assert.equal(hasBench(cfg),true,'a Bench that survives until our next turn remains eligible');
  assert.ok(AI.score(benchAttach,o,cfg,{})>-1000);
- o.self.bench[0].energies=[darkness]; // Two Darkness now cause 20 checkup damage.
- assert.equal(hasBench(cfg),false,'count all attached Darkness Energy recoil');
+ o.self.bench[0].energies=[darkness]; // Two Darkness deal 40 damage over both turns.
+ assert.equal(hasBench(cfg),false,'count all attached Darkness Energy across both checkups');
+ o.self.bench[0].damage=0; // 50 HP survives two 20-damage checkups.
+ assert.equal(hasBench(cfg),true,'survivable multiple-Darkness Bench attachment remains eligible');
  o.self.bench[0]={id:'neo1-24',energies:[],damage:40}; // Dark-type Murkrow is immune.
  assert.equal(hasBench(cfg),true,'Dark-type recipients do not take Darkness recoil');
  o.self.bench[0]={id:MACHOP,energies:[],damage:40};
