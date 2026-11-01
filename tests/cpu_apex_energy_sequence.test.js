@@ -82,6 +82,38 @@ test('Apex avoids Darkness Energy that will KO a non-Dark Bench at checkup',()=>
  assert.ok(AI.score(activeAttach,o,cfg,{})>-1000);
 });
 
+test('Apex avoids investing other Energy in a Bench already doomed by Darkness',()=>{
+ const o=board(),darkness='neo1-104',potion='base5-82';
+ const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.bench[0]={id:MACHOP,energies:[darkness],damage:30,status:null,playedTurn:2};
+ o.self.hand=[FIGHT]; // 20 HP, one Darkness: two 10-damage checkups before next turn.
+ const hasBench=level=>AI.candidates(o,level,{trainers:0,powers:0,powerKeys:new Set(),stadium:false})
+  .some(a=>a.type==='attach_energy'&&a.payload.slot===0);
+ assert.equal(hasBench(cfg),false,'ordinary Energy cannot save this doomed Bench');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack],
+  'strategic preparation must not spend the turn on a doomed Bench');
+ assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000,'score must reject the wasted attachment');
+ o.self.hand=['base5-81']; // Full Heal Energy does not heal Darkness damage.
+ assert.equal(hasBench(cfg),false,'status curing does not prevent Darkness recoil');
+ o.self.hand=[potion]; // Heals 10 now: 30 HP survives both 10-damage checkups.
+ assert.equal(hasBench(cfg),true,'Potion Energy remains legal when its heal saves the Bench');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[benchAttach],
+  'the actual rescue should still precede a non-winning attack');
+ assert.ok(AI.score(benchAttach,o,cfg,{})>-1000);
+ o.self.bench[0].damage=40; // 10 HP + 10 heal equals 20 recoil: still doomed.
+ assert.equal(hasBench(cfg),false,'do not mistake an insufficient Potion heal for survival');
+ o.self.bench[0].damage=20; // 30 HP already survives both checkups.
+ o.self.hand=[FIGHT];
+ assert.equal(hasBench(cfg),true,'survivable Bench development stays available');
+ o.self.bench[0]={id:'neo1-24',energies:[darkness],damage:40,status:null};
+ assert.equal(hasBench(cfg),true,'Dark-type Bench hosts are immune to Darkness recoil');
+ o.self.bench[0]={id:MACHOP,energies:[darkness],damage:30,status:null};
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(hasBench(lower),true,'Level 7 retains its established candidate behavior');
+ assert.ok(AI.score(benchAttach,o,lower,{})>-1000);
+});
+
 test('Apex heals a Darkness-damaged Bench before a non-winning attack',()=>{
  const o=board(),potion='base5-82',darkness='neo1-104';
  const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
@@ -101,13 +133,13 @@ test('Apex heals a Darkness-damaged Bench before a non-winning attack',()=>{
  const savingScore=AI.score(benchAttach,o,cfg,{});
  o.self.hand=['base5-81']; // Full Heal Energy does not heal damage.
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),
-  [attack,benchAttach],'neutral surplus Energy should not delay the attack');
+  [attack],'neutral Energy on a doomed Bench is excluded, not merely deprioritized');
  assert.ok(savingScore>AI.score(benchAttach,o,cfg,{})+150,
   'reward actual two-checkup survival, not just an Energy symbol');
  o.self.hand=[potion];
  o.self.bench[0].damage=40; // 10 HP + 10 healed still faints at second checkup.
- assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack,benchAttach],
-  'do not claim a rescue if the host still faints');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack],
+  'do not offer a Potion attachment when the host still faints');
  o.self.bench[0].damage=20; // 30 HP already survives both ticks.
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack,benchAttach],
   'do not force Potion when the Bench already survives');
