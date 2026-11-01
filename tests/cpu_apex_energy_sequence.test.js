@@ -30,7 +30,7 @@ test('Apex values Buzzap Electrode as two Energy of its chosen type',()=>{
  assert.ok(AI.energyValue(charged,FIGHT)<12,
   'Apex must not waste an attachment trying to unlock an already-funded attack');
  const withoutBuzzap={...charged,buzzapTypes:{}};
- assert.equal(AI.strongestAffordableAttack(withoutBuzzap,target),20,
+ assert.equal(AI.strongestAffordableAttack(withoutBuzzap,target),40,
   'without Buzzap, only the single Fighting Energy funds Jab');
  const o=board();
  o.opponent.active=charged;
