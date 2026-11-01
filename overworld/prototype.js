@@ -170,12 +170,17 @@
     renderTray();drawStage();status.textContent=cloudState?'Loaded placements from the game.':'Loaded local placements. Drag a pose onto the map to start.';
     return;
   }
+  let mapReady=false,pendingChibiMode=null;
   // When the parent RPG shows VN dialogue, preserve the location as a backdrop
   // but remove map NPC portraits, edge indicators and hotspots from the scene.
   // This message is only trusted from the same-origin parent of integrated mode.
   window.addEventListener('message',event=>{
     if(event.origin!==location.origin||event.source!==window.parent||!params.has('rpg-integration'))return;
-    if(event.data?.type==='neo-overworld-chibi-mode'){setChibiMode(event.data.enabled===true);return}
+    if(event.data?.type==='neo-overworld-chibi-mode'){
+      if(mapReady)setChibiMode(event.data.enabled===true);
+      else pendingChibiMode=event.data.enabled===true;
+      return;
+    }
     if(event.data?.type==='neo-overworld-story-visibility'){
       document.body.classList.toggle('neo-overworld-dialogue',event.data.hidden===true);
     }
@@ -440,5 +445,7 @@
     resetBtn.onclick=()=>{localStorage.removeItem(layoutKey);location.reload()};
   }
   addEventListener('resize',center);center();
+  mapReady=true;
+  if(pendingChibiMode!==null)setChibiMode(pendingChibiMode);
   window.__overworldPreview={map,placements,center,focus};
 })();
