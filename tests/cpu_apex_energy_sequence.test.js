@@ -133,13 +133,13 @@ test('Apex heals a Darkness-damaged Bench before a non-winning attack',()=>{
  const savingScore=AI.score(benchAttach,o,cfg,{});
  o.self.hand=['base5-81']; // Full Heal Energy does not heal damage.
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),
-  [attack,benchAttach],'neutral surplus Energy should not delay the attack');
+  [attack],'neutral Energy on a doomed Bench is excluded, not merely deprioritized');
  assert.ok(savingScore>AI.score(benchAttach,o,cfg,{})+150,
   'reward actual two-checkup survival, not just an Energy symbol');
  o.self.hand=[potion];
  o.self.bench[0].damage=40; // 10 HP + 10 healed still faints at second checkup.
- assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack,benchAttach],
-  'do not claim a rescue if the host still faints');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack],
+  'do not offer a Potion attachment when the host still faints');
  o.self.bench[0].damage=20; // 30 HP already survives both ticks.
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack,benchAttach],
   'do not force Potion when the Bench already survives');
