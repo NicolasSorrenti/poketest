@@ -91,7 +91,7 @@ class ClassicLocalService {
   let game=createGame({decks:[playerCards,cpuCards],names:['You','Classic CPU'],format,...(prizeCount?{prizeCount}:{}),seed:seed??crypto.randomBytes(4).readUInt32BE(0)});
   game=driveBot(game,200,cpuConfig).game;
   const token=crypto.randomBytes(24).toString('base64url'),session={game,revision:0,updated:this.now(),token,deck,opponent,cpuConfig,npc:profileId??npcDeckId??null,npcDeckTier:customOpponentDeck?null:npcDeckTier,
-   ...(typeof npcDeckId==='string'?{rpgDrawAssist:{stalled:0,used:false}}:{})};
+   ...(typeof npcDeckId==='string'?{rpgDrawAssist:{stalled:0,used:false,usedCount:0}}:{})};
   this.sessions.set(token,session);return {token,...this.response(session)};
  }
  createCube({humanDeck,cpuDeck,seed,difficulty=3,personality='balanced',name='Cube CPU'}={}){
