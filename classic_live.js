@@ -209,6 +209,7 @@
   // These are chronological public snapshots from the authoritative server,
   // not client-side re-executions of card effects or CPU decisions.
   let previousSeq=lastEventSeq(current?.activity);
+  let lastRescueCue=current?.rpgAssistCue||0;
   for(const frame of [...snapshots,result]){
    if(epoch!==playbackEpoch)return false;
    const cpuAttacked=frame.activity?.some(event=>
