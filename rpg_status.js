@@ -10,6 +10,53 @@
   const periods=['Morning','Afternoon','Evening'];
   const SOCIAL=typeof module==='object'&&module.exports?require('./rpg_social_activities'):
     (typeof window!=='undefined'?window.NeoRpgSocialActivities:null);
+  const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):
+    (typeof window!=='undefined'?window.NeoRpgRelationships:null);
+  // Persona-inspired social-link labels. These stay neutral so a high bond can
+  // represent friendship, romance, or a relationship the player has not defined yet.
+  const RANK_NAMES=Object.freeze([
+    'First Contact',
+    'Familiar Face',
+    'Trusted Company',
+    'Closer Than Words',
+    'Shared Secret',
+    'Unbreakable Bond'
+  ]);
+  const RANK_UNLOCKS=Object.freeze([
+    'Meet them and begin learning their story.',
+    'More personal conversations begin to appear.',
+    'Trust-building events and deeper conversations become available.',
+    'Private and vulnerable story conversations become available.',
+    'Final relationship choices and route scenes become available.',
+    'Maximum bond reached. Keep spending time together for bonus conversations.'
+  ]);
+  const BOND_METRICS=['affection','trust','respect','attraction'];
+  const DEFAULT_BOND_WEIGHTS={affection:2,trust:2,respect:2,attraction:2};
+  const rankInfo=(values,id)=>{
+    const profile=REL?.profileFor?.(id);
+    const weights=profile?.weights||DEFAULT_BOND_WEIGHTS;
+    const bondScore=BOND_METRICS.reduce((total,key)=>total+
+      (Number(values[key])||0)*(Number(weights[key])||0),0);
+    const thresholds=Array.isArray(REL?.rankThresholds)&&REL.rankThresholds.length
+      ?REL.rankThresholds:[0,8,18,28,40,55];
+    let rank=0;
+    for(let index=1;index<thresholds.length;index++){
+      if(bondScore>=thresholds[index])rank=index;
+      else break;
+    }
+    const maxRank=thresholds.length-1;
+    const currentThreshold=Number(thresholds[rank])||0;
+    const nextThreshold=Number(thresholds[Math.min(rank+1,maxRank)])||currentThreshold;
+    const progress=rank>=maxRank?100:Math.max(0,Math.min(100,
+      Math.round((bondScore-currentThreshold)/Math.max(1,nextThreshold-currentThreshold)*100)));
+    return {
+      score:Math.floor(bondScore),rank,name:RANK_NAMES[rank]||('Bond Rank '+rank),
+      progress,currentThreshold,nextThreshold,maxRank,
+      nextRank:Math.min(rank+1,maxRank),
+      nextName:RANK_NAMES[Math.min(rank+1,maxRank)]||'Maximum Bond',
+      nextUnlock:RANK_UNLOCKS[Math.min(rank+1,maxRank)]||RANK_UNLOCKS.at(-1)
+    };
+  };
   const labelFor=(affection,trust)=>{
     if(affection>=15&&trust>=10)return 'Deep connection';
     if(affection>=8&&trust>=5)return 'Close bond';
@@ -31,8 +78,9 @@
       const discovered=!!s['met_'+id]||(id==='reina'&&!!s.metReina)||partner||!!outcome||
         duels>0||completed>0||stats.some(key=>values[key]>0);
       if(!discovered)continue; // No names, portraits or paths for strangers.
+      const bond=rankInfo(values,id);
       people.push({
-        id,name:c.name||id,style:c.style||'',...values,duels,
+        id,name:c.name||id,style:c.style||'',...values,duels,bond,
         completed,total:chapters.length,trialWon:!!s.bondTrials?.[id],
         outcome,partner,connection:labelFor(values.affection,values.trust),
         likes:SOCIAL?.learnedLikes(s,id,cast)||[]
@@ -80,6 +128,83 @@
     return row;
   }
 
+  function installPersonaStyles(){
+    if(document.getElementById('rpgPersonaStatusStyles'))return;
+    const style=document.createElement('style');
+    style.id='rpgPersonaStatusStyles';
+    style.textContent=`
+      .status-persona-rank{
+        margin:1rem 0 1.1rem;
+        padding:1rem 1.1rem;
+        border:1px solid rgba(226,170,255,.72);
+        border-radius:16px;
+        background:linear-gradient(135deg,rgba(55,28,82,.97),rgba(24,27,59,.97));
+        color:#fff;
+        box-shadow:0 12px 28px rgba(12,8,28,.22);
+      }
+      .status-persona-rank-header{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:.75rem;
+        letter-spacing:.12em;
+        text-transform:uppercase;
+      }
+      .status-persona-rank-kicker{color:#f3b8ff;font-size:.68rem}
+      .status-persona-rank-number{
+        padding:.25rem .52rem;
+        border:1px solid rgba(255,255,255,.42);
+        border-radius:999px;
+        font-size:.72rem;
+      }
+      .status-persona-rank-name{
+        margin:.45rem 0 .8rem;
+        font-size:1.25rem;
+        line-height:1.1;
+      }
+      .status-persona-rank-progress{
+        height:9px;
+        overflow:hidden;
+        border-radius:999px;
+        background:rgba(255,255,255,.18);
+      }
+      .status-persona-rank-fill{
+        display:block;
+        height:100%;
+        border-radius:inherit;
+        background:linear-gradient(90deg,#ff87d7,#ffd36a);
+        transition:width .25s ease;
+      }
+      .status-persona-rank-progress-label{
+        display:block;
+        margin-top:.42rem;
+        color:rgba(255,255,255,.78);
+        font-size:.72rem;
+        letter-spacing:.04em;
+      }
+      .status-persona-next{
+        margin:.8rem 0 0;
+        color:rgba(255,255,255,.86);
+        font-size:.82rem;
+        line-height:1.45;
+      }
+      .status-persona-next strong{
+        display:block;
+        margin-bottom:.15rem;
+        color:#ffd36a;
+        font-size:.7rem;
+        letter-spacing:.08em;
+      }
+      .status-character-rank{
+        color:#bd75d7;
+        font-size:.68rem;
+        letter-spacing:.04em;
+      }
+      .status-character-progress[aria-label]{display:block}
+    `;
+    document.head.appendChild(style);
+  }
+
   function open(state,cast,plan,avatar,onTutorialsChange){
     const dialog=document.getElementById('statusDialog');
     const overview=document.getElementById('statusOverview');
@@ -87,6 +212,7 @@
     const detail=document.getElementById('statusDetail');
     const count=document.getElementById('statusCount');
     if(!dialog||!overview||!characters||!detail||!count)return;
+    installPersonaStyles();
     const tutorialToggle=document.getElementById('statusTutorialToggle');
     if(tutorialToggle){
       tutorialToggle.checked=state?.gameplayTutorials?.disabled===true;
@@ -122,7 +248,38 @@
       if(person.style)headingText.append(el('p','',person.style));
       heading.append(headingText);
       if(person.partner)heading.append(el('span','status-partner-tag','♥ PARTNER'));
-      detail.append(heading,el('p','status-connection-label',person.connection));
+      const bond=person.bond;
+      const rankCard=el('section','status-persona-rank');
+      const rankHeader=el('div','status-persona-rank-header');
+      rankHeader.append(
+        el('small','status-persona-rank-kicker','SOCIAL LINK'),
+        el('strong','status-persona-rank-number','RANK '+bond.rank)
+      );
+      rankCard.append(
+        rankHeader,
+        el('h4','status-persona-rank-name',bond.name)
+      );
+      const rankTrack=el('div','status-persona-rank-progress');
+      rankTrack.setAttribute('role','progressbar');
+      rankTrack.setAttribute('aria-label','Progress toward the next bond rank');
+      rankTrack.setAttribute('aria-valuemin','0');
+      rankTrack.setAttribute('aria-valuemax','100');
+      rankTrack.setAttribute('aria-valuenow',String(bond.progress));
+      const rankFill=el('span','status-persona-rank-fill');
+      rankFill.style.width=bond.progress+'%';
+      rankTrack.append(rankFill);
+      rankCard.append(rankTrack);
+      const rankProgress=el('small','status-persona-rank-progress-label',
+        bond.rank>=bond.maxRank?'MAX RANK · '+bond.score+' BOND SCORE':
+          bond.score+' / '+bond.nextThreshold+' BOND SCORE TO NEXT RANK');
+      rankCard.append(rankProgress);
+      const next=el('p','status-persona-next');
+      next.append(
+        el('strong','',bond.rank>=bond.maxRank?'CURRENT UNLOCK':'NEXT UNLOCK · RANK '+bond.nextRank+' '+bond.nextName),
+        document.createTextNode(' — '+bond.nextUnlock)
+      );
+      rankCard.append(next);
+      detail.append(heading,el('p','status-connection-label',person.connection),rankCard);
       const meters=el('div','status-meters');
       for(const key of stats)meters.append(meter(key[0].toUpperCase()+key.slice(1),person[key]));
       detail.append(meters);
@@ -154,10 +311,16 @@
         window.NeoRpgDiscreetAvatars?.set?.(portrait,person.id,'neutral',person.name);
       }else portrait.append(el('span','status-character-initials',person.name.split(' ').map(x=>x[0]).slice(0,2).join('')));
       const body=el('span','status-character-body');
-      body.append(el('strong','',person.name),el('small','',person.partner?'♥ Partner':person.connection));
+      body.append(
+        el('strong','',person.name),
+        el('small','status-character-rank','RANK '+person.bond.rank+' · '+person.bond.name),
+        el('small','',person.partner?'♥ Partner':person.connection)
+      );
       const mini=el('span','status-character-progress');
+      mini.setAttribute('aria-label','Rank progress '+person.bond.progress+' percent');
+      mini.title='Rank '+person.bond.rank+' · '+person.bond.name;
       const filled=el('span','');
-      filled.style.width=Math.min(100,person.affection/20*100)+'%';
+      filled.style.width=person.bond.progress+'%';
       mini.append(filled);body.append(mini);
       button.append(portrait,body);
       button.addEventListener('click',()=>select(person));

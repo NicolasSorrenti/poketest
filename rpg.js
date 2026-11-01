@@ -1,5 +1,12 @@
 'use strict';
 (()=>{
+const DRAW_ASSIST_KEY='neoRpgCpuDrawAssistEnabled';
+const drawAssistToggle=document.getElementById('rpgDrawAssistToggle');
+if(drawAssistToggle){
+ const refresh=()=>{const enabled=localStorage.getItem(DRAW_ASSIST_KEY)!=='false';drawAssistToggle.textContent='CPU HELP: '+(enabled?'ON':'OFF');drawAssistToggle.setAttribute('aria-pressed',String(enabled));};
+ drawAssistToggle.addEventListener('click',()=>{localStorage.setItem(DRAW_ASSIST_KEY,String(localStorage.getItem(DRAW_ASSIST_KEY)==='false'));refresh();});
+ refresh();
+}
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
@@ -149,7 +156,7 @@ function audioForTime(change){
 function timeFlash(change,onDone=()=>{}){
  audioForTime(change);
  // Presentation follows the already-committed RPG time state; it never owns state changes.
- if(window.NeoRpgTimeTransitions?.present)return !!window.NeoRpgTimeTransitions.present(change,{onDismiss:onDone});
+ if(window.NeoRpgTimeTransitions?.present)return !!window.NeoRpgTimeTransitions.present(change,{onCover:()=>{timeTransitionCovered=true;render();},onDismiss:onDone});
  const overlay=document.createElement('div');overlay.className='notice-pop';
  const heading=document.createElement('b');heading.textContent=change.afterDay>90?'Season complete':change.afterDay!==change.beforeDay?'A NEW DAY BEGINS':'TIME PASSES';
  const body=document.createElement('span');body.textContent=change.afterDay>90?'Day 90 has ended.':'Day '+change.afterDay+' · '+periods[change.afterSlot];
@@ -161,7 +168,7 @@ function timeFlash(change,onDone=()=>{}){
  return true;
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,partners:[],activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,phoneMessages:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -225,6 +232,7 @@ function recordCG(kind,npc,context=null){
 let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene.line==='string'&&Array.isArray(state.scene.choices)?state.scene:{speaker:'Narrator',line:'Ninety days. One championship. You came to Neo Harbor to win. Everyone else has their own plans.',choices:[]};
 // A single handoff owns calendar wipes, image loading and forced-story eligibility.
 // The state is saved at clock advancement; only presentation waits for acknowledgement.
+let timeTransitionCovered=true;
 const timeSequence=window.NeoRpgTimeTransitions?.createSequence?.({
  canPresent:()=>!scene.line&&!scene.choices?.length,
  present:timeFlash,
@@ -359,6 +367,7 @@ if(state.day>beforeDay){
   const latest=news.at(-1);
   log('Club news: '+COMMUNITY.describe(latest,cast));
  }
+ phoneMessages?.onDayAdvance(beforeDay);
 }
 const expiredCups=TOURNAMENTS.expire(state);if(expiredCups.length)log('A tournament registration window has closed.');
 const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
@@ -367,7 +376,7 @@ const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 queueMandatory();arriveForScheduledPlan();persist();
-if(!suppressTimeFlash){timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource});timeSequence.flush();}}
+if(!suppressTimeFlash&&timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource})){timeTransitionCovered=false;timeSequence.flush();}}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
 function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null){
  if(!Array.isArray(lines)||!lines.length)return;
@@ -449,8 +458,8 @@ window.NeoRpgOverworldBridge=Object.freeze({
   return intro?.id===id&&intro.location===state.location?intro.src:null;
  },
  interact(id){if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id))return false;selectPerson(id);return true;},
- activities(){return WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:overworldControlsLocked()||!!a.disabledReason}));},
- activity(id){if(overworldControlsLocked()||!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;performActivity(id);return true;},
+ activities(){const items=WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:overworldControlsLocked()||!!a.disabledReason}));if(state.location==='shop'&&state.deckJourney?.starter)items.unshift({id:'boosterShop',title:'Browse booster packs · The Lucky Draw',disabled:overworldControlsLocked()||state.day>90});return items;},
+ activity(id){if(id==='boosterShop'){if(overworldControlsLocked()||state.day>90||state.location!=='shop'||!state.deckJourney?.starter)return false;openBoosterShop();return true;}if(overworldControlsLocked()||!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;performActivity(id);return true;},
 });
 function overworldStoryActive(){
  return !!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||
@@ -2752,6 +2761,16 @@ function maybeShowYearEndFallReel(){
 let pendingEntrySurprise=false;
 let pendingOverworldArrival=null;
 let arrivalGate=false;
+const phoneMessages=window.NeoRpgPhoneMessages?.create({
+ state,cast,manifest:window.NeoOverworld,relationships:REL,persist,render,
+ people:currentPeople,
+ fallbackImage:id=>scenePortraitSource(id,'neutral',null),
+ audio:()=>window.NeoRpgAudio?.play?.('phone'),
+ discreet:()=>window.NeoRpgDiscreet?.isEnabled?.(),
+ avatars:window.NeoRpgDiscreetAvatars,
+ canShow:()=>!controlsLocked()&&!arrivalGate&&!pendingOverworldArrival&&!window.NeoRpgTimeTransitions?.active&&
+  !document.querySelector('dialog[open]:not(#phoneMessageDialog)')
+});
 async function finishOverworldArrival(destination){
  if(state.location!==destination)return;
  arrivalGate=true;
@@ -2779,6 +2798,9 @@ async function finishOverworldArrival(destination){
  if(state.location===destination)render();
 }
 function render(){
+ // Keep the outgoing DOM intact until the calendar wipe fully covers it; then swap
+ // the scene behind the overlay so the new day is revealed only as the wipe exits.
+ if(timeSequence.blocked&&!timeTransitionCovered)return;
  // Detect actual location changes after the first render; navigation remains free.
  const previousLocation=lastRenderedLocation;
  lastRenderedLocation=state.location;
@@ -2915,7 +2937,7 @@ function render(){
   if(action.startsWith('storyChoice:')){
    const event=STORY.byId(state.activeStory.id),chosen=event.choices[Number(action.split(':')[1])],bond=state.relationships[event.npc];
    b.disabled=chosen.kind==='commit'&&!VN.commitmentReady(state,event.npc);
-   if(b.disabled)b.title='You need a stronger bond or you already have a partner.';
+   if(b.disabled)b.title='You need a stronger bond for this step.';
   }
   if(action.startsWith('socialDo:')){
    const [,npc,activityId]=action.split(':');
@@ -3047,6 +3069,8 @@ function render(){
     const button=document.createElement('button');
     button.type='button';button.className='character-action-btn';
     button.textContent=label;button.title=title;button.onclick=action;
+    // Stable action ID lets the mobile layout hide Scout without changing PC.
+    button.dataset.characterAction=label.includes('Scout')?'scout':label.includes('Glance at')?'glance':label.includes('Deck')?'deck':'other';
     characterActions.append(button);
    }
   }
@@ -3174,6 +3198,7 @@ function render(){
   pendingOverworldArrival=null;
   void finishOverworldArrival(destination);
  }
+ phoneMessages?.showIfReady();
  notifyOverworldRendering();
 }
 

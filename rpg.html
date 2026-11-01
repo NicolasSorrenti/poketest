@@ -8,7 +8,7 @@
 <script>try{if(JSON.parse(localStorage.getItem('neoRpgCloudSessionV1')||'null')?.user?.id)document.documentElement.classList.add('rpg-cloud-loading');}catch{}</script>
 <script src="/rpg_error_diagnostics.js?v=20261028-optional-2"></script>
 <script src="/rpg_discreet.js"></script>
-<script src="/rpg_discreet_avatars.js?v=chibi-live-reina-20261030"></script>
+<script src="/rpg_discreet_avatars.js?v=chibiv2-discreet-20261101-3"></script>
 <link rel="stylesheet" href="/rpg.css?v=dialogue-bust-20261031">
 <link rel="stylesheet" href="/rpg_cloud_save.css?v=cloud-login-visible-20261030">
 <link rel="stylesheet" href="/rpg_time_transitions.css?v=readable-time-shift-20261030">
@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="/rpg_victory_presentation.css">
 <link rel="stylesheet" href="/rpg_tournament_presentation.css">
 <link rel="stylesheet" href="/rpg_audio.css">
-<link rel="stylesheet" href="/rpg_discreet.css?v=chat-avatar-compact-20261030">
+<link rel="stylesheet" href="/rpg_discreet.css?v=discreet-hide-dialogue-cg-20261101-1">
 <link rel="stylesheet" href="/rpg_status.css?v=3">
 <link rel="stylesheet" href="/rpg_cg_viewer.css?v=1">
 
@@ -40,7 +40,7 @@
       <div class="time-track" id="timeTrack"></div>
       <small id="timeHint">Next: Afternoon · ⏳</small>
     </section>
-    <div class="rpg-topbar-actions"><button id="cloudSaveButton" class="toolbar-btn cloud-save-button" type="button" title="Cloud save account">☁ SIGN IN</button><button id="save" class="save-btn" type="button" title="Save your campaign">▣ SAVE</button></div>
+    <div class="rpg-topbar-actions"><button id="cloudSaveButton" class="toolbar-btn cloud-save-button" type="button" title="Cloud save account">☁ SIGN IN</button><div style="display:flex;flex-direction:column;gap:4px"><button id="save" class="save-btn" type="button" title="Save your campaign">▣ SAVE</button><button id="rpgDrawAssistToggle" class="toolbar-btn" type="button" aria-pressed="true" title="Allow subtle CPU comeback draws in RPG battles">CPU HELP: ON</button></div></div>
   </header>
 
   <div class="utilitybar">
@@ -344,6 +344,6 @@
 <script src="/rpg_cg_viewer.js?v=chibi-all-character-art-20261030" defer></script>
 <script src="/rpg_outfit_chime.js?v=20261029-art-discovery-1"></script>
 
-<script src="/rpg_character_bootstrap.js?v=dialogue-special-outfit-priority-20261031"></script>
+<script src="/rpg_character_bootstrap.js?v=rpg-scene-wipe-20261031-1"></script>
 </body>
 </html>

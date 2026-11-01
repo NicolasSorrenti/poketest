@@ -14,17 +14,17 @@ function answer(g,selected){const d=g.pendingDecision;assert.ok(d,'Expected deci
 function runAll(g){let n=0;while(g.pendingDecision){assert.ok(n++<12,'decision loop');answer(g);}return n;}
 let passed=0;
 const check=(name,f)=>{try{f();passed++;}catch(e){e.message=name+': '+e.message;throw e;}};
-check('all 39 distinct Trainer names registered',()=>{
+check('all 40 distinct Trainer names registered',()=>{
  const names=new Set(['base1','base2','base3','base5'].flatMap(s=>require('./cards/'+s+'.json')).filter(c=>c.supertype==='Trainer').map(c=>c.name));
- assert.equal(names.size,39);for(const name of names)assert.ok(SUPPORTED.has(name),`Regression: missing Classic Trainer ${name}`);
+ assert.equal(names.size,40);for(const name of names)assert.ok(SUPPORTED.has(name),`Regression: missing Classic Trainer ${name}`);
  assert.ok(SUPPORTED.size>=names.size,'Future retail Trainers may extend this supported set');
 });
 check('Trainer selection and card consumption',()=>{const g=ready();g.players[0].hand=['base1-71','base1-91','base1-94'];
- ok(g,0,'play_trainer',{handIndex:0});assert.ok(g.pendingDecision);assert.deepEqual(g.players[0].hand,['base1-71','base1-91','base1-94']);
- answer(g,['n:1','n:2']);assert.ok(g.pendingDecision);assert.equal(g.players[0].discard.includes('base1-71'),false);
+ ok(g,0,'play_trainer',{handIndex:0});assert.equal(g.pendingDecision?.kind,'find','The forced two-card cost pair should auto-resolve');assert.deepEqual(g.players[0].hand,['base1-71','base1-91','base1-94']);
+ assert.equal(g.players[0].discard.includes('base1-71'),false,'Trainer and staged costs remain until its effect resolves');
  answer(g,['deck:2']);assert.equal(g.pendingDecision,null);assert.equal(g.players[0].discard.includes('base1-71'),true);assert.equal(g.players[0].hand.includes('base1-91'),true);
 });
-check('wrong answer to trainer choice is atomic',()=>{const g=ready();g.players[0].hand=['base1-71','base1-91','base1-94'];ok(g,0,'play_trainer',{handIndex:0});const d=g.pendingDecision;
+check('wrong answer to trainer choice is atomic',()=>{const g=ready();g.players[0].hand=['base1-71','base1-91','base1-94','base1-98'];ok(g,0,'play_trainer',{handIndex:0});const d=g.pendingDecision;
  bad(g,1,'choose',{decisionId:d.id,selected:['n:1','n:2']},/another player/);
  bad(g,0,'choose',{decisionId:d.id,selected:['n:1','n:1']},/Duplicate/);
 });
@@ -47,7 +47,7 @@ check('Goop Gas Attack and Hay Fever block powers/trainers',()=>{const g=ready()
 check('pre-historic evolution lock',()=>{const g=ready();g.players[1].bench.push(unit('base3-1'));g.players[0].hand=['base1-34'];g.players[0].active=unit('base1-52');bad(g,0,'evolve',{handIndex:0,slot:-1},/Prehistoric/);});
 check('normal evolution still works while Powers exist',()=>{const g=ready();g.players[1].bench.push(unit('base2-11'));g.players[0].hand=['base1-34'];g.players[0].active=unit('base1-52');ok(g,0,'evolve',{handIndex:0,slot:-1});assert.equal(g.players[0].active.id,'base1-34');});
 check('Rain Dance attaches additional Water Energy',()=>{const g=ready();g.players[0].active=unit('base1-2');g.players[0].bench=[unit('base1-41')];g.players[0].hand=['base1-102'];
- ok(g,0,'use_power',{slot:-1});answer(g,['hand:0']);answer(g,['slot:0']);assert.deepEqual(g.players[0].bench[0].energies,['base1-102']);assert.equal(g.players[0].energyUsed,false);
+ ok(g,0,'use_power',{slot:-1});assert.equal(g.pendingDecision.kind,'target','Blastoise and Seel are both legal, so the player chooses the recipient');answer(g,['slot:0']);assert.equal(g.pendingDecision,null,'the only Water Energy is selected automatically');assert.deepEqual(g.players[0].bench[0].energies,['base1-102']);assert.equal(g.players[0].energyUsed,false);
 });
 check('Venusaur Energy Trans moves its own Grass Energy and can be repeated',()=>{
  const g=ready(),p=g.players[0];p.active=unit('base1-15',['base1-99','base1-99','base1-102']);

@@ -31,9 +31,9 @@ function canCancel(g,actor){
  return plan.cancelBaseline===cancelFingerprint(g);
 }
 // Chaos Gym cannot pass attached Trainers to the other player (WotC ruling).
-const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil','Clefairy Doll']);
+const ATTACH_ONLY=new Set(['PlusPower','Defender','Berry','Counterattack Claws','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier','Charity',"Brock's Protection","Koga's Ninja Trick","Sabrina's ESP",'Mysterious Fossil']);
 // These cards stay in play or attach to a Pokémon and cannot be copied.
-const COPY_FORBIDDEN=new Set([...ATTACH_ONLY,'Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Sabrina's Psychic Control"]);
+const COPY_FORBIDDEN=new Set([...ATTACH_ONLY,'Clefairy Doll','Focus Band','EXP.ALL','Gold Berry','Miracle Berry','Balloon Berry','Magnifier',"Sabrina's Psychic Control"]);
 const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
 const CATALOG=new Map([
  ...require('./cards/base1.json'),
@@ -87,7 +87,11 @@ function cannotSwitch(g,side){
 }
 function prompt(g,plan,helpers){
  const side=plan.side,p=g.players[side],f=g.players[1-side],d=plan.data,name=get(plan.cardId).name;
+ if(name==='Devolution Spray'&&![p.active,...p.bench].some(u=>u?.under?.length))throw Error('Devolution Spray requires an evolved Pokémon');
  if(!plan.proxy)held(p,plan.cardId,plan.handIndex);
+ if(name==='Clefairy Doll'&&p.bench.length>=5)throw Error('Clefairy Doll requires a free Bench slot');
+ if(name==='Pokémon Flute'&&f.bench.length>=(g.stadium&&get(g.stadium.id).name==='Narrow Gym'?4:5))throw Error('Pokémon Flute cannot be played with a full opposing Bench');
+ if(name==='Revive'&&p.bench.length>=(g.stadium&&get(g.stadium.id).name==='Narrow Gym'?4:5))throw Error('Revive cannot be played with a full Bench');
  // Additional Gym Trainer effects; all hidden-card choices belong to their owner.
  if(name==="Lt. Surge's Secret Plan"&&!chosen(d,'hidden')){
   if(p.bench.length>=5)throw Error('Bench full for Secret Plan');
@@ -511,12 +515,21 @@ function prompt(g,plan,helpers){
  if(name==='Maintenance'&&!chosen(d,'cost')){
   const candidates=hchoices();
   if(candidates.length<2)throw Error('Maintenance needs two other cards in hand');
-  return multi('cost',side,candidates,2,2,'Maintenance: choose 2 other cards to shuffle into your deck, then draw 1');
+  // If only two cards can be returned, or every legal card is the same
+  // printing, the selected pair cannot change the result. Resolve it directly.
+  if(candidates.length===2||new Set(candidates.map(option=>option.cardId)).size===1){
+   d.cost=candidates.slice(0,2).map(option=>option.id);
+  }else
+   return multi('cost',side,candidates,2,2,'Maintenance: choose 2 other cards to shuffle into your deck, then draw 1');
  }
  const cost2=['Computer Search','Item Finder'];
  if(cost2.includes(name) && !chosen(d,'cost')){
-  if(hchoices().length<2)throw Error(name+' needs two other cards to discard/return');
-  return multi('cost',side,hchoices(),2,2,'Choose two cards from your hand');
+  const candidates=hchoices();
+  if(candidates.length<2)throw Error(name+' needs two other cards to discard/return');
+  // Computer Search's two-card cost has no decision if there is only one
+  // possible pair, or every candidate is the same card printing.
+  if(name==='Computer Search'&&(candidates.length===2||candidates.every(o=>o.cardId===candidates[0].cardId)))d.cost=candidates.slice(0,2).map(o=>o.id);
+  else return multi('cost',side,candidates,2,2,'Choose two cards from your hand');
  }
  // Validate the destination before requesting payment: an impossible search must not
  // strand the player in a mandatory discard decision.
@@ -526,7 +539,14 @@ function prompt(g,plan,helpers){
   return single('cost',side,hchoices(),'Choose one other card to discard');
  }
  if(name==='Pokémon Trader'&&!chosen(d,'trade'))return single('trade',side,hchoices(pokemon),'Choose Pokémon from hand to trade');
- if(name==='Computer Search'&&!chosen(d,'find'))return single('find',side,deck(),'Search your deck for any card');
+ if(name==='Computer Search'&&!chosen(d,'find')){
+  const candidates=deck();
+  // WotC-era ruling permits Computer Search with an empty deck; in that
+  // case pay the cost, skip the impossible choice, then complete the shuffle.
+  if(!candidates.length)d.find=[];
+  else if(candidates.length===1)d.find=[candidates[0].id];
+  else return single('find',side,candidates,'Search your deck for any card');
+ }
  if(name==='Item Finder'&&!chosen(d,'recover')){
   const existing=disc(p,c=>c.supertype==='Trainer');
   // Costs are staged until commit; make the selected Trainer cost cards
@@ -544,31 +564,51 @@ function prompt(g,plan,helpers){
  if(name==='Recycle'&&!chosen(d,'recover')&&helpers.flip(g))return single('recover',side,disc(p),'Put a card from discard on your deck',true);
  if(name==='Gust of Wind'&&cannotSwitch(g,1-side))d.target=[];
  if(name==='Switch'&&cannotSwitch(g,side))d.target=[];
- if(name==='Gust of Wind'&&!chosen(d,'target'))return single('target',side,options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose opponent replacement');
+ if(name==='Gust of Wind'&&!chosen(d,'target')){
+  const targetsForGust=options(f.bench.map((u,i)=>({i,label:publicName(u)})),'bench');
+  if(targetsForGust.length===1)d.target=[targetsForGust[0].id];
+  else return single('target',side,targetsForGust,'Choose opponent replacement');
+ }
  if(name==='Switch'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose your replacement');
- if(['Potion','Super Potion','Scoop Up','Devolution Spray','Defender','Pokémon Center'].includes(name)&&!chosen(d,'target')&&name!=='Pokémon Center')return single('target',side,own(u=>name==='Potion'?u.damage>0:name==='Super Potion'?u.damage>0&&u.energies.length>0:name==='Devolution Spray'?u.under.length>0:true),'Choose one of your Pokémon');
- if(name==='Energy Removal'&&!chosen(d,'target'))return single('target',side,enemy(u=>u.energies.length>0&&!u.attachedTrainers.some(t=>get(t.id).name==="Brock's Protection")),'Choose opposing Pokémon');
+ if(['Potion','Super Potion','Scoop Up','Devolution Spray','Defender','Pokémon Center'].includes(name)&&!chosen(d,'target')&&name!=='Pokémon Center'){
+  const targetsForEffect=own(u=>name==='Potion'?u.damage>0:name==='Super Potion'?u.damage>0&&u.energies.length>0:name==='Devolution Spray'?u.under.length>0:true);
+  if(name==='Super Potion'&&targetsForEffect.length===1)d.target=[targetsForEffect[0].id];
+  else return single('target',side,targetsForEffect,'Choose one of your Pokémon');
+ }
+ if(name==='Energy Removal'&&!chosen(d,'target')){
+  const targetsForRemoval=enemy(u=>u.energies.length>0&&!u.attachedTrainers.some(t=>get(t.id).name==="Brock's Protection"));
+  if(targetsForRemoval.length===1)d.target=[targetsForRemoval[0].id];
+  else return single('target',side,targetsForRemoval,'Choose opposing Pokémon');
+ }
  if(name==='Super Energy Removal'){
-  if(!chosen(d,'source'))return single('source',side,own(u=>u.energies.length>0),'Choose your Pokémon to pay Energy');
-  if(!chosen(d,'ownEnergy')){const items=options(zone(slot(p,nums(d,'source')[0]).energies));if(identicalBasicEnergy(items))d.ownEnergy=[items[0].id];else return single('ownEnergy',side,items,'Discard one of your attached Energy');}
-  if(!chosen(d,'target'))return single('target',side,enemy(u=>u.energies.length>0&&!u.attachedTrainers.some(t=>get(t.id).name==="Brock's Protection")),'Choose opponent Pokémon');
+  if(!chosen(d,'source')){
+   const sourcesForRemoval=own(u=>u.energies.length>0);
+   if(sourcesForRemoval.length===1)d.source=[sourcesForRemoval[0].id];
+   else return single('source',side,sourcesForRemoval,'Choose your Pokémon to pay Energy');
+  }
+  if(!chosen(d,'ownEnergy')){const items=options(zone(slot(p,nums(d,'source')[0]).energies));if(identicalBasicEnergy(items)||items.length>0&&items.every(o=>o.cardId===items[0].cardId))d.ownEnergy=[items[0].id];else return single('ownEnergy',side,items,'Discard one of your attached Energy');}
+  if(!chosen(d,'target')){
+   const targetsForRemoval=enemy(u=>u.energies.length>0&&!u.attachedTrainers.some(t=>get(t.id).name==="Brock's Protection"));
+   if(targetsForRemoval.length===1)d.target=[targetsForRemoval[0].id];
+   else return single('target',side,targetsForRemoval,'Choose opponent Pokémon');
+  }
  }
  if(['Energy Removal','Super Energy Removal'].includes(name)&&chosen(d,'target')&&!chosen(d,'enemyEnergy')){
   const u=slot(f,nums(d,'target')[0]),max=name==='Super Energy Removal'?Math.min(2,u.energies.length):1;
   const items=options(zone(u.energies));
   // Super Energy Removal permits one OR two: keep the amount choice when both are available.
-  if(max===1&&identicalBasicEnergy(items))d.enemyEnergy=[items[0].id];
+  if(max===1&&(identicalBasicEnergy(items)||items.length===1||items.length>0&&items.every(o=>o.cardId===items[0].cardId)))d.enemyEnergy=[items[0].id];
   else return multi('enemyEnergy',side,items,1,max,'Choose opposing Energy to discard');
  }
- if(name==='Super Potion'&&chosen(d,'target')&&!chosen(d,'ownEnergy')){const items=options(zone(slot(p,nums(d,'target')[0]).energies));if(identicalBasicEnergy(items))d.ownEnergy=[items[0].id];else return single('ownEnergy',side,items,'Discard one attached Energy');}
+ if(name==='Super Potion'&&chosen(d,'target')&&!chosen(d,'ownEnergy')){const items=options(zone(slot(p,nums(d,'target')[0]).energies));if(identicalBasicEnergy(items)||items.length>0&&items.every(o=>o.cardId===items[0].cardId))d.ownEnergy=[items[0].id];else return single('ownEnergy',side,items,'Discard one attached Energy');}
  if(name==='Nightly Garbage Run'&&!chosen(d,'recover')){const a=disc(p,c=>pokemon(c)||basicEnergy(c));if(!a.length)throw Error('No eligible cards');return multi('recover',side,a,1,Math.min(3,a.length),'Choose up to 3 cards');}
  if(name==='Mr. Fuji'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose a Benched Pokémon');
  if(name==='Pokémon Flute'&&!chosen(d,'recover'))return single('recover',side,disc(f,isBasicPokemon),'Choose opponent Basic Pokémon');
  if(name==='Revive'&&!chosen(d,'recover'))return single('recover',side,disc(p,isBasicPokemon),'Choose Basic Pokémon');
  if(name==="Rocket's Sneak Attack"&&!chosen(d,'oppHand')){const a=options(zone(f.hand,c=>c.supertype==='Trainer'),'hand');if(a.length)return single('oppHand',side,a,'Choose opponent Trainer to shuffle away');d.oppHand=[];}
  if(name==='Devolution Spray'&&!chosen(d,'stage')){
-  const u=slot(p,nums(d,'target')[0]),c=get(u.id);const vals=[{i:1,label:'Remove Stage 1 and Stage 2'},{i:2,label:'Remove Stage 2'}].filter(o=>o.i===1||c.subtypes?.includes('Stage 2'));
-  return single('stage',side,options(vals,'stage'),'Choose evolution stage to remove');
+  const u=slot(p,nums(d,'target')[0]),c=get(u.id);const vals=[{i:1,label:'Remove Stage 1 and Stage 2'},{i:2,label:'Remove Stage 2'}].filter(o=>o.i===1||c.subtypes?.includes('Stage 2')),items=options(vals,'stage');
+  if(items.length===1)d.stage=[items[0].id];else return single('stage',side,items,'Choose evolution stage to remove');
  }
  if(name==='Pokémon Breeder'){
   const eligibleBasics=evolved=>{
@@ -582,12 +622,14 @@ function prompt(g,plan,helpers){
   if(!chosen(d,'evolution')){
    const playable=hchoices(c=>c.subtypes?.includes('Stage 2')&&eligibleBasics(c).length);
    if(!playable.length)throw Error('Pokémon Breeder needs a matching Basic Pokémon already in play');
-   return single('evolution',side,playable,'Choose Stage 2 Pokémon');
+   if(playable.length===1)d.evolution=[playable[0].id];
+   else return single('evolution',side,playable,'Choose Stage 2 Pokémon');
   }
   if(!chosen(d,'target')){
    const evolved=get(p.hand[nums(d,'evolution')[0]]),targets=eligibleBasics(evolved);
    if(!targets.length)throw Error('Pokémon Breeder no longer has a compatible Basic Pokémon');
-   return single('target',side,targets,'Choose a Basic Pokémon to evolve');
+   if(targets.length===1)d.target=[targets[0].id];
+   else return single('target',side,targets,'Choose a Basic Pokémon to evolve');
   }
  }
  if(name==='Challenge!'){
@@ -646,6 +688,22 @@ function commit(g,plan,h){
    if(guess===actual)h.draw(g,plan.side,2);
    break;
   }
+  case 'Clefairy Doll':{
+   if(plan.proxy){
+    const owner=g.players[plan.ownerSide];const index=owner?.discard.indexOf(plan.cardId);
+    if(index<0)throw Error('Redirected Clefairy Doll left its owner’s discard pile');
+    owner.discard.splice(index,1);
+   }else{
+    const index=p.discard.lastIndexOf(plan.cardId);
+    if(index<0)throw Error('Clefairy Doll was not discarded from its Trainer play');
+    p.discard.splice(index,1);
+   }
+   const doll=h.unit(plan.cardId,g.round);doll.cardOwnerSide=plan.proxy?plan.ownerSide:plan.side;p.bench.push(doll);
+   if(g.stadium&&get(g.stadium.id).name==="Rocket's Minefield Gym"&&!h.flip(g)){
+    doll.damage+=20;h.log(g,"Rocket's Minefield Gym deals 20 damage to Clefairy Doll.");h.knockOuts(g,'direct');
+   }
+   break;
+  }
   case 'New Pokédex':{
    const count=Math.min(5,p.deck.length),base=p.deck.length-count;
    const chosenIndices=Array.from({length:count},(_,i)=>pick('newDex'+i));
@@ -674,7 +732,9 @@ function commit(g,plan,h){
     const index=pick('ssuTarget'),u=slot(p,index);
     if(!u)throw Error('Super Scoop Up target is missing');
     if(index===-1)p.active=null;else p.bench.splice(index,1);
-    p.hand.push(u.id,...u.under,...u.energies,...u.attachedTrainers.map(t=>t.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));
+    const cardOwner=g.players[Number.isInteger(u.cardOwnerSide)?u.cardOwnerSide:plan.side];
+    if(get(u.id).name==='Clefairy Doll')cardOwner.hand.push(u.id);else p.hand.push(u.id);
+    p.hand.push(...u.under,...u.energies,...u.attachedTrainers.map(t=>t.id),...(u.gymShapeshiftCard?[u.gymShapeshiftCard]:[]));
     if(index===-1){
      if(!p.bench.length){g.over=true;g.winner=1-plan.side;}
      else{g.pendingPromotions=[plan.side];g.promotionAfter='trainer';h.finishPromotions(g);}
@@ -988,7 +1048,20 @@ function commit(g,plan,h){
   case 'Professor Oak':p.discard.push(...p.hand);p.hand=[];h.draw(g,plan.side,7);break;
   case 'Impostor Professor Oak':f.deck=h.shuffle(g,[...f.deck,...f.hand]);f.hand=[];h.draw(g,1-plan.side,7);break;
   case "Imposter Oak's Revenge":f.deck=h.shuffle(g,[...f.deck,...f.hand]);f.hand=[];h.draw(g,1-plan.side,4);break;
-  case 'Lass':for(const owner of [p,f]){const cards=take(owner.hand,zone(owner.hand,c=>c.supertype==='Trainer').map(x=>x.i));owner.deck=h.shuffle(g,[...owner.deck,...cards]);}break;
+  case 'Lass':{
+   // Both hands are shown before any Trainer is moved. The reveal is public
+   // turn information, so both players receive the same names in the log.
+   const shown=[p,f].map(owner=>`${owner.name}: ${owner.hand.map(id=>get(id).name).join(', ')||'(empty)'}`);
+   h.log(g,`Lass revealed both hands — ${shown.join('; ')}.`);
+   for(const owner of [p,f]){
+    const indices=zone(owner.hand,c=>c.supertype==='Trainer').map(x=>x.i);
+    // WotC ruled that a player with no Trainer cards does not shuffle.
+    if(!indices.length)continue;
+    const cards=take(owner.hand,indices);
+    owner.deck=h.shuffle(g,[...owner.deck,...cards]);
+   }
+   break;
+  }
   case 'Maintenance':p.deck=h.shuffle(g,p.deck);h.draw(g,plan.side);break;
   case 'Computer Search':case 'Energy Search':case "The Boss's Way":case 'Poké Ball':
    if(chosen(d,'find')&&d.find.length){const [id]=take(p.deck,[pick('find')]);p.hand.push(id);}p.deck=h.shuffle(g,p.deck);break;
@@ -1036,13 +1109,15 @@ function commit(g,plan,h){
   case 'Rocket\'s Sneak Attack':if(d.oppHand.length){const [id]=take(f.hand,[pick('oppHand')]);f.deck=h.shuffle(g,[...f.deck,id]);}break;
   case 'Pokémon Flute':f.bench.push(h.unit(extract(f,'recover')[0],g.round));break;
   case 'Revive':{const u=h.unit(extract(p,'recover')[0],g.round);u.damage=Math.floor(Number(get(u.id).hp)/20)*10;p.bench.push(u);break;}
-  case 'Mr. Fuji':{const [u]=p.bench.splice(pick('target'),1);p.deck=h.shuffle(g,[...p.deck,u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id)]);break;}
+  case 'Mr. Fuji':{const [u]=p.bench.splice(pick('target'),1);const cardOwner=g.players[Number.isInteger(u.cardOwnerSide)?u.cardOwnerSide:plan.side];if(get(u.id).name==='Clefairy Doll'&&cardOwner!==p){cardOwner.deck=h.shuffle(g,[...cardOwner.deck,u.id]);p.deck=h.shuffle(g,[...p.deck,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id)]);}else p.deck=h.shuffle(g,[...p.deck,u.id,...u.under,...u.energies,...u.attachedTrainers.map(x=>x.id)]);break;}
   case 'Scoop Up':{const idx=pick('target'),u=idx===-1?p.active:p.bench[idx];if(idx===-1){p.active=null;}else p.bench.splice(idx,1);
-   p.hand.push(u.under.length?u.under[u.under.length-1]:u.id);p.discard.push(...[u.id,...u.under.slice(0,-1),...u.energies,...u.attachedTrainers.map(x=>x.id)].filter(x=>x!== (u.under.length?u.under[u.under.length-1]:u.id)));
+   const returned=u.under.length?u.under[u.under.length-1]:u.id,cardOwner=g.players[Number.isInteger(u.cardOwnerSide)?u.cardOwnerSide:plan.side];
+   if(get(returned).name==='Clefairy Doll')cardOwner.hand.push(returned);else p.hand.push(returned);
+   p.discard.push(...[u.id,...u.under.slice(0,-1),...u.energies,...u.attachedTrainers.map(x=>x.id)].filter(x=>x!==returned));
    if(idx===-1){if(!p.bench.length){g.over=true;g.winner=1-plan.side;}else {g.pendingPromotions=[plan.side];g.promotionAfter='direct';h.finishPromotions(g);}}break;
   }
   case 'Devolution Spray':{const u=slot(p,pick('target'));const stage=pick('stage');const cards=[u.id,...u.under];const remaining=cards.filter(id=>get(id).subtypes?.includes('Basic')||(stage===2&&get(id).subtypes?.includes('Stage 1')));
-   if(!remaining.length)throw Error('Devolution without a Basic Pokémon');u.id=remaining[0];u.under=remaining.slice(1);p.discard.push(...cards.filter(id=>!remaining.includes(id)));STATUS.clearConditions(u);h.clearBenchEffects(u);break;}
+   if(!remaining.length)throw Error('Devolution without a Basic Pokémon');u.id=remaining[0];u.under=remaining.slice(1);p.discard.push(...cards.filter(id=>!remaining.includes(id)));STATUS.clearConditions(u);h.clearBenchEffects(u);u.devolvedTurnSerial=g.turnSerial;h.knockOuts(g,'trainer');break;}
   case 'Pokémon Breeder':{
    const handIdx=pick('evolution')>plan.handIndex?pick('evolution')-1:pick('evolution'),[id]=p.hand.splice(handIdx,1),u=slot(p,pick('target'));
    u.under.unshift(u.id);u.id=id;u.playedTurn=g.round;STATUS.clearConditions(u);h.clearBenchEffects(u);h.onPlay?.(g,plan.side,pick('target'));break;
@@ -1059,21 +1134,21 @@ function commit(g,plan,h){
  if(g.tickleEndsTurn){delete g.tickleEndsTurn;h.finishTurn(g);}
 }
 const pFor=(g,side)=>g.players[side];
-function start(g,side,handIndex,h){const p=g.players[side],c=get(p.hand[handIndex]);if(c.supertype!=='Trainer')throw Error('Not a Trainer');if(!SUPPORTED.has(c.name))throw Error('Unported Trainer '+c.name);
+function start(g,side,handIndex,h){const p=g.players[side],c=get(p.hand[handIndex]);if(c.supertype!=='Trainer'&&c.name!=='Clefairy Doll')throw Error('Not a Trainer');if(!SUPPORTED.has(c.name))throw Error('Unported Trainer '+c.name);
  if(c.name==='Mail from Bill'&&p.hand.length>=5)throw Error('Mail from Bill requires at most 4 cards in hand (including itself)');
  const plan={side,handIndex,cardId:c.id,data:{},cancelBaseline:cancelFingerprint(g)};return prompt(g,plan,h);
 }
-function startProxy(g,side,cardId,h){
+function startProxy(g,side,cardId,h,ownerSide=side){
  if(g.players[side].trainerLockedUntil>g.turnSerial)throw Error('Redirected Trainer use blocked this turn');
- const c=get(cardId);if(c.supertype!=='Trainer'||c.subtypes?.includes('Stadium')||ATTACH_ONLY.has(c.name)||!SUPPORTED.has(c.name))throw Error('Unsupported redirected Trainer');
- return prompt(g,{side,handIndex:g.players[side].hand.length,cardId,proxy:true,data:{}},h);
+ const c=get(cardId);if((c.supertype!=='Trainer'&&c.name!=='Clefairy Doll')||c.subtypes?.includes('Stadium')||ATTACH_ONLY.has(c.name)||!SUPPORTED.has(c.name))throw Error('Unsupported redirected Trainer');
+ return prompt(g,{side,handIndex:g.players[side].hand.length,cardId,proxy:true,ownerSide,data:{}},h);
 }
 function answer(g,plan,response,h){
  if(!plan||!plan.await)throw Error('Trainer choice is missing');
  const data={...plan.data,[plan.await]:response.decline?[]:[...response.selected]};
  return prompt(g,{...plan,data,await:null},h);
 }
-const SUPPORTED=new Set(['Ecogym','Card-Flip Game','New Pokédex','Energy Amplifier',"Thought Wave Machine (Rocket's Secret Machine)",'Balloon Berry','Super Scoop Up','Magnifier','Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
+const SUPPORTED=new Set(['Clefairy Doll','Ecogym','Card-Flip Game','New Pokédex','Energy Amplifier',"Thought Wave Machine (Rocket's Secret Machine)",'Balloon Berry','Super Scoop Up','Magnifier','Gold Berry','Miracle Berry','Focus Band','EXP.ALL','Sprout Tower','Healing Field','Broken Ground Gym','Radio Tower','Lucky Stadium','Mary','PokéGear','Super Energy Retrieval','Time Capsule','Pokémon Personality Test',"Impostor Professor Oak's Invention",'Arcade Game','Energy Charge','Ruin Wall','Old Rod',"Team Rocket's Evil Deeds",'Energy Ark','Fossil Egg','Hyper Devolution Spray','Double Gust',"Bill's Teleporter",'Professor Elm','Moo-Moo Milk','Pokémon March','Super Rod','Bill','Professor Oak','Impostor Professor Oak',"Imposter Oak's Revenge",'Lass','Maintenance','Computer Search','Energy Search',"The Boss's Way",'Poké Ball','Pokémon Trader','Item Finder','Energy Retrieval','Nightly Garbage Run','Recycle','Pokédex','Gambler','Digger','Full Heal','Potion','Super Potion','Pokémon Center','Switch','Gust of Wind','Energy Removal','Super Energy Removal','Defender','PlusPower','Goop Gas Attack','Here Comes Team Rocket!',"Rocket's Sneak Attack",'Pokémon Flute','Revive','Mr. Fuji','Scoop Up','Devolution Spray','Pokémon Breeder','Challenge!','Sleep!',
  'Brock',"Brock's Training Method",'Misty','Lt. Surge','Secret Mission','Erika',"Erika's Perfume",'Koga','Sabrina',"Sabrina's Gaze",'Blaine',"Blaine's Gamble",'Fervor','Max Revive','Giovanni','Warp Point',
  "Blaine's Last Resort","Erika's Kindness",'Good Manners','Master Ball',"Giovanni's Last Resort","Misty's Tears","Erika's Maids","The Rocket's Trap","Rocket's Secret Experiment",
  'No Removal Gym',"The Rocket's Training Gym",'Resistance Gym',"Rocket's Minefield Gym",'Transparent Walls',

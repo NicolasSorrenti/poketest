@@ -12,6 +12,76 @@ function board(){
    energyUsed:false,prizeCount:3},
   opponent:{active:{id:RATTATA,energies:[],damage:0},bench:[{id:RATTATA,energies:[],damage:0}]}};
 }
+test('Apex does not attach Rainbow Energy for an immediate self-knockout',()=>{
+ const o=board(),rainbow='base5-80';
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ // The reducer applies Rainbow's 10 damage and resolves the knockout
+ // immediately, before the new Energy could power another attack.
+ o.self.hand=[rainbow];
+ o.self.active.energies=[FIGHT,FIGHT]; // Rainbow would fund Special Punch
+ o.self.active.damage=60; // Hitmonchan: 10 of 70 HP remaining
+ assert.ok(AI.energyValue(o.self.active,rainbow)>12,
+  'Rainbow is otherwise an attractive attack-unlocking attachment');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack],'never consider lethal Rainbow instead of a legal Jab');
+ assert.ok(AI.score(activeAttach,o,cfg,{})<=-1000,
+  'self-knockout is not an Energy improvement');
+ o.self.active.damage=50; // 20 HP: the attachment is survivable
+ assert.ok(AI.score(activeAttach,o,cfg,{})>-1000,
+  'survivable Rainbow remains a legitimate attachment');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'survivable Rainbow may be prepared before an attack');
+ o.self.bench[0].damage=40; // Machop: 10 of 50 HP remaining
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),
+  [attack],'never consider a lethal Bench attachment');
+ assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000,
+  'Bench self-knockouts must also be discouraged');
+ o.self.bench[0].damage=30;
+ assert.ok(AI.score(benchAttach,o,cfg,{})>-1000,
+  'a Bench recipient with 20 HP can still use Rainbow');
+ o.self.active.damage=60;
+ assert.ok(AI.score(activeAttach,o,AI.configuration({side:1,level:7}),{})>-1000,
+  'keep Level 7 scoring unchanged');
+});
+
+test('Apex avoids Darkness Energy that will KO a non-Dark Bench at checkup',()=>{
+ const o=board(),darkness='neo1-104';
+ const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.hand=[darkness];
+ o.self.bench[0].damage=40; // Machop has 10 HP; Darkness recoil hits Bench every turn.
+ const options=level=>AI.candidates(o,level,{trainers:0,powers:0,powerKeys:new Set(),stadium:false});
+ const hasBench=level=>options(level).some(a=>a.type==='attach_energy'&&a.payload.slot===0);
+ assert.equal(hasBench(cfg),false,'do not offer a doomed Darkness Bench attachment');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack],
+  'root preparation must also reject the doomed attachment');
+ assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000);
+ o.self.bench[0].damage=30; // 20 HP survives ours, but faints on opponent's checkup.
+ assert.equal(hasBench(cfg),false,'Bench must survive both checkups before our next turn');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack],
+  'root preparation must not override the two-checkup survival guard');
+ assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000);
+ o.self.bench[0].damage=20; // 30 HP survives two 10-damage checkups.
+ assert.equal(hasBench(cfg),true,'a Bench that survives until our next turn remains eligible');
+ assert.ok(AI.score(benchAttach,o,cfg,{})>-1000);
+ o.self.bench[0].energies=[darkness]; // Two Darkness deal 40 damage over both turns.
+ assert.equal(hasBench(cfg),false,'count all attached Darkness Energy across both checkups');
+ o.self.bench[0].damage=0; // 50 HP survives two 20-damage checkups.
+ assert.equal(hasBench(cfg),true,'survivable multiple-Darkness Bench attachment remains eligible');
+ o.self.bench[0]={id:'neo1-24',energies:[],damage:40}; // Dark-type Murkrow is immune.
+ assert.equal(hasBench(cfg),true,'Dark-type recipients do not take Darkness recoil');
+ o.self.bench[0]={id:MACHOP,energies:[],damage:40};
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(hasBench(lower),true,'Level 7 retains its existing candidate rules');
+ assert.ok(AI.score(benchAttach,o,lower,{})>-1000);
+ o.self.active.damage=60; // Preserve a possible final-Prize win before checkup.
+ assert.equal(options(cfg).some(a=>a.type==='attach_energy'&&a.payload.slot===-1),true,
+  'do not blanket-exclude an Active attachment that could win immediately');
+ assert.ok(AI.score(activeAttach,o,cfg,{})>-1000);
+});
+
 test('Apex attaches useful Energy before a non-winning attack',()=>{
  const actions=AI.energyPreparationActions(board(),cfg,[attack,attach]);
  assert.deepEqual(actions,[attach]);
@@ -37,6 +107,113 @@ test('Apex does not treat a Confused last-opponent KO as certain',()=>{
  o.self.active.status='Confused';
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach]);
 });
+test('Apex cures Confusion with Full Heal Energy before a funded damaging attack',()=>{
+ const o=board();
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ // Three Fighting Energy already fund Hitmonchan's attacks; an extra
+ // Colorless Energy has no offensive value. The status cure is the benefit.
+ o.self.active.energies=[FIGHT,FIGHT,FIGHT];
+ o.self.active.status='Confused';
+ o.self.hand=['base5-81']; // Full Heal Energy
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'cure the mandatory 50% Confusion attack failure first');
+ // The opponent's next-turn KO does not erase the value of curing now.
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ o.self.active.damage=50; // opposing Jab can KO on the following turn
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'a future KO must not suppress the immediate Confusion cure');
+ o.self.active.damage=0;
+ o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+ o.self.active.status=null;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'do not spend a redundant Energy on a healthy Active');
+ o.self.active.status='Confused';
+ o.self.hand=['base5-82']; // Potion Energy does not cure Confusion
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'ordinary surplus Energy must not suppress an attack');
+ o.self.hand=['base5-81'];
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),
+  [attack,activeAttach]),[attack,activeAttach],
+  'the sequencing change is restricted to Apex');
+});
+
+test('Apex cures lethal Poison before a non-winning attack despite surplus Energy',()=>{
+ const o=board(),activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ // Hitmonchan is fully funded, but 20 Poison damage will KO its last 10 HP
+ // at end-of-turn checkup if it attacks before attaching Full Heal Energy.
+ o.self.active.energies=[FIGHT,FIGHT,FIGHT];
+ o.self.active.damage=60;
+ o.self.active.poison=true;
+ o.self.active.poisonDamage=20;
+ o.self.hand=['base5-81']; // Full Heal Energy
+ assert.ok(AI.energyValue(o.self.active,o.self.hand[0])<=12,
+  'surplus Colorless Energy has no meaningful attack-progress value');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'save the Active before a non-winning attack ends the turn');
+ const cureScore=AI.score(activeAttach,o,cfg,{});
+ o.self.hand=['base5-82']; // Potion Energy heals only 10 and does not cure Poison
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'Potion Energy is not a Poison cure');
+ assert.ok(cureScore>AI.score(activeAttach,o,cfg,{}),
+  'Full Heal must be valued above a non-saving Potion attachment');
+ o.self.hand=['base5-81'];
+ o.self.active.poisonDamage=5;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'nonlethal Poison does not force surplus Energy');
+ o.self.active.poisonDamage=20;
+ o.self.active.poison=false;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'a healthy Active does not need a Poison rescue');
+ o.self.active.poison=true;
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),
+  [attack,activeAttach]),[attack,activeAttach],
+  'the sequencing change is Apex-only');
+ o.self.prizeCount=1;
+ o.opponent.bench=[];
+ o.opponent.active.damage=10;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'a guaranteed game-winning knockout needs no rescue');
+});
+
+test('Apex uses Potion Energy when its heal prevents lethal Poison checkup',()=>{
+ const o=board(),activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ o.phase='game';o.round=5;o.turnSerial=11;
+ // Hitmonchan has 70 HP and already has enough Energy for its attacks.
+ // At 60 damage, a normal 10-damage Poison checkup would KO it after
+ // attacking. Potion Energy heals to 50 damage, so it survives with 10 HP.
+ o.self.active.energies=[FIGHT,FIGHT,FIGHT];
+ o.self.active.damage=60;
+ o.self.active.poison=true;
+ o.self.active.poisonDamage=10;
+ o.self.hand=['base5-82']; // Potion Energy
+ assert.ok(AI.energyValue(o.self.active,o.self.hand[0])<=12,
+  'the attachment is surplus for attacks, useful only for survival');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'attach the healing Energy before ending the turn with an attack');
+ const savedScore=AI.score(activeAttach,o,cfg,{});
+ o.self.hand=['base1-96']; // Double Colorless Energy cannot heal
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'ordinary surplus Energy does not rescue Poison');
+ assert.ok(savedScore>AI.score(activeAttach,o,cfg,{}),
+  'Apex should value a real Potion rescue over an ordinary attachment');
+ o.self.hand=['base5-82'];
+ o.self.active.poisonDamage=20;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'a 10-damage heal cannot survive a 20-damage tick at 10 HP');
+ o.self.active.damage=50; // 20 HP -> heal to 30 -> survive a 20-damage tick
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'a stronger Poison tick can still be survivable after healing');
+ o.self.active.poison=false;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'no phantom Poison rescue on an unpoisoned Active');
+ o.self.active.poison=true;
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),
+  [attack,activeAttach]),[attack,activeAttach],'preserve Level 7 ordering');
+ o.self.prizeCount=1;o.opponent.bench=[];o.opponent.active.damage=10;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'a guaranteed game-winning attack takes priority');
+});
+
 test('Apex does not force attachment when Energy was already used',()=>{
  const o=board();o.self.energyUsed=true;
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
@@ -168,6 +345,52 @@ test('Apex values Energy that unlocks an attack after Paralysis clears',()=>{
  fire.self.active.status='Asleep';
  assert.equal(AI.energyHorizonBonus(attachActive,fighting,cfg),
   AI.energyHorizonBonus(attachActive,fire,cfg));
+});
+
+test('Apex Energy horizon values Full Heal Energy cure on attachment',()=>{
+ // The reducer clears Sleep and Paralysis immediately on Full Heal Energy.
+ // Both cards below provide one Colorless Energy; only Full Heal permits
+ // Hitmonchan's already-funded Jab this turn.
+ for(const status of ['Asleep','Paralyzed']){
+  const fullHeal=futureEnergyBoard('base5-81','base1-91',[FIGHT]);
+  const potion=futureEnergyBoard('base5-82','base1-91',[FIGHT]);
+  for(const o of [fullHeal,potion]){
+   o.turnSerial=11;
+   o.self.active.status=status;
+  }
+  assert.ok(AI.energyHorizonBonus(attachActive,fullHeal,cfg)>
+   AI.energyHorizonBonus(attachActive,potion,cfg),
+   `Full Heal must unlock an immediate attack while ${status}`);
+  fullHeal.self.active.status=null;
+  potion.self.active.status=null;
+  assert.equal(AI.energyHorizonBonus(attachActive,fullHeal,cfg),
+   AI.energyHorizonBonus(attachActive,potion,cfg),
+   'healthy Pokémon must not receive a phantom status-cure bonus');
+ }
+});
+
+test('Apex forecasts a future Full Heal Energy cure if Sleep persists',()=>{
+ // The first attachment funds Jab; a Full Heal Energy held for next turn
+ // can wake the attacker before that attack, unlike Potion Energy.
+ const fighting=futureEnergyBoard(FIGHT,'base5-81',[]);
+ const offType=futureEnergyBoard('base1-98','base5-81',[]);
+ const potion=futureEnergyBoard(FIGHT,'base5-82',[]);
+ const potionOffType=futureEnergyBoard('base1-98','base5-82',[]);
+ for(const o of [fighting,offType,potion,potionOffType]){
+  o.turnSerial=11;
+  o.self.active.status='Asleep';
+ }
+ assert.ok(AI.energyHorizonBonus(attachActive,fighting,cfg)>
+  AI.energyHorizonBonus(attachActive,offType,cfg),
+  'future Full Heal must unlock the funded attack even if Sleep persists');
+ assert.equal(AI.energyHorizonBonus(attachActive,potion,cfg),
+  AI.energyHorizonBonus(attachActive,potionOffType,cfg),
+  'future Potion Energy cannot cure Sleep');
+ // Without Sleep, both future Colorless Energy cards have the same value.
+ const healthyHeal=futureEnergyBoard(FIGHT,'base5-81',[]);
+ const healthyPotion=futureEnergyBoard(FIGHT,'base5-82',[]);
+ assert.equal(AI.energyHorizonBonus(attachActive,healthyHeal,cfg),
+  AI.energyHorizonBonus(attachActive,healthyPotion,cfg));
 });
 
 test('Apex forecasts a two-attachment attack after Paralysis recovery',()=>{
@@ -935,4 +1158,247 @@ test('Apex delays an unready rescue evolution when the KO requires a Confusion f
  assert.ok(AI.score(evolveActive,ready,cfg,{})>
   AI.score(evolveActive,confused,cfg,{})+200,
   'a guaranteed rescue should beat a speculative Confusion-flip rescue');
+});
+
+function rainbowFutureBoard(futureEnergy,damage){
+ const o=futureEnergyBoard(FIGHT,futureEnergy,[]);
+ // Diglett has 30 HP. Fighting now powers Dig; a second Fighting symbol
+ // next turn would power Mud Slap, but Rainbow inflicts 10 on attachment.
+ o.self.active={id:'base1-47',energies:[],damage,status:null,playedTurn:1};
+ o.opponent.active={id:HITMONCHAN,energies:[],damage:0,status:null};
+ return o;
+}
+test('Apex future Energy horizon never rewards a Rainbow self-KO',()=>{
+ for(const rainbow of ['base5-17','base5-80']){
+  const lethal=rainbowFutureBoard(rainbow,20); // exactly 10 HP left
+  const noEnergy=rainbowFutureBoard('base1-91',20); // Bill
+  assert.equal(AI.energyHorizonBonus(attachActive,lethal,cfg),
+   AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+   rainbow+' cannot power a next-turn attack after knocking out Diglett');
+ }
+});
+test('Apex future Energy horizon preserves safe Rainbow setup',()=>{
+ for(const rainbow of ['base5-17','base5-80']){
+  const safe=rainbowFutureBoard(rainbow,19); // 11 HP left
+  const noEnergy=rainbowFutureBoard('base1-91',19);
+  assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>
+   AI.energyHorizonBonus(attachActive,noEnergy,cfg),
+   rainbow+' must still unlock a legal second-turn Mud Slap');
+ }
+});
+
+test('Apex counts current Rainbow damage before projecting another Rainbow next turn',()=>{
+ const rainbows=['base5-17','base5-80'];
+ for(const current of rainbows)for(const future of rainbows){
+  const board=futureEnergyBoard(current,future,[]);
+  // Diglett has 30 HP: the first Rainbow leaves 10 HP, so the second
+  // Rainbow would KO it before the projected two-Energy Mud Slap.
+  board.self.active={id:'base1-47',energies:[],damage:10,status:null,playedTurn:1};
+  board.opponent.active={id:HITMONCHAN,energies:[],damage:0,status:null};
+  const noSecond=structuredClone(board);
+  noSecond.self.hand[1]='base1-91'; // Bill cannot provide a second Energy.
+  assert.ok(AI.energyHorizonBonus(attachActive,board,cfg)<=
+   AI.energyHorizonBonus(attachActive,noSecond,cfg),
+   current+' followed by '+future+' must not reward a future self-KO');
+  const safe=structuredClone(board),safeControl=structuredClone(noSecond);
+  safe.self.active.damage=9; // Both Rainbow damage counters leave 1 HP.
+  safeControl.self.active.damage=9;
+  assert.ok(AI.energyHorizonBonus(attachActive,safe,cfg)>
+   AI.energyHorizonBonus(attachActive,safeControl,cfg),
+   current+' followed by '+future+' must preserve a surviving attack line');
+ }
+});
+
+test('Apex does not carry spent Miracle Energy into next-turn attacks',()=>{
+ // Light Wigglytuff can legally attach Miracle Energy, but it is discarded
+ // at the end of this turn. Next turn's Double Colorless alone cannot pay
+ // Body Slam's three-Colorless cost, so it must not earn a phantom bonus.
+ const withDce=futureEnergyBoard('neo4-16','base1-96');
+ const withoutDce=futureEnergyBoard('neo4-16','base1-91'); // Bill
+ for(const o of [withDce,withoutDce]){
+  o.self.active={id:'neo4-54',energies:[],damage:0,status:null};
+ }
+ assert.equal(AI.energyHorizonBonus(attachActive,withDce,cfg),
+  AI.energyHorizonBonus(attachActive,withoutDce,cfg));
+});
+
+
+test('Apex only spends PlusPower for an attack it can legally declare',()=>{
+ const action={type:'play_trainer',payload:{handIndex:0}};
+ const ready=board();
+ Object.assign(ready,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+ ready.self.hand=['base1-84']; // PlusPower
+ ready.opponent.active={id:MACHOP,energies:[],damage:20,status:null};
+ // Hitmonchan's funded Jab deals 20; Machop has 30 HP remaining,
+ // so PlusPower creates a real 30-damage knockout only while Jab is legal.
+ const readyScore=AI.score(action,ready,cfg,{});
+ const asleep=structuredClone(ready);
+ asleep.self.active.status='Asleep';
+ const paralyzed=structuredClone(ready);
+ paralyzed.self.active.status='Paralyzed';
+ const amnesia=structuredClone(ready);
+ amnesia.self.active.amnesia={index:0,expires:12};
+ const gymOnce=structuredClone(ready);
+ gymOnce.self.active.gymAttackOnce=[0];
+ for(const [label,blocked] of [['Asleep',asleep],['Paralyzed',paralyzed],
+  ['Amnesia',amnesia],['Gym once-used',gymOnce]]){
+  assert.ok(readyScore>AI.score(action,blocked,cfg,{})+200,
+   label+' must not make PlusPower look like an immediate knockout');
+ }
+ const confused=structuredClone(ready);
+ confused.self.active.status='Confused';
+ assert.equal(AI.score(action,confused,cfg,{}),readyScore,
+  'Confusion allows attack declaration; it is not an absolute attack lock');
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(action,ready,lower,{}),AI.score(action,asleep,lower,{}),
+  'Level 7 retains its existing PlusPower evaluation');
+});
+
+test('Apex values Full Heal Energy curing an Active into an immediate legal attack',()=>{
+ const fullHeal='base5-81',potion='base5-82';
+ const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const make=(energy,status,energies=[FIGHT])=>{
+  const o=board();
+  Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+  o.self.active.status=status;
+  o.self.active.energies=energies;
+  o.self.hand=[energy];
+  o.opponent.active={id:MACHOP,energies:[],damage:0,status:null};
+  return o;
+ };
+ for(const status of ['Asleep','Paralyzed','Confused']){
+  assert.ok(AI.score(attachActive,make(fullHeal,status),cfg,{})>
+   AI.score(attachActive,make(potion,status),cfg,{}),
+   'Full Heal Energy must reward curing '+status+' when Jab is already funded');
+ }
+ assert.equal(AI.score(attachActive,make(fullHeal,null),cfg,{}),
+  AI.score(attachActive,make(potion,null),cfg,{}),
+  'no status-cure tempo bonus should be awarded to a healthy Active');
+ assert.equal(AI.score(attachActive,make(fullHeal,'Asleep',[]),cfg,{}),
+  AI.score(attachActive,make(potion,'Asleep',[]),cfg,{}),
+  'do not claim an immediate attack if Full Heal Energy cannot fund it');
+ const bench={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ assert.equal(AI.score(bench,make(fullHeal,'Asleep'),cfg,{}),
+  AI.score(bench,make(potion,'Asleep'),cfg,{}),
+  'attaching Full Heal Energy to the Bench does not cure the Active');
+});
+
+test('Apex recognizes Potion Energy preventing a public next-turn knockout',()=>{
+ // Neo Genesis Potion Energy heals one damage counter when attached.
+ // A 70-HP Hitmonchan at 50 damage is KO'd by a ready 20-damage Rattata;
+ // healing to 40 damage raises its remaining HP from 20 to 30.
+ const potion='base5-82',plain='base5-81'; // Full Heal Energy, same Colorless output
+ const activeAttachment={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const scenario=(id,damage,enemyEnergy=[FIGHT])=>{
+  const o=board();
+  Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+  o.self.active.damage=damage;
+  o.self.hand=[id];
+  o.opponent.active={id:RATTATA,energies:enemyEnergy,damage:0,status:null};
+  return o;
+ };
+ const saving=AI.score(activeAttachment,scenario(potion,50),cfg,{});
+ const plainSaving=AI.score(activeAttachment,scenario(plain,50),cfg,{});
+ assert.ok(saving>plainSaving+80,
+  'healing that prevents a certain public KO should beat neutral Colorless Energy');
+ const safe=AI.score(activeAttachment,scenario(potion,10,[]),cfg,{});
+ const plainSafe=AI.score(activeAttachment,scenario(plain,10,[]),cfg,{});
+ assert.ok(safe>plainSafe,'damaged hosts should receive a modest real healing bonus');
+ assert.ok(saving-plainSaving>safe-plainSafe+60,
+  'survival swing should matter more than routine ten-damage healing');
+ assert.equal(AI.score(activeAttachment,scenario(potion,0),cfg,{}),
+  AI.score(activeAttachment,scenario(plain,0),cfg,{}),
+  'a healthy host must not receive a phantom healing bonus');
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(activeAttachment,scenario(potion,50),lower,{}),
+  AI.score(activeAttachment,scenario(plain,50),lower,{}),
+  'existing Level 7 attachment scoring remains unchanged');
+});
+
+test('Apex does not strand a Potion Energy attachment that prevents a public KO',()=>{
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const scenario=(energy,damage,withBench=true)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+  // Hitmonchan is already fully funded and can already retreat. The only
+  // value of Potion Energy here is healing its 20 remaining HP to 30.
+  o.self.active.energies=[FIGHT,FIGHT,FIGHT];
+  o.self.active.damage=damage;
+  o.self.hand=[energy];
+  // The opponent's publicly funded Jab deals 20 on its next turn.
+  o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+  // A Colorless-ready Bench gives the stranded-Energy guard an alternative.
+  o.self.bench=withBench?[{id:RATTATA,energies:[],damage:0}]:[];
+  return o;
+ };
+ const potion='base5-82',neutral='base5-81';
+ const score=(energy,damage,withBench,config=cfg)=>
+  AI.score(activeAttach,scenario(energy,damage,withBench),config,{});
+ assert.equal(score(potion,50,true),score(potion,50,false),
+  'a Potion that saves the Active must not be penalized as stranded Energy');
+ assert.ok(score(neutral,50,false)-score(neutral,50,true)>=130,
+  'an ordinary surplus attachment remains stranded on a doomed Active');
+ assert.ok(score(potion,60,false)-score(potion,60,true)>=130,
+  'Potion still counts as stranded when 10 healing cannot prevent the KO');
+ const level7=AI.configuration({side:1,level:7});
+ assert.ok(score(potion,50,false,level7)-score(potion,50,true,level7)>=130,
+  'the new survival correction is restricted to Apex');
+});
+
+function evolutionForecastBoard(status=null){
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ o.self.active={id:MACHOP,energies:[FIGHT,FIGHT,FIGHT],damage:0,status,playedTurn:2};
+ o.self.bench=[];
+ o.self.hand=['base1-34']; // Machoke: Karate Chop is affordable after evolving.
+ o.self.energyUsed=true;
+ o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+ return o;
+}
+test('optional Apex two-step forecast recognizes evolution curing disabling conditions',()=>{
+ const planning={...cfg,planning:true};
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ for(const status of ['Asleep','Paralyzed']){
+  const o=evolutionForecastBoard(status);
+  assert.ok(AI.planningBonus(evolve,o,planning)>0,
+   'evolution should cure '+status+' and unlock Machoke\'s attack');
+ }
+});
+test('optional Apex evolution forecast does not retain Basic effectiveAttacks',()=>{
+ const planning={...cfg,planning:true};
+ const evolve={type:'evolve',payload:{handIndex:0,slot:-1}};
+ // Start with Sleep so evolution must unlock the new stage's attacks.
+ // A healthy Machop can already attack, making its improvement score zero.
+ const normal=evolutionForecastBoard('Asleep');
+ const inherited=structuredClone(normal);
+ inherited.self.active.effectiveAttacks=require('../headless_duel').CATALOG.get(MACHOP).attacks;
+ const baseline=AI.planningBonus(evolve,normal,planning);
+ assert.ok(baseline>0,'Machoke should upgrade Machop\'s attack');
+ assert.equal(AI.planningBonus(evolve,inherited,planning),baseline,
+  'evolved Machoke must use its own attack list');
+});
+
+test('Apex two-step forecast accounts for Full Heal Energy clearing attack-blocking conditions',()=>{
+ const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const attachBench={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ const make=(energy,status)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',round:5,turnSerial:11});
+  o.self.active.status=status;
+  o.self.active.energies=[FIGHT]; // Hitmonchan's Jab is already funded.
+  o.self.hand=[energy];
+  o.self.energyUsed=false;
+  return o;
+ };
+ const planning={...cfg,planning:true};
+ for(const status of ['Asleep','Paralyzed']){
+  assert.ok(AI.planningBonus(attachActive,make('base5-81',status),planning)>0,
+   'Full Heal Energy should unlock an attack after curing '+status);
+  assert.equal(AI.planningBonus(attachActive,make('base5-82',status),planning),0,
+   'Potion Energy cannot cure '+status);
+  assert.equal(AI.planningBonus(attachBench,make('base5-81',status),planning),0,
+   'curing a Benched Pokemon does not wake the Active');
+ }
+ assert.equal(AI.planningBonus(attachActive,make('base5-81',null),planning),0,
+  'a healthy, already funded Active gets no phantom attack unlock');
 });

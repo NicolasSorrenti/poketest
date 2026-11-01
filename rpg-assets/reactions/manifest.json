@@ -210,6 +210,10 @@
       "ko_taken": "/rpg-assets/characters/daisy/expression-portraits/concerned.png",
       "ko_scored": "/rpg-assets/characters/daisy/expression-portraits/happy.png",
       "match_cutin": "/rpg-assets/characters/daisy/portraits/primary.png"
+    },
+    "lyla": {
+      "default": "/rpg-assets/characters/lyla/overworld/front.png",
+      "attack": "/rpg-assets/characters/lyla/attack.png"
     }
   }
 }

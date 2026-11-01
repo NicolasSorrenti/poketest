@@ -3,8 +3,10 @@
 // Do not trust localStorage email: the server verifies the bearer with Supabase.
 (async function(){
   const scripts=[
+ "/overworld/manifest.js?v=global-pose-triggers-20261030-1",
  "/rpg_sol_character.js",
  "/rpg_narrative_pack.js",
+ "/rpg_relationship_profiles.js?v=bond-profiles-20261101",
  "/rpg_relationships.js",
  "/rpg_side_quests.js",
  "/rpg_bond_chapters.js",
@@ -33,7 +35,7 @@
  "/rpg_akari_barb_event.js?v=20261026",
  "/rpg_cross_character_events.js?v=20261026-crossovers",
  "/rpg_daisy_event_additions.js?v=1",
- "/rpg_slice_of_life.js",
+ "/rpg_slice_of_life.js?v=phone-selfie-chat-20261031-3",
  "/rpg_cg_gallery.js?v=20261028-art-fallback-2",
  "/rpg_cg_scene.js?v=20261026-in-scene",
  "/rpg_daily_planner.js",
@@ -47,11 +49,11 @@
  "/duel_playmats.js?v=2",
  "/rpg_bond_rewards.js",
  "/rpg_partner_decks.js",
- "/rpg_npc_deck_progression.js",
+ "/rpg_npc_deck_progression.js?v=lyla-legal-deck-20261031-1",
  "/rpg_mandatory_events.js",
  "/rpg_season_events.js",
  "/rpg_audio.js",
- "/rpg_time_transitions.js",
+ "/rpg_time_transitions.js?v=rpg-scene-wipe-20261031-1",
  "/rpg_render_perf.js",
  "/rpg_ui_motion.js",
  "/rpg_character_motion.js",
@@ -60,10 +62,11 @@
  "/rpg_victory_presentation.js",
  "/rpg_tournament_presentation.js",
  "/rpg_tutorials.js?v=1",
- "/rpg_status.js?v=4",
+ "/rpg_status.js?v=persona-ranks-20261101",
  "/rpg_cloud_save.js?v=cloud-login-visible-20261030",
  "/rpg_outfits.js?v=1",
- "/rpg.js?v=dialogue-special-outfit-priority-20261031"
+ "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
+ "/rpg.js?v=rpg-scene-wipe-20261031-1"
 ];
   function registry(packs){
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];

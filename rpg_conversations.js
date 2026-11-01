@@ -10,6 +10,7 @@
  const CHARACTER=typeof module==='object'&&module.exports?require('./rpg_character_chats'):window.NeoRpgCharacterChats;
  const GROUP=typeof module==='object'&&module.exports?require('./rpg_group_chats'):window.NeoRpgGroupChats;
  const MEMORY=typeof module==='object'&&module.exports?require('./rpg_dialogue_memory'):window.NeoRpgDialogueMemory;
+ const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  function hash(text){
   let n=2166136261;
   for(const ch of String(text)){n=Math.imul(n^ch.charCodeAt(0),16777619)>>>0;}
@@ -116,6 +117,13 @@
   const n=hash(npc+':'+state.day);
   const spent=!!state.hungOut?.[state.day+':'+npc];
   const planned=Array.isArray(state.appointments)&&state.appointments.some(a=>a.npc===npc&&a.status==='booked');
+  const relationship=state.relationships?.[npc]||{};
+  const trust=Number(relationship.trust)||0;
+  const rank=REL?.bondRank?.(state,npc)||0;
+  // Casual teasing becomes available after a small amount of earned trust.
+  // The wording stays playful and indirect; direct commitment is reserved for
+  // authored late-route choices.
+  const canTease=trust>=2||(rank>=1&&trust>=1);
   if(!spent&&n%4===0)return [
    [invitationLabel('social',npc,state.day), 'socialPlan:'+npc],
    [invitationLabel('later',npc,state.day), 'close']
@@ -124,7 +132,7 @@
    [invitationLabel('date',npc,state.day), 'dateInvite:'+npc],
    [invitationLabel('later',npc,state.day), 'close']
   ];
-  if(n%9===2)return [
+  if(canTease&&n%9===2)return [
    [invitationLabel('flirt',npc,state.day), 'flirt:'+npc],
    [invitationLabel('later',npc,state.day), 'close']
   ];
@@ -138,7 +146,7 @@
  }
  function commitmentReady(state,npc){
   const relationship=state?.relationships?.[npc];
-  if(!relationship||relationship.affection<3||state.partner&&state.partner!==npc)return false;
+  if(!relationship||relationship.affection<3)return false;
   const completed=Object.keys(state.storyDone||{}).filter(id=>
    id.startsWith(npc+'_')&&/_(route|guest|bond)_\d+$/.test(id)&&state.storyDone[id]).length;
   return relationship.trust>=1||completed>=3;

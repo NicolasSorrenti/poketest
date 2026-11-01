@@ -672,6 +672,16 @@
    [you.active,...you.bench].forEach((u,i)=>{if(u?.secretPlanFaceDown){$('powers').append(btn(`🎴 Reveal Secret Plan (${i===0?'Active':'Bench '+i})`,()=>send(command('reveal_secret',{slot:i-1}))));return;}const c=card(u.id);(c.abilities||[]).forEach(a=>{if(a.name)$('powers').append(btn(`✦ ${a.name} (${i===0?'Active':'Bench '+i})`,()=>send(command('use_power',{slot:i-1,repeat:['Damage Swap','Energy Trans','Rain Dance'].includes(a.name)}))));});});
   }
   const actionsDisabled=watching()||!yourTurn||v.phase!=='game'||!!v.pendingDecision||v.over;
+  const ruleActions=$('pokemonActions');ruleActions.replaceChildren();ruleActions.hidden=true;
+  if(!actionsDisabled){
+   [you.active,...you.bench].forEach((unit,index)=>{
+    if(!unit||card(unit.id).name!=='Clefairy Doll')return;
+    ruleActions.hidden=false;
+    const location=index===0?'Active':`Bench ${index}`;
+    ruleActions.append(btn(`Discard ${location} Clefairy Doll`,()=>send(command('discard_clefairy_doll',{slot:index-1})),'subtle'));
+   });
+  }
+
   $('retreatBtn').disabled=actionsDisabled||!you.bench.length;
   $('retreatBtn').title=actionsDisabled?'Retreat on your turn after resolving any choices.':!you.bench.length?'You need a Benched Pokémon to retreat.':'Choose a Benched Pokémon to replace your Active Pokémon.';
   $('undoBtn').disabled=busy||watching()||!current.undo?.available;

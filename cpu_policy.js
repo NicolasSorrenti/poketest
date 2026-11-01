@@ -99,12 +99,26 @@ function energyPool(unit){
   return [];
  });
 }
+// Darkness Energy damages non-Dark Bench hosts at the end of BOTH players'
+// turns (headless_duel.js). After attaching, a Bench Pokemon must survive
+// our checkup AND the opponent's checkup before we can use it next turn.
+// Do not spend an attachment on a host that will faint before that turn.
+// Keep Active attachments available: a final-Prize attack can win immediately.
+function lethalDarknessBenchAttachment(unit,energyId,slot){
+ if(slot===-1||!unit||card(energyId)?.name!=='Darkness Energy')return false;
+ const species=card(unit.id);
+ if(!species||species.types?.includes('Darkness')||species.name?.startsWith('Dark '))return false;
+ const darkness=(unit.energies||[]).filter(id=>card(id)?.name==='Darkness Energy').length+1;
+ return hpRemaining(unit)<=darkness*20;
+}
 function energyValue(pokemon,energyId){
  const source=card(pokemon?.id);
  if(!source)return 0;
  const pool=energyPool(pokemon);
  const added=energyPool({energies:[energyId]});
- const moves=source.attacks||[];
+ // Public copied attacks (for example Psylink) are the actual playable set.
+ // Valuing only printed attacks can strand Energy needed for a copied attack.
+ const moves=pokemon?.effectiveAttacks||source.attacks||[];
  let value=0;
  for(const attack of moves){
   const cost=attack.cost||[];
@@ -309,10 +323,14 @@ function trainerOpportunity(o,name,cfg){
  if(name==='Switch')return p.bench.length>0;
  if(name==='Gust of Wind')return q.bench.length>0;
  if(name==='Pokémon Center')return own.some(u=>u.damage>=10);
- // Item Finder requires a Trainer already in discard before its two-card cost.
- // Playing it without a target strands a mandatory choice on the genuine reducer.
- if(name==='Item Finder')return (p.discard||[]).some(id=>card(id)?.supertype==='Trainer');
- if(name==='Computer Search')return p.deckCount>0;
+ // Both searches require two OTHER cards to pay their mandatory cost.
+ // Item Finder may recover a Trainer discarded as payment, even when the
+ // discard pile has no Trainers yet. Count the Item Finder being played as
+ // one of the hand's Trainers; another must be available to pay the cost.
+ if(name==='Item Finder')return p.hand.length>=3&&(
+  (p.discard||[]).some(id=>card(id)?.supertype==='Trainer')||
+  p.hand.filter(id=>card(id)?.supertype==='Trainer').length>=2);
+ if(name==='Computer Search')return p.hand.length>=3&&p.deckCount>0;
  if(name==='Bill')return p.deckCount>(cfg.level>=4?2:0);
  if(name==='Professor Oak')return p.deckCount>(cfg.level>=4?7:0);
  return true;
@@ -380,6 +398,8 @@ function candidates(o,cfg,used){
    // Otherwise the Apex attack-ordering guard may suppress a legal attack
    // in favor of a completely impossible attachment.
    if(target&&!(target.energyAttachBlockSerial>o.turnSerial)&&
+      !(cfg.level===8&&c.name==='Rainbow Energy'&&hpRemaining(target)<=10)&&
+      !(cfg.level===8&&lethalDarknessBenchAttachment(target,c.id,slot))&&
       legalAttachment({card:c,unit:target,round:o.round,energyUsed:p.energyUsed,
        cardName:card(target.id)?.name||''}))
     options.push(command('attach_energy',{handIndex:i,slot}));
@@ -529,6 +549,16 @@ function choiceValue(option,decision,o,cfg){
   const candidate=candidateId?card(candidateId):null;
   if(candidate&&isEnergy(candidate)&&o.self.active){
    const active=o.self.active;
+   // Computer Search is choosing an Energy, not attaching it yet. Do not
+   // reward a Rainbow Energy as an immediate attack unlock when its 10 damage
+   // would knock out the Active before it can attack. A surviving Bench target
+   // can still make Rainbow a useful search result.
+   if(candidate.name==='Rainbow Energy'&&hpRemaining(active)<=10){
+    const benchProgress=Math.max(0,...(o.self.bench||[]).filter(unit=>
+     hpRemaining(unit)>10&&legalAttachment({card:candidate,unit,round:o.round,
+      cardName:card(unit.id)?.name||''})).map(unit=>energyValue(unit,candidateId)));
+    return benchProgress>12?55+Math.min(110,benchProgress*1.5):-200;
+   }
    // Search results must be attachable to the intended attacker. In
    // particular, Miracle Energy cannot power an ordinary Pokémon.
    const attachable=legalAttachment({card:candidate,unit:active,round:o.round,
@@ -745,7 +775,11 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
  if(remaining===0)return immediate;
  // Paralysis expires at the end of the affected turn; unlike Sleep, recovery
  // is guaranteed by our next turn. Do not treat it as a permanent attack lock.
- const nextTurnUnit=unit.status==='Paralyzed'?{...unit,status:null}:unit;
+ // Miracle Energy expires at the end of its owner's turn, so do not
+ // carry it into a future attack forecast.
+ const nextTurnUnit={...unit,
+  ...(unit.status==='Paralyzed'?{status:null}:{}),
+  energies:(unit.energies||[]).filter(id=>card(id)?.name!=='Miracle Energy')};
  const recovered=unit.status==='Paralyzed'?
   projectedAttackValue(nextTurnUnit,defender,turnSerial+2,benchCount)*.48:0;
  const seen=new Set();
@@ -754,10 +788,20 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   const energy=card(id);
   // Forecast only Energy the attacker can legally receive next turn.
   // Miracle Energy must not create imaginary two-turn attack lines.
-  if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit,
+  if(seen.has(id)||!isEnergy(energy)||!legalAttachment({card:energy,unit:nextTurnUnit,
    round:futureRound,cardName:card(unit.id)?.name||''}))continue;
+  // Rainbow Energy deals 10 damage when attached. A forecast that knocks
+  // out its own attacker cannot unlock a next-turn attack. Nonlethal damage
+  // still matters for counter-based attacks such as Flail.
+  const rainbowDamage=energy.name==='Rainbow Energy'?10:0;
+  if(rainbowDamage>=hpRemaining(unit))continue;
   seen.add(id);
-  const after={...nextTurnUnit,energies:[...(unit.energies||[]),id]};
+  const after={...nextTurnUnit,damage:(nextTurnUnit.damage||0)+rainbowDamage,
+   // A future Full Heal attachment also cures Sleep before the attack.
+   // Keep this consistent with the immediate attachment and duel reducer.
+   ...(energy.name==='Full Heal Energy'?{status:null,poison:false}:{}),
+   // Forecast from the post-expiry Energy pool: Miracle Energy is discarded.
+   energies:[...(nextTurnUnit.energies||[]),id]};
   // A card requires another turn's Energy attachment. Discount those future
   // outcomes to avoid preferring a speculative combination to today's KO.
   // Next attachment is on our next turn, after the opponent's turn.
@@ -774,7 +818,16 @@ function energyHorizonBonus(action,o,cfg){
  if(!u||!q.active)return 0;
  const attachedId=p.hand[v.handIndex];
  if(!isEnergy(card(attachedId)))return 0;
- const after={...u,energies:[...(u.energies||[]),attachedId]};
+ // Rainbow Energy damages its host immediately, including in two-turn forecasts.
+ const rainbowDamage=card(attachedId)?.name==='Rainbow Energy'?10:0;
+ if(rainbowDamage>=hpRemaining(u))return 0;
+ // Match the reducer: Full Heal Energy cures Special Conditions on
+ // attachment, so a sleeping/paralyzed Active can attack immediately.
+ // Forecasting the Energy without its cure undervalues this legal line.
+ const fullHeal=card(attachedId)?.name==='Full Heal Energy';
+ const after={...u,damage:(u.damage||0)+rainbowDamage,
+  ...(fullHeal?{status:null}:{}),
+  energies:[...(u.energies||[]),attachedId]};
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
  const futureRound=(Number(o.round)||0)+1;
  // Defaulting to serial zero makes expired public locks look active.
@@ -811,7 +864,7 @@ function energyHorizonBonus(action,o,cfg){
 // A forced attachment is not productive when the Active is about to be KO'd,
 // gains no attack this turn, and cannot escape using that Energy. Keep this
 // independent of Bench availability: holding the Energy is also an option.
-function strandedActiveEnergy(o,energyId){
+function strandedActiveEnergy(o,energyId,cfg){
  const active=o.self.active,enemy=o.opponent.active,energy=card(energyId);
  if(!active||!enemy||!isEnergy(energy)||['Asleep','Paralyzed'].includes(enemy.status))return false;
  const incoming=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
@@ -823,7 +876,15 @@ function strandedActiveEnergy(o,energyId){
  const confusionChance=enemy.status==='Confused'?.5:1;
  if(!incoming.some((a,i)=>eligibleAttack(fromEnemy,enemy,a,i)&&
     knockoutChance(a,enemy,active,o.opponent.bench.length)*confusionChance>=.75))return false;
- const after={...active,energies:[...(active.energies||[]),energyId]};
+ // Potion Energy heals 10 immediately on attachment. If that healing
+ // prevents the publicly threatened KO, the attachment is a survival play,
+ // not Energy stranded on a doomed Active. Keep Level 7's old behavior.
+ const potionRescue=cfg.level===8&&energy.name==='Potion Energy'&&
+  (active.damage||0)>0;
+ const after={...active,
+  ...(potionRescue?{damage:Math.max(0,active.damage-10)}:{}),
+  energies:[...(active.energies||[]),energyId]};
+ if(potionRescue&&!likelyOpponentKnockout(o,after))return false;
  if(projectedAttackValue(after,enemy,o.turnSerial,o.self.bench.length)>
     projectedAttackValue(active,enemy,o.turnSerial,o.self.bench.length))return false;
  const retreat=card(active.id)?.retreatCost||[];
@@ -834,7 +895,7 @@ function strandedActiveEnergy(o,energyId){
 }
 function doomedActiveAttachmentPenalty(o,energyId,cfg){
  if(cfg.level<7||o.phase!=='game'||!o.self.active||!o.opponent.active||
-    o.self.energyUsed||!o.self.bench?.length||!strandedActiveEnergy(o,energyId))return 0;
+    o.self.energyUsed||!o.self.bench?.length||!strandedActiveEnergy(o,energyId,cfg))return 0;
  const energy=card(energyId);
  const usefulBench=o.self.bench.some(unit=>
   !(unit.energyAttachBlockSerial>o.turnSerial)&&
@@ -946,6 +1007,11 @@ function score(a,o,cfg,used){
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
+  // Rainbow Energy places a damage counter before it can fund an attack.
+  // The reducer immediately knocks out a host with 10 HP or less remaining.
+  if(cfg.level===8&&card(p.hand[v.handIndex])?.name==='Rainbow Energy'&&
+     hpRemaining(unit)<=10)return -1000;
+  if(cfg.level===8&&lethalDarknessBenchAttachment(unit,p.hand[v.handIndex],v.slot))return -1000;
   // This attachment will be discarded if Center heals its target later.
   // Penalize it enough to force the zero-cost heal first; a follow-up
   // attachment is then evaluated normally against the healed board.
@@ -959,7 +1025,43 @@ function score(a,o,cfg,used){
   const ko=after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
   const future=(improvement*(cfg.level===2?.50:.85)+(ko?(cfg.level===2?30:65):0))*style.damage;
   const saturation=before>0&&improvement===0?(cfg.level===2?14:35):0;
-  return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation-
+  // Full Heal Energy clears conditions as soon as it is attached. A ready
+  // Asleep/Paralyzed Active can then attack this turn, while curing Confusion
+  // removes the mandatory failure coin flip. Only reward a legal, payable
+  // attack after the cure; Bench attachments cannot cure the Active.
+  const curesActive=cfg.level===8&&v.slot===-1&&
+   card(p.hand[v.handIndex])?.name==='Full Heal Energy'&&
+   ['Asleep','Paralyzed','Confused'].includes(unit?.status);
+  const cured=curesActive?{...unit,status:null,
+   energies:[...(unit.energies||[]),p.hand[v.handIndex]]}:null;
+  const cureTempo=cured&&projectedAttackValue(cured,q.active,o.turnSerial,p.bench.length)>0?
+   (unit.status==='Confused'?90:185)*style.damage:0;
+  // Poison checkup happens after an attack ends the turn. Full Heal Energy
+  // prevents a lethal tick even when the Active already has enough Energy.
+  // Benched Poison does not tick, so this rescue is Active-only.
+  const poisonRescue=cfg.level===8&&v.slot===-1&&
+   card(p.hand[v.handIndex])?.name==='Full Heal Energy'&&unit?.poison&&
+   hpRemaining(unit)>0&&(unit.poisonDamage||10)>=hpRemaining(unit);
+  const poisonSurvival=poisonRescue?245*style.survival:0;
+  // Potion Energy heals one damage counter on attachment. Reward real healing
+  // modestly, and give Apex a larger survival incentive only when that heal
+  // turns a publicly likely opponent knockout into a non-knockout. The latter
+  // uses the same legal-attack/coin-risk guard as other Apex rescue decisions.
+  // No future draw, hidden card or lower difficulty behavior is consulted.
+  const potionHeal=cfg.level===8&&card(p.hand[v.handIndex])?.name==='Potion Energy'&&
+   (unit?.damage||0)>0;
+  const healed=potionHeal?{...unit,damage:Math.max(0,unit.damage-10)}:null;
+  const preventsKo=healed&&v.slot===-1&&likelyOpponentKnockout(o,unit)&&
+   !likelyOpponentKnockout(o,healed);
+  // Poison checkup follows an attack. Potion Energy does not cure Poison,
+  // but its immediate 10-damage heal can leave enough HP to survive the tick.
+  // Only count an actual rescue, not a heal that still ends in a knockout.
+  const potionPoisonSave=potionHeal&&v.slot===-1&&unit.poison&&
+   hpRemaining(unit)>0&&(unit.poisonDamage||10)>=hpRemaining(unit)&&
+   (unit.poisonDamage||10)<hpRemaining(unit)+Math.min(10,unit.damage);
+  const healingValue=healed?(Math.min(10,unit.damage)*1.6+
+   (preventsKo?120:0)+(potionPoisonSave?185:0))*style.survival:0;
+  return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation+healingValue+cureTempo+poisonSurvival-
    (v.slot===-1?doomedActiveAttachmentPenalty(o,p.hand[v.handIndex],cfg):0);
  }
  if(type==='attack'){
@@ -974,6 +1076,19 @@ function score(a,o,cfg,used){
   const riskPreference=uncertain?style.risk*40:0;
   const direct=damage*style.damage;
   const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
+  // A retreat-lock such as Murkrow's Mean Look does not stack. Once the
+  // defending Pokemon is already unable to retreat, repeating the zero-damage
+  // move forfeits an entire attack. Prefer a payable damaging attack instead.
+  const retreatLock=/can(?:not|'t) retreat/i.test(attack?.text||'');
+  const damagingAlternative=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])
+   .some((other,index)=>index!==v.attackIndex&&
+    eligibleAttack(o,p.active,other,index)&&
+    estimatedDamage(other,p.active,q.active,p.bench.length)>0);
+  const repeatedLock=retreatLock&&damage===0&&damagingAlternative&&
+   (q.active?.retreatLocked||q.active?.cannotRetreat||q.active?.meanLook||
+    q.active?.retreatLock||q.active?.retreatBlocked);
+  const idleLockPenalty=retreatLock&&damage===0&&damagingAlternative?
+   (repeatedLock?420:185):0;
   const fixedCost=/Discard.*Energy attached to/i.test(attack?.text||'')?30:0;
   const program=ATTACK.compile(attack);
   const selfDamage=['recoil','coin-recoil','coin-recoil-bonus'].includes(program?.kind)?
@@ -984,7 +1099,7 @@ function score(a,o,cfg,used){
   // abandoning the only Active to self-KO can outright lose the match.
   const selfLoss=cfg.level>=4?selfKnockout*
    (p.bench.length===0?240:100)*(1-koChance*.8)*style.survival:0;
-  return 150+direct*.9+135*koChance+riskPreference+statusValue-fixedCost-selfLoss;
+  return 150+direct*.9+135*koChance+riskPreference+statusValue-fixedCost-selfLoss-idleLockPenalty;
  }
  if(type==='play_trainer'){
   const name=card(p.hand[v.handIndex])?.name||'';
@@ -1029,7 +1144,16 @@ function score(a,o,cfg,used){
   if(name==='Switch')return p.active?.status?210*style.survival:55;
   if(/Search|Computer|Ball|Trader|Elm/i.test(name))return 130*style.setup;
   if(name==='PlusPower'){
-   const damage=strongestAffordableAttack(p.active,q.active,p.bench.length),needed=hpRemaining(q.active)-damage;
+   // Energy payment alone does not make an attack usable. Apex should not
+   // spend PlusPower for an imaginary KO while the Active is Asleep,
+   // Paralyzed, Amnesia-locked or barred from repeating a Gym attack.
+   // Use only the publicly legal attack set; preserve lower-level scoring.
+   const damage=cfg.level===8?
+    (p.active?.effectiveAttacks||card(p.active?.id)?.attacks||[]).reduce((best,attack,index)=>
+     eligibleAttack(o,p.active,attack,index)?
+      Math.max(best,estimatedDamage(attack,p.active,q.active,p.bench.length)):best,0):
+    strongestAffordableAttack(p.active,q.active,p.bench.length);
+   const needed=hpRemaining(q.active)-damage;
    // PlusPower only boosts an attack that can actually be paid for.
    // Preserve the card when the Active cannot attack this turn.
    return (damage>0&&needed>0&&needed<=10?300:
@@ -1152,12 +1276,29 @@ function projectedPrep(board,action,round,turnSerial){
   if(next.energyUsed||!u||!isEnergy(c)||u.energyAttachBlockSerial>turnSerial||
     !legalAttachment({card:c,unit:u,round,energyUsed:next.energyUsed,
      cardName:card(u.id)?.name||''}))return null;
+  // A lethal Rainbow attachment cannot contribute to a tactical line.
+  if(c.name==='Rainbow Energy'&&hpRemaining(u)<=10)return null;
   u.energies=[...(u.energies||[]),id];
+  if(c.name==='Rainbow Energy')u.damage=(u.damage||0)+10;
+  // Match the reducer: Full Heal Energy immediately clears all conditions,
+  // potentially unlocking a sleeping or paralyzed attack in this turn's plan.
+  if(c.name==='Full Heal Energy'){
+   u.status=null;u.poison=false;delete u.poisonDamage;
+  }
   next.energyUsed=true;
  }else if(type==='evolve'){
   if(!u||!canEvolve(c,card(u.id))||u.playedTurn>=round)return null;
   u.id=id;
   u.playedTurn=round;
+  // Match the authoritative evolve reducer: the new stage uses its own
+  // attacks, and evolution removes Asleep/Paralyzed/Confused and Poison.
+  // Keeping either stale field made an otherwise legal evolved attack look
+  // unusable (or falsely retained the Basic's cheaper attack) in the
+  // optional two-step preparation forecast.
+  delete u.effectiveAttacks;
+  u.status=null;
+  u.poison=false;
+  delete u.poisonDamage;
  }else{
   if(!isBasicPokemon(c))return null;
   next.bench.push({id,damage:0,energies:[],status:null,playedTurn:round});
@@ -1200,17 +1341,52 @@ function energyPreparationActions(o,cfg,actions){
  // Attacking ends the turn. Use a legal, productive Energy attachment first,
  // unless an already-affordable attack guarantees the final knockout.
  if(cfg.level!==8||o.self.energyUsed)return actions;
- const canAttackNow=actions.some(a=>a.type==='attack');
- const useful=actions.some(a=>{
-  if(a.type!=='attach_energy'||energyValue(slotUnit(o.self,a.payload.slot),
-    o.self.hand[a.payload.handIndex])<=12)return false;
+ // This is a root-action safety gate, not just a scoring penalty: strategic
+ // search can otherwise overrule a -1000 heuristic with speculative bonuses.
+ const safeActions=actions.filter(a=>{
+  if(a.type!=='attach_energy')return true;
+  const target=slotUnit(o.self,a.payload.slot);
+  return !(card(o.self.hand[a.payload.handIndex])?.name==='Rainbow Energy'&&
+   hpRemaining(target)<=10)&&
+   !lethalDarknessBenchAttachment(target,o.self.hand[a.payload.handIndex],a.payload.slot);
+ });
+ const canAttackNow=safeActions.some(a=>a.type==='attack');
+ const useful=safeActions.some(a=>{
+  if(a.type!=='attach_energy')return false;
+  const target=slotUnit(o.self,a.payload.slot);
+  const energyId=o.self.hand[a.payload.handIndex];
+  // Full Heal Energy cures Confusion on attachment. A fully charged Active
+  // may have zero marginal Energy value, yet curing the 50% attack-failure
+  // risk before declaring a damaging attack is a productive preparation.
+  const confusionCure=a.payload.slot===-1&&target?.status==='Confused'&&
+   card(energyId)?.name==='Full Heal Energy'&&
+   (target.effectiveAttacks||card(target.id)?.attacks||[]).some((attack,index)=>
+    eligibleAttack(o,target,attack,index)&&
+    estimatedDamage(attack,target,o.opponent.active,o.self.bench.length)>0);
+  // A poisoned Active at lethal checkup damage needs the cure before
+  // attacking; otherwise attacking ends the turn and the Active is KO'd.
+  const lethalPoisonCure=a.payload.slot===-1&&
+   card(energyId)?.name==='Full Heal Energy'&&target?.poison&&
+   hpRemaining(target)>0&&(target.poisonDamage||10)>=hpRemaining(target);
+  // A fully charged Active can still need Potion Energy before attacking:
+  // healing one damage counter may turn a lethal Poison checkup into survival.
+  // Unlike Full Heal, Potion leaves Poison in place, so require a strict
+  // post-heal HP margin above the tick; otherwise do not delay the attack.
+  const potionPoisonSave=a.payload.slot===-1&&
+   card(energyId)?.name==='Potion Energy'&&target?.poison&&
+   hpRemaining(target)>0&&(target.poisonDamage||10)>=hpRemaining(target)&&
+   (target.poisonDamage||10)<hpRemaining(target)+Math.min(10,target.damage||0);
+  if(!confusionCure&&!lethalPoisonCure&&!potionPoisonSave&&
+   energyValue(target,energyId)<=12)return false;
   // Do not suppress an already-legal attack just to spend the only Energy on
   // an Active that will be KO'd before that Energy helps. A legal Bench
   // attachment or immediate attack upgrade still gets prepared first.
-  return !(canAttackNow&&a.payload.slot===-1&&
-   strandedActiveEnergy(o,o.self.hand[a.payload.handIndex]));
+  // The cure improves this turn's attack reliability even if the Active
+  // would be knocked out next turn; do not treat it as stranded Energy.
+  return confusionCure||lethalPoisonCure||potionPoisonSave||
+   !(canAttackNow&&a.payload.slot===-1&&strandedActiveEnergy(o,energyId,cfg));
  });
- if(!useful)return actions;
+ if(!useful)return safeActions;
  // Confusion requires a coin flip before a printed attack resolves, so a
  // nominally lethal attack is not a guaranteed final-Prize knockout.
  const confusionChance=o.self.active?.status==='Confused'?.5:1;
@@ -1221,7 +1397,7 @@ function energyPreparationActions(o,cfg,actions){
    return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active,o.self.bench.length)*
     confusionChance>=.999;
   });
- return gameWinningKo?actions:actions.filter(a=>a.type!=='attack');
+ return gameWinningKo?safeActions:safeActions.filter(a=>a.type!=='attack');
 }
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
@@ -1333,4 +1509,4 @@ function driveSide(initial,{side=1,level=3,personality='balanced',seed=1,plannin
 }
 function driveBot(game,limit=200,config={}){return driveSide(game,{...config,side:1,limit});}
 function propose(game,config={}){return chooseAction(game,{...config,side:1});}
-module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,estimatedDamage,strongestAffordableAttack,strongestUsableOpponentAttack,projectedAttackValue,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,centerSafeActions,chooseAction,driveSide,driveBot,propose};
+module.exports={SKILLS,CALIBRATED_SKILLS,PERSONALITIES,configuration,observation,trainerOpportunity,candidates,score,energyValue,estimatedDamage,strongestAffordableAttack,strongestUsableOpponentAttack,projectedAttackValue,knockoutChance,planningBonus,evolutionTempoPenalty,prizeRaceBonus,knockoutTempoBonus,opponentResponseBonus,energyHorizonBonus,energyPreparationActions,centerSafeActions,chooseAction,driveSide,driveBot,propose};

@@ -299,3 +299,22 @@ test('Apex hypothetical counterattack never uses disabled attack slots',()=>{
  attacker.amnesia={index:0,expires:11};
  assert.equal(S.oneEnergyThreat(attacker,defender,h,10),0);
 });
+
+test('Energy valuation includes public copied attacks, not only printed attacks',()=>{
+ const {CATALOG}=require('../headless_duel');
+ const hitmonchan=CATALOG.get(C.hit);
+ assert.equal(hitmonchan?.name,'Hitmonchan');
+ const psychic=[...CATALOG].find(([,card])=>card.name==='Psychic Energy')?.[0];
+ const fighting=[...CATALOG].find(([,card])=>card.name==='Fighting Energy')?.[0];
+ assert.ok(psychic&&fighting,'both basic Energy cards must exist');
+ const printed={id:C.hit,energies:[]};
+ const withCopied={...printed,effectiveAttacks:[
+  ...hitmonchan.attacks,{name:'Public copied attack',cost:['Psychic'],damage:'50'}
+ ]};
+ // Psylink exposes copied attacks as effectiveAttacks in duel_protocol.js.
+ // Previously energyValue read CATALOG attacks only and missed this new cost.
+ assert.ok(AI.energyValue(withCopied,psychic)>AI.energyValue(printed,psychic),
+  'Psychic Energy should gain value when a visible copied Psychic attack is playable');
+ assert.equal(AI.energyValue(withCopied,fighting),AI.energyValue(printed,fighting),
+  'existing printed Fighting attack valuation must remain intact');
+});

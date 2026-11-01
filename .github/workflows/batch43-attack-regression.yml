@@ -1,0 +1,30 @@
+name: Batch 43 Attack Regression
+on:
+  pull_request:
+    paths:
+      - 'engine.js'
+      - 'cards/**'
+      - 'batch43_targets.json'
+      - 'test_attack_batch_v043.js'
+      - 'test_attack_batch_v043_outcomes.js'
+      - '.github/workflows/batch43-attack-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'engine.js'
+      - 'cards/**'
+      - 'batch43_targets.json'
+      - 'test_attack_batch_v043.js'
+      - 'test_attack_batch_v043_outcomes.js'
+      - '.github/workflows/batch43-attack-regression.yml'
+jobs:
+  batch43:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Batch 43 registry and attack outcomes
+        run: node test_attack_batch_v043.js && node test_attack_batch_v043_outcomes.js

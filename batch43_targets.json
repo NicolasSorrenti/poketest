@@ -2,7 +2,7 @@
   {
     "id": "base1-59",
     "attack": "Water Gun",
-    "text": "Does 10 damage plus 10 damage for each Energy attached to Poliwag but not used to pay for this attack's Energy cost. Extra Energy after the end don't count.",
+    "text": "Does 10 damage plus 10 more damage for each Water Energy attached to Poliwag but not used to pay for this attack's Energy cost. Extra Water Energy after the 2nd don't count.",
     "index": 4
   },
   {
@@ -20,7 +20,7 @@
   {
     "id": "base4-88",
     "attack": "Water Gun",
-    "text": "Does 10 damage plus 10 damage for each Energy attached to Poliwag but not used to pay for this attack's Energy cost. Extra Energy after the end don't count.",
+    "text": "Does 10 damage plus 10 more damage for each Water Energy attached to Poliwag but not used to pay for this attack's Energy cost. You can't add more than 20 damage in this way.",
     "index": 19
   },
   {

@@ -21,13 +21,20 @@
    .map(([id,b])=>({id,name:displayName(id),affection:b.affection||0,trust:b.trust||0,
    closeness:(b.affection||0)+(b.trust||0)+(b.respect||0)+(b.attraction||0)}))
    .sort((a,b)=>b.closeness-a.closeness||a.name.localeCompare(b.name));
-  const partner=state.partner?displayName(state.partner):null;
+  const romanceIds=new Set([
+   ...(Array.isArray(state.partners)?state.partners:[]),
+   ...Object.entries(state.routeOutcomes||{}).filter(([,outcome])=>outcome==='romance').map(([id])=>id)
+  ].filter(id=>typeof id==='string'&&id));
+  if(state.partner)romanceIds.add(state.partner);
+  const partners=[...romanceIds].map(id=>({id,name:displayName(id)}));
+  const partner=partners[0]?.name||null;
   const sidequests=Object.values(state.sideQuests||{}).filter(q=>q?.status==='complete').length;
   const appointments=Object.values(state.appointments||{}).filter(q=>q?.status==='attended').length;
   const situations=Object.keys(state.situationDone||{}).filter(id=>state.situationDone[id]?.day>0).length;
   const galleryEarned=Object.values(state.cgUnlocked||{}).filter(x=>x&&Number.isInteger(x.day)&&x.day>0&&x.day<=90).length;
   let title,closing;
   if(cupStates[2].status==='champion'){title='The Harbor Champion';closing='You faced the final bracket and earned a place in the town’s tournament history.';}
+  else if(partners.length>1){title='Many Connections Beyond the Circuit';closing='The tournament season ends, and several relationships are ready to become something more.';}
   else if(partner){title='A Connection Beyond the Circuit';closing='The tournament season ends, but the relationship you chose is only beginning.';}
   else if(champions.length){title='A Name They Remember';closing='Some of your best matches became the stories players still tell around the card tables.';}
   else if(friendships.length){title='The People Who Stayed';closing='Not every meaningful victory happens under the tournament lights.';}
@@ -38,7 +45,7 @@
    day:Math.min(90,Math.max(1,state.day||90)),title,closing,played:duels.length,wins:win,draws:draw,losses:Math.max(0,duels.length-win-draw),
    turningPoints,seasonLessons:turningPoints.lines,
    points:state.points||0,credits:state.credits||0,cups:cupStates,champions:champions.length,
-   partner,closest:friendships.slice(0,3),knownCharacters:friendships.length,
+   partner,partners,closest:friendships.slice(0,3),knownCharacters:friendships.length,
    storyScenes:Object.keys(state.storyDone||{}).filter(id=>!!state.storyDone[id]).length,encounters:Object.keys(state.encountersDone||{}).length,
    sidequests,appointments,situations,galleryEarned,
    run:(Number.isInteger(state.ngPlus)&&state.ngPlus>=0?state.ngPlus:0)+1

@@ -224,7 +224,9 @@
  }
  // Keep existing route IDs stable for existing saves.
  // Add pack routes and bridge episodes without renumbering prior scenes.
- E.push(...(CHARPACKS?.events||[]),...PACK.events,...BONDC.events,...(EXTRA?.events||[]));
+ // PACK already registers generated calendar routes and filters ambient slice scenes.
+ // Adding CHARPACKS.events again duplicates routes and breaks story validation.
+ E.push(...PACK.events,...BONDC.events,...(EXTRA?.events||[]));
  // The new bridge scenes are mandatory for new campaigns. Existing final-route
  // IDs remain unchanged, and normalize() below backfills bridge completion for
  // saves that already passed the old four-scene structure.
@@ -243,12 +245,42 @@
   const event=E.find(item=>item.id===eventId);
   if(event)event.prerequisite=prerequisite;
  }
+ // Translate the content audit into explicit Bond-rank floors. Rank 0 keeps
+ // the legacy first-meeting gate; later scenes use the weighted relationship
+ // score instead of treating every character's affection as interchangeable.
+ function recommendedBondRank(event){
+  if(/_route_bridge_4$/.test(event.id))return 3;
+  if(/_route_early_1$/.test(event.id))return 0;
+  const route=event.id.match(/^.+_route_(\d+)$/);
+  if(route){
+   const number=Number(route[1]);
+   const hasRouteFive=E.some(candidate=>candidate.npc===event.npc&&candidate.id===event.npc+'_route_5');
+   if(number===1)return 0;
+   if(number===2)return 1;
+   if(number===3)return 2;
+   if(number===4)return hasRouteFive?3:4;
+   return 4;
+  }
+  const guest=event.id.match(/^.+_(?:guest|bond)_(\d+)$/);
+  if(guest){
+   const number=Number(guest[1]);
+   return number===1?0:number===2?1:number===3?2:number===4?3:4;
+  }
+  if(/_cross_\d+$/.test(event.id))return Math.min(2,Math.max(0,Number(event.minBond)||0));
+  return null;
+ }
+ for(const event of E){
+  const rank=recommendedBondRank(event);
+  if(rank!==null)event.minBondRank=rank;
+ }
  const ID=new Map(E.map(e=>[e.id,e]));
  function normalize(state){
   if(!state.storyDone||typeof state.storyDone!=='object')state.storyDone={};
   if(!state.storyMissed||typeof state.storyMissed!=='object')state.storyMissed={};
   if(!state.relationships||typeof state.relationships!=='object')state.relationships={};
   if(!('partner' in state))state.partner=null;
+  if(!Array.isArray(state.partners))state.partners=state.partner?[state.partner]:[];
+  else state.partners=[...new Set(state.partners.filter(id=>typeof id==='string'&&id))];
   if(!state.storyFlags||typeof state.storyFlags!=='object'||Array.isArray(state.storyFlags))state.storyFlags={};
   // Older saves may already be beyond a bridge window or have completed the
   // old final event. Mark only that bridge as legacy-completed; do not award
@@ -270,6 +302,7 @@
     state.storyDone[npc+'_route_5']?.choice===1&&!state.routeOutcomes?.[npc]);
    if(legacy.length===1&&VN.commitmentReady(state,legacy[0])){
     state.partner=legacy[0];
+    if(!state.partners.includes(legacy[0]))state.partners.push(legacy[0]);
     state.routeOutcomes=state.routeOutcomes||{};
     state.routeOutcomes[legacy[0]]='romance';
    }
@@ -278,7 +311,12 @@
  }
  function qualifies(e,state,place=state.location){
   const s=normalize(state),b=s.relationships[e.npc],previous=e.prerequisite;
-  return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&b.affection>=VN.bondNeeded(e);
+  const minBondScore=Number(e.minBondScore)||0;
+  const minBondRank=Number(e.minBondRank)||0;
+  const bondReady=minBondScore||minBondRank
+   ?REL.meets(s,e.npc,{minScore:minBondScore,minRank:minBondRank})
+   :b.affection>=VN.bondNeeded(e);
+  return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&bondReady;
  }
  function linesFor(state,id){const e=ID.get(id);if(!e)return [];const flag=state?.storyFlags?.[e.prerequisite];const opening=e.openingByFlag?.[flag];return opening?[{...e.lines[0],text:opening},...e.lines.slice(1)]:e.lines;}
  function available(state,place=state.location){return E.filter(e=>qualifies(e,state,place));}
@@ -297,10 +335,22 @@
   if(!e||state.storyDone[eventId])throw Error('Already completed or missing story event');
   if(!qualifies(e,state))throw Error('Story event is no longer available');
   const choice=e.choices[choiceIndex];if(!choice)throw Error('Invalid story choice');
-  if(choice.kind==='commit'&&state.partner&&state.partner!==e.npc)throw Error('Already committed to another relationship');
   if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc))throw Error('A deeper bond is required');
   REL.apply(state,e.npc,choice.delta);
-  if(choice.kind==='commit'){if(VN.commitmentReady(state,e.npc)){state.partner=e.npc;state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='romance';}else{state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}}
+  if(choice.kind==='commit'){
+   if(VN.commitmentReady(state,e.npc)){
+    state.partners=Array.isArray(state.partners)?state.partners:[];
+    if(!state.partners.includes(e.npc))state.partners.push(e.npc);
+    // Keep the legacy singular field as the first/primary relationship for
+    // older epilogues and UI, while partners stores every romance.
+    if(!state.partner)state.partner=e.npc;
+    state.routeOutcomes=state.routeOutcomes||{};
+    state.routeOutcomes[e.npc]='romance';
+   }else{
+    state.routeOutcomes=state.routeOutcomes||{};
+    state.routeOutcomes[e.npc]='friendship';
+   }
+  }
   if(choice.kind==='friend'||choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
   if(choice.flag&&choice.flag!=='romance'&&choice.flag!=='friendship')state.storyFlags[e.id]=choice.flag;
   state.storyDone[e.id]={choice:choiceIndex,day:state.day};
