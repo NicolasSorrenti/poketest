@@ -1307,6 +1307,9 @@ function projectedPrep(board,action,round,turnSerial){
   if(c.name==='Rainbow Energy'&&hpRemaining(u)<=10)return null;
   u.energies=[...(u.energies||[]),id];
   if(c.name==='Rainbow Energy')u.damage=(u.damage||0)+10;
+  // Potion Energy heals immediately, which can lower Flail/counter damage.
+  // A tactical forecast must use the post-attachment damage counters.
+  if(c.name==='Potion Energy')u.damage=Math.max(0,(u.damage||0)-10);
   // Match the reducer: Full Heal Energy immediately clears all conditions,
   // potentially unlocking a sleeping or paralyzed attack in this turn's plan.
   if(c.name==='Full Heal Energy'){
