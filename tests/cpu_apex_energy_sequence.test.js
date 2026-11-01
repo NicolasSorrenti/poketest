@@ -1206,6 +1206,36 @@ test('Apex recognizes Potion Energy preventing a public next-turn knockout',()=>
   'existing Level 7 attachment scoring remains unchanged');
 });
 
+test('Apex does not strand a Potion Energy attachment that prevents a public KO',()=>{
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const scenario=(energy,damage,withBench=true)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+  // Hitmonchan is already fully funded and can already retreat. The only
+  // value of Potion Energy here is healing its 20 remaining HP to 30.
+  o.self.active.energies=[FIGHT,FIGHT,FIGHT];
+  o.self.active.damage=damage;
+  o.self.hand=[energy];
+  // The opponent's publicly funded Jab deals 20 on its next turn.
+  o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+  // A Colorless-ready Bench gives the stranded-Energy guard an alternative.
+  o.self.bench=withBench?[{id:RATTATA,energies:[],damage:0}]:[];
+  return o;
+ };
+ const potion='base5-82',neutral='base5-81';
+ const score=(energy,damage,withBench,config=cfg)=>
+  AI.score(activeAttach,scenario(energy,damage,withBench),config,{});
+ assert.equal(score(potion,50,true),score(potion,50,false),
+  'a Potion that saves the Active must not be penalized as stranded Energy');
+ assert.ok(score(neutral,50,false)-score(neutral,50,true)>=130,
+  'an ordinary surplus attachment remains stranded on a doomed Active');
+ assert.ok(score(potion,60,false)-score(potion,60,true)>=130,
+  'Potion still counts as stranded when 10 healing cannot prevent the KO');
+ const level7=AI.configuration({side:1,level:7});
+ assert.ok(score(potion,50,false,level7)-score(potion,50,true,level7)>=130,
+  'the new survival correction is restricted to Apex');
+});
+
 function evolutionForecastBoard(status=null){
  const o=board();
  Object.assign(o,{phase:'game',round:5,turnSerial:11});
