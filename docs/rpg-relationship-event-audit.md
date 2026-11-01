@@ -29,6 +29,16 @@ The rank is a floor, not a requirement to choose romance. A player may still cho
 - Early scenes may contain playful attraction, but direct or emotionally loaded flirtation should not unlock before Rank 1–2.
 - Events with a narrow late window need a 90-day simulation before their gates are finalized.
 
+## Gate-pacing check
+
+Using the proposed thresholds `[0, 8, 18, 28, 40, 55]`:
+
+- Strong answers complete every route; Lyla completes all seven scenes.
+- Average answers complete all scenes for 21 of the 24 five-scene routes without extra social activity.
+- Adding one ordinary social interaction between route beats lets all 25 characters reach their full authored route set.
+- Poor answers can stall early without making the route impossible: one social interaction between beats recovers every route in the stat-only simulation.
+- This is a relationship-score simulation, not yet a complete day/slot conflict simulation. The next check must account for the 90-day calendar and competing events.
+
 ## hana
 
 | Event | About | Window | Existing gate | Recommended gate | Audit note |
