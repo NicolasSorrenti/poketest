@@ -297,7 +297,7 @@ The rank is a floor, not a requirement to choose romance. A player may still cho
 
 ## Implementation order
 
-1. Add explicit `minBondRank` metadata to the main and bridge events using the recommendations above.
+1. The story graph now assigns `minBondRank` metadata to main, bridge, guest, bond, and crossover events using the recommendations above.
 2. Keep ordinary casual dialogue at zero relationship gain; let selected forced/random conversations award small trust or Bond Score gains.
 3. Gate direct flirt/romantic choices separately from ordinary teasing.
 4. Simulate perfect, average, and poor answer patterns through Day 90 before changing thresholds again.
