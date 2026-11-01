@@ -38,6 +38,30 @@ test('Apex values Buzzap Electrode as two Energy of its chosen type',()=>{
   'opponent threat estimates also count Buzzap-funded Special Punch');
 });
 
+test('Apex forecasts live Energy Burn conversion for attack and attachment choices',()=>{
+ const charizard='base1-4',water='base1-102',double='base1-96';
+ const target={id:MACHOP,energies:[],damage:0,status:null};
+ const three={id:charizard,energies:[water,water,water],energyBurnUntil:12,damage:0,status:null};
+ const four={...three,energies:[...three.energies,water]};
+ assert.equal(AI.strongestAffordableAttack({...four,energyBurnUntil:undefined},target),0,
+  'four Water cards cannot pay Fire Spin before Energy Burn is activated');
+ assert.equal(AI.strongestAffordableAttack(three,target),0,
+  'three converted Fire units still cannot pay four Fire');
+ assert.equal(AI.strongestAffordableAttack(four,target),100,
+  'live Energy Burn converts four Water cards into four Fire');
+ assert.equal(AI.strongestAffordableAttack({...three,energies:[double,double]},target),100,
+  'two Double Colorless cards each provide two Fire while Energy Burn is active');
+ assert.ok(AI.energyValue(three,water)>90,
+  'an additional Water Energy is valuable because Energy Burn converts it to Fire');
+ assert.ok(AI.energyValue({...three,energyBurnUntil:undefined},water)<0,
+  'without Energy Burn the same Water attachment cannot unlock Fire Spin');
+ assert.ok(AI.projectedAttackValue(four,target,9)>0,
+  'the tactical forecast recognizes the converted Fire Spin');
+ const o=board();o.turnSerial=9;o.opponent.active=four;
+ assert.equal(AI.strongestUsableOpponentAttack(o,o.self.active),100,
+  'public opponent threat includes an already active Energy Burn');
+});
+
 test('Apex does not attach Rainbow Energy for an immediate self-knockout',()=>{
  const o=board(),rainbow='base5-80';
  const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
