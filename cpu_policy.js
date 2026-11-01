@@ -111,6 +111,19 @@ function lethalDarknessBenchAttachment(unit,energyId,slot){
  const darkness=(unit.energies||[]).filter(id=>card(id)?.name==='Darkness Energy').length+1;
  return hpRemaining(unit)<=darkness*20;
 }
+// Potion Energy heals one counter on attachment. If a non-Dark Bench host
+// already carries Darkness Energy, that heal may be the difference between
+// surviving both end-of-turn checkups and fainting before our next turn.
+// This is a public, deterministic survival calculation, not an RNG forecast.
+function potionSavesDarknessBench(unit,energyId,slot){
+ if(slot===-1||!unit||card(energyId)?.name!=='Potion Energy'||!(unit.damage>0))return false;
+ const species=card(unit.id);
+ if(!species||species.types?.includes('Darkness')||species.name?.startsWith('Dark '))return false;
+ const darkness=(unit.energies||[]).filter(id=>card(id)?.name==='Darkness Energy').length;
+ if(!darkness)return false;
+ const remaining=hpRemaining(unit),recoil=darkness*20;
+ return remaining>0&&remaining<=recoil&&remaining+Math.min(10,unit.damage)>recoil;
+}
 function energyValue(pokemon,energyId){
  const source=card(pokemon?.id);
  if(!source)return 0;
@@ -1059,8 +1072,9 @@ function score(a,o,cfg,used){
   const potionPoisonSave=potionHeal&&v.slot===-1&&unit.poison&&
    hpRemaining(unit)>0&&(unit.poisonDamage||10)>=hpRemaining(unit)&&
    (unit.poisonDamage||10)<hpRemaining(unit)+Math.min(10,unit.damage);
+  const potionDarknessSave=cfg.level===8&&potionSavesDarknessBench(unit,p.hand[v.handIndex],v.slot);
   const healingValue=healed?(Math.min(10,unit.damage)*1.6+
-   (preventsKo?120:0)+(potionPoisonSave?185:0))*style.survival:0;
+   (preventsKo?120:0)+(potionPoisonSave?185:0)+(potionDarknessSave?185:0))*style.survival:0;
   return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation+healingValue+cureTempo+poisonSurvival-
    (v.slot===-1?doomedActiveAttachmentPenalty(o,p.hand[v.handIndex],cfg):0);
  }
@@ -1376,14 +1390,15 @@ function energyPreparationActions(o,cfg,actions){
    card(energyId)?.name==='Potion Energy'&&target?.poison&&
    hpRemaining(target)>0&&(target.poisonDamage||10)>=hpRemaining(target)&&
    (target.poisonDamage||10)<hpRemaining(target)+Math.min(10,target.damage||0);
-  if(!confusionCure&&!lethalPoisonCure&&!potionPoisonSave&&
+  const potionDarknessSave=potionSavesDarknessBench(target,energyId,a.payload.slot);
+  if(!confusionCure&&!lethalPoisonCure&&!potionPoisonSave&&!potionDarknessSave&&
    energyValue(target,energyId)<=12)return false;
   // Do not suppress an already-legal attack just to spend the only Energy on
   // an Active that will be KO'd before that Energy helps. A legal Bench
   // attachment or immediate attack upgrade still gets prepared first.
   // The cure improves this turn's attack reliability even if the Active
   // would be knocked out next turn; do not treat it as stranded Energy.
-  return confusionCure||lethalPoisonCure||potionPoisonSave||
+  return confusionCure||lethalPoisonCure||potionPoisonSave||potionDarknessSave||
    !(canAttackNow&&a.payload.slot===-1&&strandedActiveEnergy(o,energyId,cfg));
  });
  if(!useful)return safeActions;
