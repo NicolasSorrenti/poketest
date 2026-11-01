@@ -146,7 +146,7 @@
  }
  function commitmentReady(state,npc){
   const relationship=state?.relationships?.[npc];
-  if(!relationship||relationship.affection<3||state.partner&&state.partner!==npc)return false;
+  if(!relationship||relationship.affection<3)return false;
   const completed=Object.keys(state.storyDone||{}).filter(id=>
    id.startsWith(npc+'_')&&/_(route|guest|bond)_\d+$/.test(id)&&state.storyDone[id]).length;
   return relationship.trust>=1||completed>=3;
