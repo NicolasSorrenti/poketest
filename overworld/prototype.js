@@ -170,7 +170,7 @@
     renderTray();drawStage();status.textContent=cloudState?'Loaded placements from the game.':'Loaded local placements. Drag a pose onto the map to start.';
     return;
   }
-  let mapReady=false,pendingChibiMode=null;
+  let mapReady=false,pendingChibiMode=null,eyeLevelView=null;
   // When the parent RPG shows VN dialogue, preserve the location as a backdrop
   // but remove map NPC portraits, edge indicators and hotspots from the scene.
   // This message is only trusted from the same-origin parent of integrated mode.
@@ -317,6 +317,7 @@
       else{img.onerror=null;img.removeAttribute('src');button.classList.add('missing');button.style.setProperty('--sprite-height','130px');}
     }
     paint();
+    eyeLevelView?.setChibiMode(enabled);
   }
   const reinaChibi='/rpg-assets/characters/reina/chibi/front.png';
   const chibiPaths=id=>['/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png','/rpg-assets/characters/'+id+'/chibi/front.png',reinaChibi];
@@ -361,11 +362,11 @@
     if(pin){b.classList.add('neo-hotspot-pin');Object.assign(b.style,{left:clamp(rect.x+rect.w/2,30,map.width-30)+'px',top:clamp(rect.y+rect.h/2,30,map.height-30)+'px',width:'56px',height:'56px'});}
     else Object.assign(b.style,{left:rect.x+'px',top:rect.y+'px',width:rect.w+'px',height:rect.h+'px'});
     b.setAttribute('aria-label','Explore '+h.label);b.title=h.label;const label=document.createElement('span');label.textContent=h.label;b.append(label);b.onclick=()=>{if(ignoreClick)return;if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'hotspot',id:h.id},location.origin);return;}toast(h.label+' · activity connection pending')};world.appendChild(b);}
-  camera.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('button')||!dialog.hidden)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,ox,oy,moved:false};camera.setPointerCapture(e.pointerId);camera.classList.add('dragging')});
+  camera.addEventListener('pointerdown',e=>{if(document.body.classList.contains('neo-eye-level')||e.button!==0||e.target.closest('button')||!dialog.hidden)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,ox,oy,moved:false};camera.setPointerCapture(e.pointerId);camera.classList.add('dragging')});
   camera.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>7)drag.moved=true;ox=drag.ox+dx;oy=drag.oy+dy;paint()});
   function endDrag(e){if(!drag||e.pointerId!==drag.id)return;ignoreClick=drag.moved;drag=null;camera.classList.remove('dragging');if(ignoreClick)setTimeout(()=>ignoreClick=false,80);}
   camera.addEventListener('pointerup',endDrag);camera.addEventListener('pointercancel',endDrag);
-  camera.addEventListener('wheel',e=>{if(!e.ctrlKey||!dialog.hidden)return;e.preventDefault();const old=zoom,minimum=minZoom(),maximum=Math.max(3.4,minimum),z=clamp(zoom*(e.deltaY<0?1.08:.92),minimum,maximum),r=camera.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;ox=x-(x-ox)*z/old;oy=y-(y-oy)*z/old;zoom=z;paint()},{passive:false});
+  camera.addEventListener('wheel',e=>{if(document.body.classList.contains('neo-eye-level')||!e.ctrlKey||!dialog.hidden)return;e.preventDefault();const old=zoom,minimum=minZoom(),maximum=Math.max(3.4,minimum),z=clamp(zoom*(e.deltaY<0?1.08:.92),minimum,maximum),r=camera.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;ox=x-(x-ox)*z/old;oy=y-(y-oy)*z/old;zoom=z;paint()},{passive:false});
   byId('reset').onclick=center;byId('guides').onclick=()=>{document.body.classList.toggle('show-guides');byId('guides').setAttribute('aria-pressed',String(document.body.classList.contains('show-guides')))};
   byId('close').onclick=()=>{dialog.hidden=true};for(const id of ['activities','events','deck','status'])byId(id).onclick=()=>{if(params.has('rpg-integration')&&window.parent!==window){window.parent.postMessage({type:'neo-overworld-action',kind:'navigation',id},location.origin);return;}toast(id+' opens in the existing RPG; this map is a placement preview');};
   if(layoutDev){
@@ -445,6 +446,15 @@
     resetBtn.onclick=()=>{localStorage.removeItem(layoutKey);location.reload()};
   }
   addEventListener('resize',center);center();
+  // Never let an optional visual mode prevent the existing map from starting.
+  try {
+    eyeLevelView=window.NeoOverworldEyeLevel?.mount({
+      camera,map,placements,config,params,openPerson,loadChibi,chibiMode
+    })||null;
+  } catch(error) {
+    console.warn('Optional eye-level presentation unavailable; keeping top-down map',error);
+    document.body.classList.remove('neo-eye-level');
+  }
   mapReady=true;
   if(pendingChibiMode!==null)setChibiMode(pendingChibiMode);
   window.__overworldPreview={map,placements,center,focus};
