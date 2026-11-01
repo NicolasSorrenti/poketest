@@ -839,8 +839,11 @@
       }
       #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>img[hidden]{display:none!important}
       /* Discreet Mode chibis are separate overlays and remain uncropped. */
+      :root[data-rpg-discreet="on"] #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>img:not(.rpg-safe-avatar){
+        display:none!important;visibility:hidden!important;opacity:0!important;
+      }
       :root[data-rpg-discreet="on"] #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>.rpg-safe-avatar{
-        position:relative!important;height:100%!important;object-fit:contain!important;
+        position:relative!important;height:100%!important;object-fit:contain!important;display:block!important;
       }
     `;
     document.head.append(dialogueBustCropStyle);
