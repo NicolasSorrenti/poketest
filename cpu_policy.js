@@ -1035,8 +1035,14 @@ function score(a,o,cfg,used){
   const healed=potionHeal?{...unit,damage:Math.max(0,unit.damage-10)}:null;
   const preventsKo=healed&&v.slot===-1&&likelyOpponentKnockout(o,unit)&&
    !likelyOpponentKnockout(o,healed);
-  const healingValue=healed?(Math.min(10,unit.damage)*1.6+(preventsKo?120:0))*
-   style.survival:0;
+  // Poison checkup follows an attack. Potion Energy does not cure Poison,
+  // but its immediate 10-damage heal can leave enough HP to survive the tick.
+  // Only count an actual rescue, not a heal that still ends in a knockout.
+  const potionPoisonSave=potionHeal&&v.slot===-1&&unit.poison&&
+   hpRemaining(unit)>0&&(unit.poisonDamage||10)>=hpRemaining(unit)&&
+   (unit.poisonDamage||10)<hpRemaining(unit)+Math.min(10,unit.damage);
+  const healingValue=healed?(Math.min(10,unit.damage)*1.6+
+   (preventsKo?120:0)+(potionPoisonSave?185:0))*style.survival:0;
   return 110+value*style.setup+(v.slot===-1?18:0)+future-saturation+healingValue+cureTempo+poisonSurvival-
    (v.slot===-1?doomedActiveAttachmentPenalty(o,p.hand[v.handIndex],cfg):0);
  }
@@ -1335,14 +1341,23 @@ function energyPreparationActions(o,cfg,actions){
   const lethalPoisonCure=a.payload.slot===-1&&
    card(energyId)?.name==='Full Heal Energy'&&target?.poison&&
    hpRemaining(target)>0&&(target.poisonDamage||10)>=hpRemaining(target);
-  if(!confusionCure&&!lethalPoisonCure&&energyValue(target,energyId)<=12)return false;
+  // A fully charged Active can still need Potion Energy before attacking:
+  // healing one damage counter may turn a lethal Poison checkup into survival.
+  // Unlike Full Heal, Potion leaves Poison in place, so require a strict
+  // post-heal HP margin above the tick; otherwise do not delay the attack.
+  const potionPoisonSave=a.payload.slot===-1&&
+   card(energyId)?.name==='Potion Energy'&&target?.poison&&
+   hpRemaining(target)>0&&(target.poisonDamage||10)>=hpRemaining(target)&&
+   (target.poisonDamage||10)<hpRemaining(target)+Math.min(10,target.damage||0);
+  if(!confusionCure&&!lethalPoisonCure&&!potionPoisonSave&&
+   energyValue(target,energyId)<=12)return false;
   // Do not suppress an already-legal attack just to spend the only Energy on
   // an Active that will be KO'd before that Energy helps. A legal Bench
   // attachment or immediate attack upgrade still gets prepared first.
   // The cure improves this turn's attack reliability even if the Active
   // would be knocked out next turn; do not treat it as stranded Energy.
-  return confusionCure||lethalPoisonCure||!(canAttackNow&&a.payload.slot===-1&&
-   strandedActiveEnergy(o,energyId,cfg));
+  return confusionCure||lethalPoisonCure||potionPoisonSave||
+   !(canAttackNow&&a.payload.slot===-1&&strandedActiveEnergy(o,energyId,cfg));
  });
  if(!useful)return actions;
  // Confusion requires a coin flip before a printed attack resolves, so a
