@@ -314,6 +314,7 @@
   }catch(error){stateLabel('Cloud unavailable; browser progress is safe. '+errorText(error));}
  }
  async function mount(options){
+  if(sessionStorage.getItem('neoRpgPlayFreshWithoutCloud')==='1'||sessionStorage.getItem('neoRpgRosterDegraded')==='1')return;
   if(adapter)return;
   adapter=options;ui();
   window.addEventListener('online',()=>{if(!config?.enabled)return connect();if(session&&!blocked)return reconcile();});
