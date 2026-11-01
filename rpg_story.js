@@ -251,6 +251,8 @@
   if(!state.storyMissed||typeof state.storyMissed!=='object')state.storyMissed={};
   if(!state.relationships||typeof state.relationships!=='object')state.relationships={};
   if(!('partner' in state))state.partner=null;
+  if(!Array.isArray(state.partners))state.partners=state.partner?[state.partner]:[];
+  else state.partners=[...new Set(state.partners.filter(id=>typeof id==='string'&&id))];
   if(!state.storyFlags||typeof state.storyFlags!=='object'||Array.isArray(state.storyFlags))state.storyFlags={};
   // Older saves may already be beyond a bridge window or have completed the
   // old final event. Mark only that bridge as legacy-completed; do not award
@@ -272,6 +274,7 @@
     state.storyDone[npc+'_route_5']?.choice===1&&!state.routeOutcomes?.[npc]);
    if(legacy.length===1&&VN.commitmentReady(state,legacy[0])){
     state.partner=legacy[0];
+    if(!state.partners.includes(legacy[0]))state.partners.push(legacy[0]);
     state.routeOutcomes=state.routeOutcomes||{};
     state.routeOutcomes[legacy[0]]='romance';
    }
@@ -304,10 +307,22 @@
   if(!e||state.storyDone[eventId])throw Error('Already completed or missing story event');
   if(!qualifies(e,state))throw Error('Story event is no longer available');
   const choice=e.choices[choiceIndex];if(!choice)throw Error('Invalid story choice');
-  if(choice.kind==='commit'&&state.partner&&state.partner!==e.npc)throw Error('Already committed to another relationship');
   if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc))throw Error('A deeper bond is required');
   REL.apply(state,e.npc,choice.delta);
-  if(choice.kind==='commit'){if(VN.commitmentReady(state,e.npc)){state.partner=e.npc;state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='romance';}else{state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}}
+  if(choice.kind==='commit'){
+   if(VN.commitmentReady(state,e.npc)){
+    state.partners=Array.isArray(state.partners)?state.partners:[];
+    if(!state.partners.includes(e.npc))state.partners.push(e.npc);
+    // Keep the legacy singular field as the first/primary relationship for
+    // older epilogues and UI, while partners stores every romance.
+    if(!state.partner)state.partner=e.npc;
+    state.routeOutcomes=state.routeOutcomes||{};
+    state.routeOutcomes[e.npc]='romance';
+   }else{
+    state.routeOutcomes=state.routeOutcomes||{};
+    state.routeOutcomes[e.npc]='friendship';
+   }
+  }
   if(choice.kind==='friend'||choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
   if(choice.flag&&choice.flag!=='romance'&&choice.flag!=='friendship')state.storyFlags[e.id]=choice.flag;
   state.storyDone[e.id]={choice:choiceIndex,day:state.day};
