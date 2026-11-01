@@ -994,6 +994,10 @@ function score(a,o,cfg,used){
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
+  // Rainbow Energy places a damage counter before it can fund an attack.
+  // The reducer immediately knocks out a host with 10 HP or less remaining.
+  if(cfg.level===8&&card(p.hand[v.handIndex])?.name==='Rainbow Energy'&&
+     hpRemaining(unit)<=10)return -1000;
   // This attachment will be discarded if Center heals its target later.
   // Penalize it enough to force the zero-cost heal first; a follow-up
   // attachment is then evaluated normally against the healed board.
@@ -1328,6 +1332,9 @@ function energyPreparationActions(o,cfg,actions){
   if(a.type!=='attach_energy')return false;
   const target=slotUnit(o.self,a.payload.slot);
   const energyId=o.self.hand[a.payload.handIndex];
+  // Never force a turn-ending attack to be replaced by a Rainbow attachment
+  // that immediately knocks out its recipient (Active or Bench).
+  if(card(energyId)?.name==='Rainbow Energy'&&hpRemaining(target)<=10)return false;
   // Full Heal Energy cures Confusion on attachment. A fully charged Active
   // may have zero marginal Energy value, yet curing the 50% attack-failure
   // risk before declaring a damaging attack is a productive preparation.
