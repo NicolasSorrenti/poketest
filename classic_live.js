@@ -189,6 +189,7 @@
  function fail(e){$('error').textContent=e.message||String(e);$('error').classList.remove('hidden');}
  function clearError(){$('error').textContent='';$('error').classList.add('hidden');}
 
+ let lastRescueCue=0;
  const CPU_ACTION_PAUSE_MS=1800,CPU_ATTACK_PAUSE_MS=2400,RPG_ATTACK_PAUSE_MS=3300;
  const lastEventSeq=actions=>(Array.isArray(actions)?actions:[]).reduce(
   (max,event)=>Number.isSafeInteger(event?.seq)?Math.max(max,event.seq):max,0);
@@ -202,7 +203,7 @@
   return interrupted||actionQueue.length>0;
  }
  function skipPlaybackTo(result){
-  current=result;reactions?.reset();opponentActivity.clear();combat.reset();render();
+  current=result;lastRescueCue=result?.rpgAssistCue||lastRescueCue;reactions?.reset();opponentActivity.clear();combat.reset();render();
  }
  async function playCpuPlayback(result,epoch){
   const snapshots=Array.isArray(result.cpuPlayback)?result.cpuPlayback:[];
@@ -216,6 +217,10 @@
    previousSeq=lastEventSeq(frame.activity);
    current=frame===result?result:{...result,...frame};
    render();
+   if(frame===result&&rpgMode&&result.rpgAssistCue>(lastRescueCue||0)){
+    lastRescueCue=result.rpgAssistCue;
+    reactions?.showRescue?.();
+   }
    // Continue the command queue as soon as the player queues another move.
    if(rpgMode&&reactions?.active){
     if(await waitForActionQueueOr(reactions.whenShown())){skipPlaybackTo(result);return true;}
@@ -278,12 +283,13 @@
   const response=await api('create',{method:'POST',body:JSON.stringify({
    deck:$('deck').value,opponent:$('opponent').value,
     ...(!rpgMode&&!cubeRoomCode?{difficulty:Number($('cpuDifficulty').value),advancedTactics:Number($('cpuDifficulty').value)>=6}:{}),
-   ...(rpgMode&&rpgDuelId?{rpgDuelId,npcDeckId:rpgNpc,npcDeckTier:Number(rpgParams.get('npcTier'))||1,npcDeckVariant:Number(rpgParams.get('npcVariant'))||0,prizeCount:Number(rpgParams.get('prizes'))===6?6:4}:{}),
+   ...(rpgMode&&rpgDuelId?{rpgDuelId,rpgDrawAssistEnabled:localStorage.getItem('neoRpgCpuDrawAssistEnabled')!=='false',npcDeckId:rpgNpc,npcDeckTier:Number(rpgParams.get('npcTier'))||1,npcDeckVariant:Number(rpgParams.get('npcVariant'))||0,prizeCount:Number(rpgParams.get('prizes'))===6?6:4}:{}),
    ...($('deck').value==='custom'?{customDeck:JSON.parse(rpgMode?sessionStorage.getItem('neoRpgDeck:'+rpgDuelId)||'null':localStorage.getItem('neoCampusCustomGymDeck')||'null')}:{}),
    ...(partnerCards?{customOpponentDeck:JSON.parse(partnerCards)}:{})
   })});
   feedback.reset();opponentActivity.clear();combat.reset();reactions?.reset();npcChat?.reset();token=response.token;sessionStorage.setItem(rpgKey,token);current=response;
   checkCloudCheckpoint(response);
+  lastRescueCue=response.rpgAssistCue||0;
   selectedHand=null;targetMode=null;decisionSelection.clear();handVisible=true;powersOpen=false;logOpen=false;lastCoinSeq=null;lastKoMessage="";setHandVisible(true);render();
  }catch(e){$('startupError').textContent=e.message;return false;}finally{busy=false;}return true;}
 

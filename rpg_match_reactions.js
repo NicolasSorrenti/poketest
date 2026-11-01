@@ -584,6 +584,11 @@
     readyAsset(candidates).then(show,()=>show(null));
    else show(null);
   }
+  function showRescue(){
+   const reaction={npcId,npcName,kind:'attack',imageKey:'attack',title:'LUCKY DRAW!',subtitle:'A timely draw',line:'Just what I needed!'};
+   if(active)return null;
+   queued=reaction;pump();return reaction;
+  }
   function update(data){
    const reaction=director.update(data);
    if(!reaction)return null;
@@ -596,7 +601,7 @@
    pump();
    return reaction;
   }
-  return {update,reset,setManifest:value=>{
+  return {update,showRescue,reset,setManifest:value=>{
     manifest=value;
     if(typeof media?.Image==='function'){
      // Preload actual working images, including fallback variants, not just the

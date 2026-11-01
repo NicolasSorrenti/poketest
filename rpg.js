@@ -1,5 +1,12 @@
 'use strict';
 (()=>{
+const DRAW_ASSIST_KEY='neoRpgCpuDrawAssistEnabled';
+const drawAssistToggle=document.getElementById('rpgDrawAssistToggle');
+if(drawAssistToggle){
+ const refresh=()=>{const enabled=localStorage.getItem(DRAW_ASSIST_KEY)!=='false';drawAssistToggle.textContent='CPU HELP: '+(enabled?'ON':'OFF');drawAssistToggle.setAttribute('aria-pressed',String(enabled));};
+ drawAssistToggle.addEventListener('click',()=>{localStorage.setItem(DRAW_ASSIST_KEY,String(localStorage.getItem(DRAW_ASSIST_KEY)==='false'));refresh();});
+ refresh();
+}
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
