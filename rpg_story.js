@@ -245,6 +245,34 @@
   const event=E.find(item=>item.id===eventId);
   if(event)event.prerequisite=prerequisite;
  }
+ // Translate the content audit into explicit Bond-rank floors. Rank 0 keeps
+ // the legacy first-meeting gate; later scenes use the weighted relationship
+ // score instead of treating every character's affection as interchangeable.
+ function recommendedBondRank(event){
+  if(/_route_bridge_4$/.test(event.id))return 3;
+  if(/_route_early_1$/.test(event.id))return 0;
+  const route=event.id.match(/^.+_route_(\d+)$/);
+  if(route){
+   const number=Number(route[1]);
+   const hasRouteFive=E.some(candidate=>candidate.npc===event.npc&&candidate.id===event.npc+'_route_5');
+   if(number===1)return 0;
+   if(number===2)return 1;
+   if(number===3)return 2;
+   if(number===4)return hasRouteFive?3:4;
+   return 4;
+  }
+  const guest=event.id.match(/^.+_(?:guest|bond)_(\d+)$/);
+  if(guest){
+   const number=Number(guest[1]);
+   return number===1?0:number===2?1:number===3?2:number===4?3:4;
+  }
+  if(/_cross_\d+$/.test(event.id))return Math.min(2,Math.max(0,Number(event.minBond)||0));
+  return null;
+ }
+ for(const event of E){
+  const rank=recommendedBondRank(event);
+  if(rank!==null)event.minBondRank=rank;
+ }
  const ID=new Map(E.map(e=>[e.id,e]));
  function normalize(state){
   if(!state.storyDone||typeof state.storyDone!=='object')state.storyDone={};
