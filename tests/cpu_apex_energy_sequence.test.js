@@ -115,7 +115,10 @@ test('Apex heals a Darkness-damaged Bench before a non-winning attack',()=>{
  o.self.bench[0].energies=[];
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack,benchAttach],
   'without Darkness there is no two-checkup rescue');
- o.self.bench[0]={id:'neo1-24',energies:[darkness],damage:30,status:null};
+ o.self.bench[0]={id:'neo1-24',energies:[darkness,darkness,darkness],damage:30,status:null};
+ // Murkrow already has its attack Energy. A single extra Colorless Energy
+ // could otherwise be useful setup rather than a (nonexistent) recoil cure.
+ assert.ok(AI.energyValue(o.self.bench[0],potion)<=12);
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack,benchAttach],
   'Dark-type Bench hosts are immune to Darkness recoil');
  o.self.bench[0]={id:MACHOP,energies:[darkness],damage:30,status:null};
