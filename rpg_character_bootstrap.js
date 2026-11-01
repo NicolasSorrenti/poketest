@@ -124,6 +124,7 @@
       window.NeoRpgCharacterPacks=registry(data.packs);
       window.NeoRpgExclusiveRosterLoaded=true;
     }else{
+    sessionStorage.removeItem('neoRpgRosterDegraded');
     const cached=JSON.parse(localStorage.getItem('neoRpgCloudSessionV1')||'null');
     let token=cached?.access_token||'';
     // Refresh stale sessions through the same Supabase identity provider as cloud saves.
@@ -149,6 +150,11 @@
         // Static Pages can return its HTML fallback with HTTP 200 for an
         // unimplemented API route. Use the filtered public JSON instead.
         console.warn('Character roster API returned non-JSON; using public roster');
+      }else if(response.status===503){
+        // A temporary roster/auth outage must not prevent offline gameplay.
+        // Only use the explicitly filtered public roster, never private packs.
+        console.warn('Character roster API unavailable (503); continuing with public roster');
+        sessionStorage.setItem('neoRpgRosterDegraded','1');
       }else if(response.status!==404&&response.status!==405){
         throw Error('Character roster request failed (HTTP '+response.status+')');
       }
@@ -156,7 +162,7 @@
       if(token||!(/Failed to fetch|NetworkError|fetch failed/i.test(String(error))))throw error;
       console.warn('Character roster API unreachable; checking filtered static roster',error);
     }
-    if(token&&!data)throw Error('Cloud character access is temporarily unavailable. Please retry.');
+    if(token&&!data&&sessionStorage.getItem('neoRpgRosterDegraded')!=='1')throw Error('Cloud character access is temporarily unavailable. Please retry.');
     if(!data){
       const response=await timedFetch('/rpg-character-packs.public.json',{cache:'no-store'});
       if(!response.ok||!response.headers.get('content-type')?.includes('application/json'))throw Error('Character roster unavailable (public file HTTP '+response.status+')');
@@ -165,6 +171,12 @@
     if(!Array.isArray(data?.packs)||!data.packs.length)throw Error('Character roster unavailable (invalid public registry)');
     window.NeoRpgCharacterPacks=registry(data.packs||[]);
     window.NeoRpgExclusiveRosterLoaded=true;
+    if(sessionStorage.getItem('neoRpgRosterDegraded')==='1'){
+      const note=document.createElement('div');note.setAttribute('role','status');
+      note.style.cssText='position:fixed;bottom:8px;left:8px;right:8px;z-index:2147483645;background:#29334b;color:white;padding:10px;border-radius:8px;text-align:center;font:14px system-ui';
+      note.textContent='Cloud character verification is temporarily unavailable. Playing with the public roster; cloud sync is paused. Your saved campaign is safe.';
+      document.addEventListener('DOMContentLoaded',()=>document.body.append(note),{once:true});
+    }
     }
   } catch(error) {
     // Fail closed: never load an unfiltered registry as a fallback.
