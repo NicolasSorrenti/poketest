@@ -19,12 +19,18 @@
   }catch{return isOverworld;}
  }
  function refreshButton(){
-  const button=document.getElementById('rpgDiscreetToggle');
-  if(!button)return;
   const active=root.dataset.rpgDiscreet==='on';
-  button.textContent=active?'◈ DISCREET ON':'◇ DISCREET OFF';
-  button.setAttribute('aria-pressed',String(active));
-  button.title=active?'Show character and event illustrations':'Hide character and event illustrations (no change to gameplay)';
+  const button=document.getElementById('rpgDiscreetToggle');
+  if(button){
+   button.textContent=active?'◈ DISCREET ON':'◇ DISCREET OFF';
+   button.setAttribute('aria-pressed',String(active));
+   button.title=active?'Show character and event illustrations':'Hide character and event illustrations (no change to gameplay)';
+  }
+  document.querySelectorAll('.rpg-discreet-popup-toggle').forEach(control=>{
+   control.textContent=active?'◈ Discreet on':'◇ Discreet off';
+   control.setAttribute('aria-pressed',String(active));
+   control.title=active?'Show character and event illustrations':'Hide character and event illustrations throughout the game';
+  });
  }
  function apply(value,save){
   root.dataset.rpgDiscreet=value?'on':'off';
@@ -43,15 +49,36 @@
  apply(fromStorage(),false);
  function bindButton(){
   const button=document.getElementById('rpgDiscreetToggle');
-  if(!button||button.dataset.rpgDiscreetBound==='1')return;
-  button.dataset.rpgDiscreetBound='1';
-  button.addEventListener('click',()=>apply(root.dataset.rpgDiscreet!=='on',true));
+  if(button&&button.dataset.rpgDiscreetBound!=='1'){
+   button.dataset.rpgDiscreetBound='1';
+   button.addEventListener('click',()=>apply(root.dataset.rpgDiscreet!=='on',true));
+  }
+  bindPopupButtons();
   refreshButton();
+ }
+ function bindPopupButtons(){
+  const addControl=host=>{
+   if(!host||host.querySelector(':scope > .rpg-discreet-popup-toggle'))return;
+   const button=document.createElement('button');
+   button.type='button';button.className='rpg-discreet-popup-toggle';
+   button.setAttribute('aria-label','Toggle discreet mode for the whole game');
+   button.addEventListener('click',event=>{
+    event.preventDefault();event.stopPropagation();
+    window.NeoRpgDiscreet?.toggle();
+   });
+   host.append(button);
+  };
+  document.querySelectorAll('dialog[open]').forEach(dialog=>{
+   addControl(dialog.querySelector('.modal-heading,.cg-viewer-bar,.rpg-status-header,.rpg-drawer-header')||dialog.firstElementChild);
+  });
+  const eventPanel=document.querySelector('#neoOverworldEvents:not([hidden])');
+  if(eventPanel)addControl(eventPanel.firstElementChild);
+  document.querySelectorAll('#neoOverworldStoryDock:not([hidden]) #dialogue .dialogue-title').forEach(addControl);
  }
  // The RPG duel toolbar can reveal or insert this control after initial page load.
  if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',bindButton,{once:true});
  else bindButton();
- new MutationObserver(bindButton).observe(document.documentElement,{childList:true,subtree:true});
+ new MutationObserver(bindButton).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['open','hidden']});
  window.addEventListener('storage',event=>{
   if(event.key===overworldKey||event.key===rpgKey)apply(fromStorage(),false);
  });
