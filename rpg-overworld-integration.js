@@ -1396,7 +1396,7 @@
         const onLifeguardShift=id==='laca'&&data.location==='park'&&(data.slot===0||data.slot===1);
         return onLifeguardShift?'laca:lifeguardFrontLeaning':id;
       }).join(',');
-      const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&slot='+encodeURIComponent(data.slot)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
+      const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
       if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
       note.hidden=true;
     }
