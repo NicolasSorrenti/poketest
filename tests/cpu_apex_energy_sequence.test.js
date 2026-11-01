@@ -45,6 +45,36 @@ test('Apex does not attach Rainbow Energy for an immediate self-knockout',()=>{
   'keep Level 7 scoring unchanged');
 });
 
+test('Apex avoids Darkness Energy that will KO a non-Dark Bench at checkup',()=>{
+ const o=board(),darkness='neo1-104';
+ const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,decision:null});
+ o.self.hand=[darkness];
+ o.self.bench[0].damage=40; // Machop has 10 HP; Darkness recoil hits Bench every turn.
+ const options=level=>AI.candidates(o,level,{trainers:0,powers:0,powerKeys:new Set(),stadium:false});
+ const hasBench=level=>options(level).some(a=>a.type==='attach_energy'&&a.payload.slot===0);
+ assert.equal(hasBench(cfg),false,'do not offer a doomed Darkness Bench attachment');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),[attack],
+  'root preparation must also reject the doomed attachment');
+ assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000);
+ o.self.bench[0].damage=30; // 20 HP survives one Darkness checkup.
+ assert.equal(hasBench(cfg),true,'a surviving non-Dark Bench remains eligible');
+ assert.ok(AI.score(benchAttach,o,cfg,{})>-1000);
+ o.self.bench[0].energies=[darkness]; // Two Darkness now cause 20 checkup damage.
+ assert.equal(hasBench(cfg),false,'count all attached Darkness Energy recoil');
+ o.self.bench[0]={id:'neo1-24',energies:[],damage:40}; // Dark-type Murkrow is immune.
+ assert.equal(hasBench(cfg),true,'Dark-type recipients do not take Darkness recoil');
+ o.self.bench[0]={id:MACHOP,energies:[],damage:40};
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(hasBench(lower),true,'Level 7 retains its existing candidate rules');
+ assert.ok(AI.score(benchAttach,o,lower,{})>-1000);
+ o.self.active.damage=60; // Preserve a possible final-Prize win before checkup.
+ assert.equal(options(cfg).some(a=>a.type==='attach_energy'&&a.payload.slot===-1),true,
+  'do not blanket-exclude an Active attachment that could win immediately');
+ assert.ok(AI.score(activeAttach,o,cfg,{})>-1000);
+});
+
 test('Apex attaches useful Energy before a non-winning attack',()=>{
  const actions=AI.energyPreparationActions(board(),cfg,[attack,attach]);
  assert.deepEqual(actions,[attach]);

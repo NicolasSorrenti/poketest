@@ -99,6 +99,18 @@ function energyPool(unit){
   return [];
  });
 }
+// Darkness Energy deals 10 damage to a non-Dark host at every turn-end
+// checkup, even on the Bench (headless_duel.js). A Benched recipient that
+// cannot survive the next checkup cannot benefit from this attachment.
+// Keep Active attachments available: an immediate final-Prize attack can
+// end the game before the checkup, so blanket Active exclusion is unsafe.
+function lethalDarknessBenchAttachment(unit,energyId,slot){
+ if(slot===-1||!unit||card(energyId)?.name!=='Darkness Energy')return false;
+ const species=card(unit.id);
+ if(!species||species.types?.includes('Darkness')||species.name?.startsWith('Dark '))return false;
+ const darkness=(unit.energies||[]).filter(id=>card(id)?.name==='Darkness Energy').length+1;
+ return hpRemaining(unit)<=darkness*10;
+}
 function energyValue(pokemon,energyId){
  const source=card(pokemon?.id);
  if(!source)return 0;
@@ -387,6 +399,7 @@ function candidates(o,cfg,used){
    // in favor of a completely impossible attachment.
    if(target&&!(target.energyAttachBlockSerial>o.turnSerial)&&
       !(cfg.level===8&&c.name==='Rainbow Energy'&&hpRemaining(target)<=10)&&
+      !(cfg.level===8&&lethalDarknessBenchAttachment(target,c.id,slot))&&
       legalAttachment({card:c,unit:target,round:o.round,energyUsed:p.energyUsed,
        cardName:card(target.id)?.name||''}))
     options.push(command('attach_energy',{handIndex:i,slot}));
@@ -998,6 +1011,7 @@ function score(a,o,cfg,used){
   // The reducer immediately knocks out a host with 10 HP or less remaining.
   if(cfg.level===8&&card(p.hand[v.handIndex])?.name==='Rainbow Energy'&&
      hpRemaining(unit)<=10)return -1000;
+  if(cfg.level===8&&lethalDarknessBenchAttachment(unit,p.hand[v.handIndex],v.slot))return -1000;
   // This attachment will be discarded if Center heals its target later.
   // Penalize it enough to force the zero-cost heal first; a follow-up
   // attachment is then evaluated normally against the healed board.
@@ -1333,7 +1347,8 @@ function energyPreparationActions(o,cfg,actions){
   if(a.type!=='attach_energy')return true;
   const target=slotUnit(o.self,a.payload.slot);
   return !(card(o.self.hand[a.payload.handIndex])?.name==='Rainbow Energy'&&
-   hpRemaining(target)<=10);
+   hpRemaining(target)<=10)&&
+   !lethalDarknessBenchAttachment(target,o.self.hand[a.payload.handIndex],a.payload.slot);
  });
  const canAttackNow=safeActions.some(a=>a.type==='attack');
  const useful=safeActions.some(a=>{
