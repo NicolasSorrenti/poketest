@@ -99,17 +99,17 @@ function energyPool(unit){
   return [];
  });
 }
-// Darkness Energy deals 10 damage to a non-Dark host at every turn-end
-// checkup, even on the Bench (headless_duel.js). A Benched recipient that
-// cannot survive the next checkup cannot benefit from this attachment.
-// Keep Active attachments available: an immediate final-Prize attack can
-// end the game before the checkup, so blanket Active exclusion is unsafe.
+// Darkness Energy damages non-Dark Bench hosts at the end of BOTH players'
+// turns (headless_duel.js). After attaching, a Bench Pokemon must survive
+// our checkup AND the opponent's checkup before we can use it next turn.
+// Do not spend an attachment on a host that will faint before that turn.
+// Keep Active attachments available: a final-Prize attack can win immediately.
 function lethalDarknessBenchAttachment(unit,energyId,slot){
  if(slot===-1||!unit||card(energyId)?.name!=='Darkness Energy')return false;
  const species=card(unit.id);
  if(!species||species.types?.includes('Darkness')||species.name?.startsWith('Dark '))return false;
  const darkness=(unit.energies||[]).filter(id=>card(id)?.name==='Darkness Energy').length+1;
- return hpRemaining(unit)<=darkness*10;
+ return hpRemaining(unit)<=darkness*20;
 }
 function energyValue(pokemon,energyId){
  const source=card(pokemon?.id);
