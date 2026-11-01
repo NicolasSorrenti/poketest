@@ -65,7 +65,7 @@
  async function pick(id){
   if(busy||!state||state.done)return;busy=true;$('error').textContent='';
   try{state=await request('pick',{method:'POST',body:JSON.stringify({id,revision:state.revision})});render();}
-  catch(e){$('error').textContent=e.message;}finally{busy=false;}
+  catch(e){$('error').textContent=e.message;}finally{busy=false;if(state?.done&&!state.started)renderBuilder();}
  }
  let visualBuilder=null;
  function renderBuilder(){
