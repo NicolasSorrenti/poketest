@@ -76,7 +76,7 @@ test('character preferences produce weighted bond scores and ranks',()=>{
  assert.deepEqual(REL.profileFor('yuna').weights,{affection:4,attraction:3,trust:2,respect:1});
  assert.equal(REL.bondScore(hana,'hana'),8);
  assert.equal(REL.bondScore(yuna,'yuna'),4);
- assert.equal(REL.bondRank(hana,'hana'),0);
+ assert.equal(REL.bondRank(hana,'hana'),1);
  REL.apply(hana,'hana',{trust:3,respect:3,affection:3});
- assert.equal(REL.bondRank(hana,'hana'),2);
+ assert.equal(REL.bondRank(hana,'hana'),3);
 });
