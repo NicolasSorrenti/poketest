@@ -63,7 +63,7 @@
  "/rpg_tournament_presentation.js",
  "/rpg_tutorials.js?v=1",
  "/rpg_status.js?v=persona-ranks-20261101",
- "/rpg_cloud_save.js?v=cloud-login-visible-20261030",
+ "/rpg_cloud_save.js?v=auth-recovery-20261101",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
  "/rpg.js?v=rpg-scene-wipe-20261031-1"
@@ -77,31 +77,38 @@
     }
     return Object.freeze({packs,cast,looks,schedules,arrivals,events,mandatoryEvents,byId:id=>packs.find(p=>p.id===id)||null});
   }
+  async function timedFetch(url,options={}){
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),12000);
+    try{return await fetch(url,{...options,signal:controller.signal});}
+    catch(error){if(error.name==='AbortError')throw Error('Cloud connection timed out. Please retry.');throw error;}
+    finally{clearTimeout(timer);}
+  }
+  async function refreshSession(cached){
+    let response=await timedFetch('/api/rpg-cloud/config',{cache:'no-store'});
+    let config=response.ok?await response.json().catch(()=>null):null;
+    if(!config?.enabled){
+      response=await timedFetch('/rpg-cloud-config.json',{cache:'no-store'});
+      config=response.ok?await response.json().catch(()=>null):null;
+    }
+    if(!config?.enabled)throw Error('Cloud sign-in is temporarily unavailable. Please retry.');
+    response=await timedFetch(config.url+'/auth/v1/token?grant_type=refresh_token',{
+      method:'POST',headers:{apikey:config.key,'Content-Type':'application/json'},
+      body:JSON.stringify({refresh_token:cached.refresh_token})
+    });
+    const refreshed=await response.json().catch(()=>null);
+    if(!response.ok||!refreshed?.access_token||!refreshed?.refresh_token||!refreshed?.user?.id)
+      throw Error('Your login has expired. Sign in again to load your campaign.');
+    const data={...cached,...refreshed,expires_at:Date.now()+Math.max(0,Number(refreshed.expires_in||3600)-60)*1000};
+    localStorage.setItem('neoRpgCloudSessionV1',JSON.stringify(data));
+    return data.access_token;
+  }
   try {
     const cached=JSON.parse(localStorage.getItem('neoRpgCloudSessionV1')||'null');
     let token=cached?.access_token||'';
     // Refresh stale sessions through the same Supabase identity provider as cloud saves.
     if(cached?.refresh_token && (!token||!Number.isFinite(Number(cached.expires_at))||Number(cached.expires_at)<=Date.now()+60000)){
-      // On Cloudflare Pages the authenticated /api routes may not exist.
-      // Treat missing configuration as static hosting, not a fatal startup error.
-      let config=null;
-      try {
-        let response=await fetch('/api/rpg-cloud/config',{cache:'no-store'}).catch(()=>null);
-        if(response?.ok&&response.headers.get('content-type')?.includes('application/json'))config=await response.json();
-        if(!config?.enabled){response=await fetch('/rpg-cloud-config.json',{cache:'no-store'}).catch(()=>null);if(response?.ok&&response.headers.get('content-type')?.includes('application/json'))config=await response.json();}
-      }catch(error){console.warn('Cloud API config unavailable; checking public roster',error);}
-      if(config?.enabled){
-        const response=await fetch(config.url+'/auth/v1/token?grant_type=refresh_token',{
-          method:'POST',headers:{'apikey':config.key,'Content-Type':'application/json'},
-          body:JSON.stringify({refresh_token:cached.refresh_token})
-        });
-        if(response.ok){
-          const refreshed=await response.json();
-          token=refreshed.access_token;
-          const data={...cached,...refreshed,expires_at:Date.now()+Math.max(0,Number(refreshed.expires_in||3600)-60)*1000};
-          localStorage.setItem('neoRpgCloudSessionV1',JSON.stringify(data));
-        }else token='';
-      }
+      token=await refreshSession(cached);
     }
     const headers=token?{Authorization:'Bearer '+token}:{};
     // Prefer server-verified entitlements when an API backend exists.
@@ -109,9 +116,15 @@
     // publishes an explicitly filtered public roster, never the private packs.
     let data=null;
     try {
-      const response=await fetch('/api/rpg/character-packs',{headers,cache:'no-store'});
+      let response=await timedFetch('/api/rpg/character-packs',{headers,cache:'no-store'});
+      // A revoked access token may be rejected before its local expiry time.
+      if(response.status===401&&cached?.refresh_token){
+        token=await refreshSession(JSON.parse(localStorage.getItem('neoRpgCloudSessionV1')||'null')||cached);
+        response=await timedFetch('/api/rpg/character-packs',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+      }
       if(response.ok&&response.headers.get('content-type')?.includes('application/json')){
         data=await response.json();
+        if(token&&data?.authStatus==='unavailable')throw Error('Cloud identity could not be verified. Please retry.');
       }else if(response.ok&&!response.headers.get('content-type')?.includes('application/json')){
         // Static Pages can return its HTML fallback with HTTP 200 for an
         // unimplemented API route. Use the filtered public JSON instead.
@@ -120,11 +133,12 @@
         throw Error('Character roster request failed (HTTP '+response.status+')');
       }
     }catch(error){
-      if(!/Failed to fetch|NetworkError|fetch failed/i.test(String(error)))throw error;
+      if(token||!(/Failed to fetch|NetworkError|fetch failed/i.test(String(error))))throw error;
       console.warn('Character roster API unreachable; checking filtered static roster',error);
     }
+    if(token&&!data)throw Error('Cloud character access is temporarily unavailable. Please retry.');
     if(!data){
-      const response=await fetch('/rpg-character-packs.public.json',{cache:'no-store'});
+      const response=await timedFetch('/rpg-character-packs.public.json',{cache:'no-store'});
       if(!response.ok||!response.headers.get('content-type')?.includes('application/json'))throw Error('Character roster unavailable (public file HTTP '+response.status+')');
       data=await response.json();
     }
@@ -133,7 +147,27 @@
     window.NeoRpgExclusiveRosterLoaded=true;
   } catch(error) {
     // Fail closed: never load an unfiltered registry as a fallback.
-    document.body.insertAdjacentHTML('beforeend','<p role="alert">Unable to load the RPG character roster. Reload to try again.</p>');
+    document.documentElement.classList.remove('rpg-cloud-loading');
+    const panel=document.createElement('section');
+    panel.setAttribute('role','alert');
+    panel.style.cssText='position:fixed;inset:15% 16px auto;z-index:2147483647;max-width:480px;margin:auto;padding:24px;border-radius:16px;background:#141b2e;color:#fff;font:16px system-ui';
+    const message=document.createElement('p');
+    message.textContent=error.message+' Your saved campaign has not been changed.';
+    const retry=document.createElement('button');retry.textContent='Retry loading';retry.onclick=()=>location.reload();
+    const signIn=document.createElement('button');signIn.textContent='Sign in again';
+    panel.append(message,retry,signIn);document.body.append(panel);
+    signIn.onclick=async()=>{
+      signIn.disabled=true;
+      try{
+        await new Promise((resolve,reject)=>{
+          const script=document.createElement('script');
+          script.src='/rpg_cloud_save.js?v=auth-recovery-20261101';script.onload=resolve;script.onerror=reject;document.body.append(script);
+        });
+        await window.NeoRpgCloudSave.mount({showButton:true,recoveryOnly:true,getSave:()=>null});
+        window.NeoRpgCloudSave.show();
+      }catch{message.textContent='Could not load sign-in. Check your connection and retry. Your save is safe.';}
+      finally{signIn.disabled=false;}
+    };
     window.NeoRpgErrorReport?.capture(error,{source:'startup',action:'load character roster'});
     console.error('RPG roster load failed',error);
     return;
@@ -195,6 +229,7 @@
   });
   await loadScript(scripts.at(-1));
 })().catch(error=>{
+  document.documentElement.classList.remove('rpg-cloud-loading');
   window.NeoRpgErrorReport?.capture(error,{source:'startup',action:'load RPG scripts'});
   console.error('RPG startup failed',error);
   // A recoverable loading problem should not leave the player at a dead screen.

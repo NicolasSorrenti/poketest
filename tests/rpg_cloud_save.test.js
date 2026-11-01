@@ -53,7 +53,7 @@ function setup({localSave=save(1),cloudRow=null,hadLocal=true,enabled=true,conne
  };
  const document={addEventListener:(name,fn)=>sessions.push({name,fn}),hidden:false,documentElement:{classList:{remove:()=>{}}}};
  vm.runInNewContext(script,{
-  window,document,fetch,localStorage:storage,structuredClone:clone,URLSearchParams,
+  window,document,fetch,AbortController,localStorage:storage,structuredClone:clone,URLSearchParams,
   Date:class extends Date{static now(){return clock;}},
   setTimeout:(callback)=>{const id=++timerId;timers.set(id,callback);return id;},
   clearTimeout:id=>timers.delete(id),console

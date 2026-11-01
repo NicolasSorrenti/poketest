@@ -8,6 +8,13 @@
  let meta=null,blocked=false,busy=false,inflight=null,queued=false,timer=null,lastCheck=0;
  const $=id=>dialog?.querySelector('#'+id);
  const local=()=>adapter?.getSave?.()||null;
+ async function cloudFetch(url,options={}){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),12000);
+  try{return await fetch(url,{...options,signal:controller.signal});}
+  catch(error){if(error.name==='AbortError')throw Error('Cloud connection timed out. Your browser save is safe.');throw error;}
+  finally{clearTimeout(timer);}
+ }
  function hash(value){
   const raw=JSON.stringify(value);let h=2166136261;
   for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619);}
@@ -56,6 +63,7 @@
   meta=session?readMeta():null;
   if(button)button.textContent=session?'☁ CLOUD':'☁ SIGN IN';
   renderAccount();
+  if(adapter?.recoveryOnly&&session){root.location.reload();return;}
   // The roster is loaded once at startup. Switching accounts must fetch it again.
   if(previousUserId!==(session?.user?.id||'')&&root.NeoRpgExclusiveRosterLoaded)
     root.location.reload();
@@ -66,7 +74,7 @@
   if(authenticated&&(!session||session.user.id!==expectedOwner))throw Error('Cloud account changed during request');
   const headers={'apikey':config.key,'Content-Type':'application/json'};
   if(authenticated)headers.Authorization='Bearer '+session.access_token;
-  const response=await fetch(config.url+endpoint,{method,headers,...(body===undefined?{}:{body:JSON.stringify(body)})});
+  const response=await cloudFetch(config.url+endpoint,{method,headers,...(body===undefined?{}:{body:JSON.stringify(body)})});
   const data=await response.json().catch(()=>null);
   if(!response.ok){const error=new Error(data?.msg||data?.message||data?.error_description||data?.error||'Cloud request failed ('+response.status+')');error.code=data?.code||'';error.status=response.status;throw error;}
   return data;
@@ -117,7 +125,7 @@
  }
  function renderAccount(){
   if(!dialog)return;
-  const signed=!!session;
+  const signed=!!session&&!adapter?.recoveryOnly;
   $('cloudAuth').hidden=signed;
   $('cloudSigned').hidden=!signed;
   if(signed)$('cloudEmail').textContent=session.user?.email||'Signed in';
@@ -219,7 +227,7 @@
   return {access_token:token,refresh_token:refresh,expires_in:Number(params.get('expires_in')||3600)};
  }
  async function completeEmailConfirmation(data){
-  const response=await fetch(config.url+'/auth/v1/user',{
+  const response=await cloudFetch(config.url+'/auth/v1/user',{
    headers:{apikey:config.key,Authorization:'Bearer '+data.access_token}
   });
   const user=await response.json().catch(()=>null);
@@ -244,6 +252,7 @@
     sessionSave(signup);
    }else sessionSave(await request('/auth/v1/token?grant_type=password',{email,password}));
    $('cloudPassword').value='';
+   if(adapter?.recoveryOnly)return;
    label('Signed in. Checking your cloud progress…');
    await reconcile();
   }catch(error){label(errorText(error));}
@@ -284,17 +293,18 @@
   let confirmed=null;
   try{confirmed=takeEmailConfirmation();}catch(error){label(errorText(error));}
   try{
-   let response=await fetch('/api/rpg-cloud/config',{cache:'no-store'}).catch(()=>null);
+   let response=await cloudFetch('/api/rpg-cloud/config',{cache:'no-store'}).catch(()=>null);
    config=null;
    if(response?.ok){try{config=await response.json()}catch{}}
    if(!config?.enabled){
-    response=await fetch('/rpg-cloud-config.json',{cache:'no-store'}).catch(()=>null);
+    response=await cloudFetch('/rpg-cloud-config.json',{cache:'no-store'}).catch(()=>null);
     if(response?.ok){try{config=await response.json()}catch{}}
    }
    if(!config?.enabled){
     stateLabel('Cloud saves are not connected yet. Your local save is working.');return;
    }
    if(confirmed)await completeEmailConfirmation(confirmed);
+   if(adapter?.recoveryOnly){stateLabel('Sign in again to reconnect. Your saved campaign will be kept.');return;}
    const cached=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');
    if(!cached?.refresh_token||!cached?.user?.id){
     stateLabel('Sign in to sync your RPG progress between devices.');return;
@@ -315,5 +325,5 @@
   });
   try{await connect();}finally{document.documentElement?.classList.remove('rpg-cloud-loading');}
  }
- root.NeoRpgCloudSave={mount,onLocalSave,syncNow,hash,validSave,signupEndpoint,isSignedIn:()=>!!session};
+ root.NeoRpgCloudSave={mount,show,onLocalSave,syncNow,hash,validSave,signupEndpoint,isSignedIn:()=>!!session};
 })(typeof window==='undefined'?null:window);
