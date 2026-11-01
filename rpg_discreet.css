@@ -192,3 +192,7 @@
 
 /* Discreet mode may only show the explicitly injected safe avatar; hide the full dialogue CG layer. */
 :root[data-rpg-discreet="on"] #rpgSceneCG{display:none!important;visibility:hidden!important;opacity:0!important}
+
+/* The late overworld bust-crop rule has higher specificity; discrete mode must still leave only the safe chibi visible. */
+:root[data-rpg-discreet="on"] #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>img:not(.rpg-safe-avatar){display:none!important;visibility:hidden!important;opacity:0!important}
+:root[data-rpg-discreet="on"] #neoOverworldOverlay #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>.rpg-safe-avatar{display:block!important;visibility:visible!important;opacity:1!important}
