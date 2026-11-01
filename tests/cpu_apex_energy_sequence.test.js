@@ -12,6 +12,37 @@ function board(){
    energyUsed:false,prizeCount:3},
   opponent:{active:{id:RATTATA,energies:[],damage:0},bench:[{id:RATTATA,energies:[],damage:0}]}};
 }
+test('Apex does not attach Rainbow Energy for an immediate self-knockout',()=>{
+ const o=board(),rainbow='base5-80';
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ // The reducer applies Rainbow's 10 damage and resolves the knockout
+ // immediately, before the new Energy could power another attack.
+ o.self.hand=[rainbow];
+ o.self.active.energies=[FIGHT,FIGHT]; // Rainbow would fund Special Punch
+ o.self.active.damage=60; // Hitmonchan: 10 of 70 HP remaining
+ assert.ok(AI.energyValue(o.self.active,rainbow)>12,
+  'Rainbow is otherwise an attractive attack-unlocking attachment');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'do not suppress a legal Jab for lethal Rainbow');
+ assert.ok(AI.score(activeAttach,o,cfg,{})<=-1000,
+  'self-knockout is not an Energy improvement');
+ o.self.active.damage=50; // 20 HP: the attachment is survivable
+ assert.ok(AI.score(activeAttach,o,cfg,{})>-1000,
+  'survivable Rainbow remains a legitimate attachment');
+ o.self.bench[0].damage=40; // Machop: 10 of 50 HP remaining
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),
+  [attack,benchAttach],'do not force a lethal Bench attachment');
+ assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000,
+  'Bench self-knockouts must also be discouraged');
+ o.self.bench[0].damage=30;
+ assert.ok(AI.score(benchAttach,o,cfg,{})>-1000,
+  'a Bench recipient with 20 HP can still use Rainbow');
+ o.self.active.damage=60;
+ assert.ok(AI.score(activeAttach,o,AI.configuration({side:1,level:7}),{})>-1000,
+  'keep Level 7 scoring unchanged');
+});
+
 test('Apex attaches useful Energy before a non-winning attack',()=>{
  const actions=AI.energyPreparationActions(board(),cfg,[attack,attach]);
  assert.deepEqual(actions,[attach]);
