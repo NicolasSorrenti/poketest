@@ -280,7 +280,12 @@
  }
  function qualifies(e,state,place=state.location){
   const s=normalize(state),b=s.relationships[e.npc],previous=e.prerequisite;
-  return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&b.affection>=VN.bondNeeded(e);
+  const minBondScore=Number(e.minBondScore)||0;
+  const minBondRank=Number(e.minBondRank)||0;
+  const bondReady=minBondScore||minBondRank
+   ?REL.meets(s,e.npc,{minScore:minBondScore,minRank:minBondRank})
+   :b.affection>=VN.bondNeeded(e);
+  return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&bondReady;
  }
  function linesFor(state,id){const e=ID.get(id);if(!e)return [];const flag=state?.storyFlags?.[e.prerequisite];const opening=e.openingByFlag?.[flag];return opening?[{...e.lines[0],text:opening},...e.lines.slice(1)]:e.lines;}
  function available(state,place=state.location){return E.filter(e=>qualifies(e,state,place));}
