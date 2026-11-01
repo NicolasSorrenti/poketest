@@ -1327,14 +1327,19 @@ function energyPreparationActions(o,cfg,actions){
  // Attacking ends the turn. Use a legal, productive Energy attachment first,
  // unless an already-affordable attack guarantees the final knockout.
  if(cfg.level!==8||o.self.energyUsed)return actions;
- const canAttackNow=actions.some(a=>a.type==='attack');
- const useful=actions.some(a=>{
+ // This is a root-action safety gate, not just a scoring penalty: strategic
+ // search can otherwise overrule a -1000 heuristic with speculative bonuses.
+ const safeActions=actions.filter(a=>{
+  if(a.type!=='attach_energy')return true;
+  const target=slotUnit(o.self,a.payload.slot);
+  return !(card(o.self.hand[a.payload.handIndex])?.name==='Rainbow Energy'&&
+   hpRemaining(target)<=10);
+ });
+ const canAttackNow=safeActions.some(a=>a.type==='attack');
+ const useful=safeActions.some(a=>{
   if(a.type!=='attach_energy')return false;
   const target=slotUnit(o.self,a.payload.slot);
   const energyId=o.self.hand[a.payload.handIndex];
-  // Never force a turn-ending attack to be replaced by a Rainbow attachment
-  // that immediately knocks out its recipient (Active or Bench).
-  if(card(energyId)?.name==='Rainbow Energy'&&hpRemaining(target)<=10)return false;
   // Full Heal Energy cures Confusion on attachment. A fully charged Active
   // may have zero marginal Energy value, yet curing the 50% attack-failure
   // risk before declaring a damaging attack is a productive preparation.
@@ -1366,7 +1371,7 @@ function energyPreparationActions(o,cfg,actions){
   return confusionCure||lethalPoisonCure||potionPoisonSave||
    !(canAttackNow&&a.payload.slot===-1&&strandedActiveEnergy(o,energyId,cfg));
  });
- if(!useful)return actions;
+ if(!useful)return safeActions;
  // Confusion requires a coin flip before a printed attack resolves, so a
  // nominally lethal attack is not a guaranteed final-Prize knockout.
  const confusionChance=o.self.active?.status==='Confused'?.5:1;
@@ -1377,7 +1382,7 @@ function energyPreparationActions(o,cfg,actions){
    return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active,o.self.bench.length)*
     confusionChance>=.999;
   });
- return gameWinningKo?actions:actions.filter(a=>a.type!=='attack');
+ return gameWinningKo?safeActions:safeActions.filter(a=>a.type!=='attack');
 }
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
