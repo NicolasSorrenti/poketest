@@ -65,7 +65,19 @@
   akari:{favorites:['strategy','collection'],neutral:['competitive','quiet'],voice:['Akari adjusts her glasses. "I actually learned something."','Akari listens carefully before offering a precise answer.','Akari hesitates, then admits the change of pace was useful.']},
   camila:{favorites:['collection','creative'],neutral:['quiet','community'],voice:['Camila smiles knowingly. "Now this is a fine investment of time."','Camila trades an unexpectedly sincere observation.','Camila finds a way to make the unfamiliar activity entertaining.']},
   marina:{favorites:['quiet','adventure'],neutral:['community','creative'],voice:['Marina looks toward the river. "I am glad you asked me."','Marina smiles at the chance to share a calmer moment.','Marina gathers her courage and tries something different.']},
-  kaede:{favorites:['competitive','adventure'],neutral:['playful','strategy'],voice:['Kaede smirks. "Finally, something interesting."','Kaede lets herself enjoy it without putting on a show.','Kaede laughs at herself. "Do not tell anybody about this."']}
+  kaede:{favorites:['competitive','adventure'],neutral:['playful','strategy'],voice:['Kaede smirks. "Finally, something interesting."','Kaede lets herself enjoy it without putting on a show.','Kaede laughs at herself. "Do not tell anybody about this."']},
+  daisy:{favorites:['creative','playful','competitive'],neutral:['collection','adventure'],
+   voice:['Daisy turns the activity into a bit, then quietly makes sure everyone is having fun.',
+    'Daisy relaxes into the moment and lets the conversation wander.',
+    'Daisy gives the unfamiliar idea a thoughtful look before trying it on her own terms.']},
+  jicy:{favorites:['community','quiet','creative'],neutral:['collection','playful'],
+   voice:['Jicy brightens when she can make the activity easier for someone else.',
+    'Jicy settles into the quiet and seems pleased not to need a plan for every minute.',
+    'Jicy is a little nervous at first, but keeps going and celebrates the parts that work.']},
+  lyla:{favorites:['quiet','creative','collection'],neutral:['competitive','adventure'],
+   voice:['Lyla finds the cleanest way to make the activity feel effortless.',
+    'Lyla stays longer than she planned, comfortable enough not to fill every silence.',
+    'Lyla gives the unfamiliar activity a dry comment, then admits it was not a waste of time.']}
  });
  const tags=new Set(activities.map(x=>x.tag));
  const places=new Set(activities.map(x=>x.place));

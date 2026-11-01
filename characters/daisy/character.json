@@ -22,7 +22,32 @@
       "There's this half-second before someone draws the last Prize where I can hear the whole room go quiet.",
       "I can admit I was wrong. I just prefer to do it with a dramatic entrance.",
       "If I look confident, it means I decided not to wait for permission.",
-      "My glasses aren't a disguise. They just make it easier to stare at a tiny card and pretend I'm studying."
+      "My glasses aren't a disguise. They just make it easier to stare at a tiny card and pretend I'm studying.",
+      "I collect little proofs that a day happened: café receipts, ticket stubs, a note someone left in a sleeve.",
+      "My jokes are usually doing two jobs. They make the room lighter, and they give me a second to decide how honest I want to be.",
+      "The best card art looks like it knows something the player hasn't noticed yet.",
+      "I used to think confidence meant never checking whether people were having a good time. I was wrong about that.",
+      "A dramatic entrance is only useful if you still know how to stay when the applause stops.",
+      {
+        "text": "You catch the things I leave between the jokes. That is either flattering or extremely inconvenient.",
+        "minBondRank": 2
+      },
+      {
+        "text": "There are days when I would rather be understood than admired. I do not say that very often.",
+        "minBondRank": 2
+      },
+      {
+        "text": "If I let you see me hesitate, it is because I trust you not to turn it into a story for everyone else.",
+        "minBondRank": 2
+      },
+      {
+        "text": "I am not always performing when I tease you. Sometimes I am just trying to find out whether you will stay in the conversation.",
+        "minBondRank": 3
+      },
+      {
+        "text": "You have become one of the people I look for before I decide what kind of day this is going to be.",
+        "minBondRank": 3
+      }
     ],
     "hangouts": [
       "Daisy holds two translucent skirt layers against the window and asks which moves better when she walks.",

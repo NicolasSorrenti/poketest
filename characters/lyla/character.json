@@ -21,7 +21,38 @@
       "At work I'll wear whatever fits the brief. On my days off, picking an outfit sounds like more work, so I just grab my favorite top and jeans.",
       "I once got to the shop before noticing I'd missed a button. Another morning I forgot my bra. Apparently getting dressed before coffee is a gamble.",
       "Umbreon looks like it could wait all night and still win. That's the energy I want.",
-      "If I'm quiet with you, that usually means I'm comfortable. Please don't fill every second."
+      "If I'm quiet with you, that usually means I'm comfortable. Please don't fill every second.",
+      "A good photo is not always the prettiest one. Sometimes it is just the one where nobody is pretending too hard.",
+      "I can tell when a stylist wants a smile and when they want a person. The second request is rarer.",
+      "I keep my favorite cards in a case that looks boring. It discourages people from asking to borrow them.",
+      "The best part of a shoot is usually the ten minutes when everyone stops giving instructions.",
+      "I do not hate attention. I hate being treated like attention is the only thing I am good for.",
+      "I am better at noticing a bad contract than I used to be. Experience is expensive, but it does teach you.",
+      "If I say I am tired, I am not asking you to fix it. Sitting nearby is usually enough.",
+      "I like clothes that do not require a decision. A good pair of jeans can save an entire morning.",
+      "People think being quiet means I have nothing to say. It usually means I am deciding whether it is worth saying.",
+      "I once kept a terrible photograph because I was laughing in it. The picture was awful. I still like it.",
+      "Umbreon is easier than people. It never asks me to look enthusiastic on command.",
+      {
+        "text": "You ask about the parts of the day nobody photographs. That is why I keep answering.",
+        "minBondRank": 2
+      },
+      {
+        "text": "I do not mind you seeing me without the work version of my face. Just do not make a big ceremony out of it.",
+        "minBondRank": 2
+      },
+      {
+        "text": "When I tell you I am comfortable, I mean I am choosing to stay—not that I ran out of places to go.",
+        "minBondRank": 2
+      },
+      {
+        "text": "I am not used to someone remembering what I said after the shoot is over. It is a good habit. Keep it.",
+        "minBondRank": 3
+      },
+      {
+        "text": "You have become the person I can sit beside without turning the silence into a performance.",
+        "minBondRank": 3
+      }
     ],
     "hangouts": [
       "You help Lyla review contact sheets; she chooses the candid frame over the perfectly posed one.",
