@@ -24,15 +24,17 @@ test('Apex does not attach Rainbow Energy for an immediate self-knockout',()=>{
  assert.ok(AI.energyValue(o.self.active,rainbow)>12,
   'Rainbow is otherwise an attractive attack-unlocking attachment');
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
-  [attack,activeAttach],'do not suppress a legal Jab for lethal Rainbow');
+  [attack],'never consider lethal Rainbow instead of a legal Jab');
  assert.ok(AI.score(activeAttach,o,cfg,{})<=-1000,
   'self-knockout is not an Energy improvement');
  o.self.active.damage=50; // 20 HP: the attachment is survivable
  assert.ok(AI.score(activeAttach,o,cfg,{})>-1000,
   'survivable Rainbow remains a legitimate attachment');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'survivable Rainbow may be prepared before an attack');
  o.self.bench[0].damage=40; // Machop: 10 of 50 HP remaining
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,benchAttach]),
-  [attack,benchAttach],'do not force a lethal Bench attachment');
+  [attack],'never consider a lethal Bench attachment');
  assert.ok(AI.score(benchAttach,o,cfg,{})<=-1000,
   'Bench self-knockouts must also be discouraged');
  o.self.bench[0].damage=30;
