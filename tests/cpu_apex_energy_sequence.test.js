@@ -1531,3 +1531,25 @@ test('Apex two-step forecast accounts for Full Heal Energy clearing attack-block
  assert.equal(AI.planningBonus(attachActive,make('base5-81',null),planning),0,
   'a healthy, already funded Active gets no phantom attack unlock');
 });
+
+test('Apex two-step forecast applies Potion Energy healing before Flail',()=>{
+ // Base Magikarp's Flail scales with its own damage counters. Potion Energy
+ // removes one counter on attachment; Full Heal Energy does not.
+ const make=(energy,damage)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',round:5,turnSerial:11});
+  o.self.active={id:'base1-35',energies:['base1-102'],damage,status:null,playedTurn:2};
+  o.self.hand=[energy];
+  o.self.energyUsed=false;
+  o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+  return o;
+ };
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const planning={...cfg,planning:true};
+ assert.ok(AI.planningBonus(activeAttach,make('base5-82',20),planning)<
+  AI.planningBonus(activeAttach,make('base5-81',20),planning),
+  'Potion healing reduces Magikarp Flail from 20 to 10 in the tactical forecast');
+ assert.equal(AI.planningBonus(activeAttach,make('base5-82',0),planning),
+  AI.planningBonus(activeAttach,make('base5-81',0),planning),
+  'a healthy Magikarp receives no phantom healing penalty');
+});
