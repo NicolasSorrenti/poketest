@@ -994,6 +994,10 @@ function score(a,o,cfg,used){
  }
  if(type==='attach_energy'){
   const unit=slotUnit(p,v.slot),value=energyValue(unit,p.hand[v.handIndex]);
+  // Rainbow Energy places a damage counter before it can fund an attack.
+  // The reducer immediately knocks out a host with 10 HP or less remaining.
+  if(cfg.level===8&&card(p.hand[v.handIndex])?.name==='Rainbow Energy'&&
+     hpRemaining(unit)<=10)return -1000;
   // This attachment will be discarded if Center heals its target later.
   // Penalize it enough to force the zero-cost heal first; a follow-up
   // attachment is then evaluated normally against the healed board.
@@ -1323,8 +1327,16 @@ function energyPreparationActions(o,cfg,actions){
  // Attacking ends the turn. Use a legal, productive Energy attachment first,
  // unless an already-affordable attack guarantees the final knockout.
  if(cfg.level!==8||o.self.energyUsed)return actions;
- const canAttackNow=actions.some(a=>a.type==='attack');
- const useful=actions.some(a=>{
+ // This is a root-action safety gate, not just a scoring penalty: strategic
+ // search can otherwise overrule a -1000 heuristic with speculative bonuses.
+ const safeActions=actions.filter(a=>{
+  if(a.type!=='attach_energy')return true;
+  const target=slotUnit(o.self,a.payload.slot);
+  return !(card(o.self.hand[a.payload.handIndex])?.name==='Rainbow Energy'&&
+   hpRemaining(target)<=10);
+ });
+ const canAttackNow=safeActions.some(a=>a.type==='attack');
+ const useful=safeActions.some(a=>{
   if(a.type!=='attach_energy')return false;
   const target=slotUnit(o.self,a.payload.slot);
   const energyId=o.self.hand[a.payload.handIndex];
@@ -1359,7 +1371,7 @@ function energyPreparationActions(o,cfg,actions){
   return confusionCure||lethalPoisonCure||potionPoisonSave||
    !(canAttackNow&&a.payload.slot===-1&&strandedActiveEnergy(o,energyId,cfg));
  });
- if(!useful)return actions;
+ if(!useful)return safeActions;
  // Confusion requires a coin flip before a printed attack resolves, so a
  // nominally lethal attack is not a guaranteed final-Prize knockout.
  const confusionChance=o.self.active?.status==='Confused'?.5:1;
@@ -1370,7 +1382,7 @@ function energyPreparationActions(o,cfg,actions){
    return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active,o.self.bench.length)*
     confusionChance>=.999;
   });
- return gameWinningKo?actions:actions.filter(a=>a.type!=='attack');
+ return gameWinningKo?safeActions:safeActions.filter(a=>a.type!=='attack');
 }
 function chooseAction(game,raw={},memo={}){
  const cfg=configuration(raw),o=observation(game,cfg.side);
