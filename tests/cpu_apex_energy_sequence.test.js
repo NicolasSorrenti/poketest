@@ -67,6 +67,44 @@ test('Apex cures Confusion with Full Heal Energy before a funded damaging attack
   'the sequencing change is restricted to Apex');
 });
 
+test('Apex cures lethal Poison before a non-winning attack despite surplus Energy',()=>{
+ const o=board(),activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ // Hitmonchan is fully funded, but 20 Poison damage will KO its last 10 HP
+ // at end-of-turn checkup if it attacks before attaching Full Heal Energy.
+ o.self.active.energies=[FIGHT,FIGHT,FIGHT];
+ o.self.active.damage=60;
+ o.self.active.poison=true;
+ o.self.active.poisonDamage=20;
+ o.self.hand=['base5-81']; // Full Heal Energy
+ assert.ok(AI.energyValue(o.self.active,o.self.hand[0])<=12,
+  'surplus Colorless Energy has no meaningful attack-progress value');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'save the Active before a non-winning attack ends the turn');
+ const cureScore=AI.score(activeAttach,o,cfg,{});
+ o.self.hand=['base5-82']; // Potion Energy heals only 10 and does not cure Poison
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'Potion Energy is not a Poison cure');
+ assert.ok(cureScore>AI.score(activeAttach,o,cfg,{}),
+  'Full Heal must be valued above a non-saving Potion attachment');
+ o.self.hand=['base5-81'];
+ o.self.active.poisonDamage=5;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'nonlethal Poison does not force surplus Energy');
+ o.self.active.poisonDamage=20;
+ o.self.active.poison=false;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'a healthy Active does not need a Poison rescue');
+ o.self.active.poison=true;
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),
+  [attack,activeAttach]),[attack,activeAttach],
+  'the sequencing change is Apex-only');
+ o.self.prizeCount=1;
+ o.opponent.bench=[];
+ o.opponent.active.damage=10;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'a guaranteed game-winning knockout needs no rescue');
+});
+
 test('Apex does not force attachment when Energy was already used',()=>{
  const o=board();o.self.energyUsed=true;
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
