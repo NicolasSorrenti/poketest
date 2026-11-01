@@ -105,6 +105,45 @@ test('Apex cures lethal Poison before a non-winning attack despite surplus Energ
   [attack,activeAttach],'a guaranteed game-winning knockout needs no rescue');
 });
 
+test('Apex uses Potion Energy when its heal prevents lethal Poison checkup',()=>{
+ const o=board(),activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ o.phase='game';o.round=5;o.turnSerial=11;
+ // Hitmonchan has 70 HP and already has enough Energy for its attacks.
+ // At 60 damage, a normal 10-damage Poison checkup would KO it after
+ // attacking. Potion Energy heals to 50 damage, so it survives with 10 HP.
+ o.self.active.energies=[FIGHT,FIGHT,FIGHT];
+ o.self.active.damage=60;
+ o.self.active.poison=true;
+ o.self.active.poisonDamage=10;
+ o.self.hand=['base5-82']; // Potion Energy
+ assert.ok(AI.energyValue(o.self.active,o.self.hand[0])<=12,
+  'the attachment is surplus for attacks, useful only for survival');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'attach the healing Energy before ending the turn with an attack');
+ const savedScore=AI.score(activeAttach,o,cfg,{});
+ o.self.hand=['base1-96']; // Double Colorless Energy cannot heal
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'ordinary surplus Energy does not rescue Poison');
+ assert.ok(savedScore>AI.score(activeAttach,o,cfg,{}),
+  'Apex should value a real Potion rescue over an ordinary attachment');
+ o.self.hand=['base5-82'];
+ o.self.active.poisonDamage=20;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'a 10-damage heal cannot survive a 20-damage tick at 10 HP');
+ o.self.active.damage=50; // 20 HP -> heal to 30 -> survive a 20-damage tick
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [activeAttach],'a stronger Poison tick can still be survivable after healing');
+ o.self.active.poison=false;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'no phantom Poison rescue on an unpoisoned Active');
+ o.self.active.poison=true;
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),
+  [attack,activeAttach]),[attack,activeAttach],'preserve Level 7 ordering');
+ o.self.prizeCount=1;o.opponent.bench=[];o.opponent.active.damage=10;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'a guaranteed game-winning attack takes priority');
+});
+
 test('Apex does not force attachment when Energy was already used',()=>{
  const o=board();o.self.energyUsed=true;
  assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach]);
