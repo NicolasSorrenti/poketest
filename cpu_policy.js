@@ -851,7 +851,7 @@ function energyHorizonBonus(action,o,cfg){
 // A forced attachment is not productive when the Active is about to be KO'd,
 // gains no attack this turn, and cannot escape using that Energy. Keep this
 // independent of Bench availability: holding the Energy is also an option.
-function strandedActiveEnergy(o,energyId){
+function strandedActiveEnergy(o,energyId,cfg){
  const active=o.self.active,enemy=o.opponent.active,energy=card(energyId);
  if(!active||!enemy||!isEnergy(energy)||['Asleep','Paralyzed'].includes(enemy.status))return false;
  const incoming=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
@@ -863,7 +863,15 @@ function strandedActiveEnergy(o,energyId){
  const confusionChance=enemy.status==='Confused'?.5:1;
  if(!incoming.some((a,i)=>eligibleAttack(fromEnemy,enemy,a,i)&&
     knockoutChance(a,enemy,active,o.opponent.bench.length)*confusionChance>=.75))return false;
- const after={...active,energies:[...(active.energies||[]),energyId]};
+ // Potion Energy heals 10 immediately on attachment. If that healing
+ // prevents the publicly threatened KO, the attachment is a survival play,
+ // not Energy stranded on a doomed Active. Keep Level 7's old behavior.
+ const potionRescue=cfg.level===8&&energy.name==='Potion Energy'&&
+  (active.damage||0)>0;
+ const after={...active,
+  ...(potionRescue?{damage:Math.max(0,active.damage-10)}:{}),
+  energies:[...(active.energies||[]),energyId]};
+ if(potionRescue&&!likelyOpponentKnockout(o,after))return false;
  if(projectedAttackValue(after,enemy,o.turnSerial,o.self.bench.length)>
     projectedAttackValue(active,enemy,o.turnSerial,o.self.bench.length))return false;
  const retreat=card(active.id)?.retreatCost||[];
@@ -874,7 +882,7 @@ function strandedActiveEnergy(o,energyId){
 }
 function doomedActiveAttachmentPenalty(o,energyId,cfg){
  if(cfg.level<7||o.phase!=='game'||!o.self.active||!o.opponent.active||
-    o.self.energyUsed||!o.self.bench?.length||!strandedActiveEnergy(o,energyId))return 0;
+    o.self.energyUsed||!o.self.bench?.length||!strandedActiveEnergy(o,energyId,cfg))return 0;
  const energy=card(energyId);
  const usefulBench=o.self.bench.some(unit=>
   !(unit.energyAttachBlockSerial>o.turnSerial)&&
@@ -1334,7 +1342,7 @@ function energyPreparationActions(o,cfg,actions){
   // The cure improves this turn's attack reliability even if the Active
   // would be knocked out next turn; do not treat it as stranded Energy.
   return confusionCure||lethalPoisonCure||!(canAttackNow&&a.payload.slot===-1&&
-   strandedActiveEnergy(o,energyId));
+   strandedActiveEnergy(o,energyId,cfg));
  });
  if(!useful)return actions;
  // Confusion requires a coin flip before a printed attack resolves, so a
