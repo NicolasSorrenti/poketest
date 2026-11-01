@@ -2,6 +2,18 @@
 // Load the authorized character roster BEFORE any RPG systems initialize.
 // Do not trust localStorage email: the server verifies the bearer with Supabase.
 (async function(){
+  const freshKey='neoRpgPlayFreshWithoutCloud',saveKey='neoHarborRpgV1',backupKey='neoRpgFreshPreviousLocal';
+  if(sessionStorage.getItem(freshKey)!=='1'&&localStorage.getItem('neoRpgFreshBackupActive')==='1'){
+    const old=localStorage.getItem(backupKey);
+    if(old!==null)localStorage.setItem(saveKey,old);else localStorage.removeItem(saveKey);
+    localStorage.removeItem(backupKey);localStorage.removeItem('neoRpgFreshBackupActive');
+  }
+  if(sessionStorage.getItem(freshKey)==='1'){
+    const exit=document.createElement('button');exit.textContent='Return to saved campaign';
+    exit.style.cssText='position:fixed;top:8px;right:8px;z-index:2147483646;padding:9px;background:#172c50;color:white;border:1px solid white;border-radius:8px';
+    exit.onclick=()=>{sessionStorage.removeItem(freshKey);location.reload();};
+    document.addEventListener('DOMContentLoaded',()=>document.body.append(exit),{once:true});
+  }
   const scripts=[
  "/overworld/manifest.js?v=global-pose-triggers-20261030-1",
  "/rpg_sol_character.js",
@@ -170,9 +182,9 @@
       const key='neoHarborRpgV1',backup='neoRpgFreshPreviousLocal';
       if(sessionStorage.getItem('neoRpgPlayFreshWithoutCloud')!=='1'){
         const previous=localStorage.getItem(key);
-        if(previous!==null)sessionStorage.setItem(backup,previous);
-        else sessionStorage.removeItem(backup);
-        sessionStorage.setItem('neoRpgFreshHadPreviousLocal',previous===null?'0':'1');
+        if(previous!==null)localStorage.setItem(backup,previous);
+        else localStorage.removeItem(backup);
+        localStorage.setItem('neoRpgFreshBackupActive','1');
       }
       sessionStorage.setItem('neoRpgPlayFreshWithoutCloud','1');
       localStorage.removeItem(key);location.reload();
