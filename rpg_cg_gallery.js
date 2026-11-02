@@ -1070,6 +1070,28 @@
  const DAISY_ROUTES=[['daisy_route_1','The Trouble With First Impressions','Complete Daisy’s first card-shop event.'],['daisy_route_2','Layers','Complete Daisy’s fabric-sketch café event.'],['daisy_route_3','The Girl Behind the Glasses','Complete Daisy’s arcade event.'],['daisy_route_4','A Flower That Kept Growing','Complete Daisy’s park conversation.']];
  for(const [id,title,hint] of DAISY_ROUTES){const path='/rpg-assets/events/cg/season01/'+id+'.png';catalog.push({character:'daisy',id,category:'social',trigger:'story_milestone',sceneId:id,place:null,minAffection:0,startDay:1,slot:null,title,hint,scene:'Approved Daisy route illustration for '+title+'.',composition:'Approved landscape CG with dialogue-safe lower fifth.',outfit:'Use Daisy’s approved outfit from this scene.',expression:'Authored route expression.',environment:'Neo Harbor',mood:'story',fanservice:0,path,thumb:path,dialogueSafe:'Lower fifth clear for dialogue UI'});}
 
+ // Lyla Route 7 uses two already-approved images: the opening frame for
+ // the first dialogue beat, then the existing final frame on her personal line.
+ // Resolve the route and its final CG from the authorized character pack.
+ const LYLA_PACK=typeof module==='object'&&module.exports?require('./rpg_character_packs.generated').byId('lyla'):window.NeoRpgCharacterPacks?.byId?.('lyla');
+ const LYLA_FINAL=LYLA_PACK?.events?.find(e=>e.id==='lyla_route_7');
+ const LYLA_FINAL_ART=LYLA_PACK?.art?.eventImages?.find(e=>e.sceneId==='lyla_route_7');
+ const LYLA_SWITCH_AT=LYLA_FINAL?.lines?.findIndex(line=>line.speaker==='lyla'&&line.text==="I know you like to stare... I don't mind if it's you.");
+ if(LYLA_FINAL&&LYLA_FINAL_ART&&LYLA_SWITCH_AT>=0){
+  catalog.push({
+   character:'lyla',id:LYLA_FINAL.id,category:'social',trigger:'story_milestone',sceneId:LYLA_FINAL.id,
+   place:null,minAffection:0,startDay:LYLA_FINAL.start,slot:null,title:LYLA_FINAL.title,
+   hint:'Complete Lyla\'s final relationship chapter to unlock this memory.',
+   scene:'Lyla invites the player to stay beside her, outside the demands of her modeling career.',
+   composition:'Approved two-frame story CG: an opening image followed by the final expression.',
+   outfit:'Lyla\'s approved Route 7 styling.',expression:'A quiet, personally chosen invitation.',
+   environment:'Café',mood:'intimate',fanservice:0,
+   path:LYLA_FINAL_ART.path,thumb:LYLA_FINAL_ART.path,
+   openingPath:'/rpg-assets/characters/lyla/events/lyla_router_7_pre.png',
+   switchAtLine:LYLA_SWITCH_AT,dialogueSafe:'Lower fifth clear for dialogue UI'
+  });
+ }
+
  // Daisy's authored random events have their own JSON source.
  const DAISY_EVENTS=typeof module==='object'&&module.exports?require('./characters/daisy/extra_events.json'):window.NeoRpgCharacterPacks?.byId?.('daisy')?.events||[];
  // Some server-authorized Daisy events include an image but no art brief.
@@ -1201,8 +1223,8 @@
    // opening CG from a multi-image story. Do not falsely reject those assets.
    const approvedAlias=(e.character==='daisy'&&/^\/rpg-assets\/events\/cg\/(?:season01|slice-life)\/daisy_[a-z0-9_]+\.(?:png|webp)$/.test(e.path))||(e.id==='barb_random_cg_04'&&e.path==='/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp')||
     (e.id==='akari_barb_swimsuit_fitting'&&e.path===FIT.cgs[0].path);
-   // Authored character-pack slice CGs can use their original PNG filenames.
-   const packEventPNG=e.trigger==='slice'&&e.path==='/rpg-assets/characters/'+e.character+'/events/'+e.id+'.png';
+   // Authored character-pack slice and story CGs can use their original PNGs.
+   const packEventPNG=['slice','story_milestone'].includes(e.trigger)&&e.path==='/rpg-assets/characters/'+e.character+'/events/'+e.id+'.png';
    if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png'))&&!approvedAlias&&!packEventPNG)errors.push('Invalid asset path '+e.id);
   }
   return errors;
