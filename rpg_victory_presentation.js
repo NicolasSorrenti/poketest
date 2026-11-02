@@ -16,8 +16,14 @@
  const format=(value)=>'+'+Math.max(0,Number.isFinite(Number(value))?Math.trunc(Number(value)):0);
  // A dedicated result illustration can be installed per NPC without changing
  // game code. Until then, use that same NPC's existing attack cut-in.
- const resultArtSources=npcId=>{
+ const V2_IDS=new Set('akari alma barb camila daisy elena elio iris jicy jinx jun kaede laca luna lyla marina nereo reina rina shiori sierra sol teo yuna'.split(' '));
+ const resultArtSources=(npcId,outcome)=>{
   if(typeof npcId!=='string'||!/^[a-z0-9_-]+$/.test(npcId))return [];
+  if(V2_IDS.has(npcId)){
+   // Outcome is from the player's perspective, so a player win hurts the NPC.
+   const mood=outcome==='victory'?'battle-hurt':outcome==='defeat'?'battle-victory':'neutral';
+   return ['/rpg-assets/characters/'+npcId+'/expressionsv2/'+mood+'.png'];
+  }
   const prefix='/rpg-assets/characters/'+npcId+'/events/battle-result';
   return [prefix+'.webp',prefix+'.png','/rpg-assets/reactions/'+npcId+'/attack.png'];
  };
@@ -70,7 +76,7 @@
    const request=++portraitRequest;
    art.replaceChildren();if(avatar)art.append(avatar);
    if(npcId&&typeof window!=='undefined')window.NeoRpgDiscreetAvatars?.set?.(art,npcId,details.kind==='victory'?'happy':'vulnerable',details.opponent);
-   const sources=avatar?[]:resultArtSources(npcId);
+   const sources=resultArtSources(npcId,details.kind);
    if(sources.length){
     const img=doc.createElement('img');
     img.alt=details.opponent+' after the duel';
