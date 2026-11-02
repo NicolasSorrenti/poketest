@@ -2603,7 +2603,7 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
    const paths=stagePortraitPaths(id,expression,context.sceneId);
    const path=scenePortraitSource(id,expression,context.sceneId);
-   if(image.getAttribute('src')===path)applyPersonaCStageCrop(image,id);
+   if(image.getAttribute('src')===path){stagePortraitRequests.delete(image);applyPersonaCStageCrop(image,id);}
    if(image.getAttribute('src')!==path){
     // Preserve the last rendered expression while the next one loads.
     // A newer dialogue line cancels an older pending source.
