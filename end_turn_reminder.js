@@ -17,7 +17,7 @@
       const units = [player.active, ...(player.bench || [])].filter(Boolean);
       const canAttach = player.hand.some(id => {
         const card = window.NeoCampus.lookup.get(id);
-        return units.some(unit => window.CORE?.legalAttachment?.({
+        return units.some(unit => (typeof CORE !== 'undefined' && CORE.legalAttachment({
           card, unit, energyUsed: player.energyUsed, round: game.round,
           pureBody: game.unitHasPower(unit, 'Pure Body'),
           cardName: game.card(unit)?.name || ''
