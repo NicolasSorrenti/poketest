@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: '22'
       - name: Power activation / legal choice / hidden-information regressions
-        run: node --test tests/cpu_apex_rain_dance.test.js tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+        run: node --test tests/cpu_apex_energy_sequence.test.js tests/cpu_apex_computer_search_energy.test.js
   benchmark:
     name: Rain Dance cross-archetype matchup
     runs-on: ubuntu-latest
