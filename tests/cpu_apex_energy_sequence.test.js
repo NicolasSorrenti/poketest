@@ -1681,8 +1681,8 @@ test('Apex immediate attachment scoring does not invent a Potion-funded Rage KO'
 
 test('Apex immediate attachment scoring includes Rainbow self-damage in Rage KO forecasts',()=>{
  // Jungle Dodrio's Rage gains 10 damage per counter. Rainbow adds one
- // counter before the attack, so 20 existing damage becomes a 30-damage KO
- // against Rattata; Full Heal Energy funds the same attack without recoil.
+ // counter before the attack, so 10 existing damage becomes a 30-damage KO
+ // against Rattata; Full Heal Energy only deals 20 without recoil.
  const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
  const make=(energy,damage)=>{
   const o=board();
@@ -1696,11 +1696,11 @@ test('Apex immediate attachment scoring includes Rainbow self-damage in Rage KO 
  const rainbow='base5-80',neutral='base5-81';
  const score=(energy,damage,config=cfg)=>
   AI.score(attachActive,make(energy,damage),config,{});
- assert.ok(score(rainbow,20)>score(neutral,20)+60,
+ assert.ok(score(rainbow,10)>score(neutral,10)+60,
   'Rainbow recoil unlocks a real 30-damage Rage KO instead of only 20 damage');
  assert.ok(score(rainbow,0)>score(neutral,0)+5,
   'even a healthy Dodrio gains one Rage damage counter from Rainbow');
  const level7=AI.configuration({side:1,level:7});
- assert.equal(score(rainbow,20,level7),score(neutral,20,level7),
+ assert.equal(score(rainbow,10,level7),score(neutral,10,level7),
   'lower difficulty attachment scoring remains unchanged');
 });
