@@ -97,6 +97,10 @@ function energyPool(unit){
   const buzzapType=unit?.buzzapTypes?.[id];
   if(buzzapType)return [buzzapType,buzzapType];
   const n=card(id)?.name||'';
+  // Energy Burn converts every attached Energy card into Fire while active.
+  // The reducer clears energyBurnUntil at the next turn start; Double
+  // Colorless remains two Fire units, matching the authoritative energy pool.
+  if(unit?.energyBurnUntil)return n==='Double Colorless Energy'?['Fire','Fire']:['Fire'];
   if(n==='Double Colorless Energy')return ['Colorless','Colorless'];
   if(n==='Miracle Energy')return ['Any','Any'];
   if(n==='Rainbow Energy')return ['Any'];
@@ -141,7 +145,7 @@ function energyValue(pokemon,energyId){
  const source=card(pokemon?.id);
  if(!source)return 0;
  const pool=energyPool(pokemon);
- const added=energyPool({energies:[energyId]});
+ const added=energyPool({...pokemon,energies:[energyId]});
  // Public copied attacks (for example Psylink) are the actual playable set.
  // Valuing only printed attacks can strand Energy needed for a copied attack.
  const moves=pokemon?.effectiveAttacks||source.attacks||[];
@@ -224,7 +228,7 @@ function strongestAffordableAttack(unit,defender,benchCount=null){
 }
 function damageAfterAttachment(unit,energyId,defender,benchCount=null){
  if(!unit||!defender)return 0;
- const pool=[...energyPool(unit),...energyPool({energies:[energyId]})];
+ const pool=[...energyPool(unit),...energyPool({...unit,energies:[energyId]})];
  const attacks=unit.effectiveAttacks||card(unit.id)?.attacks||[];
  return attacks.reduce((best,a)=>canPayEnergy(a.cost||[],pool)?
   Math.max(best,estimatedDamage(a,unit,defender,benchCount)):best,0);
