@@ -1820,6 +1820,46 @@ test('Apex immediate attachment scoring includes Rainbow self-damage in Rage KO 
   'lower difficulty attachment scoring remains unchanged');
 });
 
+test('Apex recognizes opposing live PlusPower before choosing a Potion rescue',()=>{
+ const potion='base5-82',activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const scenario=(expires,status=null,classicRules=true)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,classicRules});
+  // Our fully charged Hitmonchan has 30 HP remaining. The opponent's
+  // payable Jab deals 20, or 30 with its publicly attached PlusPower.
+  o.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT,FIGHT],damage:40,status:null};
+  o.self.hand=[potion];
+  o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status,
+   attachedTrainers:[{id:'base1-84',expires}]};
+  return o;
+ };
+ const live=scenario(12),expired=scenario(11);
+ assert.equal(AI.strongestUsableOpponentAttack(expired,expired.self.active),20,
+  'an expired PlusPower cannot inflate the opposing attack');
+ assert.equal(AI.strongestUsableOpponentAttack(live,live.self.active),30,
+  'a live opposing PlusPower is visible and raises its usable attack damage');
+ assert.ok(AI.score(activeAttach,live,cfg,{})>AI.score(activeAttach,expired,cfg,{})+100,
+  'Potion healing from 30 to 40 HP prevents a PlusPower-funded KO');
+ assert.deepEqual(AI.energyPreparationActions(live,cfg,[attack,activeAttach]),[activeAttach],
+  'Apex must heal before attacking when the opposing PlusPower threatens a KO');
+ assert.deepEqual(AI.energyPreparationActions(expired,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'expired PlusPower must not force a rescue');
+ const confused=scenario(12,'Confused');
+ assert.deepEqual(AI.energyPreparationActions(confused,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'Confusion reduces the opposing KO chance below the 75% threshold');
+ const nonClassic=scenario(12,null,false);
+ assert.equal(AI.strongestUsableOpponentAttack(nonClassic,nonClassic.self.active),20,
+  'non-Classic rules must not award a phantom PlusPower bonus');
+ assert.deepEqual(AI.energyPreparationActions(nonClassic,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'non-Classic PlusPower must not force Potion setup');
+ const level7=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(activeAttach,live,level7,{}),
+  AI.score(activeAttach,expired,level7,{}),
+  'Level 7 attachment scoring remains unchanged');
+ assert.deepEqual(AI.energyPreparationActions(live,level7,[attack,activeAttach]),
+  [attack,activeAttach],'Level 7 action sequencing remains unchanged');
+});
+
 test('Apex prepares a fully charged Potion rescue before a non-winning attack',()=>{
  const potion='base5-82',activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
  const o=board();
