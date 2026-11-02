@@ -346,9 +346,24 @@
   return {update,reset,get count(){return count;}};
  }
  function assetCandidates(manifest,npcId,kind,outfit=null){
-  // Always use the new expression, not older cut-ins or reactions, for v2 characters.
-  if(V2_IDS.has(npcId))return vnCandidates(npcId,kind);
   const entry=manifest?.characters?.[npcId];
+  // Expressions v2 replace old emotion sprites, never the approved attack cut-ins.
+  // Resolve original attack artwork without depending on the async manifest fetch.
+  if(V2_IDS.has(npcId)){
+   if(kind!=='attack')return vnCandidates(npcId,kind);
+   const prefix='/rpg-assets/characters/'+npcId+'/';
+   const outfitAttack=npcId==='laca'&&['casual','lifeguard'].includes(outfit)
+    ?['/rpg-assets/reactions/laca/'+outfit+'/attack.png']:[];
+   const originalAttack=npcId==='jicy'?'/rpg-assets/reactions/jicy/attack.webp':
+    npcId==='daisy'?prefix+'attack-cutins/attack.png':
+    npcId==='lyla'?prefix+'attack.png':
+    npcId==='laca'?'/rpg-assets/reactions/laca/casual/attack.png':
+    '/rpg-assets/reactions/'+npcId+'/attack.png';
+   // Old Laca manifest "attack" points at a retired expression, not a cut-in.
+   const declaredAttack=entry?.attack&&!/\/(?:expressionsv2|expression-portraits|expression-faces|vn-expressions|expressions)\//.test(entry.attack)
+    ?[entry.attack]:[];
+   return [...new Set([...outfitAttack,...declaredAttack,originalAttack,...vnCandidates(npcId,kind)])];
+  }
   const belongsToNpc=path=>typeof path==='string'&&(
    path.startsWith('/rpg-assets/'+npcId+'.')||
    path.startsWith('/rpg-assets/characters/'+npcId+'/')||
