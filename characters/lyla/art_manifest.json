@@ -44,6 +44,16 @@
       "sceneId": "lyla_random_fitting_pins",
       "path": "/rpg-assets/characters/lyla/events/lyla_random_fitting_pins.png",
       "prompt": "Use the existing user-supplied Lyla fitting illustration exactly as uploaded for the scene about the studio's AI-retouched fitting photo. Lyla is confident in her work but finds the altered likeness uncanny. Do not modify the original PNG."
+    },
+    {
+      "sceneId": "lyla_studio_06",
+      "path": "/rpg-assets/characters/lyla/events/lyla_studio_06.png",
+      "prompt": "Use the existing user-uploaded Lyla studio CG 06, unchanged. In the story a female photographer unexpectedly asks adult Lyla to retain her normal casual styling rather than change into studio wardrobe, with a modest underwear editorial setup that Lyla freely approves. Focus on Lyla's matter-of-fact surprise about the unconventional brief."
+    },
+    {
+      "sceneId": "lyla_studio_07",
+      "path": "/rpg-assets/characters/lyla/events/lyla_studio_07.png",
+      "prompt": "Use the existing user-uploaded Lyla studio CG 07, unchanged. During a photoshoot, adult Lyla deliberately reprises a relaxed pose she first struck while talking to the player during Lyla Route 2; she admits remembering that moment and using the pose because she liked how it looked."
     }
   ]
 }
