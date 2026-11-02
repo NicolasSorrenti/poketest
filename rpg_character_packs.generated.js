@@ -8077,6 +8077,74 @@ const packs=[
       }
      }
     ]
+   },
+   {
+    "id": "lyla_random_test_frame",
+    "npc": "lyla",
+    "title": "The One She Keeps",
+    "start": 47,
+    "end": 90,
+    "place": "cafe",
+    "slot": 1,
+    "minBond": 0,
+    "prerequisite": null,
+    "participants": [],
+    "encounterType": "slice",
+    "trigger": "talk",
+    "randomForced": true,
+    "chancePercent": 100,
+    "lines": [
+     {
+      "speaker": "Narrator",
+      "text": "Lyla turns her camera preview toward you. A test frame from a recent shoot is still on the screen."
+     },
+     {
+      "speaker": "lyla",
+      "text": "The photographer called this one a test. I like it more than the finished selects."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "You look comfortable. Like you forgot to pose for a second."
+     },
+     {
+      "speaker": "lyla",
+      "text": "Maybe I did. I wasn't thinking about what my hands were supposed to do."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Then keep it. It feels more like you."
+     },
+     {
+      "speaker": "lyla",
+      "text": "I will. It can stay in my own folder, without a client attached to it."
+     }
+    ],
+    "choices": [
+     {
+      "label": "Tell her not every good picture needs to become work",
+      "reply": "Good. I don't want every part of my life to become a portfolio.",
+      "kind": "support",
+      "flag": "lyla_random_test_frame_personal",
+      "delta": {
+       "affection": 2,
+       "trust": 1,
+       "respect": 1,
+       "attraction": 0
+      }
+     },
+     {
+      "label": "Say the relaxed expression suits her",
+      "reply": "That's because I wasn't trying to look any particular way.",
+      "kind": "honest",
+      "flag": "lyla_random_test_frame_honest",
+      "delta": {
+       "affection": 1,
+       "trust": 2,
+       "respect": 1,
+       "attraction": 0
+      }
+     }
+    ]
    }
   ],
   "mandatoryEvents": [
@@ -8332,7 +8400,12 @@ const packs=[
      "sceneId": "lyla_studio_afterhours",
      "path": "/rpg-assets/characters/lyla/events/lyla_studio_05.png",
      "prompt": "User-approved original Lyla CG: adult pale-blonde model sitting on a black studio stool, loose white shirt over black underlayer, heavy black boots, warm sunset photography lights, contact sheets on nearby laptop. Preserve supplied PNG unchanged."
-    }
+    },
+   {
+    "sceneId": "lyla_random_test_frame",
+    "path": "/rpg-assets/characters/lyla/events/a_detailed_anime_style_illustration_the_same_blon.png",
+    "prompt": "User-selected Lyla CG test image. Preserve the supplied PNG exactly; use it as the event's full-screen scene art."
+   }
    ]
   }
  },
