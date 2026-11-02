@@ -43,6 +43,27 @@ test('contextual choices are occasional, two at most, and require no daily rewar
  assert.ok(without>withPrompt,'most ordinary chats have no decisions');
  assert.ok(withPrompt>0,'a few invitations remain possible');
 });
+test('player invitation wording reflects Lyla, Jinx and Reina while preserving action gates',()=>{
+ const findReply=(npc,trust=0)=>{
+  for(let day=1;day<=90;day++){
+   const replies=VN.choices({day,slot:0,hungOut:{},appointments:[],relationships:{[npc]:{trust}}},npc);
+   if(replies.length)return replies;
+  }
+  return [];
+ };
+ const lyla=Array.from({length:90},(_,i)=>VN.choices({day:i+1,slot:0,hungOut:{},appointments:[]},'lyla')).flat();
+ assert.ok(lyla.some(([label])=>/can't tell|face is giving me no clues|expression/i.test(label)),
+  'Lyla replies acknowledge that her expression is hard to read');
+ const reina=Array.from({length:90},(_,i)=>VN.choices({day:i+1,slot:0,hungOut:{},appointments:[]},'reina')).flat();
+ assert.ok(reina.some(([label])=>/round|rematch|deck|strategy|challenge/i.test(label)),
+  'Reina replies retain a competitive edge');
+ const jinxEarly=findReply('jinx',0);
+ assert.ok(!jinxEarly.some(([,action])=>action==='flirt:jinx'),
+  'Jinx teasing stays locked behind the existing trust/rank gate');
+ const jinxTrusted=Array.from({length:90},(_,i)=>VN.choices({day:i+1,slot:0,hungOut:{},appointments:[],relationships:{jinx:{trust:4}}},'jinx')).flat();
+ assert.ok(jinxTrusted.some(([label,action])=>action==='flirt:jinx'&&/tease me|hit back|banter/i.test(label)),
+  'Jinx teasing uses her direct, competitive banter once available');
+});
 test('authoritative story graph remains playable with low-grind sequenced progression',()=>{
  assert.deepEqual(STORY.validate(),[]);
  for(const id of names){
