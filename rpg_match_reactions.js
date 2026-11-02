@@ -485,7 +485,11 @@
     card.className=baseClass;
     const portrait=doc.createElement('div');portrait.className='npc-reaction-portrait';
     if(readyPath&&!chibiMode){
-     const img=doc.createElement('img');img.alt='';img.src=readyPath;
+     // Reuse the preloaded, already-decoded bitmap instead of decoding a new element.
+     const cached=images.get(readyPath)?.img;
+     const img=cached?.complete&&cached.naturalWidth?cached:doc.createElement('img');
+     img.alt='';
+     if(img.getAttribute('src')!==readyPath)img.src=readyPath;
      card.className=baseClass+artClass(readyPath);
      portrait.append(img);
     }else if(!chibiMode&&typeof media?.Image!=='function'&&candidates.length){
