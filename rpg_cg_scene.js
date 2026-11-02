@@ -24,8 +24,13 @@
    return entry?{entry,preview:!!moment.choices}:null;
   }
   if(state.activeStory){
-   const entry=catalog.find(x=>x.trigger==='story_milestone'&&x.sceneId===state.activeStory.id);
-   return entry?{entry,preview:true}:null;
+   const active=state.activeStory,entry=catalog.find(x=>x.trigger==='story_milestone'&&x.sceneId===active.id);
+   if(!entry)return null;
+   // A route can open with a different approved CG, switching precisely on a
+   // dialogue line. The final CG remains the one unlocked in the gallery.
+   if(entry.openingPath&&Number.isInteger(entry.switchAtLine)&&active.phase==='lines'&&active.index<entry.switchAtLine)
+    return {entry:{...entry,id:entry.id+'_opening',path:entry.openingPath,thumb:entry.openingPath},preview:true};
+   return {entry,preview:true};
   }
   if(state.activeSituation){
    const entry=catalog.find(x=>x.trigger==='situation'&&x.situationId===state.activeSituation.id);
