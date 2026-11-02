@@ -489,7 +489,7 @@
      const cached=images.get(readyPath)?.img;
      const img=cached?.complete&&cached.naturalWidth?cached:doc.createElement('img');
      img.alt='';
-     if(img.getAttribute('src')!==readyPath)img.src=readyPath;
+     if((img.getAttribute?.('src')||img.src)!==readyPath)img.src=readyPath;
      card.className=baseClass+artClass(readyPath);
      portrait.append(img);
     }else if(!chibiMode&&typeof media?.Image!=='function'&&candidates.length){
