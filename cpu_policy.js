@@ -849,7 +849,11 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
   const rainbowDamage=energy.name==='Rainbow Energy'?10:0;
   if(rainbowDamage>=hpRemaining(unit))continue;
   seen.add(id);
-  const after={...nextTurnUnit,damage:(nextTurnUnit.damage||0)+rainbowDamage,
+  // Potion Energy heals one counter before the projected attack resolves.
+  // A healed Rage/Flail attacker must not retain its old damage bonus.
+  const potionHeal=energy.name==='Potion Energy'?10:0;
+  const after={...nextTurnUnit,
+   damage:Math.max(0,(nextTurnUnit.damage||0)+rainbowDamage-potionHeal),
    // A future Full Heal attachment also cures Sleep before the attack.
    // Keep this consistent with the immediate attachment and duel reducer.
    ...(energy.name==='Full Heal Energy'?{status:null,poison:false}:{}),
@@ -878,7 +882,9 @@ function energyHorizonBonus(action,o,cfg){
  // attachment, so a sleeping/paralyzed Active can attack immediately.
  // Forecasting the Energy without its cure undervalues this legal line.
  const fullHeal=card(attachedId)?.name==='Full Heal Energy';
- const after={...u,damage:(u.damage||0)+rainbowDamage,
+ // Current-turn Potion healing also changes next-turn counter-based damage.
+ const potionHeal=card(attachedId)?.name==='Potion Energy'?10:0;
+ const after={...u,damage:Math.max(0,(u.damage||0)+rainbowDamage-potionHeal),
   ...(fullHeal?{status:null}:{}),
   energies:[...(u.energies||[]),attachedId]};
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
