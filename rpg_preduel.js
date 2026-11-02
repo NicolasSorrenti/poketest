@@ -35,8 +35,15 @@
   const base='/rpg-assets/characters/'+npc+'/';
   const outfitArt=outfit==='lifeguard'?base+'events/laca_booster_lifeguard_square_1024.png':
    outfit==='casual'?base+'events/laca_booster_casual_square_1024.png':null;
+  // Pre-duel fallback keeps the approved cinematic attack image; expressions
+  // v2 are reserved for dialogue/reactions and used only if a cut-in is absent.
+  const oldAttack=npc==='jicy'?'/rpg-assets/reactions/jicy/attack.webp':
+   npc==='daisy'?base+'attack-cutins/attack.png':
+   npc==='lyla'?base+'attack.png':
+   npc==='laca'?'/rpg-assets/reactions/laca/'+(outfit==='lifeguard'?'lifeguard':'casual')+'/attack.png':
+   '/rpg-assets/reactions/'+npc+'/attack.png';
   return [outfitArt,base+'events/booster.webp',base+'events/booster.png',
-   npc==='hana'?'/rpg-assets/reactions/hana/attack.png':base+'expressionsv2/battle-attack.png'];
+   oldAttack,...(npc==='hana'?[]:[base+'expressionsv2/battle-attack.png'])];
  }
  const isReady=d=>!!d&&d.preview?.phase==='ready';
  const isLaunched=d=>!!d&&(!d.preview||d.preview.phase==='launched');
