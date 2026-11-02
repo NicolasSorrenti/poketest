@@ -222,11 +222,13 @@
       ['✧ Save Game',()=>document.getElementById('save')?.click()],
       ['◇ Discreet / Chibi Mode',()=>{toggleChibiPreference();refresh();}],
       ['⌾ Travel',()=>openSheet('travel')],
-      ['← Original RPG',()=>dismiss()]
+      ['← Original RPG',()=>dismiss()],
+      ['↻ Reset Campaign',()=>{const reset=bridge()?.resetCampaign;if(typeof reset==='function')void reset();else showNotice('Campaign reset is not available. Reload the page and try again.');}]
     ];
     for(const [label,action] of menuItems){
       const button=document.createElement('button');button.type='button';button.textContent=label;
       button.style.cssText='display:block;text-align:left;width:100%;padding:13px 11px;margin:5px 0;border:1px solid #735881;border-radius:9px;background:#322743;color:white;font:600 14px system-ui;cursor:pointer';
+      if(label.includes('Reset Campaign')){button.style.borderColor='#d68da2';button.style.color='#ffd0db';button.style.marginTop='16px';button.title='Erase this RPG campaign and return to Day 1';}
       button.onclick=()=>{hideMenu();action();};menu.append(button);
     }
 

@@ -213,6 +213,14 @@
   if(session&&localStorage.getItem(OWNER_KEY)===session.user.id)stashLocal(session.user.id);
   if(session&&!blocked)schedule();
  }
+ // A destructive campaign reset must not reload before the latest save is
+ // uploaded, even when an earlier automatic save is still in flight.
+ async function syncForReset(){
+  if(!config?.enabled||!session||blocked||busy)return false;
+  if(inflight)await inflight;
+  if(!session||blocked||busy)return false;
+  return syncNow();
+ }
  // Supabase email confirmation returns credentials in the URL fragment.
  // Remove the fragment immediately so credentials never remain in the address bar.
  function takeEmailConfirmation(){
@@ -331,5 +339,5 @@
   });
   try{await connect();}finally{document.documentElement?.classList.remove('rpg-cloud-loading');}
  }
- root.NeoRpgCloudSave={mount,show,onLocalSave,syncNow,hash,validSave,signupEndpoint,isSignedIn:()=>!!session};
+ root.NeoRpgCloudSave={mount,show,onLocalSave,syncNow,syncForReset,hash,validSave,signupEndpoint,isSignedIn:()=>!!session};
 })(typeof window==='undefined'?null:window);

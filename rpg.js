@@ -234,6 +234,44 @@ window.NeoRpgErrorReport?.setContextProvider(()=>{
   location:state.location,selectedCharacter:state.selected,activeType:active?.[0]||null,
   eventId:active?.[1]?.id||null,phase:active?.[1]?.phase||null};
 });
+// Both the classic and new overworld UIs share one guarded campaign reset.
+let campaignResetBusy=false;
+async function resetCampaign(){
+ if(campaignResetBusy)return false;
+ const cloud=window.NeoRpgCloudSave;
+ // A cached session can still be reconnecting. Do not let an unsynced local
+ // reset be silently replaced by the former cloud campaign on reload.
+ if(localStorage.getItem('neoRpgCloudSessionV1')&&!cloud?.isSignedIn?.()){
+  alert('Your cloud account is still reconnecting. Please reconnect or sign out before resetting your campaign.');
+  return false;
+ }
+ const signedIn=!!cloud?.isSignedIn?.();
+ if(!confirm('Reset your entire RPG campaign and start again on Day 1? This erases your current season, character relationships, decks and progress'+
+  (signedIn?' and replaces your signed-in cloud save':'')+'. This cannot be undone.'))return false;
+ campaignResetBusy=true;
+ const previous=state;
+ const previousScene=scene;
+ try{
+  state=defaults();
+  state.deckJourney=COLLECT.fresh();
+  for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};
+  persist();
+  // Do not reload before the new snapshot reaches the cloud.
+  if(signedIn){
+   const synced=await cloud.syncForReset?.();
+   if(!synced)throw Error('The cloud save could not be updated. Your previous campaign has been preserved. Please check your connection and try again.');
+  }
+  location.reload();
+  return true;
+ }catch(error){
+  state=previous;
+  scene=previousScene;
+  persist();
+  window.NeoRpgErrorReport?.capture?.(error,{source:'campaign-reset',action:'resetCampaign'});
+  alert(error.message||'Campaign reset failed. Your previous progress was preserved.');
+  return false;
+ }finally{campaignResetBusy=false;}
+}
 function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(result)log('Daily priority fulfilled: '+result.title+' ('+result.rewardLabel+').');}
 function recordCG(kind,npc,context=null){
  const entries=CG.record(state,kind,npc,context);
@@ -488,6 +526,7 @@ let overworldScenePortraits={participants:[],focused:null,conversation:false};
 let overworldRenderedDialogue='';
 // Optional overworld adapter: the existing campaign remains authoritative.
 window.NeoRpgOverworldBridge=Object.freeze({
+ resetCampaign,
  scenePortraits(){return overworldScenePortraits;},
  dialogueText(){return overworldRenderedDialogue;},
  portrait(id){
@@ -1090,7 +1129,7 @@ function act(action){
   }
   return;
  }
- if(type==='new'){if(confirm('Start a new season? This overwrites this browser save.')){state=defaults();state.deckJourney=COLLECT.fresh();for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};persist();location.reload();}return;}
+ if(type==='new')return resetCampaign();
  if(!cast[id]||!currentPeople().includes(id))return say('Narrator','They have already moved on. Try another time.');
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
  if(type==='talk'){
