@@ -294,6 +294,38 @@ test('Apex retains a guaranteed winning knockout instead of forcing attachment',
  const actions=AI.energyPreparationActions(o,cfg,[attack,attach]);
  assert.deepEqual(actions,[attack,attach]);
 });
+test('Apex keeps a PlusPower-funded final-Prize KO available before attaching Energy',()=>{
+ const o=board();
+ o.turnSerial=11;
+ o.self.prizeCount=1;
+ // Hitmonchan's Jab deals 20 to Machop, which has 30 HP left.
+ // An already attached PlusPower makes the current attack a certain KO.
+ o.opponent.active={id:MACHOP,energies:[],damage:20,status:null};
+ o.opponent.bench=[];
+ o.self.active.attachedTrainers=[{id:'base1-84',expires:12}];
+ const jab=require('../headless_duel').CATALOG.get(HITMONCHAN).attacks[0];
+ assert.equal(AI.knockoutChance(jab,o.self.active,o.opponent.active,1),0,
+  'printed Jab alone is ten short of the knockout');
+ assert.equal(AI.knockoutChance(jab,o.self.active,o.opponent.active,1,10),1,
+  'one existing PlusPower makes Jab a certain knockout');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach],
+  'Apex must not hide an immediate winning attack to prepare Bench Energy');
+ o.self.active.attachedTrainers[0].expires=11;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach],
+  'expired PlusPower must not produce a phantom guaranteed knockout');
+ o.self.active.attachedTrainers[0].expires=12;
+ o.self.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach],
+  'Confusion makes the PlusPower-funded attack uncertain');
+ o.self.active.status=null;
+ o.classicRules=false;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach],
+  'non-Classic rules must not inherit the Classic PlusPower modifier');
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),
+  [attack,attach]),[attack,attach],
+  'Level 7 action ordering remains unchanged');
+});
+
 test('Apex prepares useful Energy before a Confused final-Prize attack',()=>{
  const o=board();o.self.prizeCount=1;o.opponent.bench=[];o.opponent.active.damage=10;
  o.self.active.status='Confused';

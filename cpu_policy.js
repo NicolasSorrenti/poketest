@@ -100,7 +100,7 @@ function observation(game,side){
   return Number(x.slice(5));
  };
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
-  self,opponent,stadium:view.stadium,
+  classicRules,self,opponent,stadium:view.stadium,
   pendingTrainerTarget:selectedIndex('target'),pendingTrainerSource:selectedIndex('source'),
   decision:view.pendingDecision,setupReady:!!game.setupReady[side],mulliganBonus:view.mulliganBonus};
 }
@@ -222,11 +222,15 @@ function damageAfterType(amount,attacker,defender){
  if(type&&target?.resistances?.some(w=>w.type===type))value=Math.max(0,value-30);
  return value;
 }
-function knockoutChance(attack,attacker,defender,benchCount=null){
+function knockoutChance(attack,attacker,defender,benchCount=null,damageBonus=0){
  if(!attack||!attacker||!defender)return 0;
  const hp=hpRemaining(defender);
  if(hp<=0)return 0;
- const program=ATTACK.compile(attack),kill=raw=>damageAfterType(raw,attacker,defender)>=hp;
+ // PlusPower applies after Weakness/Resistance, but only to positive damage.
+ const program=ATTACK.compile(attack),kill=raw=>{
+  const dealt=damageAfterType(raw,attacker,defender);
+  return dealt>0&&dealt+damageBonus>=hp;
+ };
  if(program?.kind==='coin-failure')return kill(program.damage)?0.5:0;
  if(['coin-bonus','coin-recoil-bonus'].includes(program?.kind))return (Number(kill(program.base))+Number(kill(program.base+program.bonus)))/2;
  if(program?.kind==='coin-times'){
@@ -242,7 +246,7 @@ function knockoutChance(attack,attacker,defender,benchCount=null){
  }
  const expected=estimatedDamage(attack,attacker,defender,benchCount);
  const coin=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack.text||'');
- return expected>=hp?(coin&&program?.kind!=='coin-status'?.5:1):0;
+ return expected>0&&expected+damageBonus>=hp?(coin&&program?.kind!=='coin-status'?.5:1):0;
 }
 function strongestAffordableAttack(unit,defender,benchCount=null){
  if(!unit||!defender)return 0;
@@ -1503,12 +1507,17 @@ function energyPreparationActions(o,cfg,actions){
  // Confusion requires a coin flip before a printed attack resolves, so a
  // nominally lethal attack is not a guaranteed final-Prize knockout.
  const confusionChance=o.self.active?.status==='Confused'?.5:1;
+ // Existing, unexpired PlusPower can turn a funded attack into a certain
+ // final-Prize KO. Without this, the Energy-preparation gate may hide that
+ // winning attack and force an unnecessary attachment first.
+ const plusPowerBonus=o.classicRules!==false?(o.self.active?.attachedTrainers||[])
+  .filter(t=>card(t.id)?.name==='PlusPower'&&t.expires>o.turnSerial).length*10:0;
  const gameWinningKo=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
   actions.some(a=>{
    if(a.type!=='attack')return false;
    const attacks=o.self.active?.effectiveAttacks||card(o.self.active?.id)?.attacks||[];
-   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active,o.self.bench.length)*
-    confusionChance>=.999;
+   return knockoutChance(attacks[a.payload.attackIndex],o.self.active,o.opponent.active,
+    o.self.bench.length,plusPowerBonus)*confusionChance>=.999;
   });
  return gameWinningKo?safeActions:safeActions.filter(a=>a.type!=='attack');
 }
