@@ -418,7 +418,48 @@ function advanceConversation(){
  if(scene.index===scene.dialogue.length-1&&scene.asideId)MEM?.markAside(state,scene.asideId);
  state.scene=scene;persist();render();
 }
+// Outcome first, then the clock wipe: rewards are saved independently of time.
+function activityBalance(npc=null){
+ const result={};
+ for(const key of ['credits','focus','insight','reputation','preparation'])
+  result[key]=Number(state[key])||0;
+ if(npc){
+  const bond=state.relationships?.[npc]||state.bonds?.[npc]||{};
+  for(const key of ['affection','trust','respect','attraction'])
+   result[key]=Number(bond[key])||0;
+ }
+ return result;
+}
+function activityOutcome(speaker,description,before=null,npc=null,bonus=[],periodsToAdvance=1,source='activity'){
+ const earned=[...bonus],spent=[];
+ if(before){
+  const after=activityBalance(npc);
+  const names={credits:'credits',focus:'focus',insight:'insight',reputation:'reputation',
+   preparation:'duel prep',affection:'affection',trust:'trust',respect:'respect',attraction:'attraction'};
+  for(const key of Object.keys(before)){
+   const diff=(after[key]||0)-before[key];
+   if(diff>0)earned.push('+'+diff+' '+names[key]);
+   else if(diff<0)spent.push(diff+' '+names[key]);
+  }
+ }
+ const rewards=before?'\n\nEarned: '+(earned.join(' · ')||'No stat gains')+(spent.length?'\nSpent: '+spent.join(' · '):''):'';
+ scene={speaker,line:description+rewards,choices:[['Continue ›','activityContinue']],
+  activityAdvance:{periods:periodsToAdvance,source}};
+ state.scene=scene;persist();render();
+}
+function finishActivityOutcome(){
+ if(!scene?.activityAdvance)return false;
+ const {periods:n,source}=scene.activityAdvance;
+ state.scene=scene={speaker:'Narrator',line:'',choices:[]};
+ state.sceneCgId=null;
+ persist();
+ advance(n,source);
+ // Keep headless clients working when the transition module is absent.
+ if(!timeSequence.blocked)render();
+ return true;
+}
 function closeSceneDialogue(){
+ if(scene?.activityAdvance){finishActivityOutcome();return;}
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||state.activeSideQuest||state.pendingDuel||state.mandatoryEventState?.active)return;
  // Keep the current character selected after casual dialogue so Duel and Deck actions remain accessible.
  if(!state.selected||!cast[state.selected]||!currentPeople().includes(state.selected))state.selected=null;
@@ -645,6 +686,8 @@ function finishEncounter(){
 function performActivity(id){
  if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
  if(WORLD.activitiesAt(state).some(x=>x.id===id&&!x.disabledReason)&&!confirmTimeAdvance())return;
+ const entry=WORLD.activitiesAt(state).find(a=>a.id===id);
+ const before=activityBalance(entry?.npc);
  let result;try{result=WORLD.doActivity(state,id,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
  const place=state.location;
@@ -655,7 +698,9 @@ function performActivity(id){
   result.summary+=' You earned a '+COLLECT.SETS[set].name+' booster voucher to redeem at the card shop.';
  }
  log('Activity completed at '+places[place][0]+': '+result.summary);recordIntention('activity');
- advance();persist();say('Narrator',result.summary);tutorialEvent('activities');
+ activityOutcome('Narrator',result.summary,before,entry?.npc,
+  result.voucherSet==='latest'?['1 booster voucher']:[]);
+ tutorialEvent('activities');
 }
 
 
@@ -808,6 +853,7 @@ function act(action){
   if(type==='sliceChoice'&&SLICE.choose(state,Number(id))){persist();render();return;}
   if(type==='sliceNext')return nextSliceOfLife();return;
  }
+ if(type==='activityContinue')return finishActivityOutcome();
  if(type==='chatNext')return advanceConversation();
  if(type==='poseTriggerContinue'){
   const intro=state.overworldPoseIntro;
@@ -951,12 +997,12 @@ function act(action){
   try{
    const available=SOCIAL.options(state,id,currentPeople(),cast).find(x=>x.id===part&&!x.disabledReason);
    if(available&&!confirmTimeAdvance())return;
+   const before=activityBalance(id);
    const outcome=SOCIAL.complete(state,id,part,currentPeople(),cast);
    log('Spent time with '+cast[id].name+': '+outcome.title+'.');
    recordIntention('hangout');
    const memories=recordCG('hangout',id);
-   advance();
-   say(cast[id].name,outcome.line);
+   activityOutcome(cast[id].name,outcome.line,before,id);
    showCGMoment(memories[0]);return;
   }catch(err){
    return sayCharacterChoiceMenu(id,'SPEND TIME',err.message,sharedActivityChoices(id));
@@ -996,13 +1042,13 @@ function act(action){
   if(!plan)return;
   const person=cast[plan.npc];
   try{
+   const before=activityBalance(plan.npc);
    const outcome=DATES.attend(state,number,currentPeople(),{appointments:APPOINTMENTS,social:SOCIAL,cast});
    recordIntention('appointment');
    log('Kept '+(outcome.tone==='romantic'?'a date':outcome.tone==='rivalry'?'a friendly challenge':'a friendship outing')+' with '+(person?.name||'a trainer')+'.');
    const memories=recordCG('appointment',plan.npc);
    if(!outcome.legacy)for(const cg of recordCG('hangout',plan.npc))if(!memories.some(x=>x.id===cg.id))memories.push(cg);
-   advance();
-   say(person?.name||'Trainer',outcome.line);
+   activityOutcome(person?.name||'Trainer',outcome.line,before,plan.npc);
    showCGMoment(memories[0]);return;
   }catch(err){$('notice').textContent=err.message;return;}
  }
@@ -1013,7 +1059,7 @@ function act(action){
  }
  if(type==='home'){travelTo('home');return;}
  if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
- if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;if(!confirmTimeAdvance(n))return;advance(n,'sleep');return say('Narrator','You wake up to a new day in Neo Harbor.');}
+ if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;if(!confirmTimeAdvance(n))return activityOutcome('Narrator','You settle in for the night. A new morning awaits.',null,null,[],n,'sleep');}
  if(type==='close'||type==='dismissDialogue')return closeSceneDialogue();
  if(type==='duel')return startDuel(id||state.selected,false);
  if(type==='partnerDeck'){
@@ -1036,7 +1082,7 @@ function act(action){
  if(type==='event'){const e=scheduleEvent();if(!e)return;return startDuel(exhibitionOpponents[e.day]||'reina',e);}
  if(type==='work')return performActivity('shop_shift');
  if(type==='practice')return state.location==='library'?performActivity('library_research'):state.location==='center'?performActivity('center_scrimmage'):performActivity('home_reflect');
- if(type==='rest'){if(state.day>90||!confirmTimeAdvance())return;advance();return say('Narrator','You take a break. Other lives in the town carry on.');}
+ if(type==='rest'){if(state.day>90||!confirmTimeAdvance())return activityOutcome('Narrator','You take a break. Other lives in the town carry on.');}
  if(type==='replay'){
   if(!EPILOGUE.completed(state)||mandatoryClosureDue())return;
   if(confirm('Start New Game+? Your completed season report will be archived. Relationships, standings and credits will reset.')){
@@ -1251,11 +1297,9 @@ function purchaseBoosterPack(packId,useVoucher=false){
   const opened=state.deckJourney?.lastPack;
   const name=COLLECT.THEMED_PACKS?.find(x=>x.id===opened?.theme)?.name||
    COLLECT.SETS[packId]?.name||'Booster';
-  const welcome=opened?.kind==='welcome';
   log('Opened '+name+' booster: '+cards.map(labelCard).join(', ')+'.');
   persist();
-  // Leave the shop open underneath the reveal, so buying another pack needs no re-entry.
-  say('Card Shop',(welcome?'Your welcome ':'Your ')+name+' booster is ready! Reveal your cards, then use the Deck Studio to improve your deck.');
+  // The reveal is the confirmation. No blocking conversation behind the shop.
   showPackReveal();
  }catch(e){
   $('boosterShopStatus').textContent=e.message;
