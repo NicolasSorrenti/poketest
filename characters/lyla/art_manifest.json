@@ -34,6 +34,11 @@
       "sceneId": "lyla_studio_afterhours",
       "path": "/rpg-assets/characters/lyla/events/lyla_studio_05.png",
       "prompt": "User-approved original Lyla CG: adult pale-blonde model sitting on a black studio stool, loose white shirt over black underlayer, heavy black boots, warm sunset photography lights, contact sheets on nearby laptop. Preserve supplied PNG unchanged."
+    },
+    {
+      "sceneId": "lyla_random_test_frame",
+      "path": "/rpg-assets/characters/lyla/events/a_detailed_anime_style_illustration_the_same_blon.png",
+      "prompt": "User-selected Lyla CG test image. Preserve the supplied PNG exactly; use it as the event's full-screen scene art."
     }
   ]
 }
