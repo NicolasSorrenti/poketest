@@ -1415,7 +1415,12 @@ function showPreparedDuel(){
   const choice=artworkCandidates[index],photo=new Image();
   photo.className='preduel-cg'+(choice.kind==='booster'?' preduel-booster-art':'');
   photo.alt=choice.alt;
-  photo.onload=()=>{
+  photo.decoding='async';
+  photo.onload=async()=>{
+   // Keep the original portrait until the higher-resolution artwork decodes.
+   if(typeof photo.decode==='function'){
+    try{await photo.decode();}catch{if(!photo.naturalWidth){tryArtwork(index+1);return;}}
+   }
    if(artRequest!==preDuelArtSerial||!PRE.isReady(state.pendingDuel)||state.pendingDuel.id!==preview.id)return;
    art.replaceChildren(photo);
    window.NeoRpgDiscreetAvatars?.set?.(art,preview.npc,'determined',preview.name);
