@@ -7,22 +7,8 @@
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.NeoRpgDiscreetAvatars=api;
 })(typeof window==='undefined'?null:window,function(win){
- const AVATAR_IDS=new Set([
-  'akari','alma','camila','elio','hana','iris','jun','kaede','marina',
-  'nereo','reina','shiori','sol','teo','yuna'
- ]);
- // The remaining main characters have character-specific portrait crops.
- // Full-body SFW chibis for Discreet Mode. Use existing safe sprite until approved art ships.
- const CHIBI_FALLBACKS={yuna:'characters/yuna/chibi/front.png'};
- const CHIBI_IDS=new Set(['akari','alma','barb','camila','elio','elena','hana','iris','jinx','jun','kaede','laca','luna','marina','nereo','reina','rina','shiori','sierra','sol','teo','yuna']);
- const CHIBI_APPROVED={yuna:'characters/yuna/discreet/neutral.webp'};
- const OTHER_PORTRAITS={
-  jinx:'characters/jinx/neutral.webp',
-  luna:'characters/luna/expression-faces/neutral.webp',
-  rina:'characters/rina/expression-faces/neutral.webp',
-  elena:'characters/elena/expression-faces/neutral.webp',
-  sierra:'characters/sierra/expression-faces/neutral.webp'
- };
+ // Every character now has an approved v2 full-body chibi.
+ const CHIBI_IDS=new Set('akari alma barb camila daisy elena elio hana iris jicy jinx jun kaede laca luna lyla marina nereo reina rina shiori sierra sol teo yuna'.split(' '));
  // Source head positions vary. All rectangles are contained within the face/hair area.
  // Values are [crop width as a fraction of image width, top as a fraction of width,
  //           horizontal offset as a fraction of image width].
@@ -38,11 +24,11 @@
  };
  const cache=new Map();
  const isOverworld=()=>win?.location?.pathname==='/rpg-overworld.html';
- // Prefer the approved full-body chibi over portrait-only discreet crops.
- const chibiCandidates=id=>['/rpg-assets/characters/'+id+'/chibiv2.png','/rpg-assets/characters/'+id+'/chibi/front.png','/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png'];
+ // Never fall back to old chibis or another character's art.
+ const chibiCandidates=id=>CHIBI_IDS.has(validId(id))?['/rpg-assets/characters/'+id+'/chibiv2.png']:[];
  function probeChibi(id){
   if(!win?.Image)return Promise.resolve(null);
-  const paths=[...chibiCandidates(id),...(id==='reina'?[]:chibiCandidates('reina'))];
+  const paths=chibiCandidates(id);
   return new Promise(resolve=>{
    const next=i=>{if(i>=paths.length){resolve(null);return;}
     const img=new win.Image();img.onload=()=>resolve(paths[i]);img.onerror=()=>next(i+1);img.src=paths[i];};next(0);
@@ -64,12 +50,7 @@
  }
  function url(id){
   const key=validId(id);
-  if(!key)return '';
-  if(CHIBI_FALLBACKS[key])return '/rpg-assets/'+CHIBI_FALLBACKS[key];
-  if(OTHER_PORTRAITS[key])return '/rpg-assets/'+OTHER_PORTRAITS[key];
-  return '/rpg-assets/'+(AVATAR_IDS.has(key)
-   ?'ui/avatars/'+key+'.webp'
-   :'characters/'+key+'/expression-faces/neutral.webp');
+  return CHIBI_IDS.has(key)?'/rpg-assets/characters/'+key+'/chibiv2.png':'';
  }
  function cropBox(id,width,height){
   const key=validId(id);
@@ -86,12 +67,8 @@
  const isActive=()=>win?.document?.documentElement?.dataset?.rpgDiscreet==='on';
  function loadPortrait(id){
   if(cache.has(id))return cache.get(id);
-  const src=url(id);
-  if(true){
-   const promise=probeChibi(id);
-   cache.set(id,promise);return promise;
-  }
-  return loadHeadshot(id);
+  const promise=probeChibi(id);
+  cache.set(id,promise);return promise;
  }
  function loadHeadshot(id){
   const src=url(id);
@@ -141,7 +118,7 @@
   img.hidden=true;
   loadPortrait(id).then(data=>{
    if(img.dataset.safeSrc!==id||node.dataset?.rpgSafeId!==id)return;
-   if(data){img.src=data;img.hidden=false;node.dataset.rpgSafeKind=data.startsWith('/rpg-assets/characters/')&&(/\/discreet\/|\/chibi\//).test(data)?'chibi':'headshot';}
+   if(data){img.src=data;img.hidden=false;node.dataset.rpgSafeKind=data.endsWith('/chibiv2.png')?'chibi':'headshot';}
    else img.hidden=true; // Never leak the original artwork.
   });
  }
