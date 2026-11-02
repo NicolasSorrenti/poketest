@@ -2288,9 +2288,7 @@ function refreshRpgPanels(){
   const active=button.dataset.panel===rpgActivePanel;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
  }
 }
-// Outfit images are optional. All original character art remains a fallback.
-// Older guest assets are optional fallbacks; never assume every character has vn-expressions.
-const expressionGuests=new Set(['alma','jun','nereo','teo','elio']);
+// Keep the neutral character portrait as the only fallback when a v2 sheet is absent.
 const failedScenePortraits=new Set();
 let activeOutfitSceneId=null;
 // Hana's casual overworld looks are selected once per encounter and reused
@@ -2318,7 +2316,6 @@ function hanaOverworldPortrait(sceneId=activeOutfitSceneId){
  if(hanaEncounterVariants.size>64)hanaEncounterVariants.delete(hanaEncounterVariants.keys().next().value);
  return selected;
 }
-const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
 function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
  const v2=rpgV2Expression(id,expression);
  // Never fall back to old expression sheets (including outfit expression sheets).
@@ -2385,22 +2382,6 @@ const PERSONA_C_CROPS={
  sierra:[.189,0,.626,.529],sol:[.18,0,.639,.54],teo:[.09,0,.819,.519],
  yuna:[.029,0,.943,.597]
 };
-const PERSONA_C_EXPR={
- happy:['happy','smile','playful'],surprised:['surprised'],
- vulnerable:['soft','vulnerable','sad','worried','concerned','embarrassed'],
- irritated:['angry','annoyed','concerned','worried'],
- determined:['smirk','neutral'],neutral:['neutral']
-};
-// Central portrait source registry. Existing asset locations are retained; no migrations.
-// Outfit-driven characters still use OUTFITS.sources() for their canonical outfits.
-const RPG_STAGE_PORTRAIT_LAYOUTS=Object.freeze({
- barb:{folder:'vn-expressions',extension:'webp'},
- laca:{folder:'outfits',extension:'webp'},
- sol:{folder:'expressions',extension:'png'},
- elio:{folder:null},
- rina:{folder:'expression-portraits',extension:'webp',extra:'neutral.png'},
- sierra:{folder:'expression-portraits',extension:'webp',extra:'portrait.png'}
-});
 function personaCStageCandidates(id,emotion,normal){
  const v2=rpgV2Expression(id,emotion);
  return v2?[v2]:normal.filter(src=>!/(?:\/expression-portraits\/|\/expression-faces\/|\/vn-expressions\/|\/expressions\/)/.test(src));
