@@ -156,7 +156,19 @@ function audioForTime(change){
 function timeFlash(change,onDone=()=>{}){
  audioForTime(change);
  // Presentation follows the already-committed RPG time state; it never owns state changes.
- if(window.NeoRpgTimeTransitions?.present)return !!window.NeoRpgTimeTransitions.present(change,{onCover:()=>{timeTransitionCovered=true;render();},onDismiss:onDone});
+ if(window.NeoRpgTimeTransitions?.present){
+  // Only hold a frame once the wipe actually begins. A queued transition
+  // cannot hide the still-active dialogue while waiting for acknowledgement.
+  timeTransitionCovered=false;
+  try{
+   const shown=window.NeoRpgTimeTransitions.present(change,{
+    onCover:()=>{timeTransitionCovered=true;render();},
+    onDismiss:()=>{timeTransitionCovered=true;onDone();}
+   });
+   if(!shown)timeTransitionCovered=true;
+   return !!shown;
+  }catch(error){timeTransitionCovered=true;throw error;}
+ }
  const overlay=document.createElement('div');overlay.className='notice-pop';
  const heading=document.createElement('b');heading.textContent=change.afterDay>90?'Season complete':change.afterDay!==change.beforeDay?'A NEW DAY BEGINS':'TIME PASSES';
  const body=document.createElement('span');body.textContent=change.afterDay>90?'Day 90 has ended.':'Day '+change.afterDay+' · '+periods[change.afterSlot];
@@ -378,7 +390,7 @@ const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
 queueMandatory();arriveForScheduledPlan();persist();
-if(!suppressTimeFlash&&timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource})){timeTransitionCovered=false;timeSequence.flush();}}
+if(!suppressTimeFlash&&timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource}))timeSequence.flush();}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
 function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null){
  if(!Array.isArray(lines)||!lines.length)return;
@@ -413,8 +425,10 @@ function closeSceneDialogue(){
  state.sceneCgId=null;
  scene={speaker:'Narrator',line:'',choices:[]};
  state.scene=scene;
- persist();render();
- timeSequence.flush();
+ persist();
+ // Start the queued wipe before revealing the next day. If the wipe is not
+ // ready, render normally; a deferred wipe must never freeze dialogue choices.
+ if(!timeSequence.flush())render();
 }
 // Narrate a destination only the first time the player visits it.
 function travelTo(placeId,{intro=true}={}){
