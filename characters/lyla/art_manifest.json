@@ -59,6 +59,36 @@
       "sceneId": "lyla_route_7",
       "path": "/rpg-assets/characters/lyla/events/lyla_route_7.png",
       "prompt": "Approved final CG for Lyla's Route 7. Use the existing original image unchanged. Display it during her line 'I know you like to stare... I don't mind if it's you.', replacing the opening image lyla_router_7_pre.png."
+    },
+    {
+      "sceneId": "lyla_route_1",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_1.png",
+      "prompt": "Use the existing approved Lyla Route 1 CG unchanged for 'The Girl Behind the Contact Sheet'. It is the original uploaded PNG for this personal story chapter; preserve its original bytes without cropping or replacing."
+    },
+    {
+      "sceneId": "lyla_route_2",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_2.png",
+      "prompt": "Use the existing approved Lyla Route 2 CG unchanged for 'Lookbook, Take Seven'. It is the original uploaded PNG for this personal story chapter; preserve its original bytes without cropping or replacing."
+    },
+    {
+      "sceneId": "lyla_route_3",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_3.png",
+      "prompt": "Use the existing approved Lyla Route 3 CG unchanged for 'The Contract in Fine Print'. It is the original uploaded PNG for this personal story chapter; preserve its original bytes without cropping or replacing."
+    },
+    {
+      "sceneId": "lyla_route_4",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_4.png",
+      "prompt": "Use the existing approved Lyla Route 4 CG unchanged for 'Runway Without an Audience'. It is the original uploaded PNG for this personal story chapter; preserve its original bytes without cropping or replacing."
+    },
+    {
+      "sceneId": "lyla_route_5",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_5.png",
+      "prompt": "Use the existing approved Lyla Route 5 CG unchanged for 'The Smile They Couldn't Direct'. It is the original uploaded PNG for this personal story chapter; preserve its original bytes without cropping or replacing."
+    },
+    {
+      "sceneId": "lyla_route_6",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_6.png",
+      "prompt": "Use the existing approved Lyla Route 6 CG unchanged for 'A Cover of Her Own'. It is the original uploaded PNG for this personal story chapter; preserve its original bytes without cropping or replacing."
     }
   ]
 }
