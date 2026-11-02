@@ -48,12 +48,12 @@
  "/rpg_cross_character_events.js?v=20261026-crossovers",
  "/rpg_daisy_event_additions.js?v=1",
  "/rpg_slice_of_life.js?v=phone-selfie-chat-20261031-3",
- "/rpg_cg_gallery.js?v=20261028-art-fallback-2",
+ "/rpg_cg_gallery.js?v=art-v2-20261102",
  "/rpg_cg_scene.js?v=20261026-in-scene",
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
  "/rpg_planned_dates.js",
- "/rpg_preduel.js?v=20261024-preduel-art",
+ "/rpg_preduel.js?v=art-v2-20261102",
  "/rpg_situations.js",
  "/rpg_season_journey.js",
  "/rpg_collection.js",
@@ -71,16 +71,31 @@
  "/rpg_character_motion.js",
  "/rpg_scene_cast.js?v=two-voice-window-20261029",
  "/rpg_event_invites.js?v=1",
- "/rpg_victory_presentation.js",
+ "/rpg_victory_presentation.js?v=art-v2-20261102",
  "/rpg_tournament_presentation.js",
  "/rpg_tutorials.js?v=1",
  "/rpg_status.js?v=persona-ranks-20261101",
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=rpg-scene-wipe-20261031-1"
+ "/rpg.js?v=art-v2-20261102"
 ];
   function registry(packs){
+    // Normalize the authenticated/API roster too (not just the generated file).
+    // This prevents remote character packs from restoring retired expression art.
+    const v2Ids=new Set('akari alma barb camila daisy elena elio iris jicy jinx jun kaede laca luna lyla marina nereo reina rina shiori sierra sol teo yuna'.split(' '));
+    const valid=new Set(['neutral','happy','surprised','vulnerable','irritated','determined','battle-attack','battle-hurt','battle-victory']);
+    const aliases={smile:'happy',smirk:'happy',playful:'happy',flirty:'happy',soft:'vulnerable',sad:'vulnerable',concerned:'vulnerable',worried:'vulnerable',embarrassed:'vulnerable',angry:'irritated',annoyed:'irritated',focused:'determined',confident:'determined',attack:'battle-attack',hurt:'battle-hurt',victory:'battle-victory'};
+    for(const pack of packs){
+      if(!v2Ids.has(pack.id)||!pack.art)continue;
+      const base='/rpg-assets/characters/'+pack.id+'/expressionsv2/';
+      const keys=new Set([...Object.keys(pack.art.expressions||{}),...valid]);
+      pack.art.expressions=Object.fromEntries([...keys].map(key=>{
+        const name=String(key).toLowerCase().replace(/_/g,'-');
+        return [key,base+(valid.has(name)?name:aliases[name]||'neutral')+'.png'];
+      }));
+      for(const variant of Object.values(pack.art.outfits?.variants||{}))if(variant?.expressions)variant.expressions={};
+    }
     const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
     for(const p of packs){
       cast[p.id]=p.cast;looks[p.id]=p.looks;schedules[p.id]=p.schedule;
