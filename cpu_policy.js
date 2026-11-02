@@ -1233,7 +1233,14 @@ function score(a,o,cfg,used){
      eligibleAttack(o,p.active,attack,index)?
       Math.max(best,estimatedDamage(attack,p.active,q.active,p.bench.length)):best,0):
     strongestAffordableAttack(p.active,q.active,p.bench.length);
-   const needed=hpRemaining(q.active)-damage;
+   // Existing unexpired PlusPower cards already add 10 damage apiece
+   // after Weakness/Resistance. Do not spend another for a knockout already
+   // secured, but recognize when stacking one more produces a knockout.
+   // The reducer applies this only to damaging attacks in Classic rules.
+   const activePlusPowers=cfg.level===8&&damage>0?
+    (p.active?.attachedTrainers||[]).filter(t=>
+     card(t.id)?.name==='PlusPower'&&t.expires>o.turnSerial).length:0;
+   const needed=hpRemaining(q.active)-(damage+activePlusPowers*10);
    // PlusPower only boosts an attack that can actually be paid for.
    // Preserve the card when the Active cannot attack this turn.
    return (damage>0&&needed>0&&needed<=10?300:
