@@ -83,7 +83,12 @@
     img.loading='eager';
     img.className='victory-result-art';
     let index=0;
-    img.onload=()=>{
+    img.decoding='async';
+    img.onload=async()=>{
+     // Do not swap the still-visible avatar until the result image can paint.
+     if(typeof img.decode==='function'){
+      try{await img.decode();}catch{if(!img.naturalWidth)return;}
+     }
      if(request===portraitRequest&&dialog.open){art.replaceChildren(img);if(npcId&&typeof window!=='undefined')window.NeoRpgDiscreetAvatars?.set?.(art,npcId,details.kind==='victory'?'happy':'vulnerable',details.opponent);}
     };
     img.onerror=()=>{
