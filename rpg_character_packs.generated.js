@@ -7084,7 +7084,7 @@ const packs=[
    {
     "id": "lyla_random_fitting_pins",
     "npc": "lyla",
-    "title": "A Hem and a Deck Box",
+    "title": "The Other Lyla",
     "start": 12,
     "end": 65,
     "place": "shop",
@@ -7097,25 +7097,41 @@ const packs=[
     "lines": [
      {
       "speaker": "Narrator",
-      "text": "Lyla is sitting on a low stool with a roll of hem tape and a fashion sample jacket."
+      "text": "At the card shop, Lyla props her phone against her deck box. It shows a fitting photo from the studio. The jacket is familiar; the person wearing it is almost, but not quite, her."
      },
      {
       "speaker": "lyla",
-      "text": "They size everything around tall mannequins. I brought tape. Also my deck."
+      "text": "They used AI on the fitting photos. Changed my proportions, touched up my face, even fixed the jacket before anyone moved a single pin."
      },
      {
       "speaker": "Protagonist",
-      "text": "Which one is harder to make fit?"
+      "text": "Doesn't that bother you?"
      },
      {
       "speaker": "lyla",
-      "text": "The jacket. The deck actually listens."
+      "text": "Not really. I'm good enough for the job. They hired me, didn't they? And the real jacket fits."
+     },
+     {
+      "speaker": "lyla",
+      "text": "It's just weird. I'm looking at a version of me that somebody made up, and everyone acts like I should recognize her."
+     },
+     {
+      "speaker": "Protagonist",
+      "text": "Are you going to say something?"
+     },
+     {
+      "speaker": "lyla",
+      "text": "Maybe. I'm not starting a war over a photo. I'll do the shoot, take the payment, buy some cards."
+     },
+     {
+      "speaker": "Narrator",
+      "text": "She turns her phone facedown, checks a stubborn pin in the actual sleeve, and calmly reaches for her deck box."
      }
     ],
     "choices": [
      {
-      "label": "Help adjust the sleeve length",
-      "reply": "You're a more useful assistant than half the studio.",
+      "label": "Say you'd rather see the unedited picture",
+      "reply": "Me too, I think. But they'll use whichever sells the jacket. I can live with that.",
       "kind": "support",
       "flag": "lyla_random_hem_help",
       "delta": {
@@ -7126,8 +7142,8 @@ const packs=[
       }
      },
      {
-      "label": "Ask why she keeps the original fit notes",
-      "reply": "Because next time I want them to remember I'm the client too.",
+      "label": "Joke that the AI version probably can't play cards",
+      "reply": "She'd probably shuffle my deck backwards. At least there's one thing I'm definitely better at.",
       "kind": "honest",
       "flag": "lyla_random_fit_notes",
       "delta": {
@@ -8401,11 +8417,16 @@ const packs=[
      "path": "/rpg-assets/characters/lyla/events/lyla_studio_05.png",
      "prompt": "User-approved original Lyla CG: adult pale-blonde model sitting on a black studio stool, loose white shirt over black underlayer, heavy black boots, warm sunset photography lights, contact sheets on nearby laptop. Preserve supplied PNG unchanged."
     },
-   {
-    "sceneId": "lyla_random_test_frame",
-    "path": "/rpg-assets/characters/lyla/events/a_detailed_anime_style_illustration_the_same_blon.png",
-    "prompt": "User-selected Lyla CG test image. Preserve the supplied PNG exactly; use it as the event's full-screen scene art."
-   }
+    {
+     "sceneId": "lyla_random_test_frame",
+     "path": "/rpg-assets/characters/lyla/events/a_detailed_anime_style_illustration_the_same_blon.png",
+     "prompt": "User-selected Lyla CG test image. Preserve the supplied PNG exactly; use it as the event's full-screen scene art."
+    },
+    {
+     "sceneId": "lyla_random_fitting_pins",
+     "path": "/rpg-assets/characters/lyla/events/lyla_random_fitting_pins.png",
+     "prompt": "Use the existing user-supplied Lyla fitting illustration exactly as uploaded for the scene about the studio's AI-retouched fitting photo. Lyla is confident in her work but finds the altered likeness uncanny. Do not modify the original PNG."
+    }
    ]
   }
  },
