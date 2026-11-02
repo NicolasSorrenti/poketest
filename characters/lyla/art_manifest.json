@@ -89,6 +89,21 @@
       "sceneId": "lyla_route_6",
       "path": "/rpg-assets/characters/lyla/events/lyla_route_6.png",
       "prompt": "Use the existing approved Lyla Route 6 CG unchanged for 'A Cover of Her Own'. It is the original uploaded PNG for this personal story chapter; preserve its original bytes without cropping or replacing."
+    },
+    {
+      "sceneId": "lyla_random_payment_followup",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_payment_followup.png",
+      "prompt": "Lyla obtains written payment confirmation from a modeling agency representative."
+    },
+    {
+      "sceneId": "lyla_random_revised_campaign",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_revised_campaign.png",
+      "prompt": "Lyla asserts her choice during a revised fashion campaign while wearing a fitted silver editorial dress."
+    },
+    {
+      "sceneId": "lyla_random_not_for_portfolio",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_not_for_portfolio.png",
+      "prompt": "Lyla shares a private photograph with the protagonist backstage, wearing her off-shoulder cat shirt and casual shorts."
     }
   ]
 }
