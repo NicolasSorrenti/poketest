@@ -248,6 +248,14 @@ function knockoutChance(attack,attacker,defender,benchCount=null,damageBonus=0){
  const coin=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack.text||'');
  return expected>0&&expected+damageBonus>=hp?(coin&&program?.kind!=='coin-status'?.5:1):0;
 }
+// Existing PlusPower applies to the current Active's positive attack damage
+// after Weakness/Resistance, and expires at the end of its marked turn.
+// Keep lower CPU tiers' calibrated scoring unchanged at the call sites.
+function livePlusPowerBonus(o){
+ if(o.classicRules===false||!o.self?.active)return 0;
+ return (o.self.active.attachedTrainers||[]).filter(t=>
+  card(t.id)?.name==='PlusPower'&&t.expires>o.turnSerial).length*10;
+}
 function strongestAffordableAttack(unit,defender,benchCount=null){
  if(!unit||!defender)return 0;
  const attacks=(unit.effectiveAttacks||card(unit.id)?.attacks||[]);
@@ -743,7 +751,8 @@ function prizeRaceBonus(action,o,cfg){
   // Discount Prize-race urgency just as knockout tempo does; otherwise Apex
   // still treats a speculative final Prize as guaranteed in this scorer.
   const confusionChance=own.active.status==='Confused'?.5:1;
-  const ko=knockoutChance(attack,own.active,enemy.active,own.bench.length)*confusionChance;
+  const ko=knockoutChance(attack,own.active,enemy.active,own.bench.length,
+   cfg.level===8?livePlusPowerBonus(o):0)*confusionChance;
   // An actual knockout that takes our final Prize or eliminates their last
   // Pokémon must dominate speculative development, retreat or Trainer play.
   const victory=urgent?550*ko:0;
@@ -809,7 +818,8 @@ function knockoutTempoBonus(a,o,cfg){
  // A Confused attacker must pass its own coin flip before the printed
  // attack can resolve. This is independent of any attack-specific flips.
  const confusionChance=p.active.status==='Confused'?.5:1;
- const chance=knockoutChance(atk,p.active,q.active,p.bench.length)*confusionChance;
+ const chance=knockoutChance(atk,p.active,q.active,p.bench.length,
+  cfg.level===8?livePlusPowerBonus(o):0)*confusionChance;
  if(!chance)return 0;
  const lastPrize=p.prizeCount===1,lastOpponent=q.bench.length===0;
  if(lastPrize||lastOpponent)return 550*chance;
@@ -1151,14 +1161,18 @@ function score(a,o,cfg,used){
  if(type==='attack'){
   const attack=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[v.attackIndex];
   const damage=estimatedDamage(attack,p.active,q.active,p.bench.length),hp=hpRemaining(q.active);
+  // A live PlusPower can turn an already-payable attack into a secured Prize.
+  // Apply its bonus only to positive damage, matching the Classic reducer.
+  const plusPower=cfg.level===8?livePlusPowerBonus(o):0;
+  const boostedDamage=damage>0?damage+plusPower:damage;
   const uncertain=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack?.text||'');
   // Expected damage has already accounted for coin outcomes. Applying another
   // 55% multiplier here previously double-discounted random attacks. Higher
   // levels instead compute the actual KO probability for known coin families.
-  const lethal=damage>=hp&&hp>0;
-  const koChance=cfg.level>=3?knockoutChance(attack,p.active,q.active,p.bench.length):(lethal?1:0);
+  const lethal=boostedDamage>=hp&&hp>0;
+  const koChance=cfg.level>=3?knockoutChance(attack,p.active,q.active,p.bench.length,plusPower):(lethal?1:0);
   const riskPreference=uncertain?style.risk*40:0;
-  const direct=damage*style.damage;
+  const direct=boostedDamage*style.damage;
   const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
   // A retreat-lock such as Murkrow's Mean Look does not stack. Once the
   // defending Pokemon is already unable to retreat, repeating the zero-damage
