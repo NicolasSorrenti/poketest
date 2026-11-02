@@ -1081,7 +1081,17 @@ function score(a,o,cfg,used){
   // One-step public-state projection: evaluate the attacks unlocked by the
   // Energy without calling reduce() to peek at future flips or hidden cards.
   const before=strongestAffordableAttack(unit,q.active,p.bench.length);
-  const after=damageAfterAttachment(unit,p.hand[v.handIndex],q.active,p.bench.length);
+  // The one-step attachment scorer must use the same post-heal damage as
+  // the reducer and Apex's tactical/two-turn forecasts. Otherwise Potion
+  // Energy can receive a phantom Rage/Flail knockout bonus even though its
+  // immediate 10 HP heal reduces that attack's actual damage.
+  // Keep the lower difficulty tiers' attachment scoring unchanged.
+  const attachmentId=p.hand[v.handIndex];
+  const after=cfg.level===8&&card(attachmentId)?.name==='Potion Energy'?
+   strongestAffordableAttack({...unit,
+    damage:Math.max(0,(unit.damage||0)-10),
+    energies:[...(unit.energies||[]),attachmentId]},q.active,p.bench.length):
+   damageAfterAttachment(unit,attachmentId,q.active,p.bench.length);
   const improvement=Math.max(0,after-before);
   const ko=after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
   const future=(improvement*(cfg.level===2?.50:.85)+(ko?(cfg.level===2?30:65):0))*style.damage;
