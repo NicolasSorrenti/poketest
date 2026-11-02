@@ -147,6 +147,18 @@
         {
           "speaker": "lyla",
           "text": "Tell me when you can recognize me in the photo. Not just the clothes."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "While you're talking, Lyla turns away from the camera and settles into a loose, unplanned pose, more interested in your answer than in the shoot. It suits her better than anything the stylist arranged."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Wait. That pose just now. You should use that one."
+        },
+        {
+          "speaker": "lyla",
+          "text": "That one? I wasn't even posing. ...Okay. I'll remember it."
         }
       ],
       "choices": [
@@ -1722,6 +1734,174 @@
             "trust": 2,
             "respect": 1,
             "attraction": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "lyla_studio_06",
+      "npc": "lyla",
+      "title": "The Outfit She Came In",
+      "start": 36,
+      "end": 90,
+      "place": "center",
+      "slot": 1,
+      "minBond": 1,
+      "prerequisite": null,
+      "participants": [],
+      "encounterType": "slice",
+      "trigger": "talk",
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "Lyla invites you to visit a studio shoot. The photographer, a woman checking the light meter, takes one look at Lyla's everyday shirt and jeans and puts the wardrobe rack aside."
+        },
+        {
+          "speaker": "Photographer",
+          "text": "Keep that look. For the next setup, take off the shirt and lower the jeans a little. Only if you're comfortable with it."
+        },
+        {
+          "speaker": "lyla",
+          "text": "...You're not giving me another outfit? That's new. Usually they make me change three times before the first photo."
+        },
+        {
+          "speaker": "Photographer",
+          "text": "Your own styling is what I want to photograph today. We can stop or adjust it whenever you say."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Lyla considers the request, agrees, and makes the adjustment herself. A few frames are taken with her simple everyday underwear visible. She keeps her attention on the lighting and the photographer's instructions, apparently treating it like any other fitting."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You seem pretty unfazed by that setup."
+        },
+        {
+          "speaker": "lyla",
+          "text": "Hmm? I just realized I never changed out of what I put on this morning. I guess that was the idea. Weird brief, but the photos look good."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "And you're okay with the pictures?"
+        },
+        {
+          "speaker": "lyla",
+          "text": "I said yes. If I didn't like it, I'd say so. I'm more surprised she didn't make me try on something uncomfortable."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "The photographer shows Lyla the previews. Lyla studies the composition, picks a favorite without much ceremony, then asks whether the studio has somewhere to charge her phone."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Ask which frame she actually likes",
+          "reply": "The one with the natural light. It looks like me, even without a whole team deciding what I should wear.",
+          "kind": "support",
+          "flag": "lyla_studio_06_favorite",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Say you admire how easily she sets her own limits",
+          "reply": "It's work. I know what I'm agreeing to. The odd part is that nobody tried to redesign me first.",
+          "kind": "honest",
+          "flag": "lyla_studio_06_boundaries",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 2,
+            "attraction": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "lyla_studio_07",
+      "npc": "lyla",
+      "title": "A Pose She Remembered",
+      "start": 38,
+      "end": 90,
+      "place": "center",
+      "slot": 2,
+      "minBond": 1,
+      "prerequisite": "lyla_route_2",
+      "participants": [],
+      "encounterType": "slice",
+      "trigger": "talk",
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "You're watching another of Lyla's studio shoots. Between takes, she catches your eye. The photographer calls for something less rehearsed."
+        },
+        {
+          "speaker": "Photographer",
+          "text": "Let's try one more. Something that feels like you."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Without warning, Lyla shifts into the same relaxed pose she fell into while talking to you during the lookbook shoot. You recognize it immediately—and weren't expecting her to bring it back here."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Hold on. Isn't that the pose you did when we were talking at the other shoot?"
+        },
+        {
+          "speaker": "lyla",
+          "text": "Yes."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You remembered that? You did it on purpose?"
+        },
+        {
+          "speaker": "lyla",
+          "text": "Of course. You said it looked natural. I thought it would work for these photos, too."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "The photographer likes the shot and asks Lyla to hold it for another frame. Lyla turns just enough to give you a small, almost invisible smile."
+        },
+        {
+          "speaker": "lyla",
+          "text": "I don't remember every direction people give me. But I remember the ones I like. That one was yours."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "I didn't realize you took it so seriously."
+        },
+        {
+          "speaker": "lyla",
+          "text": "I didn't. I just liked how it looked. And how easy it felt when I was talking to you."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her you're glad she remembered that moment",
+          "reply": "I did. Don't make a big deal out of it. ...Though I'm glad you noticed.",
+          "kind": "support",
+          "flag": "lyla_studio_07_remembered",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tease her for secretly taking your advice",
+          "reply": "It was good advice. That doesn't mean you get to direct the next shoot. Maybe one pose.",
+          "kind": "flirt",
+          "flag": "lyla_studio_07_tease",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 2
           }
         }
       ]
