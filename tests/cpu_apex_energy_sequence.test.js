@@ -1609,3 +1609,28 @@ test('Apex two-step forecast applies Potion Energy healing before Flail',()=>{
   AI.planningBonus(activeAttach,make('base5-81',0),planning),
   'a healthy Magikarp receives no phantom healing penalty');
 });
+
+// Both the current and the following turn's attachment must use the damage
+// counters AFTER Potion Energy heals, not the pre-attachment Rage bonus.
+test('Apex two-turn Rage forecasts include Potion Energy healing on either turn',()=>{
+ const scenario=(first,second,damage)=>{
+  const o=futureEnergyBoard(first,second);
+  o.turnSerial=11;
+  o.self.active={id:'base2-34',energies:[],damage,status:null,playedTurn:2};
+  return o;
+ };
+ for(const [potionFirst,first,second] of [
+  [true,'base5-82','base1-96'],
+  [false,'base1-96','base5-82']
+ ])for(const damage of [20,0]){
+  const potion=scenario(first,second,damage);
+  const plain=scenario(potionFirst?'base5-81':first,
+   potionFirst?second:'base5-81',damage);
+  const potionValue=AI.energyHorizonBonus(attachActive,potion,cfg);
+  const plainValue=AI.energyHorizonBonus(attachActive,plain,cfg);
+  if(damage)assert.ok(potionValue<plainValue,
+   'Potion healing must reduce the projected Rage damage on '+(potionFirst?'first':'second')+' attachment');
+  else assert.equal(potionValue,plainValue,
+   'Potion must not reduce Rage damage for a healthy attacker');
+ }
+});
