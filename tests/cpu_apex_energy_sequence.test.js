@@ -1740,7 +1740,7 @@ test('Apex prepares Rainbow recoil for an already-funded Rage knockout',()=>{
  const CATALOG=require('../headless_duel').CATALOG;
  const dodrioHp=Number(CATALOG.get('base2-34').hp);
  const hitmonchanHp=Number(CATALOG.get(HITMONCHAN).hp);
- o.self.active={id:'base2-34',energies:['base5-81','base5-81','base5-81'],
+ o.self.active={id:'base2-34',energies:['base5-81','base5-81','base5-81','base5-81'],
   damage:dodrioHp-20,status:null};
  o.self.hand=['base5-80']; // Rainbow Energy
  o.self.bench=[{id:RATTATA,energies:[],damage:0}];
