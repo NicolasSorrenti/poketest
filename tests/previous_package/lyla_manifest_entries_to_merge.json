@@ -1,0 +1,39 @@
+{
+  "eventImages": [
+    {
+      "sceneId": "lyla_route_1",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_1.png",
+      "prompt": "Approved CG for The Girl Behind the Contact Sheet. Preserve original PNG unchanged."
+    },
+    {
+      "sceneId": "lyla_route_2",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_2.png",
+      "prompt": "Approved CG for Lookbook, Take Seven. Preserve original PNG unchanged."
+    },
+    {
+      "sceneId": "lyla_route_3",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_3.png",
+      "prompt": "Approved CG for The Contract in Fine Print. Preserve original PNG unchanged."
+    },
+    {
+      "sceneId": "lyla_route_4",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_4.png",
+      "prompt": "Approved CG for Runway Without an Audience. Preserve original PNG unchanged."
+    },
+    {
+      "sceneId": "lyla_route_5",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_5.png",
+      "prompt": "Approved CG for The Smile They Couldn't Direct. Preserve original PNG unchanged."
+    },
+    {
+      "sceneId": "lyla_route_6",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_6.png",
+      "prompt": "Approved CG for A Cover of Her Own. Preserve original PNG unchanged."
+    },
+    {
+      "sceneId": "lyla_route_7",
+      "path": "/rpg-assets/characters/lyla/events/lyla_route_7.png",
+      "prompt": "Approved CG for Outside the Frame. Preserve original PNG unchanged."
+    }
+  ]
+}

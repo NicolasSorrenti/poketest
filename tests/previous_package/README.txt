@@ -1,0 +1,1 @@
+Seven approved Lyla route CGs. Merge eventImages entries from lyla_manifest_entries_to_merge.json into characters/lyla/art_manifest.json, preserving existing five studio entries. Commit and push to main. Note: verify image for route_2 against intended story event before upload.
