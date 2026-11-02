@@ -1928,3 +1928,43 @@ test('Apex prepares Rainbow recoil for an already-funded Rage knockout',()=>{
  assert.deepEqual(AI.energyPreparationActions(o,lower,[attack,activeAttach]),[attack,activeAttach],
   'Level 7 retains its original action ordering');
 });
+
+test('Apex avoids surplus Active Energy when lethal Poison checkup comes first',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ // Hitmonchan has a funded Jab, but will faint to Poison after attacking.
+ // The opposing Rattata has no Energy, so opponent-KO-only threat checks miss it.
+ o.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT,FIGHT],
+  damage:60,status:null,poison:true,poisonDamage:10};
+ o.self.bench=[{id:MACHOP,energies:[],damage:0}];
+ o.self.hand=[FIGHT];
+ o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ const noBench=structuredClone(o);
+ noBench.self.bench=[];
+ const strandedScore=AI.score(activeAttach,o,cfg,{});
+ assert.ok(AI.score(activeAttach,noBench,cfg,{})-strandedScore>=130,
+  'a lethal Poison checkup strands surplus Energy even against an unready opponent');
+ assert.ok(AI.score(benchAttach,o,cfg,{})>strandedScore,
+  'preserve the attachment for a surviving Bench attacker');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach,benchAttach]),
+  [activeAttach,benchAttach],'prepare Bench Energy before the attack ends the turn');
+ // Full Heal removes Poison and Potion heals enough to survive a 10-damage tick.
+ for(const rescue of ['base5-81','base5-82']){
+  o.self.hand=[rescue];
+  const rescued=structuredClone(o);rescued.self.bench=[];
+  assert.equal(AI.score(activeAttach,o,cfg,{}),AI.score(activeAttach,rescued,cfg,{}),
+   'a real Full Heal/Potion rescue must not count as stranded Energy');
+ }
+ o.self.hand=[FIGHT];
+ o.self.active.damage=50;
+ assert.equal(AI.score(activeAttach,o,cfg,{}),AI.score(activeAttach,{
+  ...o,self:{...o.self,bench:[]}},cfg,{}),
+  'a nonlethal Poison tick is not a doomed-Active threat');
+ o.self.active.damage=60;
+ const level7=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(activeAttach,o,level7,{}),
+  AI.score(activeAttach,{...o,self:{...o.self,bench:[]}},level7,{}),
+  'Level 7 preserves its prior Energy scoring');
+});
