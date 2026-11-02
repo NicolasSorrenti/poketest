@@ -2173,10 +2173,44 @@ function openCalendar(){
  }
  $('calendarDialog').showModal();
 }
+// Keep the previous portrait on screen until its replacement is fully decoded.
+const decodedPortraitAssets=new Map(),stagePortraitRequests=new WeakMap();
+function readyPortrait(path){
+ if(!path)return Promise.resolve(false);
+ if(decodedPortraitAssets.has(path))return decodedPortraitAssets.get(path);
+ const promise=new Promise(resolve=>{
+  const asset=new Image();asset.decoding='async';
+  asset.onload=()=>{
+   if(typeof asset.decode==='function')
+    Promise.resolve().then(()=>asset.decode()).then(()=>resolve(asset.naturalWidth>0),()=>resolve(asset.naturalWidth>0));
+   else resolve(asset.naturalWidth>0);
+  };
+  asset.onerror=()=>resolve(false);
+  asset.src=path;
+ });
+ decodedPortraitAssets.set(path,promise);
+ if(decodedPortraitAssets.size>72)decodedPortraitAssets.delete(decodedPortraitAssets.keys().next().value);
+ return promise;
+}
+function swapStagePortrait(image,paths,onReady,onMissing){
+ const options=[...new Set(paths.filter(Boolean))],key=options.join('|');
+ if(stagePortraitRequests.get(image)?.key===key)return;
+ const request={key};stagePortraitRequests.set(image,request);
+ void (async()=>{
+  for(const path of options){
+   if(!await readyPortrait(path)){failedScenePortraits.add(path);continue;}
+   if(stagePortraitRequests.get(image)!==request)return;
+   if(image.getAttribute('src')!==path)image.src=path;
+   onReady?.(path);
+   return;
+  }
+  if(stagePortraitRequests.get(image)===request)onMissing?.();
+ })();
+}
 function makeAvatar(id,size=''){
  const img=document.createElement('img'),paths=size==='stage'?stagePortraitPaths(id,'neutral'):portraitPaths(id,'neutral');
  img.src=paths.find(src=>!failedScenePortraits.has(src))||cast[id].portrait||'/rpg-assets/'+id+'.png';
- img.alt=cast[id].name;img.loading='lazy';
+ img.alt=cast[id].name;img.loading=size==='stage'?'eager':'lazy';
  img.onerror=()=>{
   failedScenePortraits.add(img.getAttribute('src'));
   const next=paths.find(src=>!failedScenePortraits.has(src));
@@ -2514,6 +2548,17 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    return {id,name:cast[id].name,src,...(sources?.length?{srcs:[src,...sources.filter(path=>path!==src)]}:{})};
   }):[]
  };
+ // Warm likely expressions while the current dialogue line is visible.
+ if(composition.conversation){
+  for(const participant of overworldScenePortraits.participants){
+   void readyPortrait(participant.src);
+   if(participant.id!==focused)continue;
+   for(const mood of ['neutral','happy','vulnerable','irritated','determined']){
+    const next=rpgV2Expression(participant.id,mood);
+    if(next&&next!==participant.src)void readyPortrait(next);
+   }
+  }
+ }
  if(typeof document.querySelector!=='function')return;
  const root=$('rpgSceneCast');if(!root)return;
  // The dedicated overworld has its own two-portrait scene renderer.
@@ -2560,27 +2605,23 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    const path=scenePortraitSource(id,expression,context.sceneId);
    if(image.getAttribute('src')===path)applyPersonaCStageCrop(image,id);
    if(image.getAttribute('src')!==path){
-    image.classList.remove('expression-change');
-    image.style.display='';
-    image.onerror=()=>{
-     const failed=image.getAttribute('src');
-     if(!paths.includes(failed))return;
-     failedScenePortraits.add(failed);
-     const next=paths.find(src=>!failedScenePortraits.has(src));
-     if(next){image.src=next;return;}
+    // Preserve the last rendered expression while the next one loads.
+    // A newer dialogue line cancels an older pending source.
+    swapStagePortrait(image,[path,...paths.filter(src=>src!==path&&!failedScenePortraits.has(src))],()=>{
+     image.classList.remove('expression-change');
+     image.style.display='';
+     applyPersonaCStageCrop(image,id);
+     button.querySelector('.avatar-fallback')?.remove();
+     if(!window.NeoRpgCharacterMotion?.expressionChange?.(image))image.classList.add('expression-change');
+    },()=>{
+     if(image.naturalWidth)return;
      image.style.display='none';
      if(!button.querySelector('.avatar-fallback')){
       const span=document.createElement('span');span.className='avatar-fallback';
-      span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');button.insertBefore(span,button.lastElementChild);
+      span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');
+      button.insertBefore(span,button.lastElementChild);
      }
-    };
-    image.onload=()=>{
-     applyPersonaCStageCrop(image,id);
-     image.style.display='';
-     button.querySelector('.avatar-fallback')?.remove();
-    };
-    image.src=path;
-    if(!window.NeoRpgCharacterMotion?.expressionChange?.(image))image.classList.add('expression-change');
+    });
    }
   }
   root.append(button);existing.delete(id);
