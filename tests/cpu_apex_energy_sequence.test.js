@@ -1652,3 +1652,29 @@ test('Apex two-turn Rage forecasts include Potion Energy healing on either turn'
    'Potion must not reduce Rage damage for a healthy attacker');
  }
 });
+
+test('Apex immediate attachment scoring does not invent a Potion-funded Rage KO',()=>{
+ // Jungle Dodrio's Rage is 10 plus 10 per damage counter. With one
+ // two Colorless Energy already attached, either card below funds Rage, but
+ // Potion heals one counter before the attack and loses the 30-HP KO.
+ const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const make=(energy,damage)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',round:5,turnSerial:11});
+  o.self.active={id:'base2-34',energies:['base5-81','base5-81'],damage,status:null,playedTurn:2};
+  o.self.bench=[];
+  o.self.hand=[energy];
+  o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+  return o;
+ };
+ const potion='base5-82',neutral='base5-81';
+ const score=(energy,damage,config=cfg)=>
+  AI.score(attachActive,make(energy,damage),config,{});
+ assert.ok(score(neutral,20)>score(potion,20)+40,
+  'the actual 30-damage Rage KO must outrank Potion healing to 20 damage');
+ assert.equal(score(neutral,0),score(potion,0),
+  'a healthy Dodrio has no Rage damage or healing difference');
+ const level7=AI.configuration({side:1,level:7});
+ assert.equal(score(neutral,20,level7),score(potion,20,level7),
+  'the immediate-scoring correction is Apex-only');
+});
