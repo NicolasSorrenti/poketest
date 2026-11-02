@@ -70,8 +70,26 @@ function observation(game,side){
  const view=publicView(game,side);
  // The network projection intentionally omits once-per-turn flags. Those are
  // visible to the acting player and never reveal the opponent's private cards.
- const self={...view.players[side],energyUsed:!!game.players[side].energyUsed,
+ // Photosynthesis is public, but global Power blanking, Toxic Gas and
+ // targeted suppression can disable it. Ask the authoritative Power gate
+ // for a boolean, never infer activation from the printed card alone.
+ // The reducer's attack pool converts EACH attached card into one Grass
+ // unit, including Double Colorless and Buzzap Electrode.
+ const classicRules=['classic','theme-expanded','gym-theme','gym-expanded','neo-theme','online-preview'].includes(game.format);
+ const withPublicPowerState=(projected,actual)=>{
+  if(!projected||!actual||!classicRules||
+     !(card(projected.id)?.abilities||[]).some(a=>a.name==='Photosynthesis'))return projected;
+  return {...projected,photosynthesisActive:POWERS.enabled(game,actual,'Photosynthesis')};
+ };
+ const withFieldPowerState=(projected,actual)=>({
+  ...projected,
+  active:withPublicPowerState(projected.active,actual.active),
+  bench:projected.bench.map((u,i)=>withPublicPowerState(u,actual.bench[i]))
+ });
+ const self={...withFieldPowerState(view.players[side],game.players[side]),
+  energyUsed:!!game.players[side].energyUsed,
   retreated:!!game.players[side].retreated};
+ const opponent=withFieldPowerState(view.players[1-side],game.players[1-side]);
  // Only expose decisions previously made BY this CPU in its own Trainer flow.
  // The full pending action can include hidden draws and must never be projected.
  const ownedPlan=game.pendingAction?.kind==='classic_trainer'&&
@@ -82,7 +100,7 @@ function observation(game,side){
   return Number(x.slice(5));
  };
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
-  self,opponent:view.players[1-side],stadium:view.stadium,
+  self,opponent,stadium:view.stadium,
   pendingTrainerTarget:selectedIndex('target'),pendingTrainerSource:selectedIndex('source'),
   decision:view.pendingDecision,setupReady:!!game.setupReady[side],mulliganBonus:view.mulliganBonus};
 }
@@ -91,6 +109,11 @@ const slotUnit=(p,slot)=>slot===-1?p.active:p.bench[slot];
 const slots=p=>[-1,...p.bench.map((_,i)=>i)];
 function energyPool(unit){
  return (unit?.energies||[]).flatMap(id=>{
+  // Erika's Oddish converts every attached CARD to exactly one Grass
+  // unit while Photosynthesis is enabled. The public flag is supplied by
+  // observation using the same Power gate as the authoritative reducer.
+  if(unit?.photosynthesisActive&&
+     (card(unit.id)?.abilities||[]).some(a=>a.name==='Photosynthesis'))return ['Grass'];
   // Buzzap turns an attached Electrode into two Energy of its chosen type.
   // The reducer uses the public buzzapTypes mapping before reading card names;
   // otherwise Apex undercounts attacks and values unnecessary attachments.
