@@ -7050,6 +7050,10 @@ const packs=[
       "text": "You, if you want. Not because somebody asked us to look good together."
      },
      {
+      "speaker": "lyla",
+      "text": "I know you like to stare... I don't mind if it's you."
+     },
+     {
       "speaker": "Narrator",
       "text": "A rare, quiet smile reaches her eyes while she waits for your answer."
      }
@@ -8616,6 +8620,11 @@ const packs=[
      "sceneId": "lyla_studio_07",
      "path": "/rpg-assets/characters/lyla/events/lyla_studio_07.png",
      "prompt": "Use the existing user-uploaded Lyla studio CG 07, unchanged. During a photoshoot, adult Lyla deliberately reprises a relaxed pose she first struck while talking to the player during Lyla Route 2; she admits remembering that moment and using the pose because she liked how it looked."
+    },
+    {
+     "sceneId": "lyla_route_7",
+     "path": "/rpg-assets/characters/lyla/events/lyla_route_7.png",
+     "prompt": "Approved final CG for Lyla's Route 7. Use the existing original image unchanged. Display it during her line 'I know you like to stare... I don't mind if it's you.', replacing the opening image lyla_router_7_pre.png."
     }
    ]
   }
