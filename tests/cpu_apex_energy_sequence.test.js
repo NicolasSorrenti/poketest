@@ -1729,3 +1729,44 @@ test('Apex prepares a fully charged Potion rescue before a non-winning attack',(
  assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),[attack,activeAttach]),
   [attack,activeAttach],'Level 7 preparation behavior remains unchanged');
 });
+
+test('Apex prepares Rainbow recoil for an already-funded Rage knockout',()=>{
+ // Jungle Dodrio has 20 HP left and a funded Rage. Rainbow leaves 10 HP,
+ // raises Rage from 60 to 70, and KOs Hitmonchan before its ready Jab can
+ // knock Dodrio out. Without recoil projection the stranded-Energy guard
+ // mistakenly penalizes the attachment by 140 and lets an attack end turn.
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ const CATALOG=require('../headless_duel').CATALOG;
+ const dodrioHp=Number(CATALOG.get('base2-34').hp);
+ const hitmonchanHp=Number(CATALOG.get(HITMONCHAN).hp);
+ o.self.active={id:'base2-34',energies:['base5-81','base5-81','base5-81'],
+  damage:dodrioHp-20,status:null};
+ o.self.hand=['base5-80']; // Rainbow Energy
+ o.self.bench=[{id:RATTATA,energies:[],damage:0}];
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ o.opponent.bench=[{id:RATTATA,energies:[],damage:0}];
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const after={...o.self.active,damage:o.self.active.damage+10,
+  energies:[...o.self.active.energies,'base5-80']};
+ assert.equal(AI.strongestAffordableAttack(o.self.active,o.opponent.active),hitmonchanHp-10,
+  'funded Rage is ten short of a knockout before recoil');
+ assert.equal(AI.strongestAffordableAttack(after,o.opponent.active),hitmonchanHp,
+  'Rainbow counter creates a certain immediate knockout');
+ const withBench=AI.score(activeAttach,o,cfg,{});
+ const noBench=structuredClone(o);
+ noBench.self.bench=[];
+ assert.equal(withBench,AI.score(activeAttach,noBench,cfg,{}),
+  'a real immediate KO must not be treated as Energy stranded on a doomed Active');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[activeAttach],
+  'prepare the Rainbow knockout before an attack ends the turn');
+ o.self.hand=['base5-81']; // Neutral Energy cannot add a Rage counter.
+ assert.ok(AI.score(activeAttach,noBench,cfg,{})-AI.score(activeAttach,o,cfg,{})>=130,
+  'ordinary surplus Energy remains stranded with a useful Bench available');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[attack,activeAttach],
+  'do not force a surplus attachment with no KO upgrade');
+ const lower=AI.configuration({side:1,level:7});
+ o.self.hand=['base5-80'];
+ assert.deepEqual(AI.energyPreparationActions(o,lower,[attack,activeAttach]),[attack,activeAttach],
+  'Level 7 retains its original action ordering');
+});
