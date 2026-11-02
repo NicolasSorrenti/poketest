@@ -28,96 +28,19 @@
   barb:'/rpg-assets/characters/barb/portraits/primary.png',
   laca:'/rpg-assets/characters/laca/expression-portraits/neutral.webp'
  });
- // Established cast has two supported VN-expression folder formats.
- const VN_MAIN=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede','barb']);
- const VN_GUEST=new Set(['jun','teo','iris','elio','alma','nereo']);
- const VN_PORTRAITS=new Set(['rina','sol','jinx','luna','elena','sierra','laca']);
- const EXPRESSIONS={
-  main:{
-   default:['neutral'],attack:['happy','neutral'],play_card:['happy','neutral'],
-   evolve:['happy'],power:['happy','neutral'],hurt:['surprised','angry'],
-   big_hit:['surprised'],weakness_hit:['surprised'],status_hit:['angry','surprised'],
-   ko_taken:['angry','embarrassed'],ko_scored:['happy']
-  },
-  guest:{
-   default:['neutral'],attack:['determined','neutral'],play_card:['happy','neutral'],
-   evolve:['happy'],power:['determined','happy'],hurt:['vulnerable','surprised'],
-   big_hit:['surprised'],weakness_hit:['surprised'],status_hit:['irritated','surprised'],
-   ko_taken:['vulnerable'],ko_scored:['happy']
-  },
-  portrait:{
-   default:['neutral'],attack:['neutral'],play_card:['happy','neutral'],
-   evolve:['happy'],power:['happy','neutral'],hurt:['concerned','surprised'],
-   big_hit:['surprised'],weakness_hit:['surprised'],status_hit:['concerned'],
-   ko_taken:['concerned','soft'],ko_scored:['happy']
-  }
- };
- // Vary rivals' battle demeanor while keeping their known sprite filenames.
- const CHARACTER_EXPRESSIONS={
-  reina:{attack:'angry',play_card:'neutral',power:'angry',ko_taken:'angry'},
-  shiori:{attack:'neutral',power:'neutral',ko_taken:'embarrassed'},
-  yuna:{attack:'happy',ko_taken:'surprised'},
-  akari:{attack:'neutral',power:'neutral'},
-  camila:{attack:'flirty',play_card:'flirty',power:'flirty'},
-  marina:{attack:'neutral',ko_taken:'embarrassed'},
-  kaede:{attack:'angry',power:'angry',ko_taken:'angry'},
-  jinx:{attack:'smirk',play_card:'playful',evolve:'happy',power:'smirk',
-   hurt:'annoyed',status_hit:'annoyed',ko_taken:'annoyed',ko_scored:'smirk'},
-  teo:{attack:'happy'},
-  barb:{attack:'flirty',play_card:'happy',evolve:'happy',power:'flirty',
-   hurt:'surprised',big_hit:'surprised',weakness_hit:'surprised',
-   status_hit:'angry',ko_taken:'sad',ko_scored:'happy'}
+ // No legacy expression sheets: all reviewed characters have the same v2 set.
+ // Hana is excluded until her expressionsv2 folder is uploaded.
+ const V2_IDS=new Set('akari alma barb camila daisy elena elio iris jicy jinx jun kaede laca luna lyla marina nereo reina rina shiori sierra sol teo yuna'.split(' '));
+ const V2_REACTIONS={
+  attack:'battle-attack',play_card:'determined',evolve:'happy',power:'determined',
+  hurt:'battle-hurt',big_hit:'battle-hurt',weakness_hit:'battle-hurt',
+  status_hit:'irritated',ko_taken:'battle-hurt',ko_scored:'battle-victory'
  };
  function vnCandidates(npcId,kind){
-  // Daisy's reviewed battle expressions are PNGs, not the established WebP sheets.
-  if(npcId==='daisy'){
-   const names={
-    attack:['determined','happy','neutral'],play_card:['happy','neutral'],
-    evolve:['happy','determined'],power:['determined','happy'],
-    hurt:['surprised','concerned'],big_hit:['surprised','concerned'],
-    weakness_hit:['surprised','concerned'],status_hit:['angry','concerned'],
-    ko_taken:['concerned','surprised'],ko_scored:['happy','determined']
-   };
-   return [...new Set([...(names[kind]||['neutral']),'neutral'])].map(name=>
-    '/rpg-assets/characters/daisy/expression-portraits/'+name+'.png');
-  }
-
-  if(npcId==='elio'){
-   const name=['play_card','evolve','power','ko_scored'].includes(kind)?'happy':
-    ['hurt','big_hit','weakness_hit'].includes(kind)?'surprised':
-    ['status_hit','ko_taken'].includes(kind)?'concerned':null;
-   return name?['/rpg-assets/characters/elio/expression-portraits/'+name+'.png',PORTRAITS.elio]:[PORTRAITS.elio];
-  }
-  // Keep Alma in canonical cafe workwear; legacy guest art and suit candidates conflict.
-  if(npcId==='alma'){
-   const name=['attack','play_card','evolve','power','ko_scored'].includes(kind)?'happy':
-    ['hurt','big_hit','weakness_hit'].includes(kind)?'surprised':
-    ['status_hit','ko_taken'].includes(kind)?'concerned':'neutral';
-   return [...new Set([name,'neutral'])].map(expression=>
-    '/rpg-assets/characters/alma/expression-portraits/'+expression+'.webp');
-  }
-  if(npcId==='barb'&&['hurt','big_hit','weakness_hit','status_hit','ko_taken'].includes(kind)){
-   const name=kind==='ko_taken'?'soft':'concerned';
-   return ['/rpg-assets/characters/barb/expression-portraits/'+name+'.png',
-    '/rpg-assets/characters/barb/expression-portraits/neutral.webp'];
-  }
-  // These guest legacy sheets contain other identities; only the reviewed pair is active.
-  if(['iris','jun','nereo','teo','reina','shiori','yuna','hana'].includes(npcId)){
-   const happy=['attack','play_card','evolve','power','ko_scored'].includes(kind);
-   const hurt=['hurt','big_hit','weakness_hit','status_hit'].includes(kind);
-   const name=happy?'happy':hurt?'surprised':'neutral';
-   return [...new Set([name,'neutral'])].map(expression=>
-    '/rpg-assets/characters/'+npcId+'/expression-portraits/'+expression+'.webp');
-  }
-  const group=VN_MAIN.has(npcId)?'main':VN_GUEST.has(npcId)?'guest':
-   VN_PORTRAITS.has(npcId)?'portrait':null;
-  if(!group)return [];
-  const folder=group==='portrait'?'expression-portraits':'vn-expressions';
-  const names=[CHARACTER_EXPRESSIONS[npcId]?.[kind],
-   ...(EXPRESSIONS[group][kind]||EXPRESSIONS[group].default),
-   'neutral'].filter(Boolean);
-  return [...new Set(names)].map(name=>
-   '/rpg-assets/characters/'+npcId+'/'+folder+'/'+name+'.webp');
+  if(!V2_IDS.has(npcId))return [];
+  const base='/rpg-assets/characters/'+npcId+'/expressionsv2/';
+  const mood=V2_REACTIONS[kind]||'neutral';
+  return [base+mood+'.png',...(mood==='neutral'?[]:[base+'neutral.png'])];
  }
  const LABELS={attack:['ATTACK!','Their Pokémon attacks'],play_card:['NEW PLAY','They put a card into play'],evolve:['EVOLUTION!','A Pokémon evolves'],power:['POKÉMON POWER!','A special effect'],hurt:['HIT!','Their Pokémon takes damage'],big_hit:['BIG HIT!','A powerful blow'],weakness_hit:['IT’S SUPER EFFECTIVE!','Their Pokémon was hit for Weakness'],status_hit:['STATUS TROUBLE!','A Special Condition was inflicted'],ko_taken:['POKÉMON DOWN!','You take a Prize'],ko_scored:['A KNOCKOUT!','They take a Prize']};
  const GENERIC={attack:'Here goes.',play_card:'I can work with this.',evolve:'There we go.',power:'Try this one.',hurt:'Ouch. Good hit.',big_hit:'That hit harder than I expected.',weakness_hit:'I should have seen that matchup coming.',status_hit:'That condition complicates things.',ko_taken:'You got me there.',ko_scored:'That is one down.'};
@@ -423,6 +346,8 @@
   return {update,reset,get count(){return count;}};
  }
  function assetCandidates(manifest,npcId,kind,outfit=null){
+  // Always use the new expression, not older cut-ins or reactions, for v2 characters.
+  if(V2_IDS.has(npcId))return vnCandidates(npcId,kind);
   const entry=manifest?.characters?.[npcId];
   const belongsToNpc=path=>typeof path==='string'&&(
    path.startsWith('/rpg-assets/'+npcId+'.')||
@@ -469,7 +394,7 @@
   return (/^\/rpg-assets\/reactions\/[a-z0-9_-]+\/attack\.(?:png|webp|jpe?g)$/i.test(path)?' has-wide-action-art':'')+
    (/\/cutins\/match-cutin\.webp$/i.test(path)?' has-match-art':'')+
    (/^\/rpg-assets\/reactions\/laca\/(?:casual|lifeguard)\/attack\.png$/i.test(path)?' has-wide-action-art':'')+
-   (/\/(?:vn-expressions|expression-portraits)\/[a-z_-]+\.(?:png|webp)$/i.test(path)?' has-vn-expression':'');
+   (/\/expressionsv2\/[a-z_-]+\.png$/i.test(path)?' has-vn-expression':'');
  }
  function assetFor(manifest,npcId,kind){
   return assetCandidates(manifest,npcId,kind)[0]||null;
