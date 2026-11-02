@@ -131,8 +131,7 @@ body.rpg-duel .npc-reaction-card.npc-reaction-attack .npc-reaction-portrait{
  flex:1 1 auto;min-height:0;width:100%;transform:none;
  background:radial-gradient(ellipse at center,#4c3049 0%,#101425 83%);
 }
-body.rpg-duel .npc-reaction-card.npc-reaction-attack .npc-reaction-portrait img,
-body.rpg-duel .npc-reaction-card.npc-reaction-attack.has-vn-expression .npc-reaction-portrait img:not(.rpg-safe-avatar){
+body.rpg-duel .npc-reaction-card.npc-reaction-attack .npc-reaction-portrait img{
  display:block;width:100%;height:100%;max-height:100%;
  object-fit:contain;object-position:center center;filter:none;
 }
