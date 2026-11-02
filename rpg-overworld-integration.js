@@ -1423,6 +1423,8 @@
         if(message.id==='activities'||message.id==='events'){hideMenu();if(message.id==='activities')showActivities(bridge()?.activities()||[]);else showEvents();return;}
       }
       if(message.kind==='person'){
+        // Capture the exact rendered sprite before conversation UI takes over.
+        bridge()?.setVisiblePose?.(message.id,message.src);
         const poseTrigger=poseTriggersById.get(message.id);
         if(poseTrigger){void playPoseTrigger(poseTrigger);return}
         // Capture the explicitly tapped NPC before the native engine renders.

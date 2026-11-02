@@ -171,7 +171,7 @@ window.NeoOverworldEyeLevel = (() => {
       button.append(img, fallback, name);
       button.addEventListener('click', event => {
         if (suppressClick) { event.preventDefault(); return; }
-        openPerson(p);
+        openPerson(p,img.currentSrc||img.getAttribute('src')||art?.src||'');
       });
       cast.append(button);
       sprites.push({p,art,button,img});

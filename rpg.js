@@ -524,9 +524,23 @@ function travelTo(placeId,{intro=true}={}){
 }
 let overworldScenePortraits={participants:[],focused:null,conversation:false};
 let overworldRenderedDialogue='';
+// The map/eye-level iframe reports the exact image the player interacted with.
+const overworldClickedPoses=new Map();
+function visibleOverworldPose(id){
+ const pose=overworldClickedPoses.get(id);
+ return pose&&pose.day===state.day&&pose.slot===state.slot&&pose.location===state.location?pose.src:null;
+}
 // Optional overworld adapter: the existing campaign remains authoritative.
 window.NeoRpgOverworldBridge=Object.freeze({
  resetCampaign,
+ setVisiblePose(id,src){
+  if(!cast[id]||!currentPeople().includes(id)||typeof src!=='string')return false;
+  let url;try{url=new URL(src,location.href)}catch{return false}
+  if(url.origin!==location.origin||!url.pathname.startsWith('/rpg-assets/characters/'+id+'/')||
+     !/\.(?:png|webp|jpe?g)$/i.test(url.pathname))return false;
+  overworldClickedPoses.set(id,{src:url.pathname+url.search,day:state.day,slot:state.slot,location:state.location});
+  return true;
+ },
  scenePortraits(){return overworldScenePortraits;},
  dialogueText(){return overworldRenderedDialogue;},
  portrait(id){
@@ -653,7 +667,10 @@ function planSharedActivity(id){
 
 async function glanceAt(id){
  if(!cast[id]||!currentPeople().includes(id)||typeof window==='undefined')return;
- let portrait=scenePortraitSource(id,'neutral',activeOutfitSceneId);
+ // Glance must show the same sprite the player clicked, not a random
+ // alternate from the crop catalog or a dialogue-expression portrait.
+ const clickedPose=visibleOverworldPose(id);
+ let portrait=clickedPose||scenePortraitSource(id,'neutral',activeOutfitSceneId);
  const currentName=portrait.split('/').pop().split('?')[0];
  let focus=null;
  try{
@@ -667,14 +684,16 @@ async function glanceAt(id){
   const overworld=overworldResponse.ok?await overworldResponse.json():null;
   const activeEntry=active?.characters?.[id]?.variants?.[currentName]||null;
   const isSpecial=/special-day-\d+\.|\/overworld-variants\//i.test(portrait);
-  if(activeEntry){focus=activeEntry;}
+  const overworldVariants=Object.values(overworld?.characters?.[id]?.variants||{});
+  const exact=overworldVariants.find(entry=>String(entry?.image||'').replace(/[?].*$/,'')===String(portrait).replace(/[?].*$/,''));
+  if(clickedPose){
+   // Crop metadata may shape the initial view but cannot replace this image.
+   focus=exact||activeEntry||{top:0,bottom:1,left:0,right:1};
+  }else if(activeEntry){focus=activeEntry;}
   // Normal glances use the exact exported source path and crop preset.
   // Special looks stay on the active stage image and active special crop.
-  if(!isSpecial){
-   // A deliberate “Glance at” uses the image-specific overworld crop preset.
-   // Arrival chimes never read this file, so entering a location keeps its normal framing.
-   const overworldVariants=Object.values(overworld?.characters?.[id]?.variants||{});
-   const exact=overworldVariants.find(entry=>String(entry?.image||'').replace(/[?].*$/,'')===String(portrait).replace(/[?].*$/,''));
+  if(!clickedPose&&!isSpecial){
+   // The classic/standalone screen retains its previous prepared-art fallback.
    const exportedOverworld=exact||overworldVariants[0]||null;
    if(exportedOverworld?.image){
     // The deliberate glance always presents the prepared overworld crop.
