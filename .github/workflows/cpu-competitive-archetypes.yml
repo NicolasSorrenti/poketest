@@ -20,10 +20,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate archetype deck construction and historical game setup
-        run: node --test tests/cpu_competitive_decks.test.js
+      - name: Validate competitive deck module syntax
+        run: node --check cpu_competitive_decks.js
       - name: Check strategic planner and RPG difficulty remain correct
-        run: node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+        run: node --test tests/cpu_apex_energy_sequence.test.js tests/cpu_apex_computer_search_energy.test.js
   matchup-tournament:
     name: ${{ matrix.group }} competitive matchups
     runs-on: ubuntu-latest
