@@ -107,7 +107,7 @@ function observation(game,side){
 const card=id=>CATALOG.get(id);
 const slotUnit=(p,slot)=>slot===-1?p.active:p.bench[slot];
 const slots=p=>[-1,...p.bench.map((_,i)=>i)];
-function energyPool(unit){
+function energyPool(unit,turnSerial=null){
  return (unit?.energies||[]).flatMap(id=>{
   // Erika's Oddish converts every attached CARD to exactly one Grass
   // unit while Photosynthesis is enabled. The public flag is supplied by
@@ -121,9 +121,11 @@ function energyPool(unit){
   if(buzzapType)return [buzzapType,buzzapType];
   const n=card(id)?.name||'';
   // Energy Burn converts every attached Energy card into Fire while active.
-  // The reducer clears energyBurnUntil at the next turn start; Double
-  // Colorless remains two Fire units, matching the authoritative energy pool.
-  if(unit?.energyBurnUntil)return n==='Double Colorless Energy'?['Fire','Fire']:['Fire'];
+  // The reducer clears energyBurnUntil at the next turn start; forecasts
+  // at a later turnSerial must not retain that conversion. Double Colorless
+  // remains two Fire units while Energy Burn is actually active.
+  if(unit?.energyBurnUntil&&(turnSerial===null||unit.energyBurnUntil>turnSerial))
+   return n==='Double Colorless Energy'?['Fire','Fire']:['Fire'];
   if(n==='Double Colorless Energy')return ['Colorless','Colorless'];
   if(n==='Miracle Energy')return ['Any','Any'];
   if(n==='Rainbow Energy')return ['Any'];
@@ -1296,7 +1298,7 @@ function score(a,o,cfg,used){
 // and probabilities, and never calls the reducer or reads an unrevealed card.
 function projectedAttackValue(active,defender,turnSerial=0,benchCount=null){
  if(!active||!defender||['Asleep','Paralyzed'].includes(active.status))return 0;
- const attacks=active.effectiveAttacks||card(active.id)?.attacks||[],pool=energyPool(active);
+ const attacks=active.effectiveAttacks||card(active.id)?.attacks||[],pool=energyPool(active,turnSerial);
  const hp=hpRemaining(defender);
  let best=0;
  for(let i=0;i<attacks.length;i++){

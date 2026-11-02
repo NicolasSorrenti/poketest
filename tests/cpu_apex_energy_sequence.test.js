@@ -92,6 +92,24 @@ test('Apex forecasts live Energy Burn conversion for attack and attachment choic
  const o=board();o.turnSerial=9;o.opponent.active=four;
  assert.equal(AI.strongestUsableOpponentAttack(o,o.self.active),100,
   'public opponent threat includes an already active Energy Burn');
+ assert.equal(AI.projectedAttackValue(four,target,12),0,
+  'a future-turn forecast cannot reuse Energy Burn after its expiry serial');
+});
+
+test('Apex two-turn Energy horizon does not carry Energy Burn into the next turn',()=>{
+ const charizard='base1-4',water='base1-102',fire='base1-98';
+ const o=board();
+ o.phase='game';o.turnSerial=9;o.round=5;
+ o.self.active={id:charizard,energies:[water,water],energyBurnUntil:10,damage:0,status:null};
+ o.self.hand=[water,water];
+ o.opponent.active={id:MACHOP,energies:[],damage:0,status:null};
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ assert.equal(AI.energyHorizonBonus(activeAttach,o,cfg),0,
+  'a fourth Water next turn cannot fund Fire Spin without reactivating Energy Burn');
+ o.self.active.energies=[fire,fire];
+ o.self.hand=[fire,fire];
+ assert.ok(AI.energyHorizonBonus(activeAttach,o,cfg)>0,
+  'four printed Fire Energy still make a real two-turn Fire Spin setup');
 });
 
 test('Apex does not attach Rainbow Energy for an immediate self-knockout',()=>{
