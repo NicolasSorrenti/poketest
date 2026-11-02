@@ -315,7 +315,9 @@
   const point=p=>p.foot||map.anchors[p.anchor];
   const person=p=>config.characters[p.id]||{name:p.id.replace(/(^|[_-])([a-z])/g,(_,sep,letter)=>' '+letter.toUpperCase()).trim(),face:'',poses:{}};
   const pose=p=>{const art=person(p).poses?.[p.pose||'standing'];return art&&Number.isFinite(p.height)?{...art,height:p.height}:art};
-  const face=p=>person(p).face||'';
+  // Map thumbnails and preview faces share the new neutral expression.
+   const v2Faces=new Set('akari alma barb camila daisy elena elio iris jicy jinx jun kaede laca luna lyla marina nereo reina rina shiori sierra sol teo yuna'.split(' '));
+   const face=p=>v2Faces.has(p.id)?'/rpg-assets/characters/'+p.id+'/expressionsv2/neutral.png':person(p).face||'';
   let chibiMode=params.has('rpg-integration')&&params.get('chibi')==='1';
   const placementSpriteNodes=[];
   function setChibiMode(enabled){
