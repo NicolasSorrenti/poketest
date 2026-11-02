@@ -1732,26 +1732,29 @@ test('Apex prepares a fully charged Potion rescue before a non-winning attack',(
 
 test('Apex prepares Rainbow recoil for an already-funded Rage knockout',()=>{
  // Jungle Dodrio has 20 HP left and a funded Rage. Rainbow leaves 10 HP,
- // raises Rage from 60 to 70, and KOs Hitmonchan before its ready Jab can
- // knock Dodrio out. Without recoil projection the stranded-Energy guard
+ // raises Rage from 60 to 70, and KOs Blastoise before its ready Hydro Pump
+ // can knock Dodrio out. Without recoil projection the stranded-Energy guard
  // mistakenly penalizes the attachment by 140 and lets an attack end turn.
  const o=board();
  Object.assign(o,{phase:'game',round:5,turnSerial:11});
  const CATALOG=require('../headless_duel').CATALOG;
  const dodrioHp=Number(CATALOG.get('base2-34').hp);
- const hitmonchanHp=Number(CATALOG.get(HITMONCHAN).hp);
+ const blastoiseHp=Number(CATALOG.get('base1-2').hp);
  o.self.active={id:'base2-34',energies:['base5-81','base5-81','base5-81','base5-81'],
   damage:dodrioHp-20,status:null};
  o.self.hand=['base5-80']; // Rainbow Energy
  o.self.bench=[{id:RATTATA,energies:[],damage:0}];
- o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ o.opponent.active={id:'base1-2',energies:['base1-102','base1-102','base1-102'],
+  damage:blastoiseHp-70,status:null};
  o.opponent.bench=[{id:RATTATA,energies:[],damage:0}];
  const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ assert.ok(AI.strongestUsableOpponentAttack(o,o.self.active)>=20,
+  'Blastoise has a publicly funded knockout against the damaged Dodrio');
  const after={...o.self.active,damage:o.self.active.damage+10,
   energies:[...o.self.active.energies,'base5-80']};
- assert.equal(AI.strongestAffordableAttack(o.self.active,o.opponent.active),hitmonchanHp-10,
+ assert.equal(AI.strongestAffordableAttack(o.self.active,o.opponent.active),60,
   'funded Rage is ten short of a knockout before recoil');
- assert.equal(AI.strongestAffordableAttack(after,o.opponent.active),hitmonchanHp,
+ assert.equal(AI.strongestAffordableAttack(after,o.opponent.active),70,
   'Rainbow counter creates a certain immediate knockout');
  const withBench=AI.score(activeAttach,o,cfg,{});
  const noBench=structuredClone(o);
