@@ -1794,6 +1794,18 @@ function syncSceneCG(){
 }
 // The album is a full-page character-first experience; unearned art never gets a URL.
 
+// Only the approved 2026 v2 expression sheets are used for these characters.
+// Hana's v2 sheet is not yet in the repository; she keeps her neutral main portrait.
+const RPG_V2_IDS=new Set(['akari','alma','barb','camila','daisy','elena','elio','iris','jicy','jinx','jun','kaede','laca','luna','lyla','marina','nereo','reina','rina','shiori','sierra','sol','teo','yuna']);
+const RPG_V2_MOODS=['neutral','happy','surprised','vulnerable','irritated','determined'];
+const RPG_V2_BATTLE=['battle-attack','battle-hurt','battle-victory'];
+const RPG_V2_MOOD_ALIASES={smile:'happy',smirk:'happy',playful:'happy',flirty:'happy',soft:'vulnerable',sad:'vulnerable',concerned:'vulnerable',worried:'vulnerable',embarrassed:'vulnerable',angry:'irritated',annoyed:'irritated',focused:'determined',confident:'determined',attack:'battle-attack',hurt:'battle-hurt',victory:'battle-victory'};
+function rpgV2Expression(id,emotion='neutral'){
+ if(!RPG_V2_IDS.has(id))return null;
+ const key=String(emotion||'neutral').toLowerCase().replace(/_/g,'-');
+ const name=[...RPG_V2_MOODS,...RPG_V2_BATTLE].includes(key)?key:(RPG_V2_MOOD_ALIASES[key]||'neutral');
+ return '/rpg-assets/characters/'+id+'/expressionsv2/'+name+'.png';
+}
 const ART_TYPES=[{id:'cg',label:'CGs'},{id:'expressions',label:'Expressions'},{id:'battle',label:'Battle art'},{id:'outfits',label:'Outfits'}];
 const artEntries=new Map();
 const artSeen=state.artSeen&&typeof state.artSeen==='object'&&!Array.isArray(state.artSeen)?state.artSeen:(state.artSeen={});
@@ -1803,11 +1815,18 @@ function buildArtEntries(){
  artEntries.clear();
  const register=(id,type,label,path)=>{
   if(typeof path!=='string'||!/^\/rpg-assets\/[\w./-]+\.(?:png|webp|jpg|jpeg)$/i.test(path)||path.includes('..'))return;
+  // Retire the old expressions from the gallery, including previously seen paths.
+  if(type==='expressions'&&!/\/expressionsv2\//.test(path))return;
+  if(/\/(?:expression-portraits|expression-faces|vn-expressions|expressions)\//.test(path))return;
   const key=artKey(path);
   if(artEntries.has(key))return;
   artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artViewed[key]});
  };
  for(const item of window.NeoRpgArtManifest||[])if(cast[item.id])register(item.id,item.type,item.title,item.path);
+ for(const id of RPG_V2_IDS)if(cast[id]){
+  for(const mood of RPG_V2_MOODS)register(id,'expressions',mood,rpgV2Expression(id,mood));
+  for(const mood of RPG_V2_BATTLE)register(id,'battle',mood,rpgV2Expression(id,mood));
+ }
  for(const [id,art] of Object.entries(window.NeoRpgCharacterPacks?.looks||{})){
   for(const [emotion,path] of Object.entries(art.expressions||{}))register(id,'expressions',emotion,path);
   if(art.portrait)register(id,'expressions','Portrait',art.portrait);
@@ -1827,6 +1846,7 @@ function buildArtEntries(){
 function recordArtPath(path){
  const normalized=String(path||'').split('?')[0].replace(/^https?:\/\/[^/]+/,'');
  if(!/^\/rpg-assets\/(?:characters|reactions)\/[^?#]+\.(?:png|webp|jpe?g)$/i.test(normalized))return;
+ if(/\/(?:expression-portraits|expression-faces|vn-expressions|expressions)\//.test(normalized))return;
  if(!artSeen[normalized]){artSeen[normalized]={day:state.day,slot:state.slot};buildArtEntries();persist();}
 }
 window.NeoRpgRecordArt=recordArtPath;
@@ -2300,49 +2320,9 @@ function hanaOverworldPortrait(sceneId=activeOutfitSceneId){
 }
 const solExpressions={neutral:'neutral',surprised:'surprised',vulnerable:'worried',irritated:'worried',determined:'neutral',happy:'smile'};
 function portraitPaths(id,expression='neutral',sceneId=activeOutfitSceneId){
- // Reuse the day-locked special outfit in ordinary, dialogue and duel avatars.
- // Battle-exclusive cut-ins and reaction images remain on their own asset routes.
- if(SPECIAL_LOOKS[id]){
-  const special=dailyStagePortrait(id,state.day);
-  if(special)return [special,cast[id]?.portrait||'/rpg-assets/'+id+'.png'];
- }
-
- if(id==='hana'){
-  const fallback=cast.hana.portrait||'/rpg-assets/hana.png';
-  return [fallback];
- }
- // Only the reviewed Elio expressions may precede his canonical neutral portrait.
- if(id==='elio'){
-  const name=({smile:'happy',vulnerable:'soft',worried:'concerned',irritated:'concerned'}[expression]||expression);
-  const neutral='/rpg-assets/elio.png';
-  return ['happy','surprised','soft','concerned'].includes(name)?
-   ['/rpg-assets/characters/elio/expression-portraits/'+name+'.png',neutral]:[neutral];
- }
- // Alma's legacy guest sheet depicts another character. Only the cafe set is compatible.
- // The v4 concerned/surprised pair matches the canonical cafe outfit.
- if(id==='alma'){
-  const name=['neutral','happy','soft','concerned','surprised'].includes(expression)?expression:'neutral';
-  return ['/rpg-assets/characters/alma/expression-portraits/'+name+'.webp','/rpg-assets/alma.png'];
- }
- // Explicit reviewed scene slots. Unknown emotions stay with canonical neutral/original.
- const reviewedPairs={akari:['happy','soft'],camila:['happy','soft'],kaede:['happy','soft'],marina:['happy','soft'],
-  reina:['neutral','happy','surprised'],shiori:['neutral','happy','surprised'],yuna:['neutral','happy','surprised'],
-  iris:['neutral','happy','surprised'],jun:['neutral','happy','surprised'],nereo:['neutral','happy','surprised'],teo:['neutral','happy','surprised'],
-  hana:['neutral','happy','surprised','concerned','soft']};
- const approved=reviewedPairs[id];
- if(approved){
-  const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
-  const alias=id==='hana'?({vulnerable:'soft',irritated:'concerned',determined:'neutral'}[expression]||expression):expression;
-  const name=approved.includes(alias)?alias:approved.includes('neutral')?'neutral':null;
-  return name?['/rpg-assets/characters/'+id+'/expression-portraits/'+name+'.webp',fallback]:[fallback];
- }
- const fallback=cast[id].portrait||'/rpg-assets/'+id+'.png';
- let legacy='';
- if(expressionGuests.has(id))legacy='/rpg-assets/characters/'+id+'/vn-expressions/'+expression+'.webp';
- if(id==='sol')legacy='/rpg-assets/characters/sol/expressions/'+(solExpressions[expression]||'neutral')+'.png';
- const art=cast[id].outfitArt||window.NeoRpgCharacterPacks?.byId?.(id)?.art||null;
- if(['rina','sierra','sol','jinx','luna'].includes(id)&&!Object.prototype.hasOwnProperty.call(art?.expressions||{},expression))expression='neutral';
- return OUTFITS?.sources?.(art,{location:state.location,slot:state.slot,day:state.day,sceneId},expression,{base:fallback,legacy})||[legacy,fallback].filter(Boolean);
+ const v2=rpgV2Expression(id,expression);
+ // Never fall back to old expression sheets (including outfit expression sheets).
+ return v2?[v2]:[cast[id]?.portrait||'/rpg-assets/'+id+'.png'];
 }
 // Persona C bust framing approved by the player. Only the RPG stage uses it.
 // Original art, event CGs and booster portraits remain untouched.
@@ -2422,25 +2402,8 @@ const RPG_STAGE_PORTRAIT_LAYOUTS=Object.freeze({
  sierra:{folder:'expression-portraits',extension:'webp',extra:'portrait.png'}
 });
 function personaCStageCandidates(id,emotion,normal){
- if(id==='elio')return normal; // Elio uses only reviewed sources.
- if(id==='hana'&&normal.some(path=>path.includes('/overworld-variants/')))return normal;
- const dir='/rpg-assets/characters/'+id+'/';
- const names=PERSONA_C_EXPR[emotion]||PERSONA_C_EXPR.neutral;
- const picks=[],layout=RPG_STAGE_PORTRAIT_LAYOUTS[id]||{folder:'expression-portraits',extension:'webp'};
- if(id==='laca'){
-  // Do not override the canonical lifeguard/casual outfit selected upstream.
-  const outfit=normal.some(p=>p.includes('/lifeguard/'))?'lifeguard':'casual';
-  for(const n of names){picks.push(dir+'outfits/'+outfit+'/'+n+'.webp',dir+'outfits/'+outfit+'/'+n+'.png');}
-  picks.push(dir+'outfits/'+outfit+'/neutral.webp');
- }else{
-  for(const n of names){
-   const resolved=id==='sol'?({happy:'smile',vulnerable:'worried'}[n]||n):n;
-   picks.push(dir+layout.folder+'/'+resolved+'.'+layout.extension);
-  }
-  if(id==='sol')picks.push(dir+'portraits/primary.png');
-  if(layout.extra)picks.push(dir+layout.extra);
- }
- return [...new Set([...picks,...normal].filter(Boolean))];
+ const v2=rpgV2Expression(id,emotion);
+ return v2?[v2]:normal.filter(src=>!/(?:\/expression-portraits\/|\/expression-faces\/|\/vn-expressions\/|\/expressions\/)/.test(src));
 }
 // Daily overworld-only alternate portraits. Stable for the entire in-game day.
 const DAILY_STAGE_ALTERNATES={
@@ -2483,24 +2446,18 @@ function sceneOutfitPortraitPaths(id,expression,sceneId=activeOutfitSceneId){
  // Laca's active lifeguard look uses the matching full-body front pose.
  if(id==='laca'&&selected.key==='lifeguard')
   paths.push(LACA_OVERWORLD_DIALOGUE_DEFAULTS.lifeguard);
- const expressionPath=selected.variant?.expressions?.[expression];
- // Do not replace a named outfit with a generic expression of other clothes.
- if(expressionPath?.includes('/outfits/'+selected.key+'/'))paths.push(expressionPath);
+ // Outfit illustration remains available, but legacy outfit expressions are retired.
  paths.push(selected.variant?.portrait);
  return [...new Set(paths.filter(path=>OUTFITS.safeImage(path)))];
 }
 function stagePortraitPaths(id,expression,sceneId){
  const alternate=dailyStagePortrait(id,state.day);
- // Display priority:
- // 1. Active daily special look (Barb/Akari/Hana), unchanged for the whole day.
- // 2. Current scheduled or scene-specific costume (e.g. Laca lifeguard).
- // 3. Creator-approved neutral art / regular overworld default.
- // 4. Original expressions and standard fallbacks.
  const outfit=sceneOutfitPortraitPaths(id,expression,sceneId);
  const normal=personaCStageCandidates(id,expression,portraitPaths(id,expression,sceneId));
  const master=dialogueMasterSource(id,expression)||defaultOverworldDialogueSource(id,expression,normal)||(id==='camila'?CAMILA_DIALOGUE_MASTER:null);
- const dialogue=master?[master,...normal.filter(path=>path!==master)]:normal;
- const candidates=[...new Set([...outfit,...dialogue])];
+ // v2 expressions always take priority; named outfits and poses may remain
+ // as non-expression fallbacks for scenes with bespoke costumes.
+ const candidates=[...new Set([...normal,...outfit,...(master?[master]:[])])];
  return alternate?[alternate,...candidates.filter(path=>path!==alternate)]:candidates;
 }
 function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
@@ -2520,8 +2477,9 @@ function applyPersonaCStageCrop(img,id){
   /\/standing-front\.png(?:[?#]|$)/.test(src)||
   /\/portraits\/special-day-\d+\.png(?:[?#]|$)/.test(src);
  const alreadyCropped=/\/(?:expression-portraits|expression-faces|vn-expressions)\//.test(src);
+ const v2FullBody=/\/expressionsv2\//.test(src);
  img.style.setProperty('--rpg-dialogue-bust-height',
-  fullBody?'278%':alreadyCropped?'165%':'190%');
+  (fullBody||v2FullBody)?'278%':alreadyCropped?'165%':'190%');
  // Old inline size and offsets stretched the original images.
  for(const prop of ['width','height','left','top'])img.style.removeProperty(prop);
 }
