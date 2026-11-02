@@ -36,7 +36,7 @@
   const outfitArt=outfit==='lifeguard'?base+'events/laca_booster_lifeguard_square_1024.png':
    outfit==='casual'?base+'events/laca_booster_casual_square_1024.png':null;
   return [outfitArt,base+'events/booster.webp',base+'events/booster.png',
-   '/rpg-assets/characters/'+npc+'/expressionsv2/battle-attack.png'];
+   npc==='hana'?'/rpg-assets/reactions/hana/attack.png':base+'expressionsv2/battle-attack.png'];
  }
  const isReady=d=>!!d&&d.preview?.phase==='ready';
  const isLaunched=d=>!!d&&(!d.preview||d.preview.phase==='launched');
