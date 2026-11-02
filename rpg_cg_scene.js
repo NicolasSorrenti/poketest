@@ -67,12 +67,21 @@
     if(token!==serial)return;
     if(index===paths.length){clear();onMissing?.();return;}
     const loader=doc.createElement('img');
-    loader.onload=()=>{
+    loader.decoding='async';
+    loader.onload=async()=>{
      if(token!==serial)return;
-     const changing=!!visibleId;
-     if(changing){if(image?.style)image.style.opacity='0';image.src=paths[index].path;image.alt=entry.title||'Story illustration';image.hidden=false;stage.classList.add('has-story-cg');setTimeout(()=>{if(token===serial&&image?.style)image.style.opacity='1';},0);}else{image.src=paths[index].path;image.alt=entry.title||'Story illustration';
+     // The network 'load' event may fire before a large CG is decoded.
+     // Keep the previous image on screen until the new bitmap is paint-ready.
+     if(typeof loader.decode==='function'){
+      try{await loader.decode();}
+      catch{if(!loader.naturalWidth){attempt(index+1);return;}}
+     }
+     if(token!==serial)return; // Rapid dialogue/CG changes cancel stale loads.
+     image.src=paths[index].path;
+     image.alt=entry.title||'Story illustration';
      image.hidden=false;
-     stage.classList.add('has-story-cg');if(image?.style)image.style.opacity='1';}
+     stage.classList.add('has-story-cg');
+     if(image?.style)image.style.opacity='1';
      visibleId=entry.id;
      if(entry.character&&typeof window!=='undefined')window.NeoRpgDiscreetAvatars?.set?.(stage,entry.character,'neutral',entry.character);
      seen.add(entry.id);
