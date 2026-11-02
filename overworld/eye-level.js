@@ -81,13 +81,25 @@ window.NeoOverworldEyeLevel = (() => {
     const slot = Number(params.get('slot') || 0);
     const oldName = map.id === 'shop' && slot === 2 ? 'card-shop-evening.png' : classicBackgrounds[map.id];
     const classicUrl = '/rpg-assets/' + (oldName || 'park.jpg');
+    // Dedicated, character-free 3200x1080 PNGs take priority over the
+    // transitional mirrored SVG panoramas. Never modify the top-down art.
+    const productionBackgrounds = {
+      arcade:'arcade-eye-level.png',
+      cafe:'cafe-eye-level.png',
+      park:'park-eye-level.png',
+      home:'apartment-eye-level.png',
+      center:'tournament-eye-level.png',
+      library:'library-eye-level.png'
+    };
+    const productionUrl = productionBackgrounds[map.id]
+      ? '/rpg-assets/eye-level/' + productionBackgrounds[map.id] : null;
     const panoramaUrl = '/rpg-assets/eye-level/' + map.id + '-panorama.svg';
     // The original shop illustration is an eye-level plate already, but is too large
     // for the repository connector to embed into an SVG. Build its wider version
     // from that same artwork in the browser, without changing the source image.
     const sources = map.id === 'shop'
       ? [classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
-      : [panoramaUrl, classicUrl, map.image].filter(Boolean);
+      : [productionUrl, panoramaUrl, classicUrl, map.image].filter(Boolean);
     let sourceIndex = 0;
     const sourceImage = new Image();
     const showNextSource = () => {
