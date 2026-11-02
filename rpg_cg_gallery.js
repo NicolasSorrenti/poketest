@@ -1092,6 +1092,23 @@
   });
  }
 
+ // Lyla's first six authored route chapters use their original, approved PNGs.
+ // Route 7 is registered separately above because it has a two-image transition.
+ for(const event of LYLA_PACK?.events||[]){
+  if(!/^lyla_route_[1-6]$/.test(event.id))continue;
+  const art=LYLA_PACK.art?.eventImages?.find(image=>image.sceneId===event.id);
+  if(!art?.path)continue;
+  catalog.push({
+   character:'lyla',id:event.id,category:'social',trigger:'story_milestone',sceneId:event.id,
+   place:null,minAffection:0,startDay:event.start,slot:null,title:event.title,
+   hint:'Complete Lyla\'s relationship chapter to unlock this memory.',
+   scene:'Approved original Lyla relationship-story illustration for '+event.title+'.',
+   composition:'Approved single-frame cinematic story CG.',outfit:'Lyla\'s approved route styling.',
+   expression:'Original authored story illustration.',environment:'Neo Harbor',mood:'story',
+   fanservice:0,path:art.path,thumb:art.path,dialogueSafe:'Lower fifth clear for dialogue UI'
+  });
+ }
+
  // Daisy's authored random events have their own JSON source.
  const DAISY_EVENTS=typeof module==='object'&&module.exports?require('./characters/daisy/extra_events.json'):window.NeoRpgCharacterPacks?.byId?.('daisy')?.events||[];
  // Some server-authorized Daisy events include an image but no art brief.
