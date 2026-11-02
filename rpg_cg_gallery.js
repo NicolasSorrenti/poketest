@@ -1201,7 +1201,9 @@
    // opening CG from a multi-image story. Do not falsely reject those assets.
    const approvedAlias=(e.character==='daisy'&&/^\/rpg-assets\/events\/cg\/(?:season01|slice-life)\/daisy_[a-z0-9_]+\.(?:png|webp)$/.test(e.path))||(e.id==='barb_random_cg_04'&&e.path==='/rpg-assets/characters/barb/events/barb_random_cg_04_accidental_model_v2.webp')||
     (e.id==='akari_barb_swimsuit_fitting'&&e.path===FIT.cgs[0].path);
-   if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png'))&&!approvedAlias)errors.push('Invalid asset path '+e.id);
+   // Authored character-pack slice CGs can use their original PNG filenames.
+   const packEventPNG=e.trigger==='slice'&&e.path==='/rpg-assets/characters/'+e.character+'/events/'+e.id+'.png';
+   if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png'))&&!approvedAlias&&!packEventPNG)errors.push('Invalid asset path '+e.id);
   }
   return errors;
  }
