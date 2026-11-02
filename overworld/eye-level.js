@@ -208,28 +208,49 @@ window.NeoOverworldEyeLevel = (() => {
       const width = camera.clientWidth, height = camera.clientHeight;
       if (!width || !height) return;
       const ratio = backdrop.naturalWidth && backdrop.naturalHeight
-        ? backdrop.naturalWidth / backdrop.naturalHeight : 1.75;
+        ? backdrop.naturalWidth / backdrop.naturalHeight : 3200/1080;
       const spriteHeight = Math.round(clamp(height * (useChibi ? .43 : .69), useChibi ? 115 : 210, useChibi ? 270 : 590));
-      const perLocation = {
-        shop:{spread:1.02,ground:12},home:{spread:.90,ground:12},
-        arcade:{spread:1.15,ground:12},park:{spread:1.20,ground:12},
-        cafe:{spread:.95,ground:12},center:{spread:1.14,ground:12},
-        library:{spread:.96,ground:12}
+      // Normalized staging positions for the 3200x1080 panoramas. These are
+      // deliberately separate from top-down map coordinates and can be tuned
+      // once the final PNG artwork is installed without touching gameplay.
+      // Each zone keeps feet on a common plane and avoids extreme side edges.
+      const sceneStaging = {
+        shop:   {slots:[.23,.44,.66,.83], ground:.105, scale:1.00},
+        arcade: {slots:[.16,.32,.50,.68,.84],ground:.115,scale:.98},
+        park:   {slots:[.15,.32,.50,.68,.85],ground:.105,scale:1.00},
+        cafe:   {slots:[.19,.39,.61,.81],ground:.12, scale:.96},
+        home:   {slots:[.23,.48,.75],ground:.115,scale:.94},
+        center: {slots:[.15,.32,.50,.68,.85],ground:.105,scale:1.00},
+        library:{slots:[.19,.39,.61,.81],ground:.115,scale:.96}
       };
-      const zone = perLocation[map.id] || {spread:1,ground:12};
-      // Keep all NPC sprites the same visual height; spacing is independent of
-      // their individual top-down foot placement or source-pose pixel height.
-      const spacing = Math.round(Math.max(useChibi ? 160 : 260,
-        spriteHeight * (useChibi ? .58 : .78)) * zone.spread);
-      const groupWidth = Math.max(0,(sprites.length-1)*spacing);
-      const side = Math.max(220,width*.30);
-      stageWidth = Math.ceil(Math.max(width * 1.55, height * ratio, groupWidth + side * 2));
+      const zone = sceneStaging[map.id] || sceneStaging.shop;
+      // Maintain the authored 3200x1080 proportions. Never stretch a
+      // panoramic background differently on mobile and desktop.
+      stageWidth = Math.ceil(Math.max(width * 1.4, height * ratio));
       backdrop.style.width = shade.style.width = cast.style.width = stageWidth + 'px';
-      const groupStart = (stageWidth-groupWidth)/2;
+      // Choose a centered run of slots, retaining location-specific anchors.
+      // For more NPCs than authored slots, distribute uniformly in the safe
+      // 12%-88% span. Preserve the RPG's NPC order for predictable tapping.
+      const count = sprites.length;
+      let slots;
+      if(count <= zone.slots.length){
+        const start=Math.floor((zone.slots.length-count)/2);
+        slots=zone.slots.slice(start,start+count);
+      } else {
+        slots=Array.from({length:count},(_,i)=>.12 + .76*(i+.5)/count);
+      }
+      // Don't let large sprites overlap on narrower screens. Widen the stage
+      // rather than shrinking characters or hiding NPCs.
+      const desiredGap = Math.round(Math.max(useChibi?140:210,spriteHeight*(useChibi?.55:.70)));
+      const minSpan = count>1 ? desiredGap*(count-1)/Math.max(.01,slots[count-1]-slots[0]) : 0;
+      if(minSpan > stageWidth){
+        stageWidth=Math.ceil(minSpan);
+        backdrop.style.width=shade.style.width=cast.style.width=stageWidth+'px';
+      }
       sprites.forEach(({button},i) => {
-        button.style.left = Math.round(groupStart + spacing*i) + 'px';
-        button.style.bottom = zone.ground + '%';
-        button.style.setProperty('--neo-eye-height', spriteHeight + 'px');
+        button.style.left=Math.round(slots[i]*stageWidth)+'px';
+        button.style.bottom=(zone.ground*100)+'%';
+        button.style.setProperty('--neo-eye-height',Math.round(spriteHeight*zone.scale)+'px');
       });
       moveTo(offset);
     }
