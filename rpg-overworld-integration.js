@@ -374,7 +374,7 @@
         if(seen)continue;
         poseTriggersById.set(item.id,{id:item.id,pose,src:url.pathname+url.search,scene:data.location,key});
       }
-      syncPoseTriggerQueue();
+      // Pose triggers wait for an explicit character interaction.
     }
     async function playPoseTrigger(item){
       if(poseTriggerBusy||poseTriggerAwaitingDialogue||overlay.hidden||suspendedForDuel)return false;
@@ -410,24 +410,8 @@
     }
     function syncPoseTriggerQueue(){
       const data=bridge()?.snapshot();
-      if(poseTriggerAwaitingDialogue){
-        if(data?.locked)return;
-        poseTriggerAwaitingDialogue=false;
-      }
-      if(poseTriggerBusy||overlay.hidden||suspendedForDuel)return;
-      if(data?.locked){
-        if(poseTriggersById.size&&!poseTriggerRetryTimer){
-          poseTriggerRetryTimer=setTimeout(()=>{poseTriggerRetryTimer=null;syncPoseTriggerQueue()},300);
-        }
-        return;
-      }
-      const item=[...poseTriggersById.values()].find(entry=>
-        entry.scene===data?.location&&data?.people.includes(entry.id));
-      if(!item||poseTriggerRetryTimer)return;
-      poseTriggerRetryTimer=setTimeout(()=>{
-        poseTriggerRetryTimer=null;
-        void playPoseTrigger(item).then(started=>{if(!started)syncPoseTriggerQueue()});
-      },120);
+      if(poseTriggerAwaitingDialogue&&!data?.locked)poseTriggerAwaitingDialogue=false;
+      // No automatic pose playback: only the person-click handler starts it.
     }
     function syncPortraits(hasCG,idleFocus=null){
       const cast=bridge()?.scenePortraits?.();
@@ -1396,7 +1380,7 @@
         const onLifeguardShift=id==='laca'&&data.location==='park'&&(data.slot===0||data.slot===1);
         return onLifeguardShift?'laca:lifeguardFrontLeaning':id;
       }).join(',');
-      const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&slot='+encodeURIComponent(data.slot)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
+      const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&slot='+encodeURIComponent(data.slot)+'&day='+encodeURIComponent(data.day)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
       if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
       note.hidden=true;
     }
