@@ -53,7 +53,7 @@
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
  "/rpg_planned_dates.js",
- "/rpg_preduel.js?v=art-v2-20261102",
+ "/rpg_preduel.js?v=restore-original-attacks-20261102",
  "/rpg_situations.js",
  "/rpg_season_journey.js",
  "/rpg_collection.js",
