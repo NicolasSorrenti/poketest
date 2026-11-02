@@ -648,7 +648,7 @@
     {
       "id": "lyla_random_fitting_pins",
       "npc": "lyla",
-      "title": "A Hem and a Deck Box",
+      "title": "The Other Lyla",
       "start": 12,
       "end": 65,
       "place": "shop",
@@ -661,25 +661,41 @@
       "lines": [
         {
           "speaker": "Narrator",
-          "text": "Lyla is sitting on a low stool with a roll of hem tape and a fashion sample jacket."
+          "text": "At the card shop, Lyla props her phone against her deck box. It shows a fitting photo from the studio. The jacket is familiar; the person wearing it is almost, but not quite, her."
         },
         {
           "speaker": "lyla",
-          "text": "They size everything around tall mannequins. I brought tape. Also my deck."
+          "text": "They used AI on the fitting photos. Changed my proportions, touched up my face, even fixed the jacket before anyone moved a single pin."
         },
         {
           "speaker": "Protagonist",
-          "text": "Which one is harder to make fit?"
+          "text": "Doesn't that bother you?"
         },
         {
           "speaker": "lyla",
-          "text": "The jacket. The deck actually listens."
+          "text": "Not really. I'm good enough for the job. They hired me, didn't they? And the real jacket fits."
+        },
+        {
+          "speaker": "lyla",
+          "text": "It's just weird. I'm looking at a version of me that somebody made up, and everyone acts like I should recognize her."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Are you going to say something?"
+        },
+        {
+          "speaker": "lyla",
+          "text": "Maybe. I'm not starting a war over a photo. I'll do the shoot, take the payment, buy some cards."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She turns her phone facedown, checks a stubborn pin in the actual sleeve, and calmly reaches for her deck box."
         }
       ],
       "choices": [
         {
-          "label": "Help adjust the sleeve length",
-          "reply": "You're a more useful assistant than half the studio.",
+          "label": "Say you'd rather see the unedited picture",
+          "reply": "Me too, I think. But they'll use whichever sells the jacket. I can live with that.",
           "kind": "support",
           "flag": "lyla_random_hem_help",
           "delta": {
@@ -690,8 +706,8 @@
           }
         },
         {
-          "label": "Ask why she keeps the original fit notes",
-          "reply": "Because next time I want them to remember I'm the client too.",
+          "label": "Joke that the AI version probably can't play cards",
+          "reply": "She'd probably shuffle my deck backwards. At least there's one thing I'm definitely better at.",
           "kind": "honest",
           "flag": "lyla_random_fit_notes",
           "delta": {

@@ -39,6 +39,11 @@
       "sceneId": "lyla_random_test_frame",
       "path": "/rpg-assets/characters/lyla/events/a_detailed_anime_style_illustration_the_same_blon.png",
       "prompt": "User-selected Lyla CG test image. Preserve the supplied PNG exactly; use it as the event's full-screen scene art."
+    },
+    {
+      "sceneId": "lyla_random_fitting_pins",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_fitting_pins.png",
+      "prompt": "Use the existing user-supplied Lyla fitting illustration exactly as uploaded for the scene about the studio's AI-retouched fitting photo. Lyla is confident in her work but finds the altered likeness uncanny. Do not modify the original PNG."
     }
   ]
 }

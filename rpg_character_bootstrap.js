@@ -48,7 +48,7 @@
  "/rpg_cross_character_events.js?v=20261026-crossovers",
  "/rpg_daisy_event_additions.js?v=1",
  "/rpg_slice_of_life.js?v=phone-selfie-chat-20261031-3",
- "/rpg_cg_gallery.js?v=art-v2-20261102",
+ "/rpg_cg_gallery.js?v=lyla-ai-fitting-20261102",
  "/rpg_cg_scene.js?v=20261026-in-scene",
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
