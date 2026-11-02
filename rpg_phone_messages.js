@@ -78,6 +78,7 @@
       '.rpg-phone-name{margin:0 0 10px;font-size:20px;color:#ffd0e8}',
       '.rpg-phone-photo{position:relative;display:grid;place-items:center;width:100%;height:min(42vh,370px);min-height:190px;overflow:hidden;border:1px solid #9c70a6;border-radius:15px;background:radial-gradient(ellipse at 50% 38%,#55364f,#211b32 76%)}',
       '.rpg-phone-photo img{display:block;width:100%;height:100%;object-fit:contain}',
+      '.rpg-phone-photo{touch-action:none}',
       '.rpg-phone-caption,.rpg-phone-bubble{max-width:95%;margin:14px 0 0;padding:12px 14px;border:1px solid #745c80;border-radius:14px;background:#29253b;line-height:1.45}',
       '.rpg-phone-bubble.player{margin-left:auto;border-color:#a65d91;background:#49304b}',
       '.rpg-phone-choices{display:grid;gap:9px;margin-top:16px}',
@@ -95,9 +96,23 @@
     dialog.addEventListener('cancel',event=>event.preventDefault());
     document.body.append(notice,dialog);
     function safe(){return !dialog.open&&canShow();}
+    let photoPanzoom=null;
+    function attachZoom(frame,img){
+      const setup=()=>{
+       if(!frame.isConnected||!img.naturalWidth||!img.naturalHeight||photoPanzoom)return;
+       photoPanzoom=window.NeoRpgImagePanzoom?.mount(frame,img,{maxZoom:6})||null;
+      };
+      img.addEventListener('load',setup);
+      if(img.complete&&img.naturalWidth)setup();
+    }
     function photo(pending,frame){
       const name=cast[pending.character]?.name||pending.character;
-      if(discreet?.()&&avatars?.set){avatars.set(frame,pending.character,'neutral',name);return;}
+      if(discreet?.()&&avatars?.set){
+        avatars.set(frame,pending.character,'neutral',name);
+        const safeImage=frame.querySelector('img.rpg-safe-avatar');
+        if(safeImage)attachZoom(frame,safeImage);
+        return;
+      }
       let src=pending.src||fallbackImage?.(pending.character)||'';
       if(!src){frame.textContent='Photo unavailable';return;}
       const img=make('img');img.src=src;img.alt='Photo from '+name;img.loading='eager';
@@ -108,6 +123,7 @@
         img.remove();frame.textContent='The photo could not be loaded.';
       };
       frame.append(img);
+      attachZoom(frame,img);
     }
     function button(label,handler,cls='rpg-phone-choice'){
       const b=make('button',label);b.type='button';b.className=cls;b.addEventListener('click',handler);return b;
@@ -115,6 +131,7 @@
     function draw(){
       const pending=state.phoneMessages?.pending;if(!pending)return;
       const name=cast[pending.character]?.name||pending.name||pending.character;
+      photoPanzoom?.destroy();photoPanzoom=null;
       dialog.replaceChildren();
       const shell=make('div');shell.className='rpg-phone-shell';
       const head=make('header');head.className='rpg-phone-head';
@@ -173,14 +190,14 @@
     }
     function defer(){
       const pending=state.phoneMessages?.pending;if(!pending)return;
-      pending.deferred=true;persist();dialog.close();refresh();
+      pending.deferred=true;persist();photoPanzoom?.destroy();photoPanzoom=null;dialog.close();refresh();
     }
     function finish(){
       const box=state.phoneMessages,pending=box?.pending;if(!pending)return;
       box.lastCharacter=pending.character;
       box.pending=null;
       if(box.nextDay<=state.day)box.nextDay=state.day+interval();
-      persist();dialog.close();refresh();render();
+      persist();photoPanzoom?.destroy();photoPanzoom=null;dialog.close();refresh();render();
     }
     function open(){
       const pending=state.phoneMessages?.pending;
