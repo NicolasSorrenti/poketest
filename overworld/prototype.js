@@ -271,7 +271,18 @@
     const unique=[],seen=new Set();
     for(const [key,art] of options){if(seen.has(art.src))continue;seen.add(art.src);unique.push(key);}
     if(!unique.length)return 'standing';
-    // Pick once when this location loads; subsequent paints keep the chosen pose stable.
+    // Keep each NPC's pose consistent across locations and reloads for one day phase.
+    const day=params.get('day'),slot=params.get('slot');
+    if(params.has('rpg-integration')&&day!==null&&slot!==null){
+      const key=['neo-overworld-phase-pose-v1',day,slot,id].join(':');
+      try{
+        const saved=sessionStorage.getItem(key);
+        if(saved&&unique.includes(saved))return saved;
+      }catch{}
+      const selected=unique[Math.floor(Math.random()*unique.length)];
+      try{sessionStorage.setItem(key,selected)}catch{}
+      return selected;
+    }
     return unique[Math.floor(Math.random()*unique.length)];
   }
   // Integrated mode displays only NPCs currently scheduled here by the RPG.
