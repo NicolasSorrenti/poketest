@@ -1704,3 +1704,28 @@ test('Apex immediate attachment scoring includes Rainbow self-damage in Rage KO 
  assert.equal(score(rainbow,10,level7),score(neutral,10,level7),
   'lower difficulty attachment scoring remains unchanged');
 });
+
+test('Apex prepares a fully charged Potion rescue before a non-winning attack',()=>{
+ const potion='base5-82',activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+ o.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT,FIGHT],damage:50,status:null};
+ o.self.hand=[potion];
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ assert.ok(AI.energyValue(o.self.active,potion)<=12,
+  'Potion adds no attack value to an already fully charged Hitmonchan');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[activeAttach],
+  'heal from 20 to 30 HP before attacking into a publicly ready 20-damage Jab');
+ o.self.active.damage=60;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[attack,activeAttach],
+  'do not force a Potion that still leaves the Active vulnerable to Jab');
+ o.self.active.damage=50;
+ o.self.prizeCount=1;
+ o.opponent.active.damage=50;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[attack,activeAttach],
+  'a guaranteed last-Prize knockout may be taken without spending Potion');
+ o.self.prizeCount=3;
+ o.opponent.active.damage=0;
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),[attack,activeAttach]),
+  [attack,activeAttach],'Level 7 preparation behavior remains unchanged');
+});
