@@ -10420,6 +10420,21 @@ const packs=[
   }
  }
 ];
+// Migrate loaded character-pack expression references without modifying original artwork.
+const V2_CHARACTER_IDS=new Set('akari alma barb camila daisy elena elio iris jicy jinx jun kaede laca luna lyla marina nereo reina rina shiori sierra sol teo yuna'.split(' '));
+const V2_EMOTIONS=new Set(['neutral','happy','surprised','vulnerable','irritated','determined','battle-attack','battle-hurt','battle-victory']);
+const V2_ALIASES={smile:'happy',smirk:'happy',playful:'happy',flirty:'happy',soft:'vulnerable',sad:'vulnerable',concerned:'vulnerable',worried:'vulnerable',embarrassed:'vulnerable',angry:'irritated',annoyed:'irritated',focused:'determined',confident:'determined',attack:'battle-attack',hurt:'battle-hurt',victory:'battle-victory'};
+for(const pack of packs){
+ if(!V2_CHARACTER_IDS.has(pack.id)||!pack.art)continue;
+ const dir='/rpg-assets/characters/'+pack.id+'/expressionsv2/';
+ const keys=new Set([...Object.keys(pack.art.expressions||{}),...V2_EMOTIONS]);
+ pack.art.expressions=Object.fromEntries([...keys].map(key=>{
+  const name=String(key).toLowerCase().replace(/_/g,'-');
+  return [key,dir+(V2_EMOTIONS.has(name)?name:V2_ALIASES[name]||'neutral')+'.png'];
+ }));
+ // An outfit keeps its dedicated portrait, but may not request retired expression art.
+ for(const variant of Object.values(pack.art.outfits?.variants||{}))if(variant?.expressions)variant.expressions={};
+}
 const cast={},looks={},schedules={},arrivals={},events=[],mandatoryEvents=[];
 for(const p of packs){cast[p.id]=p.cast;looks[p.id]=p.looks;schedules[p.id]=p.schedule;arrivals[p.id]=p.arrivalDay;events.push(...p.events);mandatoryEvents.push(...p.mandatoryEvents);}
 return Object.freeze({packs,cast,looks,schedules,arrivals,events,mandatoryEvents,byId:id=>packs.find(p=>p.id===id)||null});
