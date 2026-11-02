@@ -50,12 +50,15 @@ body.rpg-duel .npc-reaction:not(.hidden){
 .npc-reaction-card.has-match-art .npc-reaction-portrait img{
  height:100%;width:100%;object-fit:contain;object-position:center bottom;
 }
-/* VN frames may be opaque and portrait-oriented: fill their panel without
-   distortion and keep facial expressions visible at desktop/mobile sizes. */
+/* expressionsv2 are full-body sources. Match the overworld's top-anchored
+   278% dialogue bust crop instead of center-cropping the middle of the PNG.
+   Keep the original source untouched, including on narrow screens. */
 .npc-reaction-card.has-vn-expression{grid-template-columns:minmax(0,39%) minmax(0,1fr)}
 .npc-reaction-card.has-vn-expression .npc-reaction-portrait{background:#1a1c31}
 .npc-reaction-card.has-vn-expression .npc-reaction-portrait img:not(.rpg-safe-avatar){
- width:100%;height:100%;object-fit:cover;object-position:50% 24%;filter:none;
+ position:absolute;top:0;left:0;display:block;
+ width:100%;height:278%;max-width:none;max-height:none;
+ object-fit:cover;object-position:center top;filter:none;
 }
 .npc-reaction-card.has-vn-expression .npc-reaction-portrait::after{
  content:"";position:absolute;inset:0;pointer-events:none;
@@ -132,6 +135,12 @@ body.rpg-duel .npc-reaction-card.npc-reaction-attack .npc-reaction-portrait img,
 body.rpg-duel .npc-reaction-card.npc-reaction-attack.has-vn-expression .npc-reaction-portrait img:not(.rpg-safe-avatar){
  display:block;width:100%;height:100%;max-height:100%;
  object-fit:contain;object-position:center center;filter:none;
+}
+/* The large attack layout has a separate contain rule above: override it
+   for v2 expressions so attacks and compact reactions use identical framing. */
+body.rpg-duel .npc-reaction-card.npc-reaction-attack.has-vn-expression .npc-reaction-portrait img:not(.rpg-safe-avatar){
+ position:absolute;top:0;left:0;width:100%;height:278%;
+ max-width:none;max-height:none;object-fit:cover;object-position:center top;
 }
 body.rpg-duel .npc-reaction-card.npc-reaction-attack.has-wide-action-art .npc-reaction-portrait::after,
 body.rpg-duel .npc-reaction-card.npc-reaction-attack.has-vn-expression .npc-reaction-portrait::after{
