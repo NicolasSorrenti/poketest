@@ -1517,6 +1517,55 @@ test('Apex counts existing live PlusPower before scoring another',()=>{
   'Level 7 retains its calibrated trainer scoring');
 });
 
+test('Apex credits live PlusPower when ranking an already-funded winning attack',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,classicRules:true});
+ o.self.prizeCount=1;
+ o.opponent.active={id:MACHOP,energies:[],damage:20,status:null};
+ o.opponent.bench=[];
+ // Jab deals 20, but Machop has 30 HP left. The attached PlusPower
+ // makes the attack a guaranteed final-Prize KO without spending a Trainer.
+ const live=structuredClone(o);
+ live.self.active.attachedTrainers=[{id:'base1-84',expires:12}];
+ assert.ok(AI.score(attack,live,cfg,{})>AI.score(attack,o,cfg,{})+120,
+  'attack scoring must recognize the existing 10 damage and knockout');
+ assert.ok(AI.prizeRaceBonus(attack,live,cfg)>AI.prizeRaceBonus(attack,o,cfg)+500,
+  'Prize-race urgency must recognize the funded match winner');
+ assert.ok(AI.knockoutTempoBonus(attack,live,cfg)>AI.knockoutTempoBonus(attack,o,cfg)+500,
+  'knockout tempo must recognize the funded match winner');
+ const expired=structuredClone(live);
+ expired.self.active.attachedTrainers[0].expires=11;
+ const nonClassic=structuredClone(live);
+ nonClassic.classicRules=false;
+ for(const invalid of [expired,nonClassic]){
+  assert.equal(AI.score(attack,invalid,cfg,{}),AI.score(attack,o,cfg,{}));
+  assert.equal(AI.prizeRaceBonus(attack,invalid,cfg),AI.prizeRaceBonus(attack,o,cfg));
+  assert.equal(AI.knockoutTempoBonus(attack,invalid,cfg),AI.knockoutTempoBonus(attack,o,cfg));
+ }
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(attack,live,lower,{}),AI.score(attack,o,lower,{}));
+ assert.equal(AI.prizeRaceBonus(attack,live,lower),AI.prizeRaceBonus(attack,o,lower));
+ assert.equal(AI.knockoutTempoBonus(attack,live,lower),AI.knockoutTempoBonus(attack,o,lower));
+});
+
+test('Apex counts two live PlusPowers when the first is not enough for a KO',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,classicRules:true});
+ o.self.prizeCount=1;
+ o.opponent.active={id:MACHOP,energies:[],damage:10,status:null};
+ o.opponent.bench=[];
+ // Machop has 40 HP left: Jab plus one PlusPower is only 30.
+ const one=structuredClone(o);
+ one.self.active.attachedTrainers=[{id:'base1-84',expires:12}];
+ const two=structuredClone(one);
+ two.self.active.attachedTrainers.push({id:'base1-84',expires:12});
+ assert.ok(AI.score(attack,two,cfg,{})>AI.score(attack,one,cfg,{})+120);
+ assert.equal(AI.prizeRaceBonus(attack,one,cfg),0);
+ assert.ok(AI.prizeRaceBonus(attack,two,cfg)>=550);
+ assert.equal(AI.knockoutTempoBonus(attack,one,cfg),0);
+ assert.ok(AI.knockoutTempoBonus(attack,two,cfg)>=550);
+});
+
 test('Apex values Full Heal Energy curing an Active into an immediate legal attack',()=>{
  const fullHeal='base5-81',potion='base5-82';
  const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
