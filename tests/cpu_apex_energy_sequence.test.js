@@ -1457,6 +1457,34 @@ test('Apex only spends PlusPower for an attack it can legally declare',()=>{
   'Level 7 retains its existing PlusPower evaluation');
 });
 
+test('Apex counts existing live PlusPower before scoring another',()=>{
+ const action={type:'play_trainer',payload:{handIndex:0}};
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+ o.self.hand=['base1-84']; // PlusPower
+ o.opponent.active={id:MACHOP,energies:[],damage:20,status:null};
+ // Machop has 30 HP left; Hitmonchan's 20-damage Jab needs one PlusPower.
+ const needed=AI.score(action,o,cfg,{});
+ const already=structuredClone(o);
+ already.self.active.attachedTrainers=[{id:'base1-84',expires:12}];
+ assert.ok(needed>AI.score(action,already,cfg,{})+200,
+  'a live PlusPower already supplies the 30-damage knockout');
+ // At 40 HP, the second PlusPower is necessary; the first alone is not.
+ const forty=structuredClone(o);
+ forty.opponent.active.damage=10;
+ const stacked=structuredClone(already);
+ stacked.opponent.active.damage=10;
+ assert.ok(AI.score(action,stacked,cfg,{})>AI.score(action,forty,cfg,{})+200,
+  'two live PlusPowers can unlock a knockout that one cannot');
+ const expired=structuredClone(already);
+ expired.self.active.attachedTrainers[0].expires=11;
+ assert.equal(AI.score(action,expired,cfg,{}),needed,
+  'an expired PlusPower does not count toward current damage');
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(action,already,lower,{}),AI.score(action,o,lower,{}),
+  'Level 7 retains its calibrated trainer scoring');
+});
+
 test('Apex values Full Heal Energy curing an Active into an immediate legal attack',()=>{
  const fullHeal='base5-81',potion='base5-82';
  const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
