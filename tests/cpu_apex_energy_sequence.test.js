@@ -1533,6 +1533,12 @@ test('Apex credits live PlusPower when ranking an already-funded winning attack'
   'Prize-race urgency must recognize the funded match winner');
  assert.ok(AI.knockoutTempoBonus(attack,live,cfg)>AI.knockoutTempoBonus(attack,o,cfg)+500,
   'knockout tempo must recognize the funded match winner');
+ const confused=structuredClone(live);
+ confused.self.active.status='Confused';
+ assert.equal(AI.prizeRaceBonus(attack,confused,cfg),AI.prizeRaceBonus(attack,live,cfg)/2,
+  'Confusion must halve even a PlusPower-funded final-Prize KO probability');
+ assert.equal(AI.knockoutTempoBonus(attack,confused,cfg),AI.knockoutTempoBonus(attack,live,cfg)/2,
+  'knockout tempo must not treat a Confused attack as certain');
  const expired=structuredClone(live);
  expired.self.active.attachedTrainers[0].expires=11;
  const nonClassic=structuredClone(live);
