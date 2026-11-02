@@ -1109,11 +1109,11 @@
  });
  const attackFallbacks=new Set(['elena','rina','sierra','sol']);
  const portraitFallbacks=Object.freeze({
-  alma:'/rpg-assets/characters/alma/expression-portraits/neutral.webp',
-  elena:'/rpg-assets/characters/elena/expression-portraits/neutral.webp',
-  rina:'/rpg-assets/characters/rina/expression-portraits/neutral.webp',
-  sierra:'/rpg-assets/characters/sierra/expression-portraits/neutral.webp',
-  sol:'/rpg-assets/characters/sol/expression-portraits/neutral.webp',
+  alma:'/rpg-assets/characters/alma/expressionsv2/neutral.png',
+  elena:'/rpg-assets/characters/elena/expressionsv2/neutral.png',
+  rina:'/rpg-assets/characters/rina/expressionsv2/neutral.png',
+  sierra:'/rpg-assets/characters/sierra/expressionsv2/neutral.png',
+  sol:'/rpg-assets/characters/sol/expressionsv2/neutral.png',
   laca:'/rpg-assets/characters/laca/neutral.webp'
  });
  function artCandidates(entry,thumbnail=false){

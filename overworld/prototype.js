@@ -315,7 +315,9 @@
   const point=p=>p.foot||map.anchors[p.anchor];
   const person=p=>config.characters[p.id]||{name:p.id.replace(/(^|[_-])([a-z])/g,(_,sep,letter)=>' '+letter.toUpperCase()).trim(),face:'',poses:{}};
   const pose=p=>{const art=person(p).poses?.[p.pose||'standing'];return art&&Number.isFinite(p.height)?{...art,height:p.height}:art};
-  const face=p=>person(p).face||'';
+  // Map thumbnails and preview faces share the new neutral expression.
+   const v2Faces=new Set('akari alma barb camila daisy elena elio iris jicy jinx jun kaede laca luna lyla marina nereo reina rina shiori sierra sol teo yuna'.split(' '));
+   const face=p=>v2Faces.has(p.id)?'/rpg-assets/characters/'+p.id+'/expressionsv2/neutral.png':person(p).face||'';
   let chibiMode=params.has('rpg-integration')&&params.get('chibi')==='1';
   const placementSpriteNodes=[];
   function setChibiMode(enabled){
@@ -330,9 +332,9 @@
     paint();
     eyeLevelView?.setChibiMode(enabled);
   }
-  const reinaChibi='/rpg-assets/characters/reina/chibi/front.png';
-  const chibiPaths=id=>['/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png','/rpg-assets/characters/'+id+'/chibi/front.png',reinaChibi];
-  function loadChibi(img,id){const paths=chibiPaths(id);let index=0;const next=()=>{if(index>=paths.length){img.onerror=null;img.removeAttribute('src');return;}img.src=paths[index++];};img.onerror=next;next();}
+  // Chibi mode uses only the corresponding character's approved v2 sprite.
+   const chibiPaths=id=>/^[a-z][a-z0-9_]*$/.test(id)?['/rpg-assets/characters/'+id+'/chibiv2.png']:[];
+   function loadChibi(img,id){const paths=chibiPaths(id);let index=0;const next=()=>{if(index>=paths.length){img.onerror=null;img.removeAttribute('src');return;}img.src=paths[index++];};img.onerror=next;next();}
 
   // Do not let the map shrink below the scale needed to cover the camera in both dimensions.
   // The larger ratio avoids empty bars along either axis at the minimum zoom.

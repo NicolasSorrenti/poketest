@@ -471,7 +471,7 @@
           person.classList.toggle('neo-ow-dialogue-front-master',isApprovedMaster);
           // Full-body art needs the tight head-to-chest crop; a face-only
           // expression asset needs less zoom. No image bytes are modified.
-          const fullBody=isApprovedMaster||
+          const fullBody=isApprovedMaster||/\/expressionsv2\//.test(source)||
             /\/(?:overworld|overworld-variants)\//.test(source)||
             /\/standing-front\.png(?:[?#]|$)/.test(source)||
             /\/portraits\/special-day-\d+\.png(?:[?#]|$)/.test(source);
