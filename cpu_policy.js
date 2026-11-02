@@ -1455,14 +1455,22 @@ function energyPreparationActions(o,cfg,actions){
    hpRemaining(target)>0&&(target.poisonDamage||10)>=hpRemaining(target)&&
    (target.poisonDamage||10)<hpRemaining(target)+Math.min(10,target.damage||0);
   const potionDarknessSave=potionSavesDarknessBench(target,energyId,a.payload.slot);
+  // A fully charged Active can use Potion before attacking to survive a
+  // publicly funded opponent KO. Attacking ends our turn, so this healing
+  // opportunity would otherwise be lost.
+  const potionOpponentSave=a.payload.slot===-1&&
+   card(energyId)?.name==='Potion Energy'&&(target?.damage||0)>0&&
+   likelyOpponentKnockout(o,target)&&
+   !likelyOpponentKnockout(o,{...target,damage:Math.max(0,target.damage-10)});
   if(!confusionCure&&!lethalPoisonCure&&!potionPoisonSave&&!potionDarknessSave&&
-   energyValue(target,energyId)<=12)return false;
+   !potionOpponentSave&&energyValue(target,energyId)<=12)return false;
   // Do not suppress an already-legal attack just to spend the only Energy on
   // an Active that will be KO'd before that Energy helps. A legal Bench
   // attachment or immediate attack upgrade still gets prepared first.
   // The cure improves this turn's attack reliability even if the Active
   // would be knocked out next turn; do not treat it as stranded Energy.
   return confusionCure||lethalPoisonCure||potionPoisonSave||potionDarknessSave||
+   potionOpponentSave||
    !(canAttackNow&&a.payload.slot===-1&&strandedActiveEnergy(o,energyId,cfg));
  });
  if(!useful)return safeActions;
