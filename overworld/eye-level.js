@@ -156,6 +156,7 @@ window.NeoOverworldEyeLevel = (() => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'neo-eye-character';
+      button.dataset.character = p.id;
       button.title = 'Interact with ' + (profile?.name || p.id);
       button.setAttribute('aria-label', button.title);
       const img = document.createElement('img');

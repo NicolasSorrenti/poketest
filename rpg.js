@@ -530,6 +530,23 @@ function visibleOverworldPose(id){
  const pose=overworldClickedPoses.get(id);
  return pose&&pose.day===state.day&&pose.slot===state.slot&&pose.location===state.location?pose.src:null;
 }
+// Source of truth if a scene was resumed or the click-pose cache expired:
+// read the currently rendered sprite from the live, same-origin overworld.
+function liveOverworldPose(id){
+ const overlay=document.getElementById('neoOverworldOverlay');
+ if(!overlay||overlay.hidden)return null;
+ const frame=overlay.querySelector('iframe[title="Current Neo Campus location"]');
+ let map;try{map=frame?.contentDocument}catch{return null}
+ if(!map)return null;
+ const idSelector='[data-character="'+CSS.escape(id)+'"]';
+ const eyeLevel=map.body?.classList.contains('neo-eye-level');
+ const image=map.querySelector(eyeLevel?
+  '#neoEyeLevelStage .neo-eye-character'+idSelector+' img':
+  '#world .anchor'+idSelector+' img.sprite');
+ const source=image?.currentSrc||image?.getAttribute('src')||null;
+ if(source&&window.NeoRpgOverworldBridge?.setVisiblePose(id,source))return visibleOverworldPose(id);
+ return null;
+}
 // Optional overworld adapter: the existing campaign remains authoritative.
 window.NeoRpgOverworldBridge=Object.freeze({
  resetCampaign,
@@ -557,6 +574,8 @@ window.NeoRpgOverworldBridge=Object.freeze({
  poseTriggerDialogue(id,src){
   if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id)||
      typeof src!=='string'||!src.startsWith('/rpg-assets/characters/'))return false;
+  // The trigger close-up and the next Glance share the same selected image.
+  if(!this.setVisiblePose(id,src))return false;
   state.selected=id;
   state.overworldPoseIntro={id,src,location:state.location,day:state.day,slot:state.slot};
   scene={speaker:cast[id].name,line:'Uh, sorry… Give me a minute…',
@@ -669,7 +688,9 @@ async function glanceAt(id){
  if(!cast[id]||!currentPeople().includes(id)||typeof window==='undefined')return;
  // Glance must show the same sprite the player clicked, not a random
  // alternate from the crop catalog or a dialogue-expression portrait.
- const clickedPose=visibleOverworldPose(id);
+ const clickedPose=liveOverworldPose(id)||visibleOverworldPose(id);
+ const overlay=document.getElementById('neoOverworldOverlay');
+ const inOverworld=!!window.NeoRpgOverworldStandalone||!!overlay&&!overlay.hidden;
  let portrait=clickedPose||scenePortraitSource(id,'neutral',activeOutfitSceneId);
  const currentName=portrait.split('/').pop().split('?')[0];
  let focus=null;
@@ -692,8 +713,9 @@ async function glanceAt(id){
   }else if(activeEntry){focus=activeEntry;}
   // Normal glances use the exact exported source path and crop preset.
   // Special looks stay on the active stage image and active special crop.
-  if(!clickedPose&&!isSpecial){
-   // The classic/standalone screen retains its previous prepared-art fallback.
+  if(!clickedPose&&!isSpecial&&!inOverworld){
+   // Only the old interface can choose a catalog default. In the overworld,
+   // missing pose information must not quietly show a different sprite.
    const exportedOverworld=exact||overworldVariants[0]||null;
    if(exportedOverworld?.image){
     // The deliberate glance always presents the prepared overworld crop.

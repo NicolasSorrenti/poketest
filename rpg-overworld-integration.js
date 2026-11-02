@@ -378,19 +378,23 @@
       }
       // Pose triggers wait for an explicit character interaction.
     }
-    async function playPoseTrigger(item){
+    async function playPoseTrigger(item,clickedSource=null){
       if(poseTriggerBusy||poseTriggerAwaitingDialogue||overlay.hidden||suspendedForDuel)return false;
       const data=bridge()?.snapshot();
       if(!data||data.locked||data.location!==item.scene||!data.people.includes(item.id))return false;
       poseTriggerBusy=true;
       try{
+        // The clicked image is authoritative. Use precisely the same source for
+        // chime, the selected interaction, and Glance rather than three paths.
+        const source=bridge()?.setVisiblePose?.(item.id,clickedSource)?clickedSource:item.src;
+        if(!bridge()?.setVisiblePose?.(item.id,source))throw Error('Unable to preserve the triggered pose');
         try{sessionStorage.setItem(item.key,'1')}catch{}
-        if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(item.src,{top:0,bottom:1,left:0,right:1},1450);
+        if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(source,{top:0,bottom:1,left:0,right:1},1450);
         const current=bridge()?.snapshot();
         if(!current||current.location!==item.scene||!current.people.includes(item.id)){try{sessionStorage.removeItem(item.key)}catch{}poseTriggersById.delete(item.id);return false}
         if(current.locked){try{sessionStorage.removeItem(item.key)}catch{}return false}
         interactionFocus=item.id;
-        if(!showStory()||!bridge()?.poseTriggerDialogue?.(item.id,item.src)){
+        if(!showStory()||!bridge()?.poseTriggerDialogue?.(item.id,source)){
           interactionFocus=null;hideStory();showNotice('This pose could not start its dialogue.');
           try{sessionStorage.removeItem(item.key)}catch{}
           poseTriggersById.delete(item.id);
@@ -1426,7 +1430,7 @@
         // Capture the exact rendered sprite before conversation UI takes over.
         bridge()?.setVisiblePose?.(message.id,message.src);
         const poseTrigger=poseTriggersById.get(message.id);
-        if(poseTrigger){void playPoseTrigger(poseTrigger);return}
+        if(poseTrigger){void playPoseTrigger(poseTrigger,message.src);return}
         // Capture the explicitly tapped NPC before the native engine renders.
         interactionFocus=message.id;
         if(!showStory())dismiss();
