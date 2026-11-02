@@ -251,9 +251,10 @@ function knockoutChance(attack,attacker,defender,benchCount=null,damageBonus=0){
 // Existing PlusPower applies to the current Active's positive attack damage
 // after Weakness/Resistance, and expires at the end of its marked turn.
 // Keep lower CPU tiers' calibrated scoring unchanged at the call sites.
-function livePlusPowerBonus(o){
- if(o.classicRules===false||!o.self?.active)return 0;
- return (o.self.active.attachedTrainers||[]).filter(t=>
+function livePlusPowerBonus(o,side='self'){
+ const active=o[side]?.active;
+ if(o.classicRules===false||!active)return 0;
+ return (active.attachedTrainers||[]).filter(t=>
   card(t.id)?.name==='PlusPower'&&t.expires>o.turnSerial).length*10;
 }
 function strongestAffordableAttack(unit,defender,benchCount=null){
@@ -278,15 +279,18 @@ function strongestUsableOpponentAttack(o,defender){
  if(!enemy||!defender)return 0;
  const fromEnemy={...o,self:o.opponent,opponent:o.self};
  const moves=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
- return moves.reduce((best,attack,index)=>
-  eligibleAttack(fromEnemy,enemy,attack,index)&&
-  canPayEnergy(attack.cost||[],energyPool(enemy))?
-   Math.max(best,estimatedDamage(attack,enemy,defender,o.opponent.bench.length)):best,0);
+ const plusPower=livePlusPowerBonus(o,'opponent');
+ return moves.reduce((best,attack,index)=>{
+  if(!eligibleAttack(fromEnemy,enemy,attack,index)||
+     !canPayEnergy(attack.cost||[],energyPool(enemy)))return best;
+  const damage=estimatedDamage(attack,enemy,defender,o.opponent.bench.length);
+  return Math.max(best,damage>0?damage+plusPower:damage);
+ },0);
 }
 // A printed KO is not a likely KO when the opponent must first pass
 // Confusion or an attack-specific coin flip. Use the same conservative
 // 75% threshold as Apex's stranded-Energy analysis.
-function likelyOpponentKnockout(o,defender){
+function likelyOpponentKnockout(o,defender,apex=false){
  const enemy=o.opponent.active;
  if(!enemy||!defender||['Asleep','Paralyzed'].includes(enemy.status))return false;
  const fromEnemy={...o,self:o.opponent,opponent:o.self};
@@ -294,7 +298,8 @@ function likelyOpponentKnockout(o,defender){
  return (enemy.effectiveAttacks||card(enemy.id)?.attacks||[]).some((attack,index)=>
   eligibleAttack(fromEnemy,enemy,attack,index)&&
   canPayEnergy(attack.cost||[],energyPool(enemy))&&
-  knockoutChance(attack,enemy,defender,o.opponent.bench.length)*confusionChance>=.75);
+  knockoutChance(attack,enemy,defender,o.opponent.bench.length,
+   apex?livePlusPowerBonus(o,'opponent'):0)*confusionChance>=.75);
 }
 function hpRemaining(u){return Math.max(0,(Number(card(u?.id)?.hp)||60)-(u?.damage||0));}
 function setupValue(unit){
@@ -733,7 +738,7 @@ function prematureEvolutionPenalty(o,slot,evolutionId,cfg){
    projectedAttackValue(before,enemy,o.turnSerial,o.self.bench.length)))return 0;
  // Important survival and tactical exceptions outweigh waiting.
  if(slot===-1){
-  if(likelyOpponentKnockout(o,before)&&!likelyOpponentKnockout(o,after))return 0;
+  if(likelyOpponentKnockout(o,before,true)&&!likelyOpponentKnockout(o,after,true))return 0;
   if(['Asleep','Paralyzed'].includes(before.status))return 0;
  }
  // Do not pretend to know a future forced discard or opponent's hand.
@@ -760,7 +765,7 @@ function prizeRaceBonus(action,o,cfg){
   // cannot declare it (Sleep, Paralysis, Amnesia or Gym cooldown), or when
   // Confusion/attack flips make the knockout unreliable. Only public state
   // is inspected; this is the same conservative threat test used elsewhere.
-  const theirWin=enemy.prizeCount===1&&likelyOpponentKnockout(o,own.active);
+  const theirWin=enemy.prizeCount===1&&likelyOpponentKnockout(o,own.active,cfg.level===8);
   // Even without winning outright, trading Prizes before a likely loss helps.
   const trade=(!urgent&&theirWin?100*ko:0)+(!urgent?45*ko:0);
   return (victory+trade)*cfg.style.damage;
@@ -830,7 +835,7 @@ function knockoutTempoBonus(a,o,cfg){
  // Apex must not award a higher attack-tempo bonus for an imaginary
  // counter-KO. Confusion, attack flips, Amnesia and Gym locks all affect
  // whether the opponent can actually take the next Prize.
- const vulnerability=cfg.level===8?likelyOpponentKnockout(o,p.active):
+ const vulnerability=cfg.level===8?likelyOpponentKnockout(o,p.active,true):
   !['Asleep','Paralyzed'].includes(q.active.status)&&
   strongestAffordableAttack(q.active,p.active,q.bench.length)>=hpRemaining(p.active);
  return chance*(vulnerability?230:125);
@@ -922,7 +927,7 @@ function energyHorizonBonus(action,o,cfg){
  // Amnesia and Gym locks must not cause speculative Bench Energy urgency.
  // Keep the previous affordable-attack estimate for lower difficulty tiers.
  const activeExposed=!!p.active&&(cfg.level===8?
-  likelyOpponentKnockout(o,p.active):
+  likelyOpponentKnockout(o,p.active,true):
   !['Asleep','Paralyzed'].includes(q.active.status)&&
   strongestAffordableAttack(q.active,p.active,q.bench.length)>=hpRemaining(p.active));
  // A Bench attacker is useful as a replacement when the Active is visibly
@@ -950,7 +955,8 @@ function strandedActiveEnergy(o,energyId,cfg){
  // conservative 75% doomed-Active threshold (no future RNG is inspected).
  const confusionChance=enemy.status==='Confused'?.5:1;
  if(!incoming.some((a,i)=>eligibleAttack(fromEnemy,enemy,a,i)&&
-    knockoutChance(a,enemy,active,o.opponent.bench.length)*confusionChance>=.75))return false;
+    knockoutChance(a,enemy,active,o.opponent.bench.length,
+     cfg.level===8?livePlusPowerBonus(o,'opponent'):0)*confusionChance>=.75))return false;
  // Potion Energy heals 10 immediately on attachment. If that healing
  // prevents the publicly threatened KO, the attachment is a survival play,
  // not Energy stranded on a doomed Active. Keep Level 7's old behavior.
@@ -964,7 +970,7 @@ function strandedActiveEnergy(o,energyId,cfg){
   ...((potionRescue||rainbowRecoil)?{damage:Math.max(0,(active.damage||0)+rainbowRecoil-
    (potionRescue?10:0))}:{}),
   energies:[...(active.energies||[]),energyId]};
- if(potionRescue&&!likelyOpponentKnockout(o,after))return false;
+ if(potionRescue&&!likelyOpponentKnockout(o,after,cfg.level===8))return false;
  if(projectedAttackValue(after,enemy,o.turnSerial,o.self.bench.length)>
     projectedAttackValue(active,enemy,o.turnSerial,o.self.bench.length))return false;
  const retreat=card(active.id)?.retreatCost||[];
@@ -1144,8 +1150,8 @@ function score(a,o,cfg,used){
   const potionHeal=cfg.level===8&&card(p.hand[v.handIndex])?.name==='Potion Energy'&&
    (unit?.damage||0)>0;
   const healed=potionHeal?{...unit,damage:Math.max(0,unit.damage-10)}:null;
-  const preventsKo=healed&&v.slot===-1&&likelyOpponentKnockout(o,unit)&&
-   !likelyOpponentKnockout(o,healed);
+  const preventsKo=healed&&v.slot===-1&&likelyOpponentKnockout(o,unit,true)&&
+   !likelyOpponentKnockout(o,healed,true);
   // Poison checkup follows an attack. Potion Energy does not cure Poison,
   // but its immediate 10-damage heal can leave enough HP to survive the tick.
   // Only count an actual rescue, not a heal that still ends in a knockout.
@@ -1290,7 +1296,7 @@ function score(a,o,cfg,used){
    strongestAffordableAttack(q.active,before,q.bench.length);
   const counterTo=cfg.level===8?strongestUsableOpponentAttack(o,to):
    strongestAffordableAttack(q.active,to,q.bench.length);
-  const threatened=cfg.level===8?likelyOpponentKnockout(o,before):
+  const threatened=cfg.level===8?likelyOpponentKnockout(o,before,true):
    counter>=hpRemaining(before)&&counter>0;
   const alternativeSurvives=counterTo<hpRemaining(to);
   // A defensive swap is useful only when it *actually* shelters the Active
@@ -1490,8 +1496,8 @@ function energyPreparationActions(o,cfg,actions){
   // opportunity would otherwise be lost.
   const potionOpponentSave=a.payload.slot===-1&&
    card(energyId)?.name==='Potion Energy'&&(target?.damage||0)>0&&
-   likelyOpponentKnockout(o,target)&&
-   !likelyOpponentKnockout(o,{...target,damage:Math.max(0,target.damage-10)});
+   likelyOpponentKnockout(o,target,true)&&
+   !likelyOpponentKnockout(o,{...target,damage:Math.max(0,target.damage-10)},true);
   // A fully funded Rage/Flail attacker can still need Rainbow before its
   // attack: the recoil counter can turn a non-KO into a guaranteed KO.
   // Only prepare this when the post-attachment attacker survives and its
