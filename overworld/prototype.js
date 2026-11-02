@@ -330,9 +330,9 @@
     paint();
     eyeLevelView?.setChibiMode(enabled);
   }
-  const reinaChibi='/rpg-assets/characters/reina/chibi/front.png';
-  const chibiPaths=id=>['/rpg-assets/characters/'+id+'/discreet/neutral.webp','/rpg-assets/characters/'+id+'/discreet/neutral.png','/rpg-assets/characters/'+id+'/chibi/front.png',reinaChibi];
-  function loadChibi(img,id){const paths=chibiPaths(id);let index=0;const next=()=>{if(index>=paths.length){img.onerror=null;img.removeAttribute('src');return;}img.src=paths[index++];};img.onerror=next;next();}
+  // Chibi mode uses only the corresponding character's approved v2 sprite.
+   const chibiPaths=id=>/^[a-z][a-z0-9_]*$/.test(id)?['/rpg-assets/characters/'+id+'/chibiv2.png']:[];
+   function loadChibi(img,id){const paths=chibiPaths(id);let index=0;const next=()=>{if(index>=paths.length){img.onerror=null;img.removeAttribute('src');return;}img.src=paths[index++];};img.onerror=next;next();}
 
   // Do not let the map shrink below the scale needed to cover the camera in both dimensions.
   // The larger ratio avoids empty bars along either axis at the minimum zoom.
