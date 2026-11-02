@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '22'
       - name: CPU invariants and root-diversity tests
-        run: node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+        run: node --test tests/cpu_apex_energy_sequence.test.js tests/cpu_apex_computer_search_energy.test.js
       - name: Compare policy decisions on identical late-campaign NPC positions
         run: node scripts/diagnose-cpu-decisions.js --scenario rpg --seed 753871 --turns 12 --samples 35
       - name: Compare policy decisions across distinct RPG personalities
