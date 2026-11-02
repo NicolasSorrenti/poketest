@@ -26,7 +26,7 @@
   sierra:'/rpg-assets/characters/sierra/portrait.png',
   sol:'/rpg-assets/sol.png',
   barb:'/rpg-assets/characters/barb/portraits/primary.png',
-  laca:'/rpg-assets/characters/laca/expression-portraits/neutral.webp'
+  laca:'/rpg-assets/characters/laca/expressionsv2/neutral.png'
  });
  // No legacy expression sheets: all reviewed characters have the same v2 set.
  // Hana is excluded until her expressionsv2 folder is uploaded.
