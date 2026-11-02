@@ -942,8 +942,13 @@ function strandedActiveEnergy(o,energyId,cfg){
  // not Energy stranded on a doomed Active. Keep Level 7's old behavior.
  const potionRescue=cfg.level===8&&energy.name==='Potion Energy'&&
   (active.damage||0)>0;
+ // Rainbow places a counter before Rage/Flail resolves. Without it,
+ // a genuine immediate KO upgrade looks like Energy stranded on a doomed
+ // Active, even though the attack can be taken before the opponent acts.
+ const rainbowRecoil=cfg.level===8&&energy.name==='Rainbow Energy'?10:0;
  const after={...active,
-  ...(potionRescue?{damage:Math.max(0,active.damage-10)}:{}),
+  ...((potionRescue||rainbowRecoil)?{damage:Math.max(0,(active.damage||0)+rainbowRecoil-
+   (potionRescue?10:0))}:{}),
   energies:[...(active.energies||[]),energyId]};
  if(potionRescue&&!likelyOpponentKnockout(o,after))return false;
  if(projectedAttackValue(after,enemy,o.turnSerial,o.self.bench.length)>
@@ -1462,15 +1467,29 @@ function energyPreparationActions(o,cfg,actions){
    card(energyId)?.name==='Potion Energy'&&(target?.damage||0)>0&&
    likelyOpponentKnockout(o,target)&&
    !likelyOpponentKnockout(o,{...target,damage:Math.max(0,target.damage-10)});
+  // A fully funded Rage/Flail attacker can still need Rainbow before its
+  // attack: the recoil counter can turn a non-KO into a guaranteed KO.
+  // Only prepare this when the post-attachment attacker survives and its
+  // publicly usable attack really crosses the knockout threshold.
+  const rainbowAfter=a.payload.slot===-1&&target&&
+   card(energyId)?.name==='Rainbow Energy'&&hpRemaining(target)>10?
+   {...target,damage:(target.damage||0)+10,
+    energies:[...(target.energies||[]),energyId]}:null;
+  const defenderHp=hpRemaining(o.opponent.active);
+  const rainbowKoUpgrade=rainbowAfter&&defenderHp>0&&
+   strongestAffordableAttack(target,o.opponent.active,o.self.bench.length)<defenderHp&&
+   strongestAffordableAttack(rainbowAfter,o.opponent.active,o.self.bench.length)>=defenderHp&&
+   projectedAttackValue(rainbowAfter,o.opponent.active,o.turnSerial,o.self.bench.length)>
+    projectedAttackValue(target,o.opponent.active,o.turnSerial,o.self.bench.length);
   if(!confusionCure&&!lethalPoisonCure&&!potionPoisonSave&&!potionDarknessSave&&
-   !potionOpponentSave&&energyValue(target,energyId)<=12)return false;
+   !potionOpponentSave&&!rainbowKoUpgrade&&energyValue(target,energyId)<=12)return false;
   // Do not suppress an already-legal attack just to spend the only Energy on
   // an Active that will be KO'd before that Energy helps. A legal Bench
   // attachment or immediate attack upgrade still gets prepared first.
   // The cure improves this turn's attack reliability even if the Active
   // would be knocked out next turn; do not treat it as stranded Energy.
   return confusionCure||lethalPoisonCure||potionPoisonSave||potionDarknessSave||
-   potionOpponentSave||
+   potionOpponentSave||rainbowKoUpgrade||
    !(canAttackNow&&a.payload.slot===-1&&strandedActiveEnergy(o,energyId,cfg));
  });
  if(!useful)return safeActions;
