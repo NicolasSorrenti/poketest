@@ -8,11 +8,16 @@
 </head>
 <body class="rpg-deck-mode">
 <header class="topbar">
- <a class="back" href="/rpg.html">← Back to Neo Harbor</a>
+ <a id="deckReturnToOverworld" class="back" href="/rpg-overworld.html">← Back to overworld</a>
  <a class="back" href="/rpg_card_library.html?from=studio">▤ Card Library</a>
  <div class="brand"><span class="star">✦</span><div><small>NEO HARBOR RPG</small><h1>DECK STUDIO</h1></div></div>
  <div id="deckProfile" class="profile">Your collection</div>
 </header>
+<script>
+ // The overworld panel owns its Back button; do not show a second one
+ // inside its Deck Studio iframe. Standalone Deck Studio keeps the link.
+ if(window.self!==window.top)document.getElementById('deckReturnToOverworld').hidden=true;
+</script>
 <main id="deckStudio" class="studio" hidden>
  <aside id="deckTutorial" class="deck-tutorial" hidden aria-live="polite"><strong id="deckTutorialTitle"></strong><p id="deckTutorialText"></p><button id="deckTutorialDismiss" type="button">Got it</button></aside>
  <div class="studio-context"><span>YOUR COLLECTION · 60-CARD FORMAT</span><span id="collectionSize"></span></div>
