@@ -234,7 +234,9 @@ let scene=state.scene&&typeof state.scene.speaker==='string'&&typeof state.scene
 // The state is saved at clock advancement; only presentation waits for acknowledgement.
 let timeTransitionCovered=true;
 const timeSequence=window.NeoRpgTimeTransitions?.createSequence?.({
- canPresent:()=>!scene.line&&!scene.choices?.length,
+ // Activity choices remain on screen until the clock advances. Allow the wipe
+ // to start from a character submenu, then reveal the saved outcome on cover.
+ canPresent:()=>scene.presentation==='character-menu'||(!scene.line&&!scene.choices?.length),
  present:timeFlash,
  onSettled:()=>render()
 })||{
