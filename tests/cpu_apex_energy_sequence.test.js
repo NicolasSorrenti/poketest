@@ -12,6 +12,38 @@ function board(){
    energyUsed:false,prizeCount:3},
   opponent:{active:{id:RATTATA,energies:[],damage:0},bench:[{id:RATTATA,energies:[],damage:0}]}};
 }
+test('Apex honors active Erika\'s Oddish Photosynthesis and its suppression',()=>{
+ const oddish='gym1-47',dce='base1-96';
+ const host={id:oddish,energies:[dce],damage:0,status:'Asleep',photosynthesisActive:true};
+ const opponent={id:RATTATA,energies:[],damage:0};
+ assert.ok(AI.energyValue(host,FIGHT)>90,
+  'one Double Colorless card supplies only one Grass; a second card unlocks Poisonpowder');
+ assert.ok(AI.energyValue({...host,photosynthesisActive:false},FIGHT)<0,
+  'suppressed Photosynthesis cannot convert Fighting Energy into Grass');
+ assert.ok(AI.energyValue({...host,energies:[dce,dce]},FIGHT)<0,
+  'two Double Colorless cards already pay two Grass; a third card is surplus');
+ assert.equal(AI.strongestAffordableAttack(host,opponent),0,
+  'Poisonpowder deals no direct damage even when its Power is enabled');
+ const player=active=>({name:'CPU',active,bench:[],hand:[],deck:[],prizes:[]});
+ const game={format:'gym-expanded',phase:'game',turn:1,round:5,turnSerial:11,
+  setupReady:[true,true],players:[
+   player({id:RATTATA,energies:[],damage:0}),
+   player({id:oddish,energies:[dce],damage:0,status:'Asleep'})
+  ]};
+ assert.equal(AI.observation(game,1).self.active.photosynthesisActive,true,
+  'Photosynthesis works even while Erika\'s Oddish is Asleep');
+ game.powerBlankUntil=12;
+ assert.equal(AI.observation(game,1).self.active.photosynthesisActive,false,
+  'a global Power blank must disable the conversion');
+ game.powerBlankUntil=0;
+ game.players[1].active.powerSuppressedUntil=12;
+ assert.equal(AI.observation(game,1).self.active.photosynthesisActive,false,
+  'targeted suppression must disable the conversion');
+ game.players[1].active.powerSuppressedUntil=0;
+ assert.equal(AI.observation(game,0).opponent.active.photosynthesisActive,true,
+  'opponent attack forecasts see the same public conversion state');
+});
+
 test('Apex values Buzzap Electrode as two Energy of its chosen type',()=>{
  const electrode='base1-21';
  const host={id:HITMONCHAN,energies:[electrode],buzzapTypes:{[electrode]:'Fighting'},damage:0};
