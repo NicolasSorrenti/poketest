@@ -2184,7 +2184,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only: two Colorless units during attack payment and retreat, non-Basic Energy classification for searches/deck four-copy limit, no printed typed-Energy payment, and special conversion paths. No new runtime test or full interaction coverage.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
@@ -2195,7 +2200,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/rule classification review only: Fighting Basic Energy identified by name, one Fighting unit in attack pool, generic Colorless costs allowed, unlimited Basic Energy deck copies, and one unit for retreat. No new runtime scenarios.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
@@ -2206,7 +2216,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/rule classification review only: Fire Basic Energy identified by name, one Fire unit in attack pool and typed discard logic, generic Colorless costs allowed, unlimited Basic Energy deck copies, and one retreat unit. No new runtime scenarios.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
@@ -2217,7 +2232,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/rule classification review only: Grass Basic Energy identified by name, one Grass unit in attack pool and typed discard logic, generic Colorless costs allowed, unlimited Basic Energy deck copies, and one retreat unit. No new runtime scenarios.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
@@ -2228,7 +2248,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/rule classification review only: Lightning Basic Energy identified by name, one Lightning unit in attack pool and typed discard logic, generic Colorless costs allowed, unlimited Basic Energy deck copies, and one retreat unit. No new runtime scenarios.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
@@ -7141,7 +7166,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only: two Colorless units during attack payment and retreat, non-Basic Energy classification for searches/deck four-copy limit, no printed typed-Energy payment, and special conversion paths. No new runtime test or full interaction coverage.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
@@ -7152,7 +7182,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/rule classification review only: Fighting Basic Energy identified by name, one Fighting unit in attack pool, generic Colorless costs allowed, unlimited Basic Energy deck copies, and one unit for retreat. No new runtime scenarios.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
@@ -7163,7 +7198,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/rule classification review only: Fire Basic Energy identified by name, one Fire unit in attack pool and typed discard logic, generic Colorless costs allowed, unlimited Basic Energy deck copies, and one retreat unit. No new runtime scenarios.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
@@ -7174,7 +7214,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/rule classification review only: Grass Basic Energy identified by name, one Grass unit in attack pool and typed discard logic, generic Colorless costs allowed, unlimited Basic Energy deck copies, and one retreat unit. No new runtime scenarios.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
@@ -7185,7 +7230,12 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/rule classification review only: Lightning Basic Energy identified by name, one Lightning unit in attack pool and typed discard logic, generic Colorless costs allowed, unlimited Basic Energy deck copies, and one retreat unit. No new runtime scenarios.",
+          "evidence": [
+            "Source inspection: core_rules.js isBasicEnergy/canPayEnergy/legalAttachment/validateDeck; headless_duel.js attackPool/retreatUnits/attachedEnergyMatchesType; printed card listings and Base/Base Set 2 catalog compared on 2026-11-03. No new tests.",
+            "External Base Set card classification: https://tcg.directory/games/pokemon/base-set; Double Colorless wording: https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102"
+          ]
         }
       ]
     },
