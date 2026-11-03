@@ -84,6 +84,12 @@
      if(image?.style)image.style.opacity='1';
      visibleId=entry.id;
      if(entry.character&&typeof window!=='undefined')window.NeoRpgDiscreetAvatars?.set?.(stage,entry.character,'neutral',entry.character);
+     else{
+      // CG-only scenes (notably Live's) must not inherit an earlier
+      // character's avatar, even when the scene image is fully loaded.
+      delete stage.dataset.rpgSafeId;
+      stage.querySelector?.('.rpg-safe-avatar')?.remove();
+     }
      seen.add(entry.id);
      onShown?.(entry);
     };
