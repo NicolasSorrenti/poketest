@@ -413,6 +413,13 @@ const atKey=(id)=>state.day+':'+state.slot+':'+id;
 function advance(n=1,transitionSource='activity',suppressTimeFlash=false){const beforeDay=state.day,beforeSlot=state.slot;TIME.advanceClock(state,n);if(state.day>90)log('The Neo Harbor championship season has ended.');
 state.selected=null;
 if(state.day>beforeDay){
+ // A new calendar day always begins at home, regardless of yesterday's last stop.
+ // Only day rollover resets location; advancing between periods never does.
+ state.location='home';
+ state.visitedLocations=state.visitedLocations||{};
+ state.visitedLocations.home=true;
+ pendingOverworldArrival='home';
+ pendingEntrySurprise=false;
  WORLD.newDay(state,state.day-beforeDay);
  const news=COMMUNITY.sync(state,Math.min(90,state.day-1),{schedules:SCHEDULES,cast});
  if(news.length){
@@ -427,7 +434,10 @@ const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-q
 const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
 for(const plan of missedAppointments)log('You missed your planned meet-up with '+(cast[plan.npc]?.name||'a trainer')+'.');
-queueMandatory();arriveForScheduledPlan();persist();
+// Keep the player at home for wake-up and any queued mandatory morning scene.
+// Scheduled appointments can be resolved after the morning arrival, not by
+// teleporting away before the new day is shown.
+queueMandatory();if(state.day===beforeDay)arriveForScheduledPlan();persist();
 if(!suppressTimeFlash&&timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource}))timeSequence.flush();}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
 function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null){
