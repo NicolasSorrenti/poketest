@@ -47,7 +47,15 @@
     cloudButton.onclick=()=>document.getElementById('cloudSaveButton')?.click();
     headerActions.append(cloudButton,chibiButton,menuButton);
     toolbar.append(title,headerActions);overlay.append(toolbar,frame,note);document.body.append(overlay);
-    frame.addEventListener('load',syncChibiMode);
+    function syncNpcIndicators(){
+      const data=bridge()?.snapshot?.();
+      if(!data||!frame.contentWindow||frame.src==='about:blank')return;
+      frame.contentWindow.postMessage({
+        type:'neo-overworld-npc-indicators',location:data.location,day:data.day,slot:data.slot,
+        indicators:data.indicators||{}
+      },location.origin);
+    }
+    frame.addEventListener('load',()=>{syncChibiMode();syncNpcIndicators();});
     syncChibiButton();syncCloudButton();
     const chibiPreferenceObserver=new MutationObserver(syncChibiButton);
     chibiPreferenceObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-rpg-discreet']});
@@ -1388,6 +1396,7 @@
       }).join(',');
       const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&slot='+encodeURIComponent(data.slot)+'&day='+encodeURIComponent(data.day)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
       if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
+      else syncNpcIndicators();
       note.hidden=true;
     }
     function dismiss(){
