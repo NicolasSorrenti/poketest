@@ -80,7 +80,7 @@ const LIVE_ROTATING_EVENTS=[...LIVE_EVENTS.filter(event=>event.id!=='live_home_w
 const LIVE_ROTATING_IDS=new Set(LIVE_ROTATING_EVENTS.map(event=>event.id));
 const LIVE_EVENT_ART={"live_clothe_washing":"/rpg-assets/characters/live/events/live_clothe_washing.jpg","live_cleaning":"/rpg-assets/characters/live/events/live_cleaning.jpg","live_cooking":"/rpg-assets/characters/live/events/live_cooking.jpg","live_library":"/rpg-assets/characters/live/events/live_library.jpg","live_sweater_bra":"/rpg-assets/characters/live/events/live_sweater_bra.jpg","live_home_welcome":"/rpg-assets/characters/live/events/live_couch_sweater.png","live_home_cooking":"/rpg-assets/characters/live/events/live_cooking_evening.png","live_home_reading":"/rpg-assets/characters/live/events/live_reading.png","live_home_relaxing":"/rpg-assets/characters/live/events/live_relaxing_sofa.png","live_brushing_teeth":"/rpg-assets/characters/live/events/live_brushing_teeth.png","live_getting_ready":"/rpg-assets/characters/live/events/live_getting_ready.png","live_cleaning_table":"/rpg-assets/characters/live/events/live_cleaning_table.png","live_vacuuming":"/rpg-assets/characters/live/events/live_vacuuming.png","live_laundry":"/rpg-assets/characters/live/events/live_laundry.png","live_workout_break":"/rpg-assets/characters/live/events/live_workout_break.png","live_workout_exhausted":"/rpg-assets/characters/live/events/live_workout_exhausted.png","live_extra_exhaused_workout":"/rpg-assets/characters/live/events/live_extra_exhaused_workout.jpg","live_waking_up_casual":"/rpg-assets/characters/live/events/live_waking_up_casual.png","live_waking_up_lavender":"/rpg-assets/characters/live/events/live_waking_up_lavender.png"};
 
-Object.assign(LIVE_EVENT_ART,LIVE_NEW.art,{[LIVE_AFTER_EVENT.id]:LIVE_AFTER_ART});
+Object.assign(LIVE_EVENT_ART,LIVE_NEW.art);
 
 // Glance milestones are independent of the rotating apartment encounters.
 // The later two images can be added without changing event code; the CG
@@ -167,6 +167,7 @@ const LIVE_AFTER_EVENT={id:'live_after_intimate',title:'After a Quiet Morning',k
  {speaker:'Live',text:'More than okay. I just need a moment to find my words.'},
  {speaker:'Narrator',text:'Live smiles at you, then takes a quiet moment to herself. Before long, you are both ready to return to the day.'}
 ],choices:[{label:'Give her a moment',reply:'Thank you, honey. I will see you in a little while.'}]};
+LIVE_EVENT_ART[LIVE_AFTER_EVENT.id]=LIVE_AFTER_ART;
 const LIVE_REPEAT_MORNING={id:'live_repeat_private_morning',title:'A Morning Together',kind:'season',priority:99,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},
  lines:[
   {speaker:'Live',text:"Honey... let's keep this just between us, okay?"},
