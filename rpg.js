@@ -499,10 +499,10 @@ function maybeStartMandatory(){
  // treat those as overdue instead of silently suppressing the event.
  const glanceMilestoneDay=Number(state.liveThirtyGlancesDay)||Math.max(1,state.day-1);
  if(state.location==='home'&&state.day<=90&&state.day>glanceMilestoneDay&&
-    Number(state.liveGlanceCount)>=30&&!state.liveSpecialSeen?.live_glance_next_morning){
+    Number(state.liveGlanceCount)>=30&&!state.mandatoryEventState?.seen?.live_glance_next_morning){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   m.active={id:'live_glance_next_morning',phase:'lines',index:0,choice:null};
-  state.liveSpecialSeen={...(state.liveSpecialSeen||{}),live_glance_next_morning:true};
+  // Mark completion only after the scene finishes: reloads must never lose it.
   state.liveHomeActivityScene=null;
   persist();
   return;
@@ -699,6 +699,7 @@ function mandatoryAction(type,id){
   const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
   if(outcome&&LIVE_SPECIAL_IDS.has(activeId)){
    if(activeId==='live_glance_next_morning'){
+    state.liveSpecialSeen={...(state.liveSpecialSeen||{}),live_glance_next_morning:true};
     state.liveSuspendedEvent=null;
     persist();
     // The CG sequence consumes the morning only. An overdue scene reached
