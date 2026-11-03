@@ -1189,7 +1189,10 @@ function score(a,o,cfg,used){
   const lethal=boostedDamage>=hp&&hp>0;
   const koChance=cfg.level>=3?knockoutChance(attack,p.active,q.active,p.bench.length,plusPower):(lethal?1:0);
   const riskPreference=uncertain?style.risk*40:0;
-  const direct=boostedDamage*style.damage;
+  // Apex values damage that actually removes HP, not overkill. KO chance is
+  // scored separately, so a 120-damage attack against 20 HP should not win
+  // solely on excess damage over a cheaper, equally reliable knockout.
+  const direct=(cfg.level===8?Math.min(boostedDamage,hp):boostedDamage)*style.damage;
   const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
   // A retreat-lock such as Murkrow's Mean Look does not stack. Once the
   // defending Pokemon is already unable to retreat, repeating the zero-damage
