@@ -506,7 +506,7 @@ function maybeStartMandatory(){
  }
  // Live's in-person Lyla photo sighting replaces (not supplements) an SMS.
  // Keep the saved image until a safe apartment arrival; show the PHOTO, not Live.
- if(state.location==='home'&&state.phoneMessages?.liveLylaSighting?.src){
+ if(state.location==='home'&&state.day>=2&&state.mandatoryEventState?.seen?.live_home_welcome&&state.phoneMessages?.liveLylaSighting?.src){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   delete m.seen[LIVE_LYLA_PHOTO_EVENT.id];
   m.active={id:LIVE_LYLA_PHOTO_EVENT.id,phase:'lines',index:0,choice:null};
