@@ -457,9 +457,23 @@
       const signature=JSON.stringify([focused,visibleParticipants,mobileStory]);
       if(signature===lastPortraitSignature)return;
       lastPortraitSignature=signature;
-      scenePeople.replaceChildren();
+      // Keep unchanged speaker images alive across dialogue turns. Only a
+      // genuinely changed expression/portrait should replace its own node.
+      const existing=new Map([...scenePeople.children].filter(node=>node.dataset.npc).map(node=>[node.dataset.npc,node]));
       for(const participant of visibleParticipants){
+        const previous=existing.get(participant.id);
+        existing.delete(participant.id);
+        const requestedSrc=participant.src||'';
+        if(previous?.dataset.requestedSrc===requestedSrc){
+          previous.classList.toggle('is-speaking',participant.id===focused);
+          previous.classList.toggle('is-listening',participant.id!==focused);
+          scenePeople.append(previous);
+          continue;
+        }
+        previous?.remove();
         const person=document.createElement('div');
+        person.dataset.npc=participant.id;
+        person.dataset.requestedSrc=requestedSrc;
         person.className='neo-ow-person'+(participant.id===focused?' is-speaking':' is-listening');
         const image=document.createElement('img');image.alt=participant.name;
         // Apply the full-body source's top-to-waist dialogue crop only when
@@ -526,6 +540,7 @@
         window.NeoRpgDiscreetAvatars?.set?.(person,participant.id,'neutral',participant.name);
         scenePeople.append(person);
       }
+      for(const stale of existing.values())stale.remove();
       scenePeople.hidden=!visibleParticipants.length;
       sceneArea?.classList.toggle('neo-ow-participants',!!visibleParticipants.length);
     }
