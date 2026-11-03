@@ -20,6 +20,8 @@
     const note=document.createElement('div');note.id='neoOverworldNotice';note.hidden=true;note.setAttribute('role','status');note.setAttribute('aria-live','polite');
     const showNotice=message=>{note.textContent=message;note.hidden=false;};
     const frame=document.createElement('iframe');frame.title='Current Neo Campus location';Object.assign(frame.style,{flex:'1',minHeight:'0',width:'100%',border:'0'});
+    // A map is a persistent view, not a disposable result of each RPG render.
+    let activeMapKey='',activeCastKey='',lastIndicatorKey='';
     const headerActions=document.createElement('div');headerActions.className='neo-ow-header-actions';
     const cloudButton=document.createElement('button');cloudButton.type='button';cloudButton.className='neo-ow-menu-button neo-ow-cloud-button';cloudButton.textContent='☁ SIGN IN';cloudButton.title='Open cloud save account';cloudButton.setAttribute('aria-label','Open cloud save account');
     const chibiButton=document.createElement('button');chibiButton.type='button';chibiButton.className='neo-ow-menu-button neo-ow-chibi-button';chibiButton.setAttribute('aria-pressed','false');chibiButton.title='Toggle character chibi mode';
@@ -47,15 +49,18 @@
     cloudButton.onclick=()=>document.getElementById('cloudSaveButton')?.click();
     headerActions.append(cloudButton,chibiButton,menuButton);
     toolbar.append(title,headerActions);overlay.append(toolbar,frame,note);document.body.append(overlay);
-    function syncNpcIndicators(){
+    function syncNpcIndicators(force=false){
       const data=bridge()?.snapshot?.();
-      if(!data||!frame.contentWindow||frame.src==='about:blank')return;
+      if(!data||!frame.contentWindow||frame.getAttribute('src')==='about:blank')return;
+      const signature=JSON.stringify([data.location,data.day,data.slot,data.indicators||{}]);
+      if(!force&&signature===lastIndicatorKey)return;
+      lastIndicatorKey=signature;
       frame.contentWindow.postMessage({
         type:'neo-overworld-npc-indicators',location:data.location,day:data.day,slot:data.slot,
         indicators:data.indicators||{}
       },location.origin);
     }
-    frame.addEventListener('load',()=>{syncChibiMode();syncNpcIndicators();});
+    frame.addEventListener('load',()=>{syncChibiMode();syncNpcIndicators(true);});
     syncChibiButton();syncCloudButton();
     const chibiPreferenceObserver=new MutationObserver(syncChibiButton);
     chibiPreferenceObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-rpg-discreet']});
@@ -92,6 +97,7 @@
       else plannerHome.append(planner);
     }
     function closeSheet(){
+      if(!expandedSheet&&sheet.hidden)return;
       restorePlanner();expandedSheet=null;sheet.hidden=true;sheetBackdrop.hidden=true;
       next.setAttribute('aria-expanded','false');travelToggle.setAttribute('aria-expanded','false');
       next.classList.remove('is-open');travelToggle.classList.remove('is-open');
@@ -1393,18 +1399,29 @@
     function refresh(){
       const data=snapshot();if(!data)return;
       const selected=data.places.find(p=>p.id===data.location);
-      locationName.textContent=selected?.name||'Neo Campus';
-      dayLabel.textContent='Day '+data.day+' · '+(['Morning','Afternoon','Evening'][data.slot]||'');
+      const name=selected?.name||'Neo Campus';
+      const dayText='Day '+data.day+' · '+(['Morning','Afternoon','Evening'][data.slot]||'');
+      if(locationName.textContent!==name)locationName.textContent=name;
+      if(dayLabel.textContent!==dayText)dayLabel.textContent=dayText;
       next.disabled=data.locked;travelToggle.disabled=data.locked;
-      if(data.locked)closeSheet();
+      if(data.locked&&expandedSheet)closeSheet();
       const people=data.people.map(id=>{
         // Match Laca's canonical outfit rules: lifeguard uniform on duty at Riverside Park.
         const onLifeguardShift=id==='laca'&&data.location==='park'&&(data.slot===0||data.slot===1);
         return onLifeguardShift?'laca:lifeguardFrontLeaning':id;
       }).join(',');
-      const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&slot='+encodeURIComponent(data.slot)+'&day='+encodeURIComponent(data.day)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
-      if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
-      else syncNpcIndicators();
+      const mapKey=[data.location,data.day,data.slot].join('|');
+      // Dialogue and ordinary UI actions must never navigate the entire map.
+      // A cast change is applied after the current conversation finishes, so
+      // NPCs cannot vanish/reload midway through an interaction.
+      const hasMap=!!frame.getAttribute('src')&&frame.getAttribute('src')!=='about:blank';
+      const mapChanged=!hasMap||activeMapKey!==mapKey;
+      const castChanged=activeCastKey!==people;
+      if(mapChanged||(castChanged&&!data.locked&&storyShield.hidden)){
+        const nextSrc='/overworld-prototype.html?scene='+encodeURIComponent(data.location)+'&cast='+encodeURIComponent(people)+'&slot='+encodeURIComponent(data.slot)+'&day='+encodeURIComponent(data.day)+'&rpg-integration=1&chibi='+(document.documentElement.dataset.rpgDiscreet==='on'?'1':'0');
+        activeMapKey=mapKey;activeCastKey=people;lastIndicatorKey='';
+        if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
+      }else syncNpcIndicators();
       note.hidden=true;
     }
     function dismiss(){
