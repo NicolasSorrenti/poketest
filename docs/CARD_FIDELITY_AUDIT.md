@@ -509,6 +509,14 @@ Base #90 and Base Set 2 #117 differ slightly in wording (“your own Pokémon”
 | Super Energy Removal (base1-79; base4-108) | Printed wording, own Pokémon/Energy cost, opposing target and “up to 2” amount-choice boundaries reviewed | [TCGdex Base #79](https://www.tcgdex.net/database/base-base/base1-base-set/79-super-energy-removal) and [Base Set 2 #108](https://www.tcgdex.net/database/base-base/base4-base-set-2/108-super-energy-removal); classic reducer source review | Partial; sole eligible source/target and forced one-Energy cost/discard choices now auto-resolve; distinct choices remain available. If the opponent has at least two attached Energy, the player still chooses whether to discard one or two because the card says “up to 2.” No new regression test added; other interactions remain unchecked |
 
 
+## Pokémon Trader (Base #77 and Base Set 2 #106)
+
+| Cards | Scope checked | Evidence | Status |
+| --- | --- | --- | --- |
+| Pokémon Trader (`base1-77`, `base4-106`) | Printed exchange, hand/deck Pokémon eligibility, actor-owned choices, showing both cards, shuffling the deck, illegal-play atomicity | `test_card_fidelity_pokemon_trader.js` (six scenarios authored; execution/CI pending); [Limitless Base #77](https://limitlesstcg.com/cards/en/BS/77); [Serebii Base #77](https://www.serebii.net/card/base/077.shtml) | Partial; code discrepancy identified and patched on an audit branch, but the regression has not yet been run. Further cross-card interactions, historical edge rulings and live client/network verification pending |
+
+The existing reducer correctly staged the hand/deck Pokémon exchange but omitted the printed instruction to show both traded Pokémon to the opponent. The new reducer change sends the offered and retrieved card names to the public turn log and online-preview match feed after their selections. The exchange, shuffle and atomic-play paths were examined in source; the public reveal fix awaits verification by existing CI and has not been independently runtime-tested.
+
 ## Scoop Up (Base #78 and Base Set 2 #107)
 
 | Cards | Scope checked | Evidence | Status |
