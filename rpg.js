@@ -75,14 +75,62 @@ const REPEATABLE_LIVE_EVENTS=[
 ];
 const REPEATABLE_LIVE_IDS=new Set(REPEATABLE_LIVE_EVENTS.map(event=>event.id));
 const LIVE_EVENT_ART={"live_clothe_washing":"/rpg-assets/characters/live/events/live_clothe_washing.jpg","live_cleaning":"/rpg-assets/characters/live/events/live_cleaning.jpg","live_cooking":"/rpg-assets/characters/live/events/live_cooking.jpg","live_library":"/rpg-assets/characters/live/events/live_library.jpg","live_sweater_bra":"/rpg-assets/characters/live/events/live_sweater_bra.jpg","live_home_welcome":"/rpg-assets/characters/live/events/live_couch_sweater.png","live_home_cooking":"/rpg-assets/characters/live/events/live_cooking_evening.png","live_home_reading":"/rpg-assets/characters/live/events/live_reading.png","live_home_relaxing":"/rpg-assets/characters/live/events/live_relaxing_sofa.png","live_brushing_teeth":"/rpg-assets/characters/live/events/live_brushing_teeth.png","live_getting_ready":"/rpg-assets/characters/live/events/live_getting_ready.png","live_cleaning_table":"/rpg-assets/characters/live/events/live_cleaning_table.png","live_vacuuming":"/rpg-assets/characters/live/events/live_vacuuming.png","live_laundry":"/rpg-assets/characters/live/events/live_laundry.png","live_workout_break":"/rpg-assets/characters/live/events/live_workout_break.png","live_workout_exhausted":"/rpg-assets/characters/live/events/live_workout_exhausted.png","live_extra_exhaused_workout":"/rpg-assets/characters/live/events/live_extra_exhaused_workout.jpg","live_waking_up_casual":"/rpg-assets/characters/live/events/live_waking_up_casual.png","live_waking_up_lavender":"/rpg-assets/characters/live/events/live_waking_up_lavender.png"};
+
+// Glance milestones are independent of the rotating apartment encounters.
+// The later two images can be added without changing event code; the CG
+// presenter will fall back to the already-shipped couch image if unavailable.
+const LIVE_SPECIAL_EVENTS=[
+ {id:'live_glance_talk_one',title:'A Word on the Couch',kind:'season',priority:99,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
+  {speaker:'Narrator',text:"After you finish looking, Live motions for you to join her on the couch."},
+  {speaker:'Live',text:"Can we talk for a moment? You've been looking my way quite a lot lately."},
+  {speaker:'Live',text:"Be a good kid, okay? I went to school with your mom, you know. I've known your family for years."},
+  {speaker:'Protagonist',text:"I know. I don't mean to make things awkward."}
+ ],choices:[
+  {label:"I'm not a kid anymore",reply:"I know you've grown up. I just want us to be careful with each other's feelings."},
+  {label:"I understand. I respect you",reply:"Thank you. That's what I wanted to hear."}
+ ]},
+ {id:'live_glance_talk_two',title:'Please Be Serious',kind:'season',priority:99,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
+  {speaker:'Narrator',text:"Live asks you to sit down beside her again. This time, her expression is serious."},
+  {speaker:'Live',text:"We should talk again. You know I've been alone for a while."},
+  {speaker:'Live',text:"So please don't play around with me, okay? If there's something you want to say, mean it."},
+  {speaker:'Protagonist',text:"I hear you."}
+ ],choices:[
+  {label:"I wouldn't play with your feelings",reply:"All right. Thank you for taking me seriously."},
+  {label:"I'll give you some space if you want",reply:"I appreciate that. Being honest with me matters more than anything."}
+ ]},
+ {id:'live_glance_next_morning',title:'A Quiet Morning Together',kind:'season',priority:100,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
+  {speaker:'Narrator',text:"You wake to find Live waiting in the living room."},
+  {speaker:'Live',text:"Oh, I know you've been wanting to talk about this for a while..."},
+  {speaker:'Narrator',text:"The two of you spend the morning together in private. The details fade as the day moves on."},
+  {speaker:'Live',text:"Ah..."}
+ ],choices:[{label:"Continue to the afternoon",reply:"The afternoon begins, and the usual rhythm of the apartment returns."}]}
+];
+const LIVE_SPECIAL_IDS=new Set(LIVE_SPECIAL_EVENTS.map(event=>event.id));
+const LIVE_SPECIAL_ART={
+ live_glance_talk_one:'/rpg-assets/characters/live/events/live_couch_sweater.png',
+ live_glance_talk_two:'/rpg-assets/characters/live/events/live_couch_sweater_2',
+ live_glance_next_morning:'/rpg-assets/characters/live/events/live_confy_scene'
+};
+const LIVE_FINAL_ART_2='/rpg-assets/characters/live/events/live_confy_scene2';
+function specialArtCandidates(path){
+ if(!path)return [];
+ if(/\.(?:png|jpe?g|webp)$/i.test(path))return [path];
+ return [path+'.png',path+'.jpg',path+'.webp'];
+}
 const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
  {speaker:'Narrator',text:'After spending time at home, you notice Live looking over from the living room.'},
  {speaker:'Live',text:"Oh, you're still here! I thought you might be heading out."},
  {speaker:'Live',text:"Are you okay? Why didn't you go out?"}
 ],choices:[{label:'Leave now',reply:"I'll be here if you need anything."}]};
 const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundry','live_getting_ready','live_workout_break'].map(name=>'/rpg-assets/characters/live/events/'+name+'.png');
-function liveEventArt(id){return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];}
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,LIVE_HOME_CHECKIN];
+function liveEventArt(id){
+ if(LIVE_SPECIAL_IDS.has(id)){
+  const base=id==='live_glance_next_morning'&&state.mandatoryEventState?.active?.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[id];
+  return specialArtCandidates(base)[0];
+ }
+ return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];
+}
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_SPECIAL_EVENTS,LIVE_HOME_CHECKIN];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -374,7 +422,7 @@ function queueMandatory(){
  // invalidates an active Live event on every render and restarts it.
  MANDATORY.queue(state,MANDATORY_EVENTS);
  const m=state.mandatoryEventState;
- if(m?.pending)m.pending=m.pending.filter(item=>!LIVE_EVENT_ART[item.id]&&item.id!==LIVE_HOME_CHECKIN.id);
+ if(m?.pending)m.pending=m.pending.filter(item=>!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id);
 }
 function autoTravelForEvent(place){
  if(!place||!places[place]||state.location===place)return false;
@@ -409,6 +457,18 @@ function maybeStartMandatory(){
     ||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
  // A due meeting takes precedence over an automatic story that would relocate the player.
  if(TIME.dueNow(state).length)return;
+ // A 30-glance milestone begins on the NEXT new day, before ordinary
+ // apartment encounters. It is not eligible on the same day as glance 30.
+ if(state.location==='home'&&state.slot===0&&state.day<=90&&
+    Number(state.liveGlanceCount)>=30&&!state.liveSpecialSeen?.live_glance_next_morning&&
+    Number(state.liveThirtyGlancesDay)>0&&state.day>Number(state.liveThirtyGlancesDay)){
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  m.active={id:'live_glance_next_morning',phase:'lines',index:0,choice:null};
+  state.liveSpecialSeen={...(state.liveSpecialSeen||{}),live_glance_next_morning:true};
+  state.liveHomeActivityScene=null;
+  persist();
+  return;
+ }
  // The activity check-in is scheduled only once the clock wipe has settled.
  if(state.location==='home'&&state.liveHomeActivityScene?.pending){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
@@ -443,7 +503,7 @@ function maybeStartMandatory(){
  // The non-Live scheduler runs only when no Live scene is active.
  // Exclude the replayable pool so it cannot accidentally start on every render.
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
-  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id));
+  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -2097,7 +2157,10 @@ function syncSceneCG(){
  const liveArt=liveEventArt(liveEventId);
  if(liveArt){
   const entry={id:liveEventId,title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home',character:'live'};
-  cgScenePresenter.show(entry,[{kind:'event',path:liveArt}],()=>{},()=>{});
+  const paths=LIVE_SPECIAL_IDS.has(liveEventId)
+   ?[...specialArtCandidates(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[liveEventId]),'/rpg-assets/characters/live/events/live_couch_sweater.png']
+   :[liveArt];
+  cgScenePresenter.show(entry,paths.map(path=>({kind:'event',path})),()=>{},()=>{});
   return;
  }
  const selected=CG_SCENE.select(state,CG.catalog,SLICE,scene);
