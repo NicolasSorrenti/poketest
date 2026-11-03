@@ -1897,9 +1897,9 @@
         {
           "kind": "trainer",
           "status": "partial",
-          "scope": "Printed Basic-only return, evolved stack/attachments discard, target selection, forced sole-target auto-resolution, and Active/Bench consequences. Six scenarios authored across Base and Base Set 2; GitHub CI pending. Historical edge rulings and network/client integration remain unreviewed.",
+          "scope": "Printed Basic-only return, evolved stack/attachments discard, target selection, forced sole-target auto-resolution, and Active/Bench consequences. Source review only across Base and Base Set 2; existing tests were not expanded. Historical edge rulings and network/client integration remain unreviewed.",
           "evidence": [
-            "test_card_fidelity_scoop_up.js (six authored scenarios; execution pending)",
+            "Source inspection of classic_trainer_core.js (no new tests added)",
             "Printed Base Set #78 and Base Set 2 #107 English text compared via Limitless and catalog. Existing reducer returned the bottom Basic and discarded evolutions/attachments; forced sole-target prompt was unnecessary."
           ]
         }
@@ -6850,9 +6850,9 @@
         {
           "kind": "trainer",
           "status": "partial",
-          "scope": "Printed Basic-only return, evolved stack/attachments discard, target selection, forced sole-target auto-resolution, and Active/Bench consequences. Six scenarios authored across Base and Base Set 2; GitHub CI pending. Historical edge rulings and network/client integration remain unreviewed.",
+          "scope": "Printed Basic-only return, evolved stack/attachments discard, target selection, forced sole-target auto-resolution, and Active/Bench consequences. Source review only across Base and Base Set 2; existing tests were not expanded. Historical edge rulings and network/client integration remain unreviewed.",
           "evidence": [
-            "test_card_fidelity_scoop_up.js (six authored scenarios; execution pending)",
+            "Source inspection of classic_trainer_core.js (no new tests added)",
             "Printed Base Set #78 and Base Set 2 #107 English text compared via Limitless and catalog. Existing reducer returned the bottom Basic and discarded evolutions/attachments; forced sole-target prompt was unnecessary."
           ]
         }
