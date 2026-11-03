@@ -5,6 +5,23 @@
   if(root)root.NeoRpgPhoneMessages=api;
 })(typeof window!=='undefined'?window:null,function(){
   const interval=()=>Math.random()<.5?2:3;
+  const photoshootInterval=()=>3+Math.floor(Math.random()*3);
+  // Generated from the assets currently under Lyla's actual photoshoot directory.
+  const lylaPhotos=["/rpg-assets/characters/lyla/photoshoot/01_black_tank_monochrome.png","/rpg-assets/characters/lyla/photoshoot/01_wet_hair_closeup.png","/rpg-assets/characters/lyla/photoshoot/02_arm_overhead.png","/rpg-assets/characters/lyla/photoshoot/03_outdoor_low_crouch.png","/rpg-assets/characters/lyla/photoshoot/04_bed_playful.png","/rpg-assets/characters/lyla/photoshoot/05_red_editorial_full_body.png","/rpg-assets/characters/lyla/photoshoot/06_red_editorial_compact_proportions.png","/rpg-assets/characters/lyla/photoshoot/06_window_shh_revised.png","/rpg-assets/characters/lyla/photoshoot/07_stadium_blue_cap_white_tee.png","/rpg-assets/characters/lyla/photoshoot/07_window_sailor_outfit.png","/rpg-assets/characters/lyla/photoshoot/08_stadium_raised_tee.png","/rpg-assets/characters/lyla/photoshoot/09_goth_blonde_lyla.png","/rpg-assets/characters/lyla/photoshoot/09_poolside_red_tee.png","/rpg-assets/characters/lyla/photoshoot/10_black_white_reclining.png","/rpg-assets/characters/lyla/photoshoot/11_black_background_windswept_portrait.png","/rpg-assets/characters/lyla/photoshoot/11_red_beret_crouch.png","/rpg-assets/characters/lyla/photoshoot/12142image.jpg","/rpg-assets/characters/lyla/photoshoot/12_manga_wall_pink_top.png","/rpg-assets/characters/lyla/photoshoot/14image.jpg","/rpg-assets/characters/lyla/photoshoot/2image.jpg","/rpg-assets/characters/lyla/photoshoot/31image.jpg","/rpg-assets/characters/lyla/photoshoot/55image.jpg","/rpg-assets/characters/lyla/photoshoot/lyla_photoshoot_05_neon_park_petite.png","/rpg-assets/characters/lyla/photoshoot/lyla_photoshoot_07_chunli_cosplay_petite.png","/rpg-assets/characters/lyla/photoshoot/lyla_photoshoot_09_gingham_mirror.png","/rpg-assets/characters/lyla/photoshoot/lyla_photoshoot_10_mai_cosplay_mirror_petite.png","/rpg-assets/characters/lyla/photoshoot/sweating pose.jpg"];
+  const photoBystanders=['yuna','hana','jinx','reina','camila','daisy','barb'];
+  const sightingPlaces=['on a bus stop advertisement','in a magazine at the café','on a poster near the card shop','in a fashion magazine','on a display in the shopping district'];
+  const sightingLines=[
+    'Hey, isn\'t this the girl who goes to the TCG store? I just saw her photo!',
+    'Heeey, it\'s Lyla! The girl who used Umbreon! Look what I found.',
+    'Wait, that\'s Lyla from the card shop, right? She\'s modeling now?',
+    'I spotted someone familiar in this ad. Is that the same Lyla we play cards with?'
+  ];
+  const fromLyla=[
+    'The photographer sent the finished photos. This one was okay, I guess.',
+    'This came back from the studio today. Thought you might want to see.',
+    'They picked this shot for the final set. I like the lighting.',
+    'Finished another modeling job. Here is one of the results.'
+  ];
   const voices={
     hana:{caption:'I found a quiet minute between everything. This one came out kind of cute, right?',context:'I escaped the shop for a quick break.'},
     reina:{caption:'A quick photo from between rounds. You can tell me honestly if the angle works.',context:'I was checking the tournament board.'},
@@ -43,6 +60,13 @@
     if(!Number.isInteger(box.nextDay)||box.nextDay<=0){box.nextDay=state.day+interval();changed=true;}
     if(!Number.isInteger(box.lastSentDay)||box.lastSentDay<0){box.lastSentDay=0;changed=true;}
     if(!Number.isInteger(box.sequence)||box.sequence<0){box.sequence=0;changed=true;}
+    if(!box.lylaPhotoshoot||typeof box.lylaPhotoshoot!=='object'||Array.isArray(box.lylaPhotoshoot)){
+      box.lylaPhotoshoot={nextDay:state.day+photoshootInterval(),lastDay:0,seen:[],lastSender:null};changed=true;
+    }
+    const shoot=box.lylaPhotoshoot;
+    if(!Number.isInteger(shoot.nextDay)||shoot.nextDay<=0){shoot.nextDay=state.day+photoshootInterval();changed=true;}
+    if(!Number.isInteger(shoot.lastDay)||shoot.lastDay<0){shoot.lastDay=0;changed=true;}
+    if(!Array.isArray(shoot.seen)){shoot.seen=[];changed=true;}
     if(box.pending&&(!box.pending.character||!['incoming','reply'].includes(box.pending.phase))) {box.pending=null;changed=true;}
     return changed;
   }
@@ -106,16 +130,17 @@
       if(img.complete&&img.naturalWidth)setup();
     }
     function photo(pending,frame){
-      const name=cast[pending.character]?.name||pending.character;
+      const photoCharacter=pending.photoSubject||pending.character;
+      const name=cast[photoCharacter]?.name||photoCharacter;
       if(discreet?.()&&avatars?.set){
-        avatars.set(frame,pending.character,'neutral',name);
+        avatars.set(frame,photoCharacter,'neutral',name);
         const safeImage=frame.querySelector('img.rpg-safe-avatar');
         if(safeImage)attachZoom(frame,safeImage);
         return;
       }
       let src=pending.src||fallbackImage?.(pending.character)||'';
       if(!src){frame.textContent='Photo unavailable';return;}
-      const img=make('img');img.src=src;img.alt='Photo from '+name;img.loading='eager';
+      const img=make('img');img.src=src;img.alt='Photo featuring '+name;img.loading='eager';
       let triedFallback=false;
       img.onerror=()=>{
         const fallback=fallbackImage?.(pending.character);
@@ -170,7 +195,23 @@
     function reply(kind){
       const pending=state.phoneMessages?.pending;if(!pending||pending.phase!=='incoming')return;
       const id=pending.character;
-      if(kind==='warm'){
+      if(pending.type==='lyla_photoshoot'){
+        const subject='lyla';
+        if(kind==='warm'){
+          if(pending.character===subject)relationships?.apply?.(state,subject,{affection:1});
+          pending.effectText=pending.character===subject?'Your bond with Lyla grew a little.':'';
+          pending.playerLine=pending.character===subject?'You look great. I\'m glad you sent it to me.':'She looks great! I didn\'t realize she modeled.';
+          pending.replyLine=pending.character===subject?'Thanks. I thought the photo turned out okay.':'Right? I recognized her immediately from the card shop.';
+        }else if(kind==='curious'){
+          if(pending.character===subject)relationships?.apply?.(state,subject,{trust:1});
+          pending.effectText=pending.character===subject?'You got to know Lyla a little better.':'';
+          pending.playerLine=pending.character===subject?'What was the shoot like?':'Where did you find that picture?';
+          pending.replyLine=pending.character===subject?'Just another job. The photographer liked this one.':'I spotted it while I was out. Small world, huh?';
+        }else{
+          pending.effectText='';pending.playerLine='You sent a Pokémon sticker 😊';
+          pending.replyLine=pending.character===subject?'That Umbreon sticker is pretty good.':'Haha, I knew you\'d recognize her!';
+        }
+      }else if(kind==='warm'){
         relationships?.apply?.(state,id,{affection:1});
         pending.effectText='Your bond with '+(cast[id]?.name||id)+' grew a little.';
         pending.playerLine='You look great. I’m glad you sent it to me.';
@@ -223,7 +264,39 @@
     function onDayAdvance(previousDay){
       normalize(state);
       if(state.day<=previousDay||state.day>90)return null;
-      const box=state.phoneMessages;if(box.pending)return null;
+      const box=state.phoneMessages;
+      // One received SMS maximum per calendar day, regardless of message type.
+      if(box.pending||box.lastSentDay===state.day)return null;
+      const shoot=box.lylaPhotoshoot;
+      const metLyla=!!(state.met_lyla||state.relationships?.lyla?.affection>0||state.relationships?.lyla?.trust>0||state.bonds?.lyla?.affection>0);
+      if(metLyla&&lylaPhotos.length&&state.day>=shoot.nextDay){
+        const rank=typeof relationships?.bondRank==='function'?relationships.bondRank(state,'lyla'):0;
+        const direct=rank>=2;
+        const bystanders=photoBystanders.filter(id=>cast[id]&&
+          (state['met_'+id]===true||(id==='reina'&&state.metReina===true)));
+        if(direct||bystanders.length){
+          const remaining=lylaPhotos.filter(src=>!shoot.seen.includes(src));
+          const photos=remaining.length?remaining:lylaPhotos;
+          const image=photos[Math.floor(Math.random()*photos.length)];
+          const sender=direct?'lyla':bystanders.find(id=>id!==shoot.lastSender)||bystanders[0];
+          const caption=direct
+            ?fromLyla[Math.floor(Math.random()*fromLyla.length)]
+            :sightingLines[Math.floor(Math.random()*sightingLines.length)]+' I saw it '+sightingPlaces[Math.floor(Math.random()*sightingPlaces.length)]+'.';
+          box.sequence++;
+          box.pending={id:'photoshoot-'+state.day+'-'+box.sequence,type:'lyla_photoshoot',
+            character:sender,photoSubject:'lyla',name:cast[sender]?.name||sender,
+            pose:'photoshoot',src:image,caption,receivedDay:state.day,phase:'incoming',deferred:false};
+          shoot.seen=shoot.seen.filter(src=>lylaPhotos.includes(src));
+          if(!shoot.seen.includes(image))shoot.seen.push(image);
+          shoot.lastSender=sender;shoot.lastDay=state.day;shoot.nextDay=state.day+photoshootInterval();
+          box.lastSentDay=state.day;
+          // A photoshoot takes today's SMS slot; keep the ordinary schedule moving.
+          if(box.nextDay<=state.day)box.nextDay=state.day+interval();
+          persist();return box.pending;
+        }
+        // No established sender yet: try again later, not as a message from Lyla.
+        shoot.nextDay=state.day+1;
+      }
       if(state.day<box.nextDay)return null;
       const present=new Set(typeof people==='function'?people():[]);
       let candidates=Object.keys(cast).filter(id=>
