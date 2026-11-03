@@ -3679,49 +3679,71 @@ function render(){
   const b=document.createElement('button');b.className='choice finish';b.textContent='Continue ›';
   b.onclick=()=>closeSceneDialogue();$('choices').append(b);
  }
- $('townRadar').replaceChildren();
+ // Stable keyed list updates: preserve existing avatar image nodes and focus.
+ // Full replaceChildren here used to retrigger image loading during every dialogue.
  const elsewhere=[];
  for(const place of Object.keys(places)){
   if(place==='home'||place===state.location)continue;
   const visible=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,place,publicAppointments(place)):[];
   for(const id of visible)if(!elsewhere.some(e=>e.id===id))elsewhere.push({id,place});
  }
- if(!elsewhere.length){
-  const p=document.createElement('p');p.className='empty-note';p.textContent='No other trainers are around town this period.';$('townRadar').append(p);
- }
- for(const {id,place} of elsewhere){
-  const button=document.createElement('button');button.className='radar-person';button.disabled=locked;
-  const label=document.createElement('strong');label.textContent=cast[id].name;
-  const where=document.createElement('small');where.textContent='↗ '+places[place][0];
-  const avatar=document.createElement('span');avatar.className='radar-person-avatar';
-  window.NeoRpgDiscreetAvatars?.set?.(avatar,id,'neutral',cast[id].name);
-  button.append(avatar,label,where);button.title='Travel for free to '+places[place][0];
-  button.onclick=()=>travelTo(place);
-  $('townRadar').append(button);
- }
- $('people').replaceChildren();
+ const radarItems=elsewhere.length?elsewhere.map(item=>({...item,key:'radar:'+item.id})):
+  [{key:'empty',empty:true}];
+ window.NeoRpgRenderPerf.reconcileKeyed($('townRadar'),radarItems,
+  item=>{
+   if(item.empty){const p=document.createElement('p');p.className='empty-note';return p;}
+   const button=document.createElement('button');button.className='radar-person';
+   const label=document.createElement('strong'),where=document.createElement('small');
+   const avatar=document.createElement('span');avatar.className='radar-person-avatar';
+   window.NeoRpgDiscreetAvatars?.set?.(avatar,item.id,'neutral',cast[item.id].name);
+   button.append(avatar,label,where);return button;
+  },
+  (button,item)=>{
+   if(item.empty){button.textContent='No other trainers are around town this period.';return;}
+   button.disabled=locked;
+   const name=cast[item.id].name,placeName=places[item.place][0];
+   const label=button.querySelector('strong'),where=button.querySelector('small');
+   if(label.textContent!==name)label.textContent=name;
+   if(where.textContent!=='↗ '+placeName)where.textContent='↗ '+placeName;
+   button.title='Travel for free to '+placeName;
+   button.onclick=()=>travelTo(item.place);
+  });
  const people=currentPeople();
- if(!people.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No regulars here at this time. Try another location or time period.';$('people').append(p);}
- for(const id of people){
-  const c=cast[id],b=document.createElement('button');b.className='person'+(state.selected===id?' selected':'');b.disabled=locked;
-  const avatar=document.createElement('span');avatar.className='person-avatar';avatar.dataset.initials=c.name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();avatar.append(makeAvatar(id));
-  window.NeoRpgDiscreetAvatars?.set?.(avatar,id,'neutral',c.name);
-  const label=document.createElement('span');label.className='person-info';
-  const name=document.createElement('strong');name.textContent=c.name;const sub=document.createElement('small');sub.textContent=c.style;
-  const bond=BONDS.progress(state,id,BOND_PLAN),chapter=document.createElement('small');
-  chapter.className='character-chapter-progress';chapter.textContent='♥ Character chapters '+bond.completed+' / '+bond.total+(state.bondTrials?.[id]?' · Personal challenge won':'');
-  label.append(name,sub,chapter);
-  const invite=!locked?availableInvitation(id,people):null;
-  if(invite){
-   const cue=document.createElement('small');cue.className='character-reaction-hint';
-   cue.textContent=invite.kind==='appointment'?'✦ Waiting for you':'✦ Wants to talk';
-   label.append(cue);
-  }else if(!locked&&state['met_'+id]&&REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ)){
-   const cue=document.createElement('small');cue.className='character-reaction-hint';cue.textContent='✦ Something to say';
-   label.append(cue);
-  }
-  b.append(avatar,label);b.onclick=()=>selectPerson(id);$('people').append(b);
- }
+ const peopleItems=people.length?people.map(id=>({key:'person:'+id,id})):
+  [{key:'empty',empty:true}];
+ window.NeoRpgRenderPerf.reconcileKeyed($('people'),peopleItems,
+  item=>{
+   if(item.empty){const p=document.createElement('p');p.className='empty-note';return p;}
+   const id=item.id,c=cast[id],button=document.createElement('button');
+   button.className='person';
+   const avatar=document.createElement('span');avatar.className='person-avatar';
+   avatar.dataset.initials=c.name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();
+   avatar.append(makeAvatar(id));
+   window.NeoRpgDiscreetAvatars?.set?.(avatar,id,'neutral',c.name);
+   const label=document.createElement('span');label.className='person-info';
+   const name=document.createElement('strong'),sub=document.createElement('small');
+   const chapter=document.createElement('small');chapter.className='character-chapter-progress';
+   const cue=document.createElement('small');cue.className='character-reaction-hint';cue.hidden=true;
+   label.append(name,sub,chapter,cue);button.append(avatar,label);return button;
+  },
+  (button,item)=>{
+   if(item.empty){button.textContent='No regulars here at this time. Try another location or time period.';return;}
+   const id=item.id,c=cast[id],label=button.querySelector('.person-info');
+   button.className='person'+(state.selected===id?' selected':'');
+   button.disabled=locked;button.onclick=()=>selectPerson(id);
+   const name=label.querySelector('strong'),sub=label.querySelector('small'),chapter=label.querySelector('.character-chapter-progress');
+   if(name.textContent!==c.name)name.textContent=c.name;
+   if(sub.textContent!==c.style)sub.textContent=c.style;
+   const bond=BONDS.progress(state,id,BOND_PLAN);
+   const chapterText='♥ Character chapters '+bond.completed+' / '+bond.total+(state.bondTrials?.[id]?' · Personal challenge won':'');
+   if(chapter.textContent!==chapterText)chapter.textContent=chapterText;
+   const cue=label.querySelector('.character-reaction-hint');
+   const invite=!locked?availableInvitation(id,people):null;
+   const cueText=invite?(invite.kind==='appointment'?'✦ Waiting for you':'✦ Wants to talk'):
+    (!locked&&state['met_'+id]&&REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ)?'✦ Something to say':'');
+   if(cue.textContent!==cueText)cue.textContent=cueText;
+   cue.hidden=!cueText;
+  });
  const sceneScript=showingMandatory?.lines||
   (showingStory?storyDialogueLines(showingStory.id):null)||
   (showingArc?ARC.linesFor(state,showingArc.id):null)||
