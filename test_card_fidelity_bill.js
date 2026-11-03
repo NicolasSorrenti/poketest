@@ -36,7 +36,7 @@ for(const v of variants){
  // applyCommand replaces game.players transactionally; read fresh player objects.
  const p=g.players[0],foe=g.players[1];
  assert.equal(g.pendingDecision,null,'Bill has no target or card-choice prompt');
- assert.deepEqual(p.hand,[fire,grass],'Bill draws exactly two cards from its owner’s deck top');
+ assert.deepEqual(p.hand,[grass,fire],'Bill draws exactly two cards in deck-top order');
  assert.deepEqual(p.deck,[]);
  assert.deepEqual(p.discard,[v.id],'Bill is discarded after resolving');
  assert.deepEqual(foe.hand,opponentHand);
