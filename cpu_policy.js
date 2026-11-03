@@ -906,7 +906,7 @@ function energyHorizonBonus(action,o,cfg){
  // Current-turn Potion healing also changes next-turn counter-based damage.
  const potionHeal=card(attachedId)?.name==='Potion Energy'?10:0;
  const after={...u,damage:Math.max(0,(u.damage||0)+rainbowDamage-potionHeal),
-  ...(fullHeal?{status:null}:{}),
+  ...(fullHeal?{status:null,poison:false}:{}),
   energies:[...(u.energies||[]),attachedId]};
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
  const futureRound=(Number(o.round)||0)+1;
