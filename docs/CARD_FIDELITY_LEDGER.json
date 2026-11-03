@@ -1933,7 +1933,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): Printed 20-damage attack reduction after Weakness/Resistance, own-Pokémon attachment target and expiration at end of opponent's next turn inspected in source. Interaction timing, stacking and all attack prevention cases unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
@@ -1944,7 +1948,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): One-other-hand-card discard payment, Basic Energy discard selection, max-two return, destination and invalid-play prechecks inspected in source. Optional count boundaries, copying, and interactions unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
@@ -1955,7 +1963,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): Printed Active-only removal of Sleep, Confusion, Paralysis and Poison inspected against STATUS.clearConditions; Benched/status edge interactions unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
@@ -2142,7 +2154,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): Printed healing of up to two 10-damage counters on one damaged own Pokémon, target choice and 20-damage cap inspected in source; prevention/damage replacement interactions unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
@@ -2153,7 +2169,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): Printed Active/Bench exchange, acting-player target selection, and clearing outgoing Active's status and effects inspected in source; blocking effects and all interactions unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
@@ -6891,7 +6911,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): Printed 20-damage attack reduction after Weakness/Resistance, own-Pokémon attachment target and expiration at end of opponent's next turn inspected in source. Interaction timing, stacking and all attack prevention cases unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
@@ -6902,7 +6926,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): One-other-hand-card discard payment, Basic Energy discard selection, max-two return, destination and invalid-play prechecks inspected in source. Optional count boundaries, copying, and interactions unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
@@ -6913,7 +6941,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): Printed Active-only removal of Sleep, Confusion, Paralysis and Poison inspected against STATUS.clearConditions; Benched/status edge interactions unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
@@ -7079,7 +7111,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): Printed healing of up to two 10-damage counters on one damaged own Pokémon, target choice and 20-damage cap inspected in source; prevention/damage replacement interactions unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
@@ -7090,7 +7126,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/printed-text review only (no new runtime tests): Printed Active/Bench exchange, acting-player target selection, and clearing outgoing Active's status and effects inspected in source; blocking effects and all interactions unverified.",
+          "evidence": [
+            "2026-11-03 five-Trainer/ten-printing batch: cards/base1.json and cards/base4.json compared with classic_trainer_core.js, plus special_conditions_core.js as applicable; independently cross-checked online Base and Base Set 2 printed wording. Source inspection is NOT runtime verification."
+          ]
         }
       ]
     },
