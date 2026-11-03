@@ -946,7 +946,7 @@ function energyHorizonBonus(action,o,cfg){
 // independent of Bench availability: holding the Energy is also an option.
 function strandedActiveEnergy(o,energyId,cfg){
  const active=o.self.active,enemy=o.opponent.active,energy=card(energyId);
- if(!active||!enemy||!isEnergy(energy)||['Asleep','Paralyzed'].includes(enemy.status))return false;
+ if(!active||!enemy||!isEnergy(energy))return false;
  const incoming=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
  // Only publicly usable opposing attacks count (Amnesia, cooldown, once-use).
  const fromEnemy={...o,self:o.opponent,opponent:o.self};
@@ -954,9 +954,14 @@ function strandedActiveEnergy(o,energyId,cfg){
  // resolves. Even a printed certain KO is only a 50% threat, below this
  // conservative 75% doomed-Active threshold (no future RNG is inspected).
  const confusionChance=enemy.status==='Confused'?.5:1;
- if(!incoming.some((a,i)=>eligibleAttack(fromEnemy,enemy,a,i)&&
-    knockoutChance(a,enemy,active,o.opponent.bench.length,
-     cfg.level===8?livePlusPowerBonus(o,'opponent'):0)*confusionChance>=.75))return false;
+ const opponentThreat=!['Asleep','Paralyzed'].includes(enemy.status)&&
+  incoming.some((a,i)=>eligibleAttack(fromEnemy,enemy,a,i)&&
+   knockoutChance(a,enemy,active,o.opponent.bench.length,
+    cfg.level===8?livePlusPowerBonus(o,'opponent'):0)*confusionChance>=.75);
+ // Poison checkup can KO our Active immediately after its attack, before
+ // the opponent ever gets a turn. Level 8 must not invest surplus Energy in
+ // that doomed attacker merely because the opponent has no funded attack.
+ if(!opponentThreat&&!(cfg.level===8&&active.poison))return false;
  // Potion Energy heals 10 immediately on attachment. If that healing
  // prevents the publicly threatened KO, the attachment is a survival play,
  // not Energy stranded on a doomed Active. Keep Level 7's old behavior.
@@ -970,7 +975,13 @@ function strandedActiveEnergy(o,energyId,cfg){
   ...((potionRescue||rainbowRecoil)?{damage:Math.max(0,(active.damage||0)+rainbowRecoil-
    (potionRescue?10:0))}:{}),
   energies:[...(active.energies||[]),energyId]};
- if(potionRescue&&!likelyOpponentKnockout(o,after,cfg.level===8))return false;
+ // Full Heal cures Poison; Potion may heal enough to survive the checkup.
+ // Rainbow recoil is applied first. Keep a genuinely useful attack upgrade
+ // or newly payable retreat exempt from the stranded-Energy penalty below.
+ const poisonThreat=cfg.level===8&&active.poison&&energy.name!=='Full Heal Energy'&&
+  hpRemaining(after)>0&&(active.poisonDamage||10)>=hpRemaining(after);
+ if(!opponentThreat&&!poisonThreat)return false;
+ if(potionRescue&&!likelyOpponentKnockout(o,after,cfg.level===8)&&!poisonThreat)return false;
  if(projectedAttackValue(after,enemy,o.turnSerial,o.self.bench.length)>
     projectedAttackValue(active,enemy,o.turnSerial,o.self.bench.length))return false;
  const retreat=card(active.id)?.retreatCost||[];
