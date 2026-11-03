@@ -29,10 +29,12 @@ for(const v of variants){
  const card=CATALOG.get(v.id);
  assert.equal(card.name,'Bill');
  assert.deepEqual(card.rules,['Draw 2 cards.']);
- const g=game(v),p=g.players[0],foe=g.players[1];
- p.hand=[v.id];foe.hand=[grass];foe.deck=[fire,grass];
- const opponentHand=[...foe.hand],opponentDeck=[...foe.deck];
+ const g=game(v);
+ g.players[0].hand=[v.id];g.players[1].hand=[grass];g.players[1].deck=[fire,grass];
+ const opponentHand=[...g.players[1].hand],opponentDeck=[...g.players[1].deck];
  act(g,0,'play_trainer',{handIndex:0});
+ // applyCommand replaces game.players transactionally; read fresh player objects.
+ const p=g.players[0],foe=g.players[1];
  assert.equal(g.pendingDecision,null,'Bill has no target or card-choice prompt');
  assert.deepEqual(p.hand,[fire,grass],'Bill draws exactly two cards from its owner’s deck top');
  assert.deepEqual(p.deck,[]);
