@@ -492,11 +492,14 @@ function maybeStartMandatory(){
     ||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
  // A due meeting takes precedence over an automatic story that would relocate the player.
  if(TIME.dueNow(state).length)return;
- // A 30-glance milestone begins on the NEXT new day, before ordinary
- // apartment encounters. It is not eligible on the same day as glance 30.
- if(state.location==='home'&&state.slot===0&&state.day<=90&&
-    Number(state.liveGlanceCount)>=30&&!state.liveSpecialSeen?.live_glance_next_morning&&
-    Number(state.liveThirtyGlancesDay)>0&&state.day>Number(state.liveThirtyGlancesDay)){
+ // The 30-glance scene is due from the *next* in-game day onward.
+ // Don't restrict it to slot 0: a scheduled appointment, travel wipe, or
+ // resumed dialogue must not permanently make the event missable.
+ // Legacy saves may already have 30 glances without liveThirtyGlancesDay;
+ // treat those as overdue instead of silently suppressing the event.
+ const glanceMilestoneDay=Number(state.liveThirtyGlancesDay)||Math.max(1,state.day-1);
+ if(state.location==='home'&&state.day<=90&&state.day>glanceMilestoneDay&&
+    Number(state.liveGlanceCount)>=30&&!state.liveSpecialSeen?.live_glance_next_morning){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   m.active={id:'live_glance_next_morning',phase:'lines',index:0,choice:null};
   state.liveSpecialSeen={...(state.liveSpecialSeen||{}),live_glance_next_morning:true};
@@ -2332,7 +2335,7 @@ function syncSceneCG(){
  const liveArt=isLiveCg?(liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(liveEventId)):null;
  if(liveArt){
   const finalSecond=liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2;
-  const entry={id:liveEventId+(finalSecond?'_second':''),title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home',character:'live'};
+  const entry={id:liveEventId+(finalSecond?'_second':''),title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home'};
   const paths=liveDiscreetEnabled()?[LIVE_DISCREET_PLACEHOLDER]:LIVE_SPECIAL_IDS.has(liveEventId)
    ?[...specialArtCandidates(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[liveEventId]),'/rpg-assets/characters/live/events/live_couch_sweater.png']
    :[liveArt];
@@ -3437,7 +3440,12 @@ function render(){
  const showingEncounter=state.activeEncounter?WORLD.byEncounter(state.activeEncounter.id):null;
  const showingArc=state.activeArc?ARC.byId(state.activeArc.id):null;
  const sideQuest=state.activeSideQuest?SIDE.byId(state.activeSideQuest.id):null,sideOwner=sideQuest?.stages[state.sideQuests[state.activeSideQuest?.id]?.step]?.npc;
-  const portraitId=mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
+  const liveCgOnly=!!showingMandatory&&(showingMandatory.id===LIVE_HOME_CHECKIN.id||
+  showingMandatory.id===LIVE_LYLA_PHOTO_EVENT.id||!!LIVE_EVENT_ART[showingMandatory.id]||
+  LIVE_SPECIAL_IDS.has(showingMandatory.id));
+ // Live has no portrait: her events are illustrated entirely by the scene CG.
+ // Don't inherit a previously selected character's portrait either.
+ const portraitId=liveCgOnly?null:mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
  activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
  const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
  const nextArt=nextPortrait?scenePortraitSource(nextPortrait,'neutral'):'';
@@ -3563,6 +3571,7 @@ function render(){
   active:!!(showingMandatory||showingSlice||showingSituation||showingStory||showingEncounter||showingArc||sideQuest),
   script:sceneScript,remote:remoteScene,sceneId:activeOutfitSceneId
  });
+ if(liveCgOnly)overworldScenePortraits={participants:[],focused:null,conversation:false};
  const characterActions=$('characterActions');
  if(characterActions){
   const menuMode=shown?.presentation==='character-menu';
