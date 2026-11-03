@@ -8,7 +8,37 @@
   const photoshootInterval=()=>3+Math.floor(Math.random()*3);
   // Generated from the assets currently under Lyla's actual photoshoot directory.
   const lylaPhotos=["/rpg-assets/characters/lyla/photoshoot/01_black_tank_monochrome.png","/rpg-assets/characters/lyla/photoshoot/01_wet_hair_closeup.png","/rpg-assets/characters/lyla/photoshoot/02_arm_overhead.png","/rpg-assets/characters/lyla/photoshoot/03_outdoor_low_crouch.png","/rpg-assets/characters/lyla/photoshoot/04_bed_playful.png","/rpg-assets/characters/lyla/photoshoot/05_red_editorial_full_body.png","/rpg-assets/characters/lyla/photoshoot/06_red_editorial_compact_proportions.png","/rpg-assets/characters/lyla/photoshoot/06_window_shh_revised.png","/rpg-assets/characters/lyla/photoshoot/07_stadium_blue_cap_white_tee.png","/rpg-assets/characters/lyla/photoshoot/07_window_sailor_outfit.png","/rpg-assets/characters/lyla/photoshoot/08_stadium_raised_tee.png","/rpg-assets/characters/lyla/photoshoot/09_goth_blonde_lyla.png","/rpg-assets/characters/lyla/photoshoot/09_poolside_red_tee.png","/rpg-assets/characters/lyla/photoshoot/10_black_white_reclining.png","/rpg-assets/characters/lyla/photoshoot/11_black_background_windswept_portrait.png","/rpg-assets/characters/lyla/photoshoot/11_red_beret_crouch.png","/rpg-assets/characters/lyla/photoshoot/12142image.jpg","/rpg-assets/characters/lyla/photoshoot/12_manga_wall_pink_top.png","/rpg-assets/characters/lyla/photoshoot/14image.jpg","/rpg-assets/characters/lyla/photoshoot/2image.jpg","/rpg-assets/characters/lyla/photoshoot/31image.jpg","/rpg-assets/characters/lyla/photoshoot/55image.jpg","/rpg-assets/characters/lyla/photoshoot/lyla_photoshoot_05_neon_park_petite.png","/rpg-assets/characters/lyla/photoshoot/lyla_photoshoot_07_chunli_cosplay_petite.png","/rpg-assets/characters/lyla/photoshoot/lyla_photoshoot_09_gingham_mirror.png","/rpg-assets/characters/lyla/photoshoot/lyla_photoshoot_10_mai_cosplay_mirror_petite.png","/rpg-assets/characters/lyla/photoshoot/sweating pose.jpg"];
-  const photoBystanders=['yuna','hana','jinx','reina','camila','daisy','barb'];
+  // Any character the player knows can recognize Lyla's Umbreon from the store.
+  const sightingVoices={
+    hana:["Hey, is this Lyla from the card shop? I saw her in an ad today!","She was in the shop just the other day. Now she's in a magazine!"],
+    reina:["That Umbreon player from the store—Lyla, right? Recognize her?","I found a photo of Lyla. She looks more serious than she does in a match."],
+    yuna:["HEYYY! That's Lyla! The Umbreon girl! She's on an ad!","No way, our card-shop Lyla is in a magazine! Look!"],
+    jinx:["So your quiet Umbreon girl does modeling too. Recognize her?","Look who I spotted in an ad. Lyla's stealing my spotlight."],
+    shiori:["Isn't that Lyla from the TCG store? I saw her photograph in a magazine.","I came across a familiar face in a magazine. That's Lyla, isn't it?"],
+    camila:["Darling, look who turned up in an advertisement. That's Lyla from the shop!","This campaign is rather striking. Wait, isn't that our Umbreon player?"],
+    marina:["I think I spotted Lyla from the card shop in an advertisement.","I saw a familiar face in a magazine today. Is it Lyla?"],
+    kaede:["Huh. The Umbreon player is modeling now? Take a look.","I spotted Lyla on a poster. Didn't expect that."],
+    jun:["Does this look like Lyla from the store to you?","I saw an ad with someone familiar. Pretty sure it's Lyla."],
+    teo:["Saw this while I was out. That's Lyla from the TCG shop, right?","Apparently the Umbreon player does advertising too. Look."],
+    iris:["Look at this photograph. Isn't that Lyla from the card shop?","I recognized Lyla in a magazine. Thought you'd want to see."],
+    elio:["Uh, I think that's Lyla on this poster. Same one from the shop?","Found a familiar face in an ad. The Umbreon girl."],
+    alma:["Oh, look! I think that's Lyla from the store!","I saw Lyla in a magazine today. Isn't that lovely?"],
+    nereo:["I noticed someone familiar in this advertisement. Is that Lyla?","The woman from the card shop—the one with Umbreon—isn't this her?"],
+    barb:["This model looks familiar. That's Lyla from the TCG store, isn't it?","I've seen this campaign before. Wait, that's Lyla!"],
+    laca:["Hey, is that Lyla? The girl who plays Umbreon?","I spotted a familiar face in an ad on my break. Look!"],
+    daisy:["HEY! Look! Lyla from the card shop is in a magazine!","Our sleepy Umbreon girl got a poster! That's amazing!"],
+    rina:["Oh wow, is that Lyla from the shop? What a photo!","I saw Lyla in an ad and had to send it to you!"],
+    sol:["Hey, recognize this model? I think it's Lyla from the shop.","The Umbreon player made it onto a billboard. Check it out."],
+    luna:["I ran into a familiar face on a poster today. Isn't that Lyla?","I spotted Lyla in a magazine on my way through town."],
+    elena:["I think that's Lyla from the TCG store in this campaign.","I recognized the Umbreon player in a magazine. Interesting."],
+    sierra:["I saw a photo that reminded me of someone. Is that Lyla?","Lyla from the card shop looks lovely in this advertisement."],
+    jicy:["Um, I think that's Lyla! The Umbreon girl from the store?","I found a photo of Lyla in a magazine! Is it really her?"],
+    lyla:["Apparently they used this picture. Thought I'd show you."]
+  };
+  const genericSighting=id=>[
+    "Hey, isn't that Lyla, the girl who plays Umbreon at the TCG store?",
+    "I think I just spotted Lyla from the card shop in an ad."
+  ];
   const sightingPlaces=['on a bus stop advertisement','in a magazine at the café','on a poster near the card shop','in a fashion magazine','on a display in the shopping district'];
   const sightingLines=[
     'Hey, isn\'t this the girl who goes to the TCG store? I just saw her photo!',
@@ -65,7 +95,9 @@
           "Umbreon would have left after the first take."
         ]};
       const choices=lylaSightingReplies[pending.character]||[
-        ["Wait, that's Lyla from the shop!","Where was this picture taken?","She's famous and still won't smile at a topdeck."]
+        (playerReplies[pending.character]?.[variant]||[
+          "That's Lyla, all right!","Where did you find the photo?","Umbreon must have a modeling contract too."
+        ]).map((line,index)=>index===0?"That's definitely Lyla! "+line:index===1?"Where did you come across that photo?":line)
       ];
       return {choices:choices[variant%choices.length],replies:[
         pending.character==='reina'?"At least you recognize her. She plays better than she poses.":"Right? I recognized her from the card shop too!",
@@ -290,27 +322,37 @@
       if(metLyla&&lylaPhotos.length&&state.day>=shoot.nextDay){
         const rank=typeof relationships?.bondRank==='function'?relationships.bondRank(state,'lyla'):0;
         const direct=rank>=2;
-        const bystanders=photoBystanders.filter(id=>cast[id]&&
+        const bystanders=Object.keys(cast).filter(id=>id!=='lyla'&&
           (state['met_'+id]===true||(id==='reina'&&state.metReina===true)));
         if(direct||bystanders.length){
           const remaining=lylaPhotos.filter(src=>!shoot.seen.includes(src));
           const photos=remaining.length?remaining:lylaPhotos;
           const image=photos[Math.floor(Math.random()*photos.length)];
-          const sender=direct?'lyla':bystanders.find(id=>id!==shoot.lastSender)||bystanders[0];
+          const alternate=bystanders.filter(id=>id!==shoot.lastSender);
+          const sender=direct?'lyla':(alternate.length?alternate:bystanders)[Math.floor(Math.random()*(alternate.length||bystanders.length))];
           const caption=direct
             ?fromLyla[Math.floor(Math.random()*fromLyla.length)]
-            :sightingLines[Math.floor(Math.random()*sightingLines.length)]+' I saw it '+sightingPlaces[Math.floor(Math.random()*sightingPlaces.length)]+'.';
+            :(sightingVoices[sender]||genericSighting(sender))[(box.sequence+state.day)%2]
+              +' I saw it '+sightingPlaces[Math.floor(Math.random()*sightingPlaces.length)]+'.';
           box.sequence++;
-          box.pending={id:'photoshoot-'+state.day+'-'+box.sequence,type:'lyla_photoshoot',
-            character:sender,photoSubject:'lyla',name:cast[sender]?.name||sender,
-            pose:'photoshoot',src:image,caption,receivedDay:state.day,phase:'incoming',deferred:false};
+          // At low bond, roughly one third of sightings happen in person:
+          // Live shares the same photograph at the apartment, NOT as an extra SMS.
+          const liveVisit=!direct&&state.met_live!==false&&Math.random()<1/3;
+          if(liveVisit){
+            box.liveLylaSighting={src:image,receivedDay:state.day,
+              caption:"Hey, you play cards at that store, right? Do you know her? I saw this photo today."};
+          }else{
+            box.pending={id:'photoshoot-'+state.day+'-'+box.sequence,type:'lyla_photoshoot',
+              character:sender,photoSubject:'lyla',name:cast[sender]?.name||sender,
+              pose:'photoshoot',src:image,caption,receivedDay:state.day,phase:'incoming',deferred:false};
+          }
           shoot.seen=shoot.seen.filter(src=>lylaPhotos.includes(src));
           if(!shoot.seen.includes(image))shoot.seen.push(image);
           shoot.lastSender=sender;shoot.lastDay=state.day;shoot.nextDay=state.day+photoshootInterval();
           box.lastSentDay=state.day;
           // A photoshoot takes today's SMS slot; keep the ordinary schedule moving.
           if(box.nextDay<=state.day)box.nextDay=state.day+interval();
-          persist();return box.pending;
+          persist();return box.pending||box.liveLylaSighting;
         }
         // No established sender yet: try again later, not as a message from Lyla.
         shoot.nextDay=state.day+1;
