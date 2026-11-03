@@ -2,15 +2,42 @@
 const SETS=['base1','base2','base3','base4','base5','gym1','gym2','neo1','neo2','neo3','neo4','basep'];
 const SET_NAMES=['Base Set','Jungle','Fossil','Base Set 2','Team Rocket','Gym Heroes','Gym Challenge','Neo Genesis','Neo Discovery','Neo Revelation','Neo Destiny','Wizards Promos'];
 const $=id=>document.getElementById(id), rng=n=>Math.floor(Math.random()*n);
-const coinQueue=[];let coinBusy=false;let matchGeneration=0;let lastBattleAnimation=Promise.resolve();let cpuRunning=false;
+const visualQueue=[];let visualBusy=false;let visualGeneration=0;let matchGeneration=0;let lastBattleAnimation=Promise.resolve();let cpuRunning=false;
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-async function feedback(message,side,kind='action',slot=-1,duration=920){
- const banner=$('actionFeedback');if(!banner)return;
- banner.textContent=message;banner.className='feedback '+kind;
- const selector=side===1?(slot===-1?'#oppActive .field-pokemon':`#oppBench .field-pokemon:nth-child(${slot+1})`):(slot===-1?'#myActive .field-pokemon':`#myBench .field-pokemon:nth-child(${slot+1})`);
- const tile=document.querySelector(selector);
- if(tile){tile.classList.remove('fx-attach','fx-attack','fx-hit');void tile.offsetWidth;tile.classList.add('fx-'+kind)}
- await pause(duration);banner.className='feedback hidden';tile?.classList.remove('fx-'+kind);
+// Coin flips and battle feedback share one display queue. Game outcomes remain synchronous.
+function enqueueBattleNotice(run){
+ return new Promise(resolve=>{visualQueue.push({run,resolve});playBattleNotices()});
+}
+async function playBattleNotices(){
+ if(visualBusy)return;
+ visualBusy=true;
+ const generation=visualGeneration;
+ while(visualQueue.length&&generation===visualGeneration){
+  const notice=visualQueue.shift();
+  try{await notice.run(generation)}catch(err){console.warn('Battle notice failed',err)}
+  finally{notice.resolve()}
+ }
+ if(generation===visualGeneration)visualBusy=false;
+}
+function resetBattleNotices(){
+ visualGeneration++;
+ for(const notice of visualQueue.splice(0))notice.resolve();
+ visualBusy=false;
+ $('actionFeedback')?.classList.add('hidden');
+ $('coinOverlay')?.classList.add('hidden');
+ $('coinFace')?.classList.remove('spinning');
+}
+function feedback(message,side,kind='action',slot=-1,duration=920){
+ return enqueueBattleNotice(async generation=>{
+  const banner=$('actionFeedback');if(!banner)return;
+  banner.textContent=message;banner.className='feedback '+kind;
+  const selector=side===1?(slot===-1?'#oppActive .field-pokemon':`#oppBench .field-pokemon:nth-child(${slot+1})`):(slot===-1?'#myActive .field-pokemon':`#myBench .field-pokemon:nth-child(${slot+1})`);
+  const tile=document.querySelector(selector);
+  if(tile){tile.classList.remove('fx-attach','fx-attack','fx-hit');void tile.offsetWidth;tile.classList.add('fx-'+kind)}
+  await pause(duration);
+  if(generation!==visualGeneration)return;
+  banner.className='feedback hidden';tile?.classList.remove('fx-'+kind);
+ });
 }
 
 // Battlefield FX uses viewport coordinates, so animated objects fly between real cards.
@@ -42,27 +69,28 @@ function queuePrizeFX(winnerSide){
 }
 function coin(context='Coin flip'){
  const result=Math.random()<.5;
- coinQueue.push({result,context});playCoinQueue();
+ // Queue the visual result at the exact point of the flip, before later feedback.
+ // Do not await it: attacks and powers still resolve against the actual result.
+ void enqueueBattleNotice(async generation=>{
+  const overlay=$('coinOverlay'),face=$('coinFace'),label=$('coinResult'),title=$('coinContext');
+  if(!overlay||!face||!label||!title)return;
+  title.textContent=context;
+  label.textContent='Flipping…';
+  face.textContent='?';
+  face.classList.remove('spinning','heads','tails');
+  overlay.classList.remove('hidden');
+  void face.offsetWidth;
+  face.classList.add('spinning');
+  await pause(650);
+  if(generation!==visualGeneration)return;
+  face.classList.remove('spinning');
+  face.classList.add(result?'heads':'tails');
+  face.textContent=result?'H':'T';
+  label.textContent=result?'HEADS':'TAILS';
+  await pause(725);
+  if(generation===visualGeneration)overlay.classList.add('hidden');
+ });
  return result;
-}
-function playCoinQueue(){
- if(coinBusy||!coinQueue.length)return;
- coinBusy=true;const {result,context}=coinQueue.shift(),overlay=$('coinOverlay');
- if(!overlay){coinBusy=false;return;}
- $('coinContext').textContent=context;
- $('coinResult').textContent='Flipping…';
- $('coinFace').textContent='?';
- overlay.classList.remove('hidden');
- $('coinFace').classList.remove('spinning','heads','tails');
- void $('coinFace').offsetWidth;
- $('coinFace').classList.add('spinning');
- setTimeout(()=>{
-  $('coinFace').classList.remove('spinning');
-  $('coinFace').classList.add(result?'heads':'tails');
-  $('coinFace').textContent=result?'H':'T';
-  $('coinResult').textContent=result?'HEADS':'TAILS';
- },650);
- setTimeout(()=>{overlay.classList.add('hidden');coinBusy=false;playCoinQueue()},1375);
 }
 
 let cards=[],lookup=new Map(),selected=null,target=0,offset=0,theme='water',pendingTrainer=null;
@@ -1588,8 +1616,7 @@ class Engine{
  draw(p,n=1){for(let i=0;i<n;i++){if(!p.deck.length){p.drawFailed=true;return false}p.hand.push(p.deck.pop())}return true}
  start(d1,d2){
  if(window.NeoClassicFormat){for(const [side,deck] of [d1,d2].entries()){const verdict=window.NeoClassicFormat.validateDeck(deck,lookup);if(!verdict.valid)throw Error(`Classic deck ${side+1} rejected: ${verdict.errors.join('; ')}`);}}
- matchGeneration++;$('actionFeedback').className='feedback hidden';
- coinQueue.length=0;coinBusy=false;$('coinOverlay').classList.add('hidden');this.turnSerial=0;this.powerSilenceUntilSerial=0;this.copyCoinCache=null;this.pending53=null;this.pending54=null;this.lastAttackAction=null;this.players=[statePlayer('You',d1),statePlayer('Rival',d2)];this.turn=0;this.round=1;this.over=false;this.started=true;this.phase='setup';this.message=[];this.mulligans=[0,0];selected=null;deckSearchRequest=null;targetRequest=null;
+ matchGeneration++;resetBattleNotices();this.turnSerial=0;this.powerSilenceUntilSerial=0;this.copyCoinCache=null;this.pending53=null;this.pending54=null;this.lastAttackAction=null;this.players=[statePlayer('You',d1),statePlayer('Rival',d2)];this.turn=0;this.round=1;this.over=false;this.started=true;this.phase='setup';this.message=[];this.mulligans=[0,0];selected=null;deckSearchRequest=null;targetRequest=null;
  for(let pi=0;pi<2;pi++){
   const p=this.players[pi];let tries=0;
   do{p.deck=shuffle([...p.deck,...p.hand]);p.hand=[];this.draw(p,7);tries++}
