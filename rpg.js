@@ -163,6 +163,7 @@ const LIVE_REPEAT_MORNING={id:'live_repeat_private_morning',title:'A Morning Tog
   {speaker:'Narrator',text:"The scene fades to black. By the time you return to the living room, the morning has passed."}
  ],choices:[{label:'Continue the day',reply:"Live smiles and says she'll see you later."}]};
 const LIVE_FOLLOWUPS={
+ live_home_welcome:["I've made myself at home now. Your mom would be pleased you were so welcoming.","The coffee pot's washed and I'm settling in. Thank you for being so kind."],
  live_home_cooking:["I kept some of the sauce for you. It turned out even better after resting.","Dinner was lovely! I put the leftovers in the fridge."],
  live_home_reading:["I finished another chapter. I'm starting to suspect everyone.","I finally found the answer. No spoilers until you've read it."],
  live_home_relaxing:["That little break did wonders. I feel much better now.","I'm calling it an early night. Don't stay up too late."],
