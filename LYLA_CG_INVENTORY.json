@@ -1,0 +1,65 @@
+{
+  "event_ready": {
+    "lyla_random_fitness_break.png": "lyla_random_fitness_break.png",
+    "lyla_random_contact_sheet.png": "lyla_muestra_sus_dos_versiones.png",
+    "lyla_random_rare_card.png": "lyla_descubre_una_carta_hologr\u00e1fica_en_el_arcade.png",
+    "lyla_random_late_invoice.png": "lyla_random_late_invoice.png",
+    "lyla_random_summer_fitting.png": "boutique_de_verano_con_lyla_petite.png",
+    "lyla_random_retouch_request.png": "same_as_previous_scene_but_with_the_off_shoulder.png",
+    "lyla_random_window_reflection.png": "a_detailed_anime_city_street_scene_at_dusk_golden.png",
+    "lyla_random_quiet_casting.png": "lyla_en_el_caf\u00e9_al_atardecer.png",
+    "lyla_random_payment_followup.png": "package_extract_lyla_random_payment_followup.png",
+    "lyla_random_revised_campaign.png": "package_extract_lyla_random_revised_campaign.png",
+    "lyla_random_not_for_portfolio.png": "package_extract_lyla_random_not_for_portfolio.png"
+  },
+  "alternates": [
+    "a_close_detailed_anime_style_photoreal_illustrati.png",
+    "a_detailed_anime_style_illustration_a_cozy_caf\u00e9_i.png",
+    "a_detailed_anime_style_illustration_a_cozy_evenin.png",
+    "a_detailed_anime_style_illustration_a_realistic.png",
+    "a_detailed_anime_style_illustration_an_arcade_car.png",
+    "a_detailed_anime_style_illustration_in_a_caf\u00e9_sett.png",
+    "a_detailed_anime_style_illustration_in_a_neon_lit.png",
+    "a_detailed_anime_style_illustration_in_a_photograp.png",
+    "a_detailed_anime_style_illustration_of_a_petite_yo.png",
+    "a_detailed_anime_style_illustration_of_lyla_at_a_c.png",
+    "a_detailed_anime_style_illustration_of_the_same_bl.png",
+    "a_detailed_anime_style_illustration_of_the_same_sc.png",
+    "a_detailed_anime_style_scene_in_a_trading_card_sho.png",
+    "a_detailed_anime_style_scene_lyla_in_a_cozy_eveni.png",
+    "a_detailed_anime_style_studio_office_scene_a_tens.png",
+    "a_detailed_polished_anime_illustration_matching_t.png",
+    "a_detailed_realistic_anime_style_illustration_a.png",
+    "a_highly_detailed_anime_style_illustration_in_the.png",
+    "a_highly_detailed_anime_style_illustration_of_lyla.png",
+    "a_highly_detailed_anime_style_illustration_same_c.png",
+    "a_highly_detailed_cinematic_anime_style_cg_lyla.png",
+    "arcade(1).png",
+    "firma_del_nuevo_contrato.png",
+    "imagegen.png",
+    "lyla_en_el_backstage_del_glamour.png",
+    "lyla_en_el_camerino_backstage.png",
+    "lyla_en_el_camerino_dorado.png",
+    "lyla_en_el_showroom_de_verano.png",
+    "lyla_en_el_tocador_dorado.png",
+    "lyla_en_el_tocador_glamuroso.png",
+    "lyla_en_su_rinc\u00f3n_detr\u00e1s_de_c\u00e1maras.png",
+    "lyla_frente_al_espejo_del_vestidor.png",
+    "lyla_pausa_soleada_en_el_parque.png",
+    "lyla_y_el_sobre_de_mariposa.png",
+    "lyla_y_su_carta_legendaria_en_el_arcade.png",
+    "reflejo_aut\u00e9ntico_en_la_boutique.png",
+    "reuni\u00f3n_creativa_campa\u00f1a_revisada.png",
+    "revisi\u00f3n_de_campa\u00f1a_con_lyla.png"
+  ],
+  "newly_mapped": [
+    {
+      "event_path": "rpg-assets/characters/lyla/events/lyla_random_sneaker_campaign.png",
+      "original_test": "tests/lyla/18_a_highly_detailed_anime_style_illustration_in_the.png"
+    },
+    {
+      "event_path": "rpg-assets/characters/lyla/events/lyla_random_catalog_break.png",
+      "original_test": "tests/lyla/12_a_detailed_anime_style_illustration_of_the_same_sc.png"
+    }
+  ]
+}
