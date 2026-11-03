@@ -11,7 +11,33 @@ const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHar
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[])];
+const LIVE_EVENTS=[
+ {id:'live_home_welcome',title:'Someone Is Already Home',kind:'season',priority:95,earliestDay:2,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:2},lines:[
+  {speaker:'Narrator',text:'You wake up to the smell of fresh coffee. Someone is moving around the kitchen.'},
+  {speaker:'Live',text:"Morning! Your mom asked me to look after the apartment. I'm Live. I hope you don't mind me making myself at home."},
+  {speaker:'Protagonist',text:'You already seem pretty comfortable here.'},
+  {speaker:'Live',text:"Of course! I want you to feel completely taken care of. Oh—did that sound strange? I just mean breakfast!"}
+ ],choices:[{label:'Thank her for breakfast',reply:"You're welcome! There's plenty more where that came from.",flag:'live_welcome_kind'},{label:'Ask how she knows Mom',reply:"We've been friends for ages! She said you'd need someone to keep the place in order.",flag:'live_welcome_curious'}]},
+ {id:'live_home_cooking',title:'A Little Something in the Kitchen',kind:'season',priority:94,earliestDay:5,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_home_welcome'},lines:[
+  {speaker:'Narrator',text:'You return home to find Live cooking with her sleeves rolled up.'},
+  {speaker:'Live',text:"Perfect timing! I made enough for two. I like it when you come home hungry."},
+  {speaker:'Protagonist',text:'That sounded a little—'},
+  {speaker:'Live',text:"What? Oh! I meant dinner. Taste the sauce before it gets cold!"}
+ ],choices:[{label:'Help set the table',reply:"That's sweet of you. I knew we'd make a good team!",flag:'live_cooking_help'},{label:'Try the sauce',reply:"See? A little patience makes everything better.",flag:'live_cooking_taste'}]},
+ {id:'live_home_reading',title:'The Quiet Afternoon',kind:'season',priority:93,earliestDay:9,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_home_cooking'},lines:[
+  {speaker:'Narrator',text:'Live is curled up with a book on the sofa when you enter.'},
+  {speaker:'Live',text:"There you are! Come sit close; I saved you the warm spot."},
+  {speaker:'Protagonist',text:'You say things like that so naturally.'},
+  {speaker:'Live',text:"Well, the sunlight reaches this cushion first. What did you think I meant?"}
+ ],choices:[{label:'Sit and read together',reply:"Lovely. You can have the next chapter when I'm done.",flag:'live_read_together'},{label:'Ask about her book',reply:"It's a mystery! I always think I've solved it, and then I'm wrong.",flag:'live_read_book'}]},
+ {id:'live_home_relaxing',title:'A Moment to Unwind',kind:'season',priority:92,earliestDay:14,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_home_reading'},lines:[
+  {speaker:'Narrator',text:'Live has finished tidying the living room and is relaxing with a cup of tea.'},
+  {speaker:'Live',text:"Long day? You can let everything go when you're here. I'll take care of the rest."},
+  {speaker:'Protagonist',text:'You really do a lot around here.'},
+  {speaker:'Live',text:"It's no trouble. Your mom trusted me with this place, and I want you to feel safe in it."}
+ ],choices:[{label:'Offer to make her tea next time',reply:"Oh, I'd love that. You remembered how I take it?",flag:'live_tea_offer'},{label:'Thank her for looking after home',reply:"You don't have to thank me. Still, it's nice to hear.",flag:'live_home_thanks'}]}
+];
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -299,7 +325,7 @@ const cgScenePresenter=CG_SCENE?.create($('scene'),$('rpgSceneCG'),document)||nu
 
 function queueMandatory(){
  if(!MANDATORY)return;
- MANDATORY.queue(state,MANDATORY_EVENTS);
+ MANDATORY.queue(state,MANDATORY_EVENTS.filter(e=>!LIVE_EVENTS.includes(e)));
 }
 function autoTravelForEvent(place){
  if(!place||!places[place]||state.location===place)return false;
@@ -334,7 +360,22 @@ function maybeStartMandatory(){
     ||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
  // A due meeting takes precedence over an automatic story that would relocate the player.
  if(TIME.dueNow(state).length)return;
- const started=MANDATORY.takeNext(state,MANDATORY_EVENTS);
+ // Live is a resident: her one-off scenes fire on a safe apartment arrival,
+ // never remotely or after travelling the player elsewhere.
+ if(state.location==='home'&&state.day<=90){
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  const lastLiveDay=Number(state.liveLastEventDay)||0;
+  if(lastLiveDay!==state.day){
+   const due=LIVE_EVENTS.find(e=>e.earliestDay<=state.day&&!m.seen[e.id]&&MANDATORY.testPredicate(e.trigger,state));
+   if(due){
+    m.active={id:due.id,phase:'lines',index:0,choice:null};
+    state.liveLastEventDay=state.day;
+    persist();
+    return;
+   }
+  }
+ }
+ const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>!LIVE_EVENTS.includes(e)));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
