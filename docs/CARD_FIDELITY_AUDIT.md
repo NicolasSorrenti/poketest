@@ -537,3 +537,15 @@ The original reducer chose the lowest Basic in an evolved stack, returned only t
 | Switch (`base1-95`, `base4-123`) | Chooses a Benched replacement, switches it with the Active, clears the outgoing Active's conditions and lingering effects | Partial; no new runtime tests |
 
 Printed wording cross-checked against [Base Set cards and text](https://pokemondungeon.com/base-set/) and [Base Set 2 cards and text](https://pokemondungeon.com/base-set-2/), plus both repository card catalogs. This was a **source-only** batch review, not runtime simulation, comprehensive historical rulings research, or end-to-end browser/network certification. Interactions (including stadium-based limits, effect locks, attack replacement/prevention, and unusual attached Trainer handling) remain pending. No test files or CI workflows were added or expanded.
+
+
+## Basic and Double Colorless Energy (Base Set / Base Set 2 — 10 printings, 2026-11-03)
+
+Reviewed `base1-96`/`base4-124` (Double Colorless), `base1-97`/`base4-125` (Fighting), `base1-98`/`base4-126` (Fire), `base1-99`/`base4-127` (Grass), and `base1-100`/`base4-128` (Lightning). All ten are recorded as **partial source-inspection-only** in `CARD_FIDELITY_LEDGER.json`.
+
+- `cards/base1.json` and `cards/base4.json` show equivalent Energy classification and Double Colorless printed wording across the reprints. Independent references: [Base Set inventory](https://tcg.directory/games/pokemon/base-set) and [Double Colorless card text](https://www.tcgcollector.com/cards/402/double-colorless-energy-base-set-96-102).
+- `core_rules.js` identifies six original Basic Energy names and exempts those from the four-copy deck restriction; Double Colorless is not Basic Energy. Generic Colorless requirements are paid by remaining energy units, while printed typed requirements consume matching symbols.
+- `headless_duel.js` builds one matching typed attack unit from each Basic Energy and two Colorless units from Double Colorless. `retreatUnits` also counts Double Colorless as two units; typed discard matching excludes Double Colorless.
+- No source discrepancy requiring a gameplay change was confirmed in this batch. No new tests, test files or CI changes were added. **Not verified end-to-end:** attachment flow and ownership, all typed-cost combinations, mixed special-Energy payments, external historical rulings, live browser/network behavior.
+
+Remaining Base Set Psychic/Water and their Base Set 2 equivalents are still outside this batch; this is 10 card IDs, not 10 fully certified effects.
