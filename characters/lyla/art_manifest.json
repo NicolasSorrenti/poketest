@@ -154,6 +154,11 @@
       "sceneId": "lyla_random_catalog_break",
       "path": "/rpg-assets/characters/lyla/events/lyla_random_catalog_break.png",
       "prompt": "Lyla taking a sandwich break in a folding chair among studio equipment, wearing a tailored vest and wide trousers; preserve original CG."
+    },
+    {
+      "sceneId": "lyla_random_umbreon_sleeves",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_umbreon_sleeves.png",
+      "prompt": "Approved A Darker Shade CG. Lyla compares charcoal and violet Umbreon card sleeves while seated at a neon-lit arcade table; preserve PNG unchanged."
     }
   ]
 }
