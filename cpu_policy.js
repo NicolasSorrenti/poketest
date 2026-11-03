@@ -1132,7 +1132,12 @@ function score(a,o,cfg,used){
     energies:[...(unit.energies||[]),attachmentId]},q.active,p.bench.length):
    damageAfterAttachment(unit,attachmentId,q.active,p.bench.length);
   const improvement=Math.max(0,after-before);
-  const ko=after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
+  // A Benched Pokémon cannot attack this turn. Its Energy readiness is
+  // valuable, but a hypothetical KO against today's Active is not an
+  // immediate Prize. Apex reserves the tactical KO bonus for the Active;
+  // the Bench still earns the ordinary damage-readiness improvement.
+  const ko=after>=hpRemaining(q.active)&&before<hpRemaining(q.active)&&
+   (cfg.level!==8||v.slot===-1);
   const future=(improvement*(cfg.level===2?.50:.85)+(ko?(cfg.level===2?30:65):0))*style.damage;
   const saturation=before>0&&improvement===0?(cfg.level===2?14:35):0;
   // Full Heal Energy clears conditions as soon as it is attached. A ready
