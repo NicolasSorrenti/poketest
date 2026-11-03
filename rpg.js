@@ -415,12 +415,26 @@ function renderMandatory(){
  const responseActor=[...e.lines].reverse().find(line=>cast[line.speaker])?.speaker;
  const remoteReply=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
  const actorName=cast[e.characterId]?.name||e.characterId;
- return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:[['Continue story ›','mandatoryFinish']]};
+ return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]?[['Leave now ›','mandatoryFinish'],['Glance at Live ›','mandatoryGlance']]:[['Continue story ›','mandatoryFinish']]};
 }
 function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;
  if(type==='mandatoryNext')MANDATORY.advanceDialogue(state,MANDATORY_EVENTS);
  else if(type==='mandatoryChoice')MANDATORY.choose(state,MANDATORY_EVENTS,Number(id));
+ else if(type==='mandatoryGlance'){
+  const activeId=state.mandatoryEventState.active.id;
+  const cg=LIVE_EVENT_ART[activeId];
+  if(!cg||state.mandatoryEventState.active.phase!=='response')return true;
+  // The existing glance viewer accepts a source image and a crop rectangle.
+  // Count the deliberate choice, not modal reopens or automatic CG display.
+  if(typeof window.NeoOutfitChime?.glance!=='function')return true;
+  state.liveGlanceCount=(Number(state.liveGlanceCount)||0)+1;
+  state.liveGlancesByEvent=state.liveGlancesByEvent||{};
+  state.liveGlancesByEvent[activeId]=(Number(state.liveGlancesByEvent[activeId])||0)+1;
+  persist();
+  Promise.resolve(window.NeoOutfitChime.glance(cg,{top:0,bottom:1,left:0,right:1})).catch(error=>console.warn('Live glance failed',error));
+  return true;
+ }
  else if(type==='mandatoryFinish'){
   const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
   if(outcome)log('Story milestone: '+(outcome.event.title||outcome.event.id)+'.');
