@@ -104,6 +104,46 @@
       "sceneId": "lyla_random_not_for_portfolio",
       "path": "/rpg-assets/characters/lyla/events/lyla_random_not_for_portfolio.png",
       "prompt": "Lyla shares a private photograph with the protagonist backstage, wearing her off-shoulder cat shirt and casual shorts."
+    },
+    {
+      "sceneId": "lyla_random_fitness_break",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_fitness_break.png",
+      "prompt": "Optional Lyla story CG from approved generation session. Use the supplied image unchanged; preserve original artwork."
+    },
+    {
+      "sceneId": "lyla_random_contact_sheet",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_contact_sheet.png",
+      "prompt": "Optional Lyla story CG from approved generation session. Use the supplied image unchanged; preserve original artwork."
+    },
+    {
+      "sceneId": "lyla_random_rare_card",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_rare_card.png",
+      "prompt": "Optional Lyla story CG from approved generation session. Use the supplied image unchanged; preserve original artwork."
+    },
+    {
+      "sceneId": "lyla_random_late_invoice",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_late_invoice.png",
+      "prompt": "Optional Lyla story CG from approved generation session. Use the supplied image unchanged; preserve original artwork."
+    },
+    {
+      "sceneId": "lyla_random_summer_fitting",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_summer_fitting.png",
+      "prompt": "Optional Lyla story CG from approved generation session. Use the supplied image unchanged; preserve original artwork."
+    },
+    {
+      "sceneId": "lyla_random_retouch_request",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_retouch_request.png",
+      "prompt": "Optional Lyla story CG from approved generation session. Use the supplied image unchanged; preserve original artwork."
+    },
+    {
+      "sceneId": "lyla_random_window_reflection",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_window_reflection.png",
+      "prompt": "Optional Lyla story CG from approved generation session. Use the supplied image unchanged; preserve original artwork."
+    },
+    {
+      "sceneId": "lyla_random_quiet_casting",
+      "path": "/rpg-assets/characters/lyla/events/lyla_random_quiet_casting.png",
+      "prompt": "Optional Lyla story CG from approved generation session. Use the supplied image unchanged; preserve original artwork."
     }
   ]
 }
