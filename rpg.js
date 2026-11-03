@@ -681,8 +681,12 @@ function renderMandatory(){
   return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice'){
-  if(e.id===LIVE_DAY_FOLLOWUP.id)
-   return {speaker:'Live',line:liveFollowupContent().text,choices:[['See you later ›','mandatoryChoice:0']]};
+  if(e.id===LIVE_DAY_FOLLOWUP.id){
+   const follow=liveFollowupContent();
+   return {speaker:follow.speaker,line:follow.text,
+    choices:[['See you later ›','mandatoryChoice:0'],
+     ...(!follow.away?[['◉ Glance at Live','mandatoryGlance']]:[])]};
+  }
   if(e.id===LIVE_REPEAT_MORNING.id)
    return {speaker:'Narrator',line:'The morning passes quietly.',choices:[['Continue ›','mandatoryChoice:0']]};
   if(e.id===LIVE_LYLA_PHOTO_EVENT.id)return {speaker:'Live',line:e.lines.at(-1).text,
@@ -698,7 +702,10 @@ function renderMandatory(){
  }
  const choice=e.choices[a.choice];
  if(e.id===LIVE_REPEAT_MORNING.id)return {speaker:'Narrator',line:choice?.reply||'',choices:[['Continue ›','mandatoryFinish']]};
- if(e.id===LIVE_DAY_FOLLOWUP.id)return {speaker:'Live',line:choice?.reply||'',choices:[['Leave now ›','mandatoryFinish']]};
+ if(e.id===LIVE_DAY_FOLLOWUP.id)return {speaker:liveFollowupContent().away?'Narrator':'Live',
+  line:liveFollowupContent().away?'You leave the note where you found it.':choice?.reply||'',
+  choices:[['Leave now ›','mandatoryFinish'],
+   ...(!liveFollowupContent().away?[['◉ Glance at Live','mandatoryGlance']]:[])]};
  if(e.id===LIVE_LYLA_PHOTO_EVENT.id)return {speaker:'Live',line:choice?.reply||'',
   choices:[['Continue ›','mandatoryFinish']]};
  if(LIVE_SPECIAL_IDS.has(e.id)){
@@ -745,7 +752,8 @@ function mandatoryAction(type,id){
  else if(type==='mandatoryGlance'){
   const activeId=state.mandatoryEventState.active.id;
   const cg=liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(activeId);
-  if(!cg||!['lines','choice','response'].includes(state.mandatoryEventState.active.phase))return true;
+  if(!cg||(activeId===LIVE_DAY_FOLLOWUP.id&&liveFollowupContent().away)||
+     !['lines','choice','response'].includes(state.mandatoryEventState.active.phase))return true;
   // The existing glance viewer accepts a source image and a crop rectangle.
   // Count the deliberate choice, not modal reopens or automatic CG display.
   if(typeof window.NeoOutfitChime?.glance!=='function')return true;
@@ -2454,13 +2462,23 @@ function syncSceneCG(){
    return;
   }
  }
+ if(liveEventId===LIVE_DAY_FOLLOWUP.id&&liveFollowupContent().away){
+  cgScenePresenter.clear();
+  return;
+ }
  const isLiveCg=!!liveEventId&&(!!LIVE_EVENT_ART[liveEventId]||
-  LIVE_SPECIAL_IDS.has(liveEventId)||liveEventId===LIVE_HOME_CHECKIN.id);
+  LIVE_SPECIAL_IDS.has(liveEventId)||liveEventId===LIVE_HOME_CHECKIN.id||
+  liveEventId===LIVE_DAY_FOLLOWUP.id||liveEventId===LIVE_REPEAT_MORNING.id);
  const liveArt=isLiveCg?(liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(liveEventId)):null;
  if(liveArt){
-  const finalSecond=liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2;
-  const entry={id:liveEventId+(finalSecond?'_second':''),title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home'};
-  const paths=liveDiscreetEnabled()?[LIVE_DISCREET_PLACEHOLDER]:LIVE_SPECIAL_IDS.has(liveEventId)
+  const finalSecond=(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2)||
+    (liveEventId===LIVE_REPEAT_MORNING.id&&state.mandatoryEventState.active.index>=1);
+  // Include period and selected CG so repeated encounters update the bitmap.
+  const entry={id:[liveEventId,state.day,state.slot,state.liveDayScene?.id||'',finalSecond?'second':'first'].join(':'),
+   title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home'};
+  const paths=liveDiscreetEnabled()?[LIVE_DISCREET_PLACEHOLDER]:liveEventId===LIVE_REPEAT_MORNING.id?
+   [finalSecond?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning]:
+   LIVE_SPECIAL_IDS.has(liveEventId)
    ?[...specialArtCandidates(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[liveEventId]),'/rpg-assets/characters/live/events/live_couch_sweater.png']
    :[liveArt];
   cgScenePresenter.show(entry,paths.map(path=>({kind:'event',path})),()=>{},()=>{});
@@ -3573,7 +3591,8 @@ function render(){
  const showingArc=state.activeArc?ARC.byId(state.activeArc.id):null;
  const sideQuest=state.activeSideQuest?SIDE.byId(state.activeSideQuest.id):null,sideOwner=sideQuest?.stages[state.sideQuests[state.activeSideQuest?.id]?.step]?.npc;
   const liveCgOnly=!!showingMandatory&&(showingMandatory.id===LIVE_HOME_CHECKIN.id||
-  showingMandatory.id===LIVE_LYLA_PHOTO_EVENT.id||!!LIVE_EVENT_ART[showingMandatory.id]||
+  showingMandatory.id===LIVE_LYLA_PHOTO_EVENT.id||showingMandatory.id===LIVE_DAY_FOLLOWUP.id||
+  showingMandatory.id===LIVE_REPEAT_MORNING.id||!!LIVE_EVENT_ART[showingMandatory.id]||
   LIVE_SPECIAL_IDS.has(showingMandatory.id));
  // Live has no portrait: her events are illustrated entirely by the scene CG.
  // Don't inherit a previously selected character's portrait either.
