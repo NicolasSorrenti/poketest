@@ -111,10 +111,10 @@ const LIVE_SPECIAL_EVENTS=[
 const LIVE_SPECIAL_IDS=new Set(LIVE_SPECIAL_EVENTS.map(event=>event.id));
 const LIVE_SPECIAL_ART={
  live_glance_talk_one:'/rpg-assets/characters/live/events/live_couch_sweater.png',
- live_glance_talk_two:'/rpg-assets/characters/live/events/live_couch_sweater_2',
- live_glance_next_morning:'/rpg-assets/characters/live/events/live_confy_scene'
+ live_glance_talk_two:'/rpg-assets/characters/live/events/live_couch_sweater _2.png',
+ live_glance_next_morning:'/rpg-assets/characters/live/events/live_confy_scene.jpg'
 };
-const LIVE_FINAL_ART_2='/rpg-assets/characters/live/events/live_confy_scene2';
+const LIVE_FINAL_ART_2='/rpg-assets/characters/live/events/live_confy_scene2.jpg';
 function startLiveGlanceMilestone(id){
  if(!LIVE_SPECIAL_IDS.has(id)||state.liveSpecialSeen?.[id])return;
  const active=state.mandatoryEventState?.active;
@@ -2327,7 +2327,9 @@ function syncSceneCG(){
    return;
   }
  }
- const liveArt=liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(liveEventId);
+ const isLiveCg=!!liveEventId&&(!!LIVE_EVENT_ART[liveEventId]||
+  LIVE_SPECIAL_IDS.has(liveEventId)||liveEventId===LIVE_HOME_CHECKIN.id);
+ const liveArt=isLiveCg?(liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(liveEventId)):null;
  if(liveArt){
   const finalSecond=liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2;
   const entry={id:liveEventId+(finalSecond?'_second':''),title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home',character:'live'};
