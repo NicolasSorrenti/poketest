@@ -58,6 +58,8 @@ window.NeoOverworldEyeLevel = (() => {
       '#neoEyeLevelStage .neo-eye-ground-shade{position:absolute;inset:0 auto 0 0;pointer-events:none;background:linear-gradient(0deg,#100a1a9e 0%,transparent 30%,transparent 85%,#100a1a28 100%)}',
       '#neoEyeLevelStage .neo-eye-cast{position:absolute;left:0;top:0;height:100%;pointer-events:none;will-change:transform}',
       '#neoEyeLevelStage .neo-eye-character{position:absolute;bottom:12%;padding:0;border:0;background:transparent;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;pointer-events:auto;filter:drop-shadow(0 9px 10px #070419a3)}',
+      '#neoEyeLevelStage .neo-eye-character>.neo-npc-indicator{position:absolute;top:-6px;left:50%;transform:translate(-50%,-100%);display:grid;place-items:center;min-width:32px;height:32px;padding:2px 6px;background:#211e3fec;border:2px solid #fffc;border-radius:999px;font:800 22px/1 system-ui;z-index:15;pointer-events:none;filter:drop-shadow(0 3px 5px #0009)}',
+      'body.neo-overworld-dialogue #neoEyeLevelStage .neo-npc-indicator{display:none!important}',
       '#neoEyeLevelStage .neo-eye-character img{display:block;height:var(--neo-eye-height);width:auto;max-width:none;object-fit:contain;object-position:center bottom;pointer-events:none}',
       '#neoEyeLevelStage .neo-eye-character .neo-eye-name{margin-top:3px;display:block;border:1px solid #d996d7;border-radius:9px;padding:4px 11px;background:#171329ed;color:white;font:800 13px system-ui;white-space:nowrap}',
       '#neoEyeLevelStage .neo-eye-character:focus-visible .neo-eye-name,#neoEyeLevelStage .neo-eye-character:hover .neo-eye-name{background:#77466c}',
@@ -317,7 +319,23 @@ window.NeoOverworldEyeLevel = (() => {
     setMode(saved === 'eye');
     // Opt-in preview link for testing in both screen sizes.
     if (params.get('perspective') === 'eye') setMode(true);
-    return {setChibiMode,center,setMode};
+    function setIndicators(next){
+      const indicators=next&&typeof next==='object'?next:{};
+      for(const {p,button} of sprites){
+        button.querySelector(':scope > .neo-npc-indicator')?.remove();
+        const kind=indicators[p.id];
+        button.title='Interact with '+(config.characters?.[p.id]?.name||p.id)+
+          (kind==='plan'?' · planned meeting':kind==='dialogue'?' · available event':'');
+        button.setAttribute('aria-label',button.title);
+        if(kind!=='plan'&&kind!=='dialogue')continue;
+        const badge=document.createElement('span');
+        badge.className='neo-npc-indicator neo-npc-indicator-'+kind;
+        badge.textContent=kind==='plan'?'❗':'💬';
+        badge.setAttribute('aria-hidden','true');
+        button.prepend(badge);
+      }
+    }
+    return {setChibiMode,center,setMode,setIndicators};
   }
   return {mount};
 })();
