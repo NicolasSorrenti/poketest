@@ -143,6 +143,15 @@ function liveDiscreetEnabled(){
  return document.documentElement.dataset.rpgDiscreet==='on'||
   window.NeoRpgDiscreet?.isEnabled?.()===true;
 }
+const LIVE_LYLA_PHOTO_EVENT={id:'live_lyla_photo_sighting',title:'A Familiar Face',kind:'season',priority:98,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
+ {speaker:'Narrator',text:'Live calls you over and holds out a photograph she spotted around town.'},
+ {speaker:'Live',text:"Hey, you play cards at that shop, right? Do you know this girl? I thought I'd seen her around."},
+ {speaker:'Protagonist',text:'Wait. Is that Lyla? She plays Umbreon at the TCG store.'},
+ {speaker:'Live',text:"That's the one! I didn't realize she modeled, too. Small world, isn't it?"}
+],choices:[
+ {label:"Yeah, that's Lyla from the card shop",reply:"I thought so! She looks different in a magazine, but I'd recognize that face."},
+ {label:"I didn't know her pictures were everywhere",reply:"Neither did I! Imagine seeing your card-shop friends on the side of a bus."}
+]};
 const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
  {speaker:'Narrator',text:'After spending time at home, you notice Live looking over from the living room.'},
  {speaker:'Live',text:"Oh, you're still here! I thought you might be heading out."},
@@ -156,7 +165,7 @@ function liveEventArt(id){
  }
  return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];
 }
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_SPECIAL_EVENTS,LIVE_HOME_CHECKIN];
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_SPECIAL_EVENTS,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -448,7 +457,7 @@ function queueMandatory(){
  // invalidates an active Live event on every render and restarts it.
  MANDATORY.queue(state,MANDATORY_EVENTS);
  const m=state.mandatoryEventState;
- if(m?.pending)m.pending=m.pending.filter(item=>!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id);
+ if(m?.pending)m.pending=m.pending.filter(item=>!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id&&item.id!==LIVE_LYLA_PHOTO_EVENT.id);
 }
 function autoTravelForEvent(place){
  if(!place||!places[place]||state.location===place)return false;
@@ -492,6 +501,16 @@ function maybeStartMandatory(){
   m.active={id:'live_glance_next_morning',phase:'lines',index:0,choice:null};
   state.liveSpecialSeen={...(state.liveSpecialSeen||{}),live_glance_next_morning:true};
   state.liveHomeActivityScene=null;
+  persist();
+  return;
+ }
+ // Live's in-person Lyla photo sighting replaces (not supplements) an SMS.
+ // Keep the saved image until a safe apartment arrival; show the PHOTO, not Live.
+ if(state.location==='home'&&state.phoneMessages?.liveLylaSighting?.src){
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  delete m.seen[LIVE_LYLA_PHOTO_EVENT.id];
+  m.active={id:LIVE_LYLA_PHOTO_EVENT.id,phase:'lines',index:0,choice:null};
+  state.liveLastEventDay=state.day;
   persist();
   return;
  }
@@ -539,7 +558,7 @@ function maybeStartMandatory(){
  // The non-Live scheduler runs only when no Live scene is active.
  // Exclude the replayable pool so it cannot accidentally start on every render.
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
-  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id));
+  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -554,6 +573,11 @@ function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(!a||!e)return null;
  if(a.phase==='lines'){
+  if(e.id===LIVE_LYLA_PHOTO_EVENT.id){
+   const line=e.lines[a.index]||e.lines.at(-1);
+   return {speaker:line.speaker==='Protagonist'?'You':line.speaker,line:line.text,
+    choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
+  }
   if(e.id==='live_glance_next_morning'){
    const line=e.lines[a.index]||e.lines.at(-1);
    return {speaker:line.speaker==='Protagonist'?'You':line.speaker,line:line.text,
@@ -569,6 +593,8 @@ function renderMandatory(){
   return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice'){
+  if(e.id===LIVE_LYLA_PHOTO_EVENT.id)return {speaker:'Live',line:e.lines.at(-1).text,
+   choices:e.choices.map((choice,index)=>[choice.label,'mandatoryChoice:'+index])};
   if(e.id==='live_glance_next_morning')
    return {speaker:'Narrator',line:'The morning slips by.',choices:[['Continue ›','mandatoryChoice:0']]};
   if(e.id===LIVE_HOME_CHECKIN.id)
@@ -579,6 +605,8 @@ function renderMandatory(){
   return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line:mandatoryText(last?.text||''),choices:LIVE_EVENT_ART[e.id]?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
  }
  const choice=e.choices[a.choice];
+ if(e.id===LIVE_LYLA_PHOTO_EVENT.id)return {speaker:'Live',line:choice?.reply||'',
+  choices:[['Continue ›','mandatoryFinish']]};
  if(LIVE_SPECIAL_IDS.has(e.id)){
   const extra=e.id==='live_glance_talk_one'&&!state.liveFirstCouchGlanced
     ?[['◉ Glance at Live','mandatoryGlance']]:[];
@@ -680,6 +708,10 @@ function mandatoryAction(type,id){
    }
   }
   if(outcome){
+   if(outcome.event.id===LIVE_LYLA_PHOTO_EVENT.id){
+    if(state.phoneMessages)state.phoneMessages.liveLylaSighting=null;
+    log('Live showed you a photo of Lyla from a local advertisement.');
+   }
    if(LIVE_ROTATING_IDS.has(outcome.event.id)){
     state.liveRepeatCounts=state.liveRepeatCounts||{};
     state.liveRepeatCounts[outcome.event.id]=(Number(state.liveRepeatCounts[outcome.event.id])||0)+1;
@@ -2266,6 +2298,16 @@ function showCGMoment(entry){
 function syncSceneCG(){
  if(!cgScenePresenter)return;
  const liveEventId=state.mandatoryEventState?.active?.id;
+ if(liveEventId===LIVE_LYLA_PHOTO_EVENT.id){
+  const path=liveDiscreetEnabled()
+   ?window.NeoRpgDiscreetAvatars?.url?.('lyla')
+   :state.phoneMessages?.liveLylaSighting?.src;
+  if(path){
+   const entry={id:LIVE_LYLA_PHOTO_EVENT.id+':'+(state.phoneMessages.liveLylaSighting?.receivedDay||state.day),title:'Lyla in the Spotlight',character:'lyla'};
+   cgScenePresenter.show(entry,[{kind:'event',path}],()=>{},()=>{});
+   return;
+  }
+ }
  const liveArt=liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(liveEventId);
  if(liveArt){
   const finalSecond=liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2;
