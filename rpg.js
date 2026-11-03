@@ -948,7 +948,26 @@ window.NeoRpgOverworldBridge=Object.freeze({
    srcs:[src,...options.filter(path=>path!==src)]};
  },
  clearInteraction(){if(overworldControlsLocked())return false;state.selected=null;persist();render();return true;},
- snapshot(){return {location:state.location,day:state.day,slot:state.slot,selected:state.selected&&currentPeople().includes(state.selected)?state.selected:null,locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),people:currentPeople().filter(id=>!!cast[id]),places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};},
+ snapshot(){
+  const people=currentPeople().filter(id=>!!cast[id]);
+  const booked=APPOINTMENTS.active(state);
+  const indicators={};
+  for(const id of people){
+   // Scheduled plans win over ordinary talk opportunities, even when the
+   // meeting is later today or on a future date.
+   if(booked.some(plan=>plan.npc===id)){
+    indicators[id]='plan';
+   }else if(availableInvitation(id,people)||
+     (!state['met_'+id]&&!state.overworldIntroductions?.[id]&&!(id==='reina'&&state.metReina))){
+    indicators[id]='dialogue';
+   }
+  }
+  return {location:state.location,day:state.day,slot:state.slot,
+   selected:state.selected&&people.includes(state.selected)?state.selected:null,
+   locked:overworldControlsLocked(),arriving:arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active,
+   storyActive:overworldStoryActive(),eventActive:!!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter),
+   people,indicators,places:Object.entries(places).map(([id,p])=>({id,name:p[0]}))};
+ },
  travel(placeId){if(overworldControlsLocked())return false;return travelTo(placeId);},
  poseTriggerDialogue(id,src){
   if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id)||
