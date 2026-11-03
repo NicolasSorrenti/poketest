@@ -74,7 +74,7 @@
   "artPending": true,
   "art": {
    "scene": "Barb designs a new shop-window outfit display while Hana tries to keep customers able to see the actual cards.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "shop",
@@ -153,7 +153,7 @@
   "artPending": true,
   "art": {
    "scene": "Camila commissions a jacket lined with hidden deck pockets and keeps trying to negotiate the price.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "shop",
@@ -232,7 +232,7 @@
   "artPending": true,
   "art": {
    "scene": "At the waterfront training shallows, Laca patiently coaches Marina in a new swimming technique.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -311,7 +311,7 @@
   "artPending": true,
   "art": {
    "scene": "Sol volunteers for Laca's supervised water-safety drill and learns that confidence is not the same as preparation.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -390,7 +390,7 @@
   "artPending": true,
   "art": {
    "scene": "Jinx helps Rina rehearse an entrance and turns the arcade into a miniature concert venue.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "arcade",
@@ -469,7 +469,7 @@
   "artPending": true,
   "art": {
    "scene": "Akari brings a terrifyingly exact set of clothing measurements and Barb teaches her that a design also needs room to move.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "cafe",
@@ -548,7 +548,7 @@
   "artPending": true,
   "art": {
    "scene": "Reina wants intuition, Akari wants probabilities, and the community practice board gets filled with both.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "center",
@@ -627,7 +627,7 @@
   "artPending": true,
   "art": {
    "scene": "Hana asks Akari to decipher confusing inventory labels and accidentally starts an argument about beautiful handwriting.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "cafe",
@@ -706,7 +706,7 @@
   "artPending": true,
   "art": {
    "scene": "Jinx paints an old arcade cabinet while Yuna argues it needs a score counter for absolutely everything.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "arcade",
@@ -785,7 +785,7 @@
   "artPending": true,
   "art": {
    "scene": "Yuna wants a jacket dramatic enough for a final-round entrance, and Barb refuses to sacrifice usable pockets.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "arcade",
@@ -864,7 +864,7 @@
   "artPending": true,
   "art": {
    "scene": "Luna has trouble relaxing beside the river, and Laca teaches a grounding exercise using the rhythm of the water.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -943,7 +943,7 @@
   "artPending": true,
   "art": {
    "scene": "Camila offers to trade Reina a card she needs, but insists the exchange include one honest strategy lesson.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "shop",
@@ -1022,7 +1022,7 @@
   "artPending": true,
   "art": {
    "scene": "Shiori finds a handwritten old-rules footnote that overturns Akari's supposedly airtight interpretation.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "library",
@@ -1101,7 +1101,7 @@
   "artPending": true,
   "art": {
    "scene": "Kaede and Yuna compete over a charity arcade challenge and refuse to admit they're having fun.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "arcade",
@@ -1180,7 +1180,7 @@
   "artPending": true,
   "art": {
    "scene": "Rina asks Barb for concert-poster art; Barb wants to reflect Rina's quieter self as well as her stage persona.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "cafe",
@@ -1259,7 +1259,7 @@
   "artPending": true,
   "art": {
    "scene": "Laca coaches Rina's breathing and posture for an outdoor performance after Rina admits she's exhausted.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -1338,7 +1338,7 @@
   "artPending": true,
   "art": {
    "scene": "Marina and Sierra compare notes on the changing shoreline and decide how to make a safe walking route.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -1417,7 +1417,7 @@
   "artPending": true,
   "art": {
    "scene": "Sol wants a perfect sunset photo; Sierra wants a picture of the people enjoying it.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -1496,7 +1496,7 @@
   "artPending": true,
   "art": {
    "scene": "Elena and Luna try to share a peaceful cafe break until a lost tournament note finds its way to their table.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "cafe",
@@ -1575,7 +1575,7 @@
   "artPending": true,
   "art": {
    "scene": "Shiori shows Reina an old tournament notebook; Reina discovers the famous winner nearly lost the final.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -1654,7 +1654,7 @@
   "artPending": true,
   "art": {
    "scene": "Jinx offers to customize Laca's training vest without compromising any safety markings.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -1733,7 +1733,7 @@
   "artPending": true,
   "art": {
    "scene": "Sierra brings the wrong notebook to a fitting consultation, and Barb designs around an unexpected idea.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "cafe",
@@ -1813,7 +1813,7 @@
   "artPending": true,
   "art": {
    "scene": "Marina returns after her first lesson and surprises Laca by swimming a short supervised distance without the board.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -1893,7 +1893,7 @@
   "artPending": true,
   "art": {
    "scene": "The shop-window display becomes a minor neighborhood attraction until a mischievous breeze threatens Barb's perfect ribbons.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "shop",
@@ -1973,7 +1973,7 @@
   "artPending": true,
   "art": {
    "scene": "Rina and Jinx take down the rehearsal decorations and talk about how frightening it is when a dream starts becoming real.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "arcade",
@@ -2053,7 +2053,7 @@
   "artPending": true,
   "art": {
    "scene": "Akari's opening-hand model predicts Reina's next choice, but Reina decides to show her something the model missed.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "center",
@@ -2133,7 +2133,7 @@
   "artPending": true,
   "art": {
    "scene": "Akari returns with a redesigned pattern and Barb makes her judge it by comfort rather than measurement alone.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "cafe",
@@ -2213,7 +2213,7 @@
   "artPending": true,
   "art": {
    "scene": "The arcade asks Yuna and Kaede to cooperate for a charity tournament after their notorious scoreboard tie.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "arcade",
@@ -2293,7 +2293,7 @@
   "artPending": true,
   "art": {
    "scene": "Rina returns to the riverside to perform a song with no lights, ticket booth or pressure.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -2373,7 +2373,7 @@
   "artPending": true,
   "art": {
    "scene": "Marina and Sierra guide visitors along the route they mapped earlier and discover that being a guide means listening.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -2453,7 +2453,7 @@
   "artPending": true,
   "art": {
    "scene": "The repainted arcade cabinet finally goes live, and its first score is not what either artist expects.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "arcade",
@@ -2532,7 +2532,7 @@
   "artPending": true,
   "art": {
    "scene": "Laca gives Barb honest feedback about a prototype lifeguard cover-up and insists it survive an actual workday.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -2611,7 +2611,7 @@
   "artPending": true,
   "art": {
    "scene": "Luna finds anonymous encouragement tucked into old library books and Shiori helps trace it to a tiny local tradition.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "library",
@@ -2690,7 +2690,7 @@
   "artPending": true,
   "art": {
    "scene": "Camila organizes a bargain table at Hana's shop but is genuinely moved when a beginner can't afford the starter they want.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "shop",
@@ -2769,7 +2769,7 @@
   "artPending": true,
   "art": {
    "scene": "Jinx and Sol collaborate on a colorful riverside safety sign that must be expressive but instantly readable.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -2848,7 +2848,7 @@
   "artPending": true,
   "art": {
    "scene": "Sierra asks Laca to review her riverside walking plan before inviting people to a new route.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -2928,7 +2928,7 @@
   "artPending": true,
   "art": {
    "scene": "After the poster, Barb helps Rina choose a performance outfit she can wear offstage without feeling like a stranger.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "cafe",
@@ -3008,7 +3008,7 @@
   "artPending": true,
   "art": {
    "scene": "Sol returns for her follow-up safety drill and surprises Laca with careful technique instead of bravado.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -3088,7 +3088,7 @@
   "artPending": true,
   "art": {
    "scene": "Camila returns with a better deck list after Reina's earlier lesson and demands a rematch with no bargains.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "shop",
@@ -3168,7 +3168,7 @@
   "artPending": true,
   "art": {
    "scene": "Elena and Luna share tea again and decide to organize a no-pressure study afternoon for anyone who needs a quiet place.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "cafe",
@@ -3248,7 +3248,7 @@
   "artPending": true,
   "art": {
    "scene": "The beginner who received the budget deck returns for a local practice match, and Camila tries to hide how proud she is.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "shop",
@@ -3328,7 +3328,7 @@
   "artPending": true,
   "art": {
    "scene": "The reflective-vest design is ready, and Jinx learns that making something useful can be its own act of rebellion.",
-   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, bottom fifth clear for VN dialogue.",
+   "composition": "Cinematic 16:9 two-character CG, both faces identifiable, storytelling action visible, full-frame composition.",
    "outfit": "Use each character's approved visual bible; preserve design, hair and tattoos.",
    "expression": "Natural expressive response to the encounter",
    "environment": "park",
@@ -3422,7 +3422,7 @@
   },
   "art": {
    "scene": "Barb and hana at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Her shop apron always slips from one shoulder Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: rose pink, white and cherry blossom, floral pink bikini with elaborate scalloped ruffles, rose bows, crossing decorative ribbons and frilled hip overlay. Incorporate the refined decorative specifics: Handmade flower appliques, bow fasteners and playful pink patterns. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and hana both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and hana both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "shop",
@@ -3513,7 +3513,7 @@
   },
   "art": {
    "scene": "Barb and reina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Reina refuses anything that feels like a costume Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: black, crimson and antique gold, dramatic black-and-crimson floral bikini with structured neckline, gold rings, diagonal layering and asymmetric hip details. Incorporate the refined decorative specifics: Red floral graphics and intricate gold-tone buckles. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and reina both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and reina both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "shop",
@@ -3603,7 +3603,7 @@
   },
   "art": {
    "scene": "Barb and shiori at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Shiori brings a pressed seaside flower as her only reference Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: sea-glass green and ivory, vintage-inspired high-waist bikini and softly wrapped top with removable light cover-up.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and shiori both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and shiori both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
@@ -3693,7 +3693,7 @@
   },
   "art": {
    "scene": "Barb and yuna at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Yuna wants a design loud enough for the beach-games tournament Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: electric cobalt and citrus orange, sporty zip-front bikini top and flexible swim shorts with geometric contrasting panels.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and yuna both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and yuna both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
@@ -3784,7 +3784,7 @@
   },
   "art": {
    "scene": "Barb and akari at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Akari arrives with a spreadsheet of sun coverage, fit, and drying times Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: deep teal, black and silver, structured teal-and-black halter bikini with angular crossing upper straps, metal connectors and precision-cut contrast panels. Incorporate the refined decorative specifics: Streamlined metallic fittings and an asymmetric hip belt. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and akari both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and akari both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "cafe",
@@ -3874,7 +3874,7 @@
   },
   "art": {
    "scene": "Barb and camila at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Camila treats her fashion consultation like a rare-card negotiation Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: wine red and antique gold, sleek one-shoulder bikini top paired with high-waist bottoms, minimal metallic detailing.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and camila both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and camila both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "shop",
@@ -3964,7 +3964,7 @@
   },
   "art": {
    "scene": "Barb and marina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Marina insists on practicality for a long day by the water Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: lagoon blue and pearl white, secure cross-back bikini with moderate coverage, UV swim shirt and dry-bag pocket.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and marina both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and marina both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
@@ -4054,7 +4054,7 @@
   },
   "art": {
    "scene": "Barb and kaede at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Kaede is hesitant to try anything that could draw a crowd Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: black, slate and a narrow silver edge, precise asymmetrical swim top with fitted high-rise bottoms and detachable wrap skirt.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and kaede both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and kaede both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
@@ -4144,7 +4144,7 @@
   },
   "art": {
    "scene": "Barb and jun at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Jun volunteers to check the beachwear show's accessibility and dress code A bikini is shown ONLY as a garment sketch on paper; jun is dressed in their usual clothing. The proposed design: marine blue and warm sand, coordinated bikini concept with a simple secure top and matching boardshorts for a group showcase.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and jun both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and jun both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "cafe",
@@ -4234,7 +4234,7 @@
   },
   "art": {
    "scene": "Barb and teo at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Teo proposes a coordinated team palette and tries to narrate the entire fitting A bikini is shown ONLY as a garment sketch on paper; teo is dressed in their usual clothing. The proposed design: sunset coral and bright violet, bikini color concept paired with geometric-pattern boardshorts for a beach-games team.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and teo both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and teo both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "shop",
@@ -4324,7 +4324,7 @@
   },
   "art": {
    "scene": "Barb and iris at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Iris has collected shell colors but doesn't know how to turn them into clothing Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: seafoam and lavender, softly gathered bikini with reversible high-waist bottoms and a sheer-free lightweight cover-up.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and iris both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and iris both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
@@ -4414,7 +4414,7 @@
   },
   "art": {
    "scene": "Barb and elio at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Elio wants to contribute a meaningful design without guessing someone else's measurements A bikini is shown ONLY as a garment sketch on paper; elio is dressed in their usual clothing. The proposed design: sage green and muted coral, bikini prototype displayed alongside coordinated relaxed swim trunks for the community show.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and elio both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and elio both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "shop",
@@ -4505,7 +4505,7 @@
   },
   "art": {
    "scene": "Barb and alma at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Alma wants something elegant that can survive a whole afternoon with friends Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: pale lavender, cream and soft gold, lavender floral bikini with delicate layered ruffles, lace-inspired edging, subtle gold fasteners and an elegant matching wrap. Incorporate the refined decorative specifics: Soft flower details, flutter fabric and pearl-like accents. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and alma both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and alma both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "cafe",
@@ -4595,7 +4595,7 @@
   },
   "art": {
    "scene": "Barb and nereo at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Nereo brings contour maps instead of clothing references A bikini is shown ONLY as a garment sketch on paper; nereo is dressed in their usual clothing. The proposed design: deep ocean blue and dune beige, bikini print concept with shoreline contour lines and matching swim shorts for the seaside crew.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and nereo both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and nereo both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
@@ -4686,7 +4686,7 @@
   },
   "art": {
    "scene": "Barb and elena at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Elena books a calm, private design consultation rather than joining a crowded fitting Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: soft rose and deep indigo, comfortable wrap-style bikini top with wide straps and high-waist bottoms plus a light overshirt.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and elena both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and elena both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event.",
    "expression": "Characterful collaborative design discussion",
    "environment": "cafe",
@@ -4777,7 +4777,7 @@
   },
   "art": {
    "scene": "Barb and jinx at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Jinx presents Barb with a page of paint splashes that would overwhelm any swimsuit Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: black, violet, hot pink and electric cyan, punk graffiti bikini with asymmetric graphic panels, crisscross straps, buckled hip bands and paint-splash prints. Incorporate the refined decorative specifics: Neon trim, graffiti motifs and bold layered straps. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and jinx both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and jinx both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
@@ -4868,7 +4868,7 @@
   },
   "art": {
    "scene": "Barb and laca at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Laca wants an off-duty look distinct from her functional red lifeguard uniform Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: coral red, teal and cream, sporty color-block bikini with cross-over halter neckline, diagonal teal straps, asymmetric hip band and metallic ring fasteners. Incorporate the refined decorative specifics: Teal piping, glossy ring connectors and layered athletic strapwork. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and laca both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and laca both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
@@ -4959,7 +4959,7 @@
   },
   "art": {
    "scene": "Barb and luna at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Luna is afraid her tastes will seem too quiet compared with everyone else's Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: midnight violet, indigo and gold, elegant violet bikini with crossing neckline straps, gold connectors, layered hip straps and gothic filigree panels. Incorporate the refined decorative specifics: Small gold constellation motifs and jewel-like fittings. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and luna both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and luna both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "shop",
@@ -5050,7 +5050,7 @@
   },
   "art": {
    "scene": "Barb and rina at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Rina asks for something pretty that doesn't feel like a stage costume Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: bubblegum pink, fuchsia and rose, ornate ruffled pink bikini with layered bow-front top, scalloped trim and doubled side-tie ribbons. Incorporate the refined decorative specifics: Flower-like ruffles, oversized satin bows and a tiny star charm. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and rina both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and rina both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "cafe",
@@ -5141,7 +5141,7 @@
   },
   "art": {
    "scene": "Barb and sierra at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Sierra expects to be exploring as much as swimming Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: burnt orange, turquoise and charcoal, adventurous burnt-orange and teal bikini with secure asymmetric strapping, buckle details and a utility-inspired hip belt. Incorporate the refined decorative specifics: Geometric panels, sporty contrast piping and an optional overshirt. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and sierra both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and sierra both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
@@ -5232,7 +5232,7 @@
   },
   "art": {
    "scene": "Barb and sol at a public beachwear design consultation, discussing fabric swatches and a fashion illustration on the table. Sol wants the colors of her favorite riverside sunset without sacrificing comfort Both characters fully clothed; bikini is shown as fashion sketches and fabric samples only. The proposed design: warm amber, white and sunset gold, sunburst-pattern bikini with layered crossing neckline, ornate gold ring hardware, asymmetric draping and high-hip chain-inspired trim. Incorporate the refined decorative specifics: Radiant amber-to-gold details and jewelry-inspired accents. The illustration shows this garment as Barb's sketch, not worn.",
-   "composition": "Single 16:9 cinematic workshop consultation, Barb and sol both clearly recognizable, design sketch foreground, bottom 20% clear for dialogue; no split panels or actual swimsuit changing.",
+   "composition": "Single 16:9 cinematic workshop consultation, Barb and sol both clearly recognizable, design sketch foreground, full-frame composition; no split panels or actual swimsuit changing.",
    "outfit": "Canonical approved everyday outfits for both characters; beachwear exists only as sketch and swatch in this initial event. Bold concept detailing must match beachwear metadata; retain approved facial and body canon.",
    "expression": "Characterful collaborative design discussion",
    "environment": "park",
