@@ -59,7 +59,7 @@
     const variant=(Math.max(0,Number(pending.sequence)||0)+Math.max(0,Number(pending.receivedDay)||0))%2;
     if(pending.type==='lyla_photoshoot'){
       if(pending.character==='lyla')return {
-        choices:lylaPhotoshootReplies[variant],replies:[
+        choices:lylaPhotoshootReplies[variant][Math.floor((Math.max(0,Number(pending.sequence)||0)+Math.max(0,Number(pending.receivedDay)||0))/2)%2],replies:[
           "Thanks. I wasn't sure about this one, but I kept it.",
           "It took a while. Modeling is mostly waiting around.",
           "Umbreon would have left after the first take."
