@@ -701,8 +701,9 @@ function mandatoryAction(type,id){
    if(activeId==='live_glance_next_morning'){
     state.liveSuspendedEvent=null;
     persist();
-    // The special morning ends in the afternoon; ordinary play resumes.
-    advance(1,'live_special_morning');
+    // The CG sequence consumes the morning only. An overdue scene reached
+    // after morning must not skip another period or change the date.
+    if(state.slot===0)advance(1,'live_special_morning');
    }else{
     const suspended=state.liveSuspendedEvent;
     state.liveSuspendedEvent=null;
@@ -3074,6 +3075,14 @@ function dialogueExpression(line){
  return 'neutral';
 }
 function renderRpgCast(ids,locked,shown,portraitId,context={}){
+ if(context.cgOnly){
+  // Do not construct, preload or display any regular character portraits.
+  // Live's authored CG is the entire illustration for this scene.
+  overworldScenePortraits={conversation:false,focused:null,participants:[]};
+  const root=typeof document.querySelector==='function'?$('rpgSceneCast'):null;
+  if(root){root.hidden=true;if(root.childNodes.length)root.replaceChildren();}
+  return;
+ }
  // Scene composition is shared with the separate overworld, even when the
  // classic RPG scene-cast container is absent in that HTML document.
  const composition=SCENE_CAST.select({cast,present:ids,portraitId,shown,...context});
@@ -3569,9 +3578,8 @@ function render(){
    !SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(showingMandatory.characterId));
  renderRpgCast(people,locked,shown,portraitId,{
   active:!!(showingMandatory||showingSlice||showingSituation||showingStory||showingEncounter||showingArc||sideQuest),
-  script:sceneScript,remote:remoteScene,sceneId:activeOutfitSceneId
+  script:sceneScript,remote:remoteScene,sceneId:activeOutfitSceneId,cgOnly:liveCgOnly
  });
- if(liveCgOnly)overworldScenePortraits={participants:[],focused:null,conversation:false};
  const characterActions=$('characterActions');
  if(characterActions){
   const menuMode=shown?.presentation==='character-menu';
