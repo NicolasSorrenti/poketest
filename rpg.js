@@ -410,19 +410,19 @@ function renderMandatory(){
   const line=e.lines[a.index]||e.lines[e.lines.length-1];
   const name=line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker;
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
-  return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
+  return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice'){
   const last=e.lines.at(-1);
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
   const speaker=last?.speaker==='Protagonist'?'You':(cast[last?.speaker]?.name||last?.speaker||'Narrator');
-  return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line:mandatoryText(last?.text||''),choices:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
+  return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line:mandatoryText(last?.text||''),choices:LIVE_EVENT_ART[e.id]?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
  }
  const choice=e.choices[a.choice];
  const responseActor=[...e.lines].reverse().find(line=>cast[line.speaker])?.speaker;
  const remoteReply=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
  const actorName=cast[e.characterId]?.name||e.characterId;
- return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]?[['Leave now ›','mandatoryFinish'],['Glance at Live ›','mandatoryGlance']]:[['Continue story ›','mandatoryFinish']]};
+ return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]?[['Leave now ›','mandatoryFinish'],['◉ Glance at Live','mandatoryGlance']]:[['Continue story ›','mandatoryFinish']]};
 }
 function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;
@@ -431,7 +431,7 @@ function mandatoryAction(type,id){
  else if(type==='mandatoryGlance'){
   const activeId=state.mandatoryEventState.active.id;
   const cg=LIVE_EVENT_ART[activeId];
-  if(!cg||state.mandatoryEventState.active.phase!=='response')return true;
+  if(!cg||!['lines','choice','response'].includes(state.mandatoryEventState.active.phase))return true;
   // The existing glance viewer accepts a source image and a crop rectangle.
   // Count the deliberate choice, not modal reopens or automatic CG display.
   if(typeof window.NeoOutfitChime?.glance!=='function')return true;
