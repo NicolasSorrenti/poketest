@@ -28,7 +28,7 @@
     "close": "You hold the corner while she fixes the tape. She steps down, inspects it, and gives you a grateful little salute.",
     "art": {
       "scene": "Hana is standing on tiptoe, trying to straighten a handmade sign above the starter decks. It was straight five minutes ago. The shop has a personal grudge against my handwriting.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "shop",
@@ -51,7 +51,7 @@
     "close": "She offers you the chair across from her. For a few minutes, neither of you has anywhere to be.",
     "art": {
       "scene": "Hana has claimed a quiet corner table, her hair bow beside a nearly empty mug. I told everyone I was off duty, so naturally somebody asked where we keep the sleeves.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -74,7 +74,7 @@
     "close": "She gives you the second bottle, and the brief smile she tries to hide is worth more than a rematch.",
     "art": {
       "scene": "Reina loses an argument with the practice-room vending machine; two bottles drop instead of one. Don't even think about calling that a tactical victory. It was clearly a misplay.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "center",
@@ -97,7 +97,7 @@
     "close": "She admits she likes the shop best before the matches begin, when there is no one left to impress.",
     "art": {
       "scene": "Reina is at a table with no cards laid out, tracing a circle around a chipped spot in the wood. I come here sometimes without a deck. Don't make it into an inspiring speech.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "shop",
@@ -120,7 +120,7 @@
     "close": "She takes it gently and tells you about the person who gave it to her years ago.",
     "art": {
       "scene": "A carefully pressed flower slides from Shiori's borrowed book and lands at your feet. That is not a clue to a mystery. It's a bookmark. Although I suppose it does have a story.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "library",
@@ -143,7 +143,7 @@
     "close": "She lets you look after all, then draws an extra chair at the little table in the picture.",
     "art": {
       "scene": "Shiori turns a napkin over before you can see the tiny sketch on its back. It's the café window. I was trying to remember how the light falls before it disappears.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -166,7 +166,7 @@
     "close": "The duck is smaller than expected. Yuna presents it to you with full tournament ceremony.",
     "art": {
       "scene": "Yuna is surrounded by tickets from an arcade machine she insists she has beaten fairly. If the prize is a rubber duck, it will become my official team mascot. No appeals.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "arcade",
@@ -189,7 +189,7 @@
     "close": "You peel off the last star together, and she secretly leaves one on your own deck case.",
     "art": {
       "scene": "Yuna has stuck tiny stars all over her deck box and accidentally decorated her sleeve as well. Don't tell anyone I need help. I'm establishing a reputation for artistic genius.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "shop",
@@ -212,7 +212,7 @@
     "close": "She closes the spreadsheet and asks whether you know anywhere nearby that serves actual food.",
     "art": {
       "scene": "Akari's neat research table includes three charts, a calculator, and a completely forgotten pastry. I scheduled breakfast. I forgot that eating it was a separate step.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "library",
@@ -235,7 +235,7 @@
     "close": "When the results prove nothing, she laughs and says she might be learning to appreciate that.",
     "art": {
       "scene": "Akari asks you to help her measure how long it takes people to notice a change in the noticeboard. A perfectly harmless study. No prizes, no ranking, and absolutely no sample-size argument.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "center",
@@ -258,7 +258,7 @@
     "close": "She sets it back in the binder without a price tag, and trusts you with the story behind it.",
     "art": {
       "scene": "Camila pauses while pricing a battered card, running her thumb over the sleeve's worn edge. The market says it's nearly worthless. The owner says it's irreplaceable. The owner wins.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "shop",
@@ -281,7 +281,7 @@
     "close": "She orders two coffees instead, then pushes one toward you as though that was the plan all along.",
     "art": {
       "scene": "Camila has been negotiating with a café owner over the last slice of cake. Apparently charm is not accepted as legal tender after closing time. Tragic.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -304,7 +304,7 @@
     "close": "You stand beside her until the ripples reach the bank and vanish into the reeds.",
     "art": {
       "scene": "Marina has stopped along the riverside to watch the patterns left behind by a departing ferry. Every boat leaves a different wake. That sounds poetic, but mostly I just like watching them.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "park",
@@ -327,7 +327,7 @@
     "close": "She marks the spot with a blue star and asks you to keep the map until the next sunny day.",
     "art": {
       "scene": "Marina has drawn a little map of the riverside on the back of a receipt. There's a bench nobody seems to use. I thought we could walk past it sometime.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -350,7 +350,7 @@
     "close": "The machine finally plays the right melody. Kaede pretends the triumphant grin wasn't hers.",
     "art": {
       "scene": "Kaede is fixing a loose cable on an arcade cabinet while its music loops the same two notes. If this thing plays that chorus one more time, I'm challenging it to a duel.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "arcade",
@@ -373,7 +373,7 @@
     "close": "She lets you hold the thread while she finishes, then slips the jacket back on without another joke.",
     "art": {
       "scene": "Kaede has taken off her jacket to repair a small torn patch under a park lamp. It was a gift from someone who'd hate how sentimental I'm being right now.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "park",
@@ -396,7 +396,7 @@
     "close": "She folds the planner shut and spends those ten minutes looking at the sunlight with you.",
     "art": {
       "scene": "Elena's agenda is open on the center table. Between two meetings she has written: ten minutes outside. No, I haven't forgotten an appointment. I'm attempting a completely deliberate break.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "center",
@@ -419,7 +419,7 @@
     "close": "She takes a careful sip, looks almost surprised by her own smile, and orders the same tea again.",
     "art": {
       "scene": "Elena studies a cup of tea that the server has mistaken for her usual order. I could correct it. But I think I'd rather find out what I have been missing.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -442,7 +442,7 @@
     "close": "You spot it by a table leg. She fastens it back on and gives you a rare, unguarded thank-you.",
     "art": {
       "scene": "Jinx is crouched beside an arcade machine, searching for a silver pin from her favorite jacket. Before you ask, yes, I could buy another. That's not the point.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "arcade",
@@ -465,7 +465,7 @@
     "close": "She offers you the other earbud and waits to see whether you notice the chorus she loves.",
     "art": {
       "scene": "Jinx has one earbud in and is tapping a combat-boot heel against the riverside railing. It's not a love song. It's a really good bass line. There is a difference.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "park",
@@ -488,7 +488,7 @@
     "close": "She takes the long route anyway, pointing out all the things that have changed since then.",
     "art": {
       "scene": "Laca is trying to remember which path you used to race down when you were kids. I swear it used to be shorter. Either that, or we were much better at running.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "park",
@@ -511,7 +511,7 @@
     "close": "When you choose one, she smiles at how quickly you remembered the colors she likes.",
     "art": {
       "scene": "Laca has brought two jackets to the café and wants a ruling before tomorrow's outing. Don't say they both look good. You're my oldest friend; I need an actual answer.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -534,7 +534,7 @@
     "close": "You help sort them by color; she is delighted to discover that one has a tiny drawing on the back.",
     "art": {
       "scene": "A handful of bookmarks scatter over the library floor as Luna opens a book upside down. I promise I was being organized five seconds ago. Maybe four.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "library",
@@ -557,7 +557,7 @@
     "close": "She gets the quieter seat she wanted and celebrates with the smallest victorious fist pump.",
     "art": {
       "scene": "Luna is standing at the counter, rehearsing how to request a different table. Would you come with me? I know it's a little thing, but I'd like to ask for myself.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -580,7 +580,7 @@
     "close": "She finishes the phrase and gives you a shy bow that turns into a laugh.",
     "art": {
       "scene": "Rina is quietly practicing a vocal exercise behind the arcade, hoping the machines will cover the sound. I can perform for a crowd. Somehow humming for one person is scarier.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "arcade",
@@ -603,7 +603,7 @@
     "close": "She reads the new line to you without singing it, then keeps it instead of crossing it out.",
     "art": {
       "scene": "Rina has a notebook open on her knees and keeps crossing out the same lyric. It doesn't need to sound like a hit. I want it to sound like something I'd actually say.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "park",
@@ -626,7 +626,7 @@
     "close": "You sit opposite her. She relaxes enough to start telling you about her day on her own terms.",
     "art": {
       "scene": "Sierra has slipped into a quiet café booth still carrying the bag from a photoshoot. Please tell me you didn't come to ask for a pose. I have exactly five minutes to be invisible.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -649,7 +649,7 @@
     "close": "She takes the picture, shows it to you with obvious pride, and pockets the phone instead of posting.",
     "art": {
       "scene": "Sierra has her phone propped against a tree, trying to photograph the sunlight on the river. This one's not for work. Nobody gets to approve it but me.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "park",
@@ -672,7 +672,7 @@
     "close": "She slides a wrapped pastry toward you, pleased that a simple morning has gone according to plan.",
     "art": {
       "scene": "Sol is arranging three snacks on a bench as though preparing a formal banquet. The third one is for whoever admits they forgot breakfast. I have a strong suspect.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "park",
@@ -695,7 +695,7 @@
     "close": "She asks you to pick the next song, and promises not to blame you if she loses again.",
     "art": {
       "scene": "Sol has stepped off a rhythm game, laughing too hard to look at the score. I was robbed. By my own feet, apparently, but robbed nonetheless.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "arcade",
@@ -718,7 +718,7 @@
     "close": "She sets out two mugs and enjoys the quiet until the front bell finally rings.",
     "art": {
       "scene": "Alma is wiping down the same clean counter while the first kettle warms. It's peaceful before the chairs start arguing with me. Want the first cup?",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -741,7 +741,7 @@
     "close": "She lets you add a tiny flourish in the corner, then declares it part of the café's history.",
     "art": {
       "scene": "Alma is considering a new handwritten menu board, complete with a crooked doodle of a mug. The lettering is terrible. The soup is good. I know which one matters.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "cafe",
@@ -764,7 +764,7 @@
     "close": "You take the lightest box, and she rewards the help with a story about the morning tide.",
     "art": {
       "scene": "Iris carries a stack of shipping boxes into the shop, carefully protecting one dented corner. Every package arrived dry. You have no idea how much of a miracle that is.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "shop",
@@ -787,7 +787,7 @@
     "close": "She lets you hold the chart against the breeze and points out the patterns you missed.",
     "art": {
       "scene": "Iris is comparing today's waterline with a weathered chart pinned inside her notebook. I know the tide by sight. But I like being able to prove I'm right.",
-      "composition": "Single cinematic 16:9 game CG, character prominent, lower fifth clear for dialogue.",
+      "composition": "Single cinematic 16:9 game CG, character prominent, full-frame composition.",
       "outfit": "Use canonical character bible and a casual outfit suited to the location.",
       "expression": "Natural, character-specific slice-of-life expression.",
       "environment": "park",
@@ -1148,7 +1148,7 @@
    art:{scene:e.title,composition:'Approved single horizontal story CG',outfit:'Approved character outfit',
     expression:'Authored everyday expression',environment:e.place,mood:'everyday',fanservice:0}});
  }
- scenes.push({...FIT.event, minAffection:0, image:FIT.cgs[0].path, cgSequence:FIT.cgs.map(x=>x.id), art:{scene:'Akari and Barb fitting a swimsuit at Barb\'s workshop.',composition:'Approved cinematic 16:9 story CG with lower fifth clear for dialogue.',outfit:'Approved swimsuit-fitting scene outfits',expression:'Natural flustered and professional expressions',environment:'Barb\'s workshop',mood:'lighthearted',fanservice:1}});
+ scenes.push({...FIT.event, minAffection:0, image:FIT.cgs[0].path, cgSequence:FIT.cgs.map(x=>x.id), art:{scene:'Akari and Barb fitting a swimsuit at Barb\'s workshop.',composition:'Approved cinematic 16:9 story CG with full-frame composition.',outfit:'Approved swimsuit-fitting scene outfits',expression:'Natural flustered and professional expressions',environment:'Barb\'s workshop',mood:'lighthearted',fanservice:1}});
  // Exclusive character packs must remain server-authorized: no absent guest, no leaked CG.
  scenes.push(...(CROSS?.events||[]).filter(e=>e.participants.every(id=>Object.prototype.hasOwnProperty.call(SCHEDULES.start,id))));
  const index=new Map(scenes.map(e=>[e.id,e]));
