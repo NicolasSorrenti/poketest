@@ -1885,7 +1885,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Base/Base Set 2 printed exchange legality, actor-owned hand/deck choices, public reveal of both Pokémon, deck shuffle, and illegal-play atomicity; test authored but awaiting execution/CI; additional interactions and live-client validation pending",
+          "evidence": [
+            "test_card_fidelity_pokemon_trader.js (six regression scenarios authored; execution not yet verified)",
+            "Printed text cross-checked with Limitless Base #77 and Serebii Base #77; both require revealing offered and found cards. Reducer source omitted public reveal before this change."
+          ]
         }
       ]
     },
@@ -6833,7 +6838,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Base/Base Set 2 printed exchange legality, actor-owned hand/deck choices, public reveal of both Pokémon, deck shuffle, and illegal-play atomicity; test authored but awaiting execution/CI; additional interactions and live-client validation pending",
+          "evidence": [
+            "test_card_fidelity_pokemon_trader.js (six regression scenarios authored; execution not yet verified)",
+            "Printed text cross-checked with Limitless Base #77 and Serebii Base #77; both require revealing offered and found cards. Reducer source omitted public reveal before this change."
+          ]
         }
       ]
     },
