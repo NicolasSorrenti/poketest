@@ -572,7 +572,7 @@ function prompt(g,plan,helpers){
  if(name==='Switch'&&!chosen(d,'target'))return single('target',side,options(p.bench.map((u,i)=>({i,label:publicName(u)})),'bench'),'Choose your replacement');
  if(['Potion','Super Potion','Scoop Up','Devolution Spray','Defender','Pokémon Center'].includes(name)&&!chosen(d,'target')&&name!=='Pokémon Center'){
   const targetsForEffect=own(u=>name==='Potion'?u.damage>0:name==='Super Potion'?u.damage>0&&u.energies.length>0:name==='Devolution Spray'?u.under.length>0:true);
-  if(name==='Super Potion'&&targetsForEffect.length===1)d.target=[targetsForEffect[0].id];
+  if(['Super Potion','Scoop Up'].includes(name)&&targetsForEffect.length===1)d.target=[targetsForEffect[0].id];
   else return single('target',side,targetsForEffect,'Choose one of your Pokémon');
  }
  if(name==='Energy Removal'&&!chosen(d,'target')){
