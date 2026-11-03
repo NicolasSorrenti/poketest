@@ -384,6 +384,13 @@
       else{img.onerror=null;img.removeAttribute('src');button.classList.add('missing');button.style.setProperty('--sprite-height','130px');}
     }
     paint();
+    // Edge thumbnails are persistent, so switch their source only on mode changes.
+    for(const [p,button] of edgeNodes){
+      const img=button.querySelector('img');if(!img)continue;
+      img.hidden=false;
+      if(enabled)loadChibi(img,p.id);
+      else{img.onerror=()=>{img.hidden=true;};img.src=face(p);}
+    }
     eyeLevelView?.setChibiMode(enabled);
   }
   // Chibi mode uses only the corresponding character's approved v2 sprite.
@@ -394,18 +401,50 @@
   // The larger ratio avoids empty bars along either axis at the minimum zoom.
   const minZoom=()=>Math.max(camera.clientWidth/map.width,camera.clientHeight/map.height);
   function bound(){const w=camera.clientWidth,h=camera.clientHeight;ox=map.width*zoom>w?clamp(ox,w-map.width*zoom,0):(w-map.width*zoom)/2;oy=map.height*zoom>h?clamp(oy,h-map.height*zoom,0):(h-map.height*zoom)/2;}
-  function paint(){bound();world.style.transform=`translate(${ox}px,${oy}px) scale(${zoom})`;edges.replaceChildren();
+  // Reuse edge controls and their images while panning, zooming, or updating badges.
+  // Recreating them on every paint started several identical image loads per tap.
+  const edgeNodes=new Map();
+  function paint(){
+    bound();
+    world.style.transform=`translate(${ox}px,${oy}px) scale(${zoom})`;
     const w=camera.clientWidth,h=camera.clientHeight,margin=28,top=80,bottom=110;
-    for(const p of placements){const pos=point(p),x=ox+pos.x*zoom,y=oy+(pos.y-(pose(p)?.height||130)/2)*zoom;
+    const visible=new Set();
+    for(const p of placements){
+      const pos=point(p),x=ox+pos.x*zoom,y=oy+(pos.y-(pose(p)?.height||130)/2)*zoom;
       if(x>=margin&&x<=w-margin&&y>=top&&y<=h-bottom)continue;
       const dx=x-w/2,dy=y-h/2,ratio=Math.max(1,Math.abs(dx)/(w/2-margin),Math.abs(dy)/(h/2-top));
       const ex=clamp(w/2+dx/ratio,margin,w-margin),ey=clamp(h/2+dy/ratio,top,h-bottom);
-      const b=document.createElement('button');b.className='edge';b.style.left=ex+'px';b.style.top=ey+'px';b.title=`Find ${person(p).name}${p.previewKey?' · '+p.previewKey:''}`;b.setAttribute('aria-label',b.title);
-      const img=document.createElement('img');if(chibiMode){loadChibi(img,p.id);}else{img.src=face(p);img.onerror=()=>{img.remove();b.insertAdjacentText('afterbegin',person(p).name[0])};}img.alt='';
-      const arrow=document.createElement('b');arrow.textContent=Math.abs(dx)>Math.abs(dy)?(dx>0?'›':'‹'):(dy>0?'⌄':'⌃');b.append(img,arrow);
-      const indicator=indicatorBadge(p.id);
-      if(indicator)b.append(indicator);
-      b.onclick=()=>focus(p);edges.appendChild(b);
+      let b=edgeNodes.get(p);
+      if(!b){
+        b=document.createElement('button');b.className='edge';
+        b.title=`Find ${person(p).name}${p.previewKey?' · '+p.previewKey:''}`;
+        b.setAttribute('aria-label',b.title);
+        const img=document.createElement('img');
+        img.alt='';
+        if(chibiMode)loadChibi(img,p.id);
+        else{img.src=face(p);img.onerror=()=>{img.hidden=true;if(!b.dataset.fallback){b.prepend(document.createTextNode(person(p).name[0]));b.dataset.fallback='1';}};}
+        const arrow=document.createElement('b');
+        b.append(img,arrow);
+        b.onclick=()=>focus(p);
+        edgeNodes.set(p,b);edges.append(b);
+      }
+      b.hidden=false;b.style.display='';
+      b.style.left=ex+'px';b.style.top=ey+'px';
+      const arrow=b.querySelector('b');
+      const nextArrow=Math.abs(dx)>Math.abs(dy)?(dx>0?'›':'‹'):(dy>0?'⌄':'⌃');
+      if(arrow.textContent!==nextArrow)arrow.textContent=nextArrow;
+      const kind=npcIndicators[p.id]||'';
+      if(b.dataset.indicator!==kind){
+        b.querySelector('.neo-npc-indicator')?.remove();
+        const badge=indicatorBadge(p.id);
+        if(badge)b.append(badge);
+        b.dataset.indicator=kind;
+      }
+      visible.add(p);
+    }
+    for(const [p,b] of edgeNodes){
+      if(!placements.includes(p)){b.remove();edgeNodes.delete(p);}
+      else if(!visible.has(p)){b.hidden=true;b.style.display='none';}
     }
   }
   function focus(p){const pt=point(p);ox=camera.clientWidth/2-pt.x*zoom;oy=camera.clientHeight/2-(pt.y-60)*zoom;world.style.transition='transform .3s ease-out';paint();setTimeout(()=>world.style.transition='',320);}
