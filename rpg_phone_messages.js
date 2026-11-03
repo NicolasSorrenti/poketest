@@ -49,6 +49,37 @@
     jicy:{caption:'A little photo from my day. I thought you might enjoy the view.',context:'I was taking a short break.'},
     lyla:{caption:'Quick selfie before I head out. I thought you might like this one.',context:'I had a few minutes free.'}
   };
+  // Reply tone is mechanically stable (warm=affection, curious=trust, neutral=no change),
+  // while wording belongs to the actual sender and message type.
+  const playerReplies={"hana":[["You earned a break, Hana. The shop can survive five minutes.","Did the shop finally let you sit down?","Save me a booster before you vanish again."],["That smile looks good on you. No sales pitch needed.","Tell me the shop didn't drag you back already.","Lucky Draw's unofficial mascot strikes again."]],"reina":[["Even off the bracket, you look ready to win.","Studying opponents or just checking the lighting?","Careful, your rivals might study this photo."],["That's a strong opening. I approve.","What's the tactical purpose of this angle?","So this is your intimidation strategy?"]],"shiori":[["You look comfortable there. I like that.","Did you find anything worth reading?","You've somehow made a quiet corner look dramatic."],["The peaceful look suits you, Shiori.","What book kept you company today?","Is this where you secretly plan your victories?"]],"yuna":[["You actually stopped moving for a picture? Impressive.","Which arcade machine finally beat your attention span?","New high score: one successful selfie."],["You look like trouble in the best way.","What ridiculous combo are you testing now?","Should I expect a victory pose next?"]],"akari":[["The details are lovely. You clearly planned this.","Was that angle part of your experiment?","How many charts did this photo require?"]],"camila":[["You really know how to make a scene look expensive.","Did you discover something valuable today?","Please tell me this isn't the start of a sales pitch."]],"marina":[["That place looks peaceful. I'd sit there with you.","How was the river today?","Even the water looks like it's posing for you."]],"kaede":[["Not bad. You almost look approachable.","Find any competition worth mentioning?","Did the arcade survive your visit?"]],"jun":[["Good to hear from you. Hope you got some rest.","What have you been running around doing?","Actual downtime? I'll mark the calendar."]],"teo":[["Glad you finally took a break.","Did the shift go all right?","I was about to issue a mandatory rest order."]],"iris":[["You look happy. That's a good moment to keep.","What were you working on?","So this is what escaping your to-do list looks like."]],"elio":[["No big reason is a perfectly good reason.","What caught your attention today?","An unsolicited update from you? Rare loot."]],"alma":[["You look at ease. That's nice to see.","Was the coffee worth the trip?","I assume this counts as official relaxation time."]],"nereo":[["I'm glad you found a quiet moment.","What pulled you away from everything?","I'll frame this as proof you know how to relax."]],"barb":[["This look works. Keep that one.","What was the brief for this shoot?","Should I invoice you for art direction?"]],"laca":[["You deserved that break, Laca.","Was work especially busy today?","You know relaxing is allowed, right?"]],"daisy":[["You look great, Daisy. Rare quiet moment and all.","What finally got you to stop moving?","I'm saving this as evidence you can sit still."]],"rina":[["You look great, even after rehearsal.","Did practice go well?","The hairstyle says you gave it everything."]],"sol":[["Nice shot. It's good to see you relaxed.","What happened before this picture?","Should I be worried about the story behind it?"]],"jinx":[["Okay, that looks ridiculously good. Happy now?","What kind of trouble were you causing?","Try not to let that ego break your phone."]],"luna":[["Looks like you found somewhere special.","Where did you wander off to this time?","You collect odd places like I collect cards."]],"elena":[["You look good. Glad you took a breather.","Anything interesting in those notes?","I hope the notes didn't pose for the photo too."]],"sierra":[["This shot has a really nice mood.","What inspired that pose?","Is this your secret modeling debut?"]],"jicy":[["That's a cute photo, Jicy. Thanks for sending it.","How was your day, really?","Trying to charm me through the phone?"]],"lyla":[["I like this one. You seem comfortable.","Did the photographer make you redo it a lot?","You look almost awake. That's progress."],["The lighting works, but it's still you I noticed.","Was this shoot another long day?","Is that your version of an excited expression?"]]};
+  const senderReplies={"hana":["That honestly makes my day. Thank you!","I was supposed to be on break, but you know how the shop gets.","Don't give the customers any ideas!"],"reina":["I wasn't asking for praise. Still... noted.","I always have a reason. Some are just less important.","If it works, it works. You should know that."],"shiori":["You noticed. That's rather kind of you.","Just a few chapters. I could lend it to you.","Only the most dangerous plans, naturally."],"yuna":["I KNOW. A historic achievement!","Something completely irresponsible. You'll love it.","Next time I'm bringing a trophy."],"akari":["Good. The framing took some thought.","It was. I tested three alternatives.","Fewer than you might think. More than one."],"camila":["An excellent assessment, darling.","Perhaps. I'll tell you when the timing is right.","Only if you insist on making an offer."],"marina":["There's room for you here sometime.","Calm for once. I enjoyed it.","It was a good day for the camera."],"kaede":["That's almost a compliment.","Nothing I couldn't handle.","Barely. They should thank me."],"jun":["Thanks. I needed that.","Nothing dramatic. Just too many errands.","You'd be surprised how rare this is."],"teo":["I did. It helped more than I expected.","Busy, but manageable.","I'll submit a formal request next time."],"iris":["I'm glad it comes across that way.","A few things. I finally made progress.","It felt strange not rushing."],"elio":["That's what I thought.","Nothing special. Just felt worth sharing.","Don't get used to it."],"alma":["Thank you. It was a nice moment.","Yes, actually. I'd go again.","I like that definition."],"nereo":["Thank you for saying so.","A bit of fresh air. Nothing more.","You have proof now. Use it wisely."],"barb":["I knew you had taste.","Interesting lighting and a difficult client.","I'll remember that when I get the bill."],"laca":["I really did. Thanks.","Enough to make the break worthwhile.","I'm learning, slowly."],"daisy":["Aw, thank you!","A miracle. Don't ask me to explain it.","Delete that evidence immediately."],"rina":["That's sweet! I needed to hear it.","Intense, but fun.","It has earned its retirement."],"sol":["Good to hear, thanks.","Long story. Mostly harmless.","Only a little."],"jinx":["Very happy. Keep going.","The usual. You'd have enjoyed it.","My phone can handle my greatness."],"luna":["It felt that way too.","I'll show you if we go together.","You make that sound like a talent."],"elena":["Thanks. A short break helped.","A few interesting patterns, actually.","Not without asking for credit."],"sierra":["I'm glad you noticed.","It just felt right for the moment.","I wouldn't go that far!"],"jicy":["Really? I'm glad you liked it.","It was okay. Better now that we're talking.","M-me? I wasn't trying anything!"],"lyla":["Thanks. It was one of the better ones.","Not that many. It just felt like a lot.","That's called being consistent."]};
+  const lylaPhotoshootReplies=[[["You have a good eye for the shots you keep.","Was this one your choice or the photographer's?","An Umbreon could never pose this patiently."],["I think this one really suits you.","Did you enjoy this session at all?","How do you manage to look unimpressed in every ad?"]],[["Thanks for showing me the finished one, Lyla.","How many takes did this one need?","So this is what 'just another job' looks like."],["You should keep this one. Seriously.","Do you like the result yourself?","Should I expect this on the next bus stop?"]]];
+  const lylaSightingReplies={"yuna":[["That's Lyla! She looks like an endgame boss.","Where did you spot that ad?","Umbreon user by night, magazine star by day."]],"hana":[["That's definitely her! She looks great.","Was that near the shop?","Should we reserve her a celebrity table?"]],"jinx":[["Yeah, that's Lyla. Try not to sound jealous.","Where did you find that photo?","Careful, she might steal your spotlight."]],"reina":[["That's Lyla. Her expression barely changed.","Where was this displayed?","Think she analyzes poses like she analyzes decks?"]],"camila":[["That's Lyla! Pretty striking campaign.","Is it a magazine or an advertisement?","Are you scouting her as a collector's item?"]],"daisy":[["No way, that's our Umbreon girl!","Where'd you run into that photo?","She's famous and still acts half asleep."]],"barb":[["That's Lyla. The styling looks really good.","Did the campaign just launch?","Should we expect autographs at the card shop?"]]};
+  function responseSet(pending){
+    const variant=(Math.max(0,Number(pending.sequence)||0)+Math.max(0,Number(pending.receivedDay)||0))%2;
+    if(pending.type==='lyla_photoshoot'){
+      if(pending.character==='lyla')return {
+        choices:lylaPhotoshootReplies[variant],replies:[
+          "Thanks. I wasn't sure about this one, but I kept it.",
+          "It took a while. Modeling is mostly waiting around.",
+          "Umbreon would have left after the first take."
+        ]};
+      const choices=lylaSightingReplies[pending.character]||[
+        ["Wait, that's Lyla from the shop!","Where was this picture taken?","She's famous and still won't smile at a topdeck."]
+      ];
+      return {choices:choices[variant%choices.length],replies:[
+        pending.character==='reina'?"At least you recognize her. She plays better than she poses.":"Right? I recognized her from the card shop too!",
+        "I saw it on my way through town. Had to show you.",
+        pending.character==='jinx'?"I don't share the spotlight. I'm just generous.":"Ha! That's exactly what I thought."
+      ]};
+    }
+    const choices=playerReplies[pending.character]||[
+      ["You look happy in this one.","How did your day go?","A rare photo update. I approve."]
+    ];
+    return {choices:choices[variant%choices.length],replies:senderReplies[pending.character]||[
+      "Thanks, that's kind of you.","It was a nice break from everything.","You're impossible."
+    ]};
+  }
   const favoritePose=/back|rear|seated|sitting|crouch|kneel|arcade|lean|reach|cards|special|phone|playing|sketch|coffee|book|look/i;
   const make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
   function normalize(state){
@@ -171,11 +202,10 @@
         const caption=make('p',pending.caption);caption.className='rpg-phone-caption';
         const prompt=make('p','What do you send back?');prompt.className='rpg-phone-effect';
         const choices=make('div');choices.className='rpg-phone-choices';
-        choices.append(
-          button('“You look great. I’m glad you sent it to me.”',()=>reply('warm')),
-          button('“What were you doing when you took it?”',()=>reply('curious')),
-          button('Send a Pokémon sticker 😊',()=>reply('neutral'))
-        );
+        const options=responseSet(pending).choices;
+        ['warm','curious','neutral'].forEach((kind,index)=>{
+          choices.append(button('“'+options[index]+'”',()=>reply(kind)));
+        });
         content.append(caption,prompt,choices);
       }else{
         const caption=make('p',pending.caption);caption.className='rpg-phone-caption';
@@ -193,38 +223,26 @@
       shell.append(head,content,foot);dialog.append(shell);
     }
     function reply(kind){
-      const pending=state.phoneMessages?.pending;if(!pending||pending.phase!=='incoming')return;
-      const id=pending.character;
-      if(pending.type==='lyla_photoshoot'){
-        const subject='lyla';
-        if(kind==='warm'){
-          if(pending.character===subject)relationships?.apply?.(state,subject,{affection:1});
-          pending.effectText=pending.character===subject?'Your bond with Lyla grew a little.':'';
-          pending.playerLine=pending.character===subject?'You look great. I\'m glad you sent it to me.':'She looks great! I didn\'t realize she modeled.';
-          pending.replyLine=pending.character===subject?'Thanks. I thought the photo turned out okay.':'Right? I recognized her immediately from the card shop.';
-        }else if(kind==='curious'){
-          if(pending.character===subject)relationships?.apply?.(state,subject,{trust:1});
-          pending.effectText=pending.character===subject?'You got to know Lyla a little better.':'';
-          pending.playerLine=pending.character===subject?'What was the shoot like?':'Where did you find that picture?';
-          pending.replyLine=pending.character===subject?'Just another job. The photographer liked this one.':'I spotted it while I was out. Small world, huh?';
-        }else{
-          pending.effectText='';pending.playerLine='You sent a Pokémon sticker 😊';
-          pending.replyLine=pending.character===subject?'That Umbreon sticker is pretty good.':'Haha, I knew you\'d recognize her!';
+      const pending=state.phoneMessages?.pending;
+      if(!pending||pending.phase!=='incoming'||!['warm','curious','neutral'].includes(kind))return;
+      const sender=pending.character,subject=pending.photoSubject||sender;
+      const index={warm:0,curious:1,neutral:2}[kind];
+      const options=responseSet(pending);
+      pending.playerLine=options.choices[index];
+      pending.replyLine=options.replies[index];
+      pending.effectText='';
+      // Reactions to a friend's sighting do not increase Lyla's affection:
+      // only Lyla herself can receive bond effects from her photo messages.
+      if(kind==='warm'){
+        if(pending.type!=='lyla_photoshoot'||sender===subject){
+          relationships?.apply?.(state,sender,{affection:1});
+          pending.effectText='Your bond with '+(cast[sender]?.name||sender)+' grew a little.';
         }
-      }else if(kind==='warm'){
-        relationships?.apply?.(state,id,{affection:1});
-        pending.effectText='Your bond with '+(cast[id]?.name||id)+' grew a little.';
-        pending.playerLine='You look great. I’m glad you sent it to me.';
-        pending.replyLine='I was hoping you’d like it. I wanted to share this with you.';
       }else if(kind==='curious'){
-        relationships?.apply?.(state,id,{trust:1});
-        pending.effectText='You got to know '+(cast[id]?.name||id)+' a little better.';
-        pending.playerLine='What were you doing when you took it?';
-        pending.replyLine=''+(makeCopy(id).context)+' It was nice to have a moment to myself.';
-      }else{
-        pending.effectText='';
-        pending.playerLine='You sent a Pokémon sticker 😊';
-        pending.replyLine='Okay, that sticker is pretty good. I’ll allow it.';
+        if(pending.type!=='lyla_photoshoot'||sender===subject){
+          relationships?.apply?.(state,sender,{trust:1});
+          pending.effectText='You got to know '+(cast[sender]?.name||sender)+' a little better.';
+        }
       }
       pending.phase='reply';pending.choice=kind;pending.deferred=false;
       persist();draw();
