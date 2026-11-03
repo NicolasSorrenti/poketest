@@ -130,6 +130,19 @@ function specialArtCandidates(path){
  if(/\.(?:png|jpe?g|webp)$/i.test(path))return [path];
  return [path+'.png',path+'.jpg',path+'.webp'];
 }
+// Until Live has a chibi, use an entirely neutral placeholder in Discreet Mode.
+const LIVE_DISCREET_PLACEHOLDER='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(
+ '<svg xmlns="http://www.w3.org/2000/svg" width="960" height="720" viewBox="0 0 960 720">'+
+ '<rect width="960" height="720" fill="#24283b"/>'+
+ '<rect x="90" y="70" width="780" height="580" rx="38" fill="#343950" stroke="#8187a4" stroke-width="5"/>'+
+ '<circle cx="480" cy="283" r="95" fill="#9299b1"/>'+
+ '<path d="M275 544c15-117 94-175 205-175s190 58 205 175" fill="#9299b1"/>'+
+ '<text x="480" y="608" text-anchor="middle" fill="#f4f2fa" font-family="sans-serif" font-size="36" font-weight="700">LIVE</text>'+
+ '</svg>');
+function liveDiscreetEnabled(){
+ return document.documentElement.dataset.rpgDiscreet==='on'||
+  window.NeoRpgDiscreet?.isEnabled?.()===true;
+}
 const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
  {speaker:'Narrator',text:'After spending time at home, you notice Live looking over from the living room.'},
  {speaker:'Live',text:"Oh, you're still here! I thought you might be heading out."},
@@ -595,7 +608,7 @@ function mandatoryAction(type,id){
  }
  else if(type==='mandatoryGlance'){
   const activeId=state.mandatoryEventState.active.id;
-  const cg=liveEventArt(activeId);
+  const cg=liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(activeId);
   if(!cg||!['lines','choice','response'].includes(state.mandatoryEventState.active.phase))return true;
   // The existing glance viewer accepts a source image and a crop rectangle.
   // Count the deliberate choice, not modal reopens or automatic CG display.
@@ -619,13 +632,13 @@ function mandatoryAction(type,id){
   }
   persist();
   const onClose=()=>{if(milestone)startLiveGlanceMilestone(milestone);};
-  const candidates=LIVE_SPECIAL_IDS.has(activeId)
+  const candidates=!liveDiscreetEnabled()&&LIVE_SPECIAL_IDS.has(activeId)
     ?[...specialArtCandidates(LIVE_SPECIAL_ART[activeId]),'/rpg-assets/characters/live/events/live_couch_sweater.png']
     :[cg];
   const openGlance=async()=>{
    // Resolve a missing future CG to the existing approved couch image.
    let src=cg;
-   if(LIVE_SPECIAL_IDS.has(activeId)){
+   if(!liveDiscreetEnabled()&&LIVE_SPECIAL_IDS.has(activeId)){
     src=await new Promise(resolve=>{
      let i=0;
      const attempt=()=>{
@@ -2253,11 +2266,11 @@ function showCGMoment(entry){
 function syncSceneCG(){
  if(!cgScenePresenter)return;
  const liveEventId=state.mandatoryEventState?.active?.id;
- const liveArt=liveEventArt(liveEventId);
+ const liveArt=liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(liveEventId);
  if(liveArt){
   const finalSecond=liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2;
   const entry={id:liveEventId+(finalSecond?'_second':''),title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home',character:'live'};
-  const paths=LIVE_SPECIAL_IDS.has(liveEventId)
+  const paths=liveDiscreetEnabled()?[LIVE_DISCREET_PLACEHOLDER]:LIVE_SPECIAL_IDS.has(liveEventId)
    ?[...specialArtCandidates(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[liveEventId]),'/rpg-assets/characters/live/events/live_couch_sweater.png']
    :[liveArt];
   cgScenePresenter.show(entry,paths.map(path=>({kind:'event',path})),()=>{},()=>{});
