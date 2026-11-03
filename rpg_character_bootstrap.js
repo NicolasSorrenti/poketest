@@ -62,6 +62,7 @@
  "/rpg_bond_rewards.js",
  "/rpg_partner_decks.js",
  "/rpg_npc_deck_progression.js?v=lyla-legal-deck-20261031-1",
+ "/rpg_live_everyday_events.js?v=live-scenes-20261103",
  "/rpg_mandatory_events.js",
  "/rpg_season_events.js",
  "/rpg_audio.js",
