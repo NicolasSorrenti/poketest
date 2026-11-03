@@ -74,6 +74,9 @@ const REPEATABLE_LIVE_EVENTS=[
  ]}
 ];
 const REPEATABLE_LIVE_IDS=new Set(REPEATABLE_LIVE_EVENTS.map(event=>event.id));
+// All ordinary apartment moments can repeat; the first introduction is unique.
+const LIVE_ROTATING_EVENTS=[...LIVE_EVENTS.filter(event=>event.id!=='live_home_welcome'),...REPEATABLE_LIVE_EVENTS];
+const LIVE_ROTATING_IDS=new Set(LIVE_ROTATING_EVENTS.map(event=>event.id));
 const LIVE_EVENT_ART={"live_clothe_washing":"/rpg-assets/characters/live/events/live_clothe_washing.jpg","live_cleaning":"/rpg-assets/characters/live/events/live_cleaning.jpg","live_cooking":"/rpg-assets/characters/live/events/live_cooking.jpg","live_library":"/rpg-assets/characters/live/events/live_library.jpg","live_sweater_bra":"/rpg-assets/characters/live/events/live_sweater_bra.jpg","live_home_welcome":"/rpg-assets/characters/live/events/live_couch_sweater.png","live_home_cooking":"/rpg-assets/characters/live/events/live_cooking_evening.png","live_home_reading":"/rpg-assets/characters/live/events/live_reading.png","live_home_relaxing":"/rpg-assets/characters/live/events/live_relaxing_sofa.png","live_brushing_teeth":"/rpg-assets/characters/live/events/live_brushing_teeth.png","live_getting_ready":"/rpg-assets/characters/live/events/live_getting_ready.png","live_cleaning_table":"/rpg-assets/characters/live/events/live_cleaning_table.png","live_vacuuming":"/rpg-assets/characters/live/events/live_vacuuming.png","live_laundry":"/rpg-assets/characters/live/events/live_laundry.png","live_workout_break":"/rpg-assets/characters/live/events/live_workout_break.png","live_workout_exhausted":"/rpg-assets/characters/live/events/live_workout_exhausted.png","live_extra_exhaused_workout":"/rpg-assets/characters/live/events/live_extra_exhaused_workout.jpg","live_waking_up_casual":"/rpg-assets/characters/live/events/live_waking_up_casual.png","live_waking_up_lavender":"/rpg-assets/characters/live/events/live_waking_up_lavender.png"};
 
 // Glance milestones are independent of the rotating apartment encounters.
@@ -484,7 +487,7 @@ function maybeStartMandatory(){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   if(!m.active){
    const chosen=state.liveHomeActivityScene.id||LIVE_HOME_CHECKIN.id;
-   const id=REPEATABLE_LIVE_IDS.has(chosen)?chosen:LIVE_HOME_CHECKIN.id;
+   const id=LIVE_ROTATING_IDS.has(chosen)?chosen:LIVE_HOME_CHECKIN.id;
    delete m.seen[id]; // repeatable events may run again on another apartment activity
    m.active={id,phase:'lines',index:0,choice:null};
    state.liveHomeActivityScene.pending=false;
@@ -499,8 +502,18 @@ function maybeStartMandatory(){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   const lastLiveDay=Number(state.liveLastEventDay)||0;
   if(lastLiveDay!==state.day){
-   const due=LIVE_EVENTS.find(e=>e.earliestDay<=state.day&&!m.seen[e.id]&&MANDATORY.testPredicate(e.trigger,state));
+   const intro=LIVE_EVENTS.find(e=>e.id==='live_home_welcome'&&e.earliestDay<=state.day&&!m.seen[e.id]);
+   const available=LIVE_ROTATING_EVENTS.filter(e=>e.earliestDay<=state.day);
+   const previous=state.liveLastRotatingId;
+   const options=available.filter(e=>e.id!==previous);
+   const rotation=options.length?options[(Number(state.liveDailyRotationCount)||0)%options.length]:available[0];
+   const due=intro||rotation;
    if(due){
+    if(LIVE_ROTATING_IDS.has(due.id)){
+     delete m.seen[due.id];
+     state.liveLastRotatingId=due.id;
+     state.liveDailyRotationCount=(Number(state.liveDailyRotationCount)||0)+1;
+    }
     m.active={id:due.id,phase:'lines',index:0,choice:null};
     state.liveLastEventDay=state.day;
     persist();
@@ -654,7 +667,7 @@ function mandatoryAction(type,id){
    }
   }
   if(outcome){
-   if(REPEATABLE_LIVE_IDS.has(outcome.event.id)){
+   if(LIVE_ROTATING_IDS.has(outcome.event.id)){
     state.liveRepeatCounts=state.liveRepeatCounts||{};
     state.liveRepeatCounts[outcome.event.id]=(Number(state.liveRepeatCounts[outcome.event.id])||0)+1;
     state.liveHomeActivityScene=null;
@@ -710,7 +723,7 @@ if(homeActivity&&state.day<=90){
  const lastCG=state.liveHomeActivityScene?.cg||LIVE_EVENT_ART[previous];
  // Alternate ordinary check-ins with the five repeatable CG encounters.
  // The rotation is save-stable, avoids immediate repeats, and never consumes an extra period.
- const pool=[LIVE_HOME_CHECKIN.id,...REPEATABLE_LIVE_EVENTS.map(event=>event.id)];
+ const pool=[LIVE_HOME_CHECKIN.id,...LIVE_ROTATING_EVENTS.filter(event=>event.earliestDay<=state.day).map(event=>event.id)];
  const previousId=state.liveHomeLastSceneId;
  // Rotate through every scene before repeating, including laundry.
  let id=pool[(count-1)%pool.length];
