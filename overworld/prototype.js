@@ -171,11 +171,65 @@
     return;
   }
   let mapReady=false,pendingChibiMode=null,eyeLevelView=null;
+  let npcIndicators={};
+  const indicatorBadge=(id)=>{
+    const kind=npcIndicators[id];
+    if(kind!=='plan'&&kind!=='dialogue')return null;
+    const badge=document.createElement('span');
+    badge.className='neo-npc-indicator neo-npc-indicator-'+kind;
+    badge.textContent=kind==='plan'?'❗':'💬';
+    badge.setAttribute('aria-label',kind==='plan'?'Planned meeting':'Available conversation or event');
+    badge.setAttribute('aria-hidden','true');
+    return badge;
+  };
+  function syncNpcIndicators(){
+    for(const {p,button} of placementSpriteNodes){
+      button.querySelector(':scope > .neo-npc-indicator')?.remove();
+      const badge=indicatorBadge(p.id);
+      if(badge)button.prepend(badge);
+      const kind=npcIndicators[p.id];
+      button.title='Interact with '+person(p).name+(kind==='plan'?' · planned meeting':kind==='dialogue'?' · available event':'');
+      button.setAttribute('aria-label',button.title);
+    }
+    eyeLevelView?.setIndicators?.(npcIndicators);
+    if(mapReady)paint(); // Include badges in off-screen indicators too.
+  }
+  const npcBadgeStyle=document.createElement('style');
+  npcBadgeStyle.textContent=`
+    body.neo-overworld-embedded .anchor{overflow:visible!important}
+    body.neo-overworld-embedded .anchor>.neo-npc-indicator{
+      position:absolute;left:50%;top:0;transform:translate(-50%,-115%);
+      display:grid;place-items:center;min-width:30px;height:30px;padding:2px 5px;
+      border:2px solid #fff9;border-radius:999px;background:#23213fe8;
+      font:900 21px/1 system-ui;filter:drop-shadow(0 3px 5px #000a);
+      pointer-events:none;z-index:25;white-space:nowrap
+    }
+    body.neo-overworld-embedded .edge>.neo-npc-indicator{
+      position:absolute;right:-8px;top:-12px;min-width:22px;height:22px;
+      display:grid;place-items:center;border-radius:50%;background:#211e3fe8;
+      font:800 16px/1 system-ui;pointer-events:none
+    }
+    body.neo-overworld-dialogue .neo-npc-indicator{display:none!important}
+  `;
+  document.head.append(npcBadgeStyle);
   // When the parent RPG shows VN dialogue, preserve the location as a backdrop
   // but remove map NPC portraits, edge indicators and hotspots from the scene.
   // This message is only trusted from the same-origin parent of integrated mode.
   window.addEventListener('message',event=>{
     if(event.origin!==location.origin||event.source!==window.parent||!params.has('rpg-integration'))return;
+    if(event.data?.type==='neo-overworld-npc-indicators'){
+      // Ignore stale map / date updates during iframe navigation.
+      if(event.data.location!==sceneId||Number(event.data.day)!==Number(params.get('day'))||
+         Number(event.data.slot)!==Number(params.get('slot')))return;
+      const incoming=event.data.indicators;
+      npcIndicators={};
+      if(incoming&&typeof incoming==='object'&&!Array.isArray(incoming))
+       for(const [id,kind] of Object.entries(incoming))
+        if(/^[a-z][a-z0-9_]{0,39}$/.test(id)&&['plan','dialogue'].includes(kind))
+         npcIndicators[id]=kind;
+      if(mapReady)syncNpcIndicators();
+      return;
+    }
     if(event.data?.type==='neo-overworld-chibi-mode'){
       if(mapReady)setChibiMode(event.data.enabled===true);
       else pendingChibiMode=event.data.enabled===true;
@@ -348,7 +402,10 @@
       const ex=clamp(w/2+dx/ratio,margin,w-margin),ey=clamp(h/2+dy/ratio,top,h-bottom);
       const b=document.createElement('button');b.className='edge';b.style.left=ex+'px';b.style.top=ey+'px';b.title=`Find ${person(p).name}${p.previewKey?' · '+p.previewKey:''}`;b.setAttribute('aria-label',b.title);
       const img=document.createElement('img');if(chibiMode){loadChibi(img,p.id);}else{img.src=face(p);img.onerror=()=>{img.remove();b.insertAdjacentText('afterbegin',person(p).name[0])};}img.alt='';
-      const arrow=document.createElement('b');arrow.textContent=Math.abs(dx)>Math.abs(dy)?(dx>0?'›':'‹'):(dy>0?'⌄':'⌃');b.append(img,arrow);b.onclick=()=>focus(p);edges.appendChild(b);
+      const arrow=document.createElement('b');arrow.textContent=Math.abs(dx)>Math.abs(dy)?(dx>0?'›':'‹'):(dy>0?'⌄':'⌃');b.append(img,arrow);
+      const indicator=indicatorBadge(p.id);
+      if(indicator)b.append(indicator);
+      b.onclick=()=>focus(p);edges.appendChild(b);
     }
   }
   function focus(p){const pt=point(p);ox=camera.clientWidth/2-pt.x*zoom;oy=camera.clientHeight/2-(pt.y-60)*zoom;world.style.transition='transform .3s ease-out';paint();setTimeout(()=>world.style.transition='',320);}
@@ -474,6 +531,7 @@
     document.body.classList.remove('neo-eye-level');
   }
   mapReady=true;
+  syncNpcIndicators();
   if(pendingChibiMode!==null)setChibiMode(pendingChibiMode);
   window.__overworldPreview={map,placements,center,focus};
 })();
