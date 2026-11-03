@@ -549,3 +549,12 @@ Reviewed `base1-96`/`base4-124` (Double Colorless), `base1-97`/`base4-125` (Figh
 - No source discrepancy requiring a gameplay change was confirmed in this batch. No new tests, test files or CI changes were added. **Not verified end-to-end:** attachment flow and ownership, all typed-cost combinations, mixed special-Energy payments, external historical rulings, live browser/network behavior.
 
 Remaining Base Set Psychic/Water and their Base Set 2 equivalents are still outside this batch; this is 10 card IDs, not 10 fully certified effects.
+
+
+## Jungle Pidgeot Hurricane and nine other card printings — 2026-11-03
+
+Audited **ten catalog card IDs** (all partial, source-level only): `base1-101`/`base4-129` Psychic Energy, `base1-102`/`base4-130` Water Energy, `base2-8`/`base2-24`/`base4-14` Pidgeot, `base2-2`/`base2-18` Electrode, and `base2-1` Clefable. The per-effect ledger records each scope separately. No new test files or CI workflows were introduced.
+
+**Confirmed discrepancy fixed on main:** Jungle Pidgeot's Hurricane says, “Unless this attack Knocks Out the Defending Pokémon, return the Defending Pokémon and all cards attached to it to your opponent's hand.” [Limitless Jungle Pidgeot #8](https://limitlesstcg.com/cards/JU/8) and the equivalent Jungle #24 and Base Set 2 #14 printings corroborate the effect. `classic_attack_extensions.js` already resolves Hurricane to `bounceDefender:true`, but `headless_duel.js` only honored that return when `!jawClampLocks(g,1-side)`. This incorrectly conflated returning to hand with retreat/switch restrictions (WotC-era distinction documented in [old-school rules](https://pokemon1999.org/the-rules-of-old-school-pokemon/), including Murkrow's Mean Look example). The return-to-hand branch no longer checks `jawClampLocks`. Direct-to-main fix: [commit 3281bfe](https://github.com/NicolasSorrenti/poketest/commit/3281bfe495864a1661b0b185674a71c24b7c7d86).
+
+Also inspected: Pidgeot's fixed Wing Attack; Electrode's Tackle and Chain Lightning same-type Bench spread on both players' sides; Clefable's Metronome and Minimize compiler/decision paths; and the Psychic/Water Basic Energy cost/deck classification. **Not certified:** Hurricane's full knockout/promotion timeline, every locked-Active interaction, special Energy edge combinations, copied-attack limits, all historical rulings, and live client/network resolution. Existing CI results must be distinguished from focused Hurricane runtime verification.
