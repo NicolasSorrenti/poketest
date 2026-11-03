@@ -1389,7 +1389,12 @@ function projectedAttackValue(active,defender,turnSerial=0,benchCount=null){
     (active.gymAttackCooldown.index===null||active.gymAttackCooldown.index===i))continue;
   const dmg=estimatedDamage(attack,active,defender,benchCount),
     ko=knockoutChance(attack,active,defender,benchCount);
-  const impact=Math.min(dmg,hp)*1.05+ko*115+
+  // Confusion requires a successful coin flip before any attack resolves.
+  // The preparation and retreat forecasts must not value a hypothetical
+  // Confused attack as a guaranteed KO (or guaranteed damage). The status
+  // can be removed by a projected Full Heal Energy or evolution beforehand.
+  const confusionChance=active.status==='Confused'?.5:1;
+  const impact=(Math.min(dmg,hp)*1.05+ko*115)*confusionChance+
    (/Poison|Paraly|Sleep|Confus/i.test(attack.text||'')?10:0);
   best=Math.max(best,impact);
  }
