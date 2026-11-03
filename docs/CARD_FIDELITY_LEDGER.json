@@ -2372,13 +2372,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Quick Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Quick Attack coin bonus and Pin Missile four flips with 20 per heads: generic coin compiler and resolver source inspected; correctness of RNG/results not runtime checked. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-4 Jolteon attack: Quick Attack; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Pin Missile",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Quick Attack coin bonus and Pin Missile four flips with 20 per heads: generic coin compiler and resolver source inspected; correctness of RNG/results not runtime checked. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-4 Jolteon attack: Pin Missile; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         }
       ]
     },
@@ -2391,13 +2399,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Fetch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Fetch draws one card through draw-one effect; Comet Punch uses four coin tosses at 20 per heads; source inspected, no focused runtime check. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-5 Kangaskhan attack: Fetch; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Comet Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Fetch draws one card through draw-one effect; Comet Punch uses four coin tosses at 20 per heads; source inspected, no focused runtime check. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-5 Kangaskhan attack: Comet Punch; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         }
       ]
     },
@@ -2410,13 +2426,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Meditate",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Meditate adds 10 per defending damage counter; Invisible Wall power prevents incoming attack damage >=30 after weakness/resistance while retaining other effects. Source inspected; indirect damage and copied attacks remain unchecked. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-6 Mr. Mime attack: Meditate; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Invisible Wall",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Meditate adds 10 per defending damage counter; Invisible Wall power prevents incoming attack damage >=30 after weakness/resistance while retaining other effects. Source inspected; indirect damage and copied attacks remain unchecked. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-6 Mr. Mime power: Invisible Wall; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         }
       ]
     },
@@ -2429,13 +2453,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Boyfriends",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Boyfriends counts Nidoking in own play using team-name matching; Mega Punch 50 flat. Source inspection only; evolved/renamed Pokémon interactions not verified. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-7 Nidoqueen attack: Boyfriends; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Mega Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Boyfriends counts Nidoking in own play using team-name matching; Mega Punch 50 flat. Source inspection only; evolved/renamed Pokémon interactions not verified. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-7 Nidoqueen attack: Mega Punch; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         }
       ]
     },
@@ -2477,13 +2509,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Irongrip",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Irongrip 20 plus coin Paralyzed and Guillotine 50 flat; compiler matches printed conditions, reducer status application source inspected. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-9 Pinsir attack: Irongrip; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Guillotine",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Irongrip 20 plus coin Paralyzed and Guillotine 50 flat; compiler matches printed conditions, reducer status application source inspected. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-9 Pinsir attack: Guillotine; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         }
       ]
     },
@@ -2496,13 +2536,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Swords Dance",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Swords Dance next-turn Slash base override from 30 to 60 uses turnSerial+2 and active-unit state; Slash 30 flat; switching and timing require further verification. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-10 Scyther attack: Swords Dance; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Slash",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Swords Dance next-turn Slash base override from 30 to 60 uses turnSerial+2 and active-unit state; Slash 30 flat; switching and timing require further verification. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-10 Scyther attack: Slash; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         }
       ]
     },
@@ -2515,13 +2563,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Body Slam",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Body Slam 30 plus coin Paralyzed; Thick Skinned condition-prevention checks through CLASSIC_POWERS; statuses and suppression interactions remain unchecked. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-11 Snorlax attack: Body Slam; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Thick Skinned",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Body Slam 30 plus coin Paralyzed; Thick Skinned condition-prevention checks through CLASSIC_POWERS; statuses and suppression interactions remain unchecked. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-11 Snorlax power: Thick Skinned; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         }
       ]
     },
@@ -2534,13 +2590,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Quick Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Quick Attack coin bonus and Water Gun 30+ up to 20 extra from Energy not used toward printed cost; extra-energy compiler and attached card count inspected, complex DCE/typed allocation not verified. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-12 Vaporeon attack: Quick Attack; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Quick Attack coin bonus and Water Gun 30+ up to 20 extra from Energy not used toward printed cost; extra-energy compiler and attached card count inspected, complex DCE/typed allocation not verified. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-12 Vaporeon attack: Water Gun; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         }
       ]
     },
@@ -2553,13 +2617,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Venom Powder",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Venom Powder 10 and coin dual status source reviewed. Shift power stored selected type but effectiveCard ignored it; fixed in main (e85e50e7, 51768668). Shift's changed Pokémon type now affects combat and can be copied by other Shift users; historical persistence and target-selection edge cases still require runtime checks. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-13 Venomoth attack: Venom Powder; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review.",
+            "https://bulbapedia.bulbagarden.net/wiki/Venomoth_(Jungle)",
+            "https://forum.tcgone.net/t/br-two-observed-separate-bugs-with-pokemon-powers-on-jungle-set-cards-mr-mime-ju-6-ju-22-invisible-wall-and-venomoth-ju-13-ju-29-shift/17330"
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Shift",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Venom Powder 10 and coin dual status source reviewed. Shift power stored selected type but effectiveCard ignored it; fixed in main (e85e50e7, 51768668). Shift's changed Pokémon type now affects combat and can be copied by other Shift users; historical persistence and target-selection edge cases still require runtime checks. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-13 Venomoth power: Shift; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review.",
+            "https://bulbapedia.bulbagarden.net/wiki/Venomoth_(Jungle)",
+            "https://forum.tcgone.net/t/br-two-observed-separate-bugs-with-pokemon-powers-on-jungle-set-cards-mr-mime-ju-6-ju-22-invisible-wall-and-venomoth-ju-13-ju-29-shift/17330"
+          ]
         }
       ]
     },
@@ -2572,13 +2648,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Lure",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Lure owner-controlled opposing Bench selection and Active switch; Acid 20 plus coin no-retreat effect source inspected; attack switch restrictions and expiry interactions not fully checked. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-14 Victreebel attack: Lure; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Acid",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Lure owner-controlled opposing Bench selection and Active switch; Acid 20 plus coin no-retreat effect source inspected; attack switch restrictions and expiry interactions not fully checked. No new tests or CI additions.",
+          "evidence": [
+            "2026-11-03 Jungle batch: base2-14 Victreebel attack: Acid; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+          ]
         }
       ]
     },
