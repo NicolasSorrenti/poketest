@@ -1909,6 +1909,248 @@
           }
         }
       ]
+    },
+    {
+      "id": "lyla_random_payment_followup",
+      "npc": "lyla",
+      "title": "The Date on the Invoice",
+      "start": 27,
+      "end": 44,
+      "place": "center",
+      "slot": 1,
+      "minBond": 1,
+      "prerequisite": "lyla_random_late_invoice",
+      "participants": [],
+      "encounterType": "slice",
+      "trigger": "talk",
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "You meet Lyla in the modeling agency lobby. She has a folder of unpaid invoices under one arm and her scuffed deck case over her shoulder."
+        },
+        {
+          "speaker": "Agency Representative",
+          "text": "Accounting says they'll get back to you when they can."
+        },
+        {
+          "speaker": "lyla",
+          "text": "They've had the invoice for six weeks. 'When they can' isn't a payment date."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "The representative opens the ledger. Lyla doesn't raise her voice or leave the counter."
+        },
+        {
+          "speaker": "lyla",
+          "text": "Please write down the amount, the date you'll transfer it, and who I should contact if it doesn't arrive."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You had that ready."
+        },
+        {
+          "speaker": "lyla",
+          "text": "I practiced on the way here. I hate practicing lines that aren't for a camera."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "The representative prints a written confirmation. Outside, Lyla folds it carefully and tucks it into her bag beside a pack of card sleeves."
+        },
+        {
+          "speaker": "lyla",
+          "text": "I can be patient about a bad draw. Not about getting paid for work I already did."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her she handled it professionally",
+          "reply": "I was shaking a little. It's nice that you couldn't tell.",
+          "kind": "support",
+          "flag": "lyla_payment_followup_support",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Offer to help her track the payment date",
+          "reply": "Sure. You can remind me. I don't want to spend every afternoon thinking about invoices.",
+          "kind": "honest",
+          "flag": "lyla_payment_followup_tracking",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 2,
+            "attraction": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "lyla_random_revised_campaign",
+      "npc": "lyla",
+      "title": "The Revised Brief",
+      "start": 40,
+      "end": 58,
+      "place": "center",
+      "slot": 1,
+      "minBond": 2,
+      "prerequisite": "lyla_route_3",
+      "participants": [],
+      "encounterType": "slice",
+      "trigger": "talk",
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "A studio coordinator brings Lyla a revised campaign brief after the wardrobe fitting. The new styling is a fitted silver editorial dress, very different from the loose clothes she chooses for herself."
+        },
+        {
+          "speaker": "Coordinator",
+          "text": "Marketing wants to take the campaign in a bolder direction. We assumed you'd be fine with the change."
+        },
+        {
+          "speaker": "lyla",
+          "text": "You assumed. That's the part I don't like."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Lyla checks the sample against the revised shot list, then asks the team to pause before any photography begins."
+        },
+        {
+          "speaker": "lyla",
+          "text": "I can wear something outside my usual style. That doesn't mean you get to change the agreement without asking."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Do you want to leave?"
+        },
+        {
+          "speaker": "lyla",
+          "text": "Not yet. I want to know if they'll listen when I say what I'm actually comfortable with."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She marks the approved styling and poses on the brief. The coordinator agrees to remove the unapproved changes and sends the revision in writing."
+        },
+        {
+          "speaker": "lyla",
+          "text": "There. I still get to try something new. But it's my choice, not a surprise."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "Only after the written brief is corrected does Lyla step back toward the set. She looks a little nervous—and unmistakably pleased with herself."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Tell her being adventurous should be her choice",
+          "reply": "Exactly. You understood the difference without me explaining it twice.",
+          "kind": "support",
+          "flag": "lyla_revised_campaign_choice",
+          "delta": {
+            "affection": 1,
+            "trust": 2,
+            "respect": 1,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Ask whether she likes the final look",
+          "reply": "Actually... yes. It's strange seeing myself in something I wouldn't buy, but I chose it.",
+          "kind": "honest",
+          "flag": "lyla_revised_campaign_look",
+          "delta": {
+            "affection": 1,
+            "trust": 1,
+            "respect": 2,
+            "attraction": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "lyla_random_not_for_portfolio",
+      "npc": "lyla",
+      "title": "Not for the Portfolio",
+      "start": 65,
+      "end": 84,
+      "place": "center",
+      "slot": 1,
+      "minBond": 3,
+      "prerequisite": "lyla_route_5",
+      "participants": [],
+      "encounterType": "slice",
+      "trigger": "talk",
+      "lines": [
+        {
+          "speaker": "Narrator",
+          "text": "The studio has quieted after a long shoot. Lyla has changed back into her soft off-shoulder cat shirt and comfortable shorts, and sits beside you on the backstage couch."
+        },
+        {
+          "speaker": "lyla",
+          "text": "The photographer sent the contact sheet. The best picture isn't in the campaign."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "Why not?"
+        },
+        {
+          "speaker": "lyla",
+          "text": "Because it isn't selling anything."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She shows you a candid photograph: her hair is untidy, her deck is spread across her knees, and she's laughing at something you said while the cameras were supposedly off."
+        },
+        {
+          "speaker": "lyla",
+          "text": "Normally I delete pictures where I forget there's a camera. I asked for this one."
+        },
+        {
+          "speaker": "Protagonist",
+          "text": "You look happy."
+        },
+        {
+          "speaker": "lyla",
+          "text": "I was. I didn't have to be interesting or impressive for anybody."
+        },
+        {
+          "speaker": "Narrator",
+          "text": "She places the photograph between you, holding one corner rather than pulling it back."
+        },
+        {
+          "speaker": "lyla",
+          "text": "You can see it. Just don't let anyone put it in a portfolio. It's ours to remember, not theirs to sell."
+        }
+      ],
+      "choices": [
+        {
+          "label": "Promise to keep the photo between you",
+          "reply": "Good. I thought you'd understand why it matters.",
+          "kind": "support",
+          "flag": "lyla_private_photo_promise",
+          "delta": {
+            "affection": 2,
+            "trust": 2,
+            "respect": 0,
+            "attraction": 0
+          }
+        },
+        {
+          "label": "Tell her it's your favorite picture of her",
+          "reply": "Then I might have to keep it where I can see it too.",
+          "kind": "flirt",
+          "flag": "lyla_private_photo_favorite",
+          "delta": {
+            "affection": 2,
+            "trust": 1,
+            "respect": 0,
+            "attraction": 1
+          }
+        }
+      ]
     }
   ]
 }

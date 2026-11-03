@@ -294,6 +294,38 @@ test('Apex retains a guaranteed winning knockout instead of forcing attachment',
  const actions=AI.energyPreparationActions(o,cfg,[attack,attach]);
  assert.deepEqual(actions,[attack,attach]);
 });
+test('Apex keeps a PlusPower-funded final-Prize KO available before attaching Energy',()=>{
+ const o=board();
+ o.turnSerial=11;
+ o.self.prizeCount=1;
+ // Hitmonchan's Jab deals 20 to Machop, which has 30 HP left.
+ // An already attached PlusPower makes the current attack a certain KO.
+ o.opponent.active={id:MACHOP,energies:[],damage:20,status:null};
+ o.opponent.bench=[];
+ o.self.active.attachedTrainers=[{id:'base1-84',expires:12}];
+ const jab=require('../headless_duel').CATALOG.get(HITMONCHAN).attacks[0];
+ assert.equal(AI.knockoutChance(jab,o.self.active,o.opponent.active,1),0,
+  'printed Jab alone is ten short of the knockout');
+ assert.equal(AI.knockoutChance(jab,o.self.active,o.opponent.active,1,10),1,
+  'one existing PlusPower makes Jab a certain knockout');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attack,attach],
+  'Apex must not hide an immediate winning attack to prepare Bench Energy');
+ o.self.active.attachedTrainers[0].expires=11;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach],
+  'expired PlusPower must not produce a phantom guaranteed knockout');
+ o.self.active.attachedTrainers[0].expires=12;
+ o.self.active.status='Confused';
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach],
+  'Confusion makes the PlusPower-funded attack uncertain');
+ o.self.active.status=null;
+ o.classicRules=false;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,attach]),[attach],
+  'non-Classic rules must not inherit the Classic PlusPower modifier');
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),
+  [attack,attach]),[attack,attach],
+  'Level 7 action ordering remains unchanged');
+});
+
 test('Apex prepares useful Energy before a Confused final-Prize attack',()=>{
  const o=board();o.self.prizeCount=1;o.opponent.bench=[];o.opponent.active.damage=10;
  o.self.active.status='Confused';
@@ -1457,6 +1489,89 @@ test('Apex only spends PlusPower for an attack it can legally declare',()=>{
   'Level 7 retains its existing PlusPower evaluation');
 });
 
+test('Apex counts existing live PlusPower before scoring another',()=>{
+ const action={type:'play_trainer',payload:{handIndex:0}};
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+ o.self.hand=['base1-84']; // PlusPower
+ o.opponent.active={id:MACHOP,energies:[],damage:20,status:null};
+ // Machop has 30 HP left; Hitmonchan's 20-damage Jab needs one PlusPower.
+ const needed=AI.score(action,o,cfg,{});
+ const already=structuredClone(o);
+ already.self.active.attachedTrainers=[{id:'base1-84',expires:12}];
+ assert.ok(needed>AI.score(action,already,cfg,{})+200,
+  'a live PlusPower already supplies the 30-damage knockout');
+ // At 40 HP, the second PlusPower is necessary; the first alone is not.
+ const forty=structuredClone(o);
+ forty.opponent.active.damage=10;
+ const stacked=structuredClone(already);
+ stacked.opponent.active.damage=10;
+ assert.ok(AI.score(action,stacked,cfg,{})>AI.score(action,forty,cfg,{})+200,
+  'two live PlusPowers can unlock a knockout that one cannot');
+ const expired=structuredClone(already);
+ expired.self.active.attachedTrainers[0].expires=11;
+ assert.equal(AI.score(action,expired,cfg,{}),needed,
+  'an expired PlusPower does not count toward current damage');
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(action,already,lower,{}),AI.score(action,o,lower,{}),
+  'Level 7 retains its calibrated trainer scoring');
+});
+
+test('Apex credits live PlusPower when ranking an already-funded winning attack',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,classicRules:true});
+ o.self.prizeCount=1;
+ o.opponent.active={id:MACHOP,energies:[],damage:20,status:null};
+ o.opponent.bench=[];
+ // Jab deals 20, but Machop has 30 HP left. The attached PlusPower
+ // makes the attack a guaranteed final-Prize KO without spending a Trainer.
+ const live=structuredClone(o);
+ live.self.active.attachedTrainers=[{id:'base1-84',expires:12}];
+ assert.ok(AI.score(attack,live,cfg,{})>AI.score(attack,o,cfg,{})+120,
+  'attack scoring must recognize the existing 10 damage and knockout');
+ assert.ok(AI.prizeRaceBonus(attack,live,cfg)>AI.prizeRaceBonus(attack,o,cfg)+500,
+  'Prize-race urgency must recognize the funded match winner');
+ assert.ok(AI.knockoutTempoBonus(attack,live,cfg)>AI.knockoutTempoBonus(attack,o,cfg)+500,
+  'knockout tempo must recognize the funded match winner');
+ const confused=structuredClone(live);
+ confused.self.active.status='Confused';
+ assert.equal(AI.prizeRaceBonus(attack,confused,cfg),AI.prizeRaceBonus(attack,live,cfg)/2,
+  'Confusion must halve even a PlusPower-funded final-Prize KO probability');
+ assert.equal(AI.knockoutTempoBonus(attack,confused,cfg),AI.knockoutTempoBonus(attack,live,cfg)/2,
+  'knockout tempo must not treat a Confused attack as certain');
+ const expired=structuredClone(live);
+ expired.self.active.attachedTrainers[0].expires=11;
+ const nonClassic=structuredClone(live);
+ nonClassic.classicRules=false;
+ for(const invalid of [expired,nonClassic]){
+  assert.equal(AI.score(attack,invalid,cfg,{}),AI.score(attack,o,cfg,{}));
+  assert.equal(AI.prizeRaceBonus(attack,invalid,cfg),AI.prizeRaceBonus(attack,o,cfg));
+  assert.equal(AI.knockoutTempoBonus(attack,invalid,cfg),AI.knockoutTempoBonus(attack,o,cfg));
+ }
+ const lower=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(attack,live,lower,{}),AI.score(attack,o,lower,{}));
+ assert.equal(AI.prizeRaceBonus(attack,live,lower),AI.prizeRaceBonus(attack,o,lower));
+ assert.equal(AI.knockoutTempoBonus(attack,live,lower),AI.knockoutTempoBonus(attack,o,lower));
+});
+
+test('Apex counts two live PlusPowers when the first is not enough for a KO',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,classicRules:true});
+ o.self.prizeCount=1;
+ o.opponent.active={id:MACHOP,energies:[],damage:10,status:null};
+ o.opponent.bench=[];
+ // Machop has 40 HP left: Jab plus one PlusPower is only 30.
+ const one=structuredClone(o);
+ one.self.active.attachedTrainers=[{id:'base1-84',expires:12}];
+ const two=structuredClone(one);
+ two.self.active.attachedTrainers.push({id:'base1-84',expires:12});
+ assert.ok(AI.score(attack,two,cfg,{})>AI.score(attack,one,cfg,{})+120);
+ assert.equal(AI.prizeRaceBonus(attack,one,cfg),0);
+ assert.ok(AI.prizeRaceBonus(attack,two,cfg)>=550);
+ assert.equal(AI.knockoutTempoBonus(attack,one,cfg),0);
+ assert.ok(AI.knockoutTempoBonus(attack,two,cfg)>=550);
+});
+
 test('Apex values Full Heal Energy curing an Active into an immediate legal attack',()=>{
  const fullHeal='base5-81',potion='base5-82';
  const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
@@ -1651,4 +1766,205 @@ test('Apex two-turn Rage forecasts include Potion Energy healing on either turn'
   else assert.equal(potionValue,plainValue,
    'Potion must not reduce Rage damage for a healthy attacker');
  }
+});
+
+test('Apex immediate attachment scoring does not invent a Potion-funded Rage KO',()=>{
+ // Jungle Dodrio's Rage is 10 plus 10 per damage counter. With one
+ // two Colorless Energy already attached, either card below funds Rage, but
+ // Potion heals one counter before the attack and loses the 30-HP KO.
+ const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const make=(energy,damage)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',round:5,turnSerial:11});
+  o.self.active={id:'base2-34',energies:['base5-81','base5-81'],damage,status:null,playedTurn:2};
+  o.self.bench=[];
+  o.self.hand=[energy];
+  o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+  return o;
+ };
+ const potion='base5-82',neutral='base5-81';
+ const score=(energy,damage,config=cfg)=>
+  AI.score(attachActive,make(energy,damage),config,{});
+ assert.ok(score(neutral,20)>score(potion,20)+40,
+  'the actual 30-damage Rage KO must outrank Potion healing to 20 damage');
+ assert.equal(score(neutral,0),score(potion,0),
+  'a healthy Dodrio has no Rage damage or healing difference');
+ const level7=AI.configuration({side:1,level:7});
+ assert.equal(score(neutral,20,level7),score(potion,20,level7),
+  'the immediate-scoring correction is Apex-only');
+});
+
+test('Apex immediate attachment scoring includes Rainbow self-damage in Rage KO forecasts',()=>{
+ // Jungle Dodrio's Rage gains 10 damage per counter. Rainbow adds one
+ // counter before the attack, so 10 existing damage becomes a 30-damage KO
+ // against Rattata; Full Heal Energy only deals 20 without recoil.
+ const attachActive={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const make=(energy,damage)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',round:5,turnSerial:11});
+  o.self.active={id:'base2-34',energies:['base5-81','base5-81'],damage,status:null,playedTurn:2};
+  o.self.bench=[];
+  o.self.hand=[energy];
+  o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+  return o;
+ };
+ const rainbow='base5-80',neutral='base5-81';
+ const score=(energy,damage,config=cfg)=>
+  AI.score(attachActive,make(energy,damage),config,{});
+ assert.ok(score(rainbow,10)>score(neutral,10)+60,
+  'Rainbow recoil unlocks a real 30-damage Rage KO instead of only 20 damage');
+ assert.ok(score(rainbow,0)>score(neutral,0)+5,
+  'even a healthy Dodrio gains one Rage damage counter from Rainbow');
+ const level7=AI.configuration({side:1,level:7});
+ assert.equal(score(rainbow,10,level7),score(neutral,10,level7),
+  'lower difficulty attachment scoring remains unchanged');
+});
+
+test('Apex recognizes opposing live PlusPower before choosing a Potion rescue',()=>{
+ const potion='base5-82',activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const scenario=(expires,status=null,classicRules=true)=>{
+  const o=board();
+  Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false,classicRules});
+  // Our fully charged Hitmonchan has 30 HP remaining. The opponent's
+  // payable Jab deals 20, or 30 with its publicly attached PlusPower.
+  o.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT,FIGHT],damage:40,status:null};
+  o.self.hand=[potion];
+  o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status,
+   attachedTrainers:[{id:'base1-84',expires}]};
+  return o;
+ };
+ const live=scenario(12),expired=scenario(11);
+ assert.equal(AI.strongestUsableOpponentAttack(expired,expired.self.active),20,
+  'an expired PlusPower cannot inflate the opposing attack');
+ assert.equal(AI.strongestUsableOpponentAttack(live,live.self.active),30,
+  'a live opposing PlusPower is visible and raises its usable attack damage');
+ assert.ok(AI.score(activeAttach,live,cfg,{})>AI.score(activeAttach,expired,cfg,{})+100,
+  'Potion healing from 30 to 40 HP prevents a PlusPower-funded KO');
+ assert.deepEqual(AI.energyPreparationActions(live,cfg,[attack,activeAttach]),[activeAttach],
+  'Apex must heal before attacking when the opposing PlusPower threatens a KO');
+ assert.deepEqual(AI.energyPreparationActions(expired,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'expired PlusPower must not force a rescue');
+ const confused=scenario(12,'Confused');
+ assert.deepEqual(AI.energyPreparationActions(confused,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'Confusion reduces the opposing KO chance below the 75% threshold');
+ const nonClassic=scenario(12,null,false);
+ assert.equal(AI.strongestUsableOpponentAttack(nonClassic,nonClassic.self.active),20,
+  'non-Classic rules must not award a phantom PlusPower bonus');
+ assert.deepEqual(AI.energyPreparationActions(nonClassic,cfg,[attack,activeAttach]),
+  [attack,activeAttach],'non-Classic PlusPower must not force Potion setup');
+ const level7=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(activeAttach,live,level7,{}),
+  AI.score(activeAttach,expired,level7,{}),
+  'Level 7 attachment scoring remains unchanged');
+ assert.deepEqual(AI.energyPreparationActions(live,level7,[attack,activeAttach]),
+  [attack,activeAttach],'Level 7 action sequencing remains unchanged');
+});
+
+test('Apex prepares a fully charged Potion rescue before a non-winning attack',()=>{
+ const potion='base5-82',activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const o=board();
+ Object.assign(o,{phase:'game',turn:1,round:5,turnSerial:11,over:false});
+ o.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT,FIGHT],damage:50,status:null};
+ o.self.hand=[potion];
+ o.opponent.active={id:HITMONCHAN,energies:[FIGHT],damage:0,status:null};
+ assert.ok(AI.energyValue(o.self.active,potion)<=12,
+  'Potion adds no attack value to an already fully charged Hitmonchan');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[activeAttach],
+  'heal from 20 to 30 HP before attacking into a publicly ready 20-damage Jab');
+ o.self.active.damage=60;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[attack,activeAttach],
+  'do not force a Potion that still leaves the Active vulnerable to Jab');
+ o.self.active.damage=50;
+ o.self.prizeCount=1;
+ o.opponent.active.damage=50;
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[attack,activeAttach],
+  'a guaranteed last-Prize knockout may be taken without spending Potion');
+ o.self.prizeCount=3;
+ o.opponent.active.damage=0;
+ assert.deepEqual(AI.energyPreparationActions(o,AI.configuration({side:1,level:7}),[attack,activeAttach]),
+  [attack,activeAttach],'Level 7 preparation behavior remains unchanged');
+});
+
+test('Apex prepares Rainbow recoil for an already-funded Rage knockout',()=>{
+ // Jungle Dodrio has 20 HP left and a funded Rage. Rainbow leaves 10 HP,
+ // raises Rage from 60 to 70, and KOs Blastoise before its ready Hydro Pump
+ // can knock Dodrio out. Without recoil projection the stranded-Energy guard
+ // mistakenly penalizes the attachment by 140 and lets an attack end turn.
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ const CATALOG=require('../headless_duel').CATALOG;
+ const dodrioHp=Number(CATALOG.get('base2-34').hp);
+ const blastoiseHp=Number(CATALOG.get('base1-2').hp);
+ o.self.active={id:'base2-34',energies:['base5-81','base5-81','base5-81','base5-81'],
+  damage:dodrioHp-20,status:null};
+ o.self.hand=['base5-80']; // Rainbow Energy
+ o.self.bench=[{id:RATTATA,energies:[],damage:0}];
+ o.opponent.active={id:'base1-2',energies:['base1-102','base1-102','base1-102'],
+  damage:blastoiseHp-70,status:null};
+ o.opponent.bench=[{id:RATTATA,energies:[],damage:0}];
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ assert.ok(AI.strongestUsableOpponentAttack(o,o.self.active)>=20,
+  'Blastoise has a publicly funded knockout against the damaged Dodrio');
+ const after={...o.self.active,damage:o.self.active.damage+10,
+  energies:[...o.self.active.energies,'base5-80']};
+ assert.equal(AI.strongestAffordableAttack(o.self.active,o.opponent.active),60,
+  'funded Rage is ten short of a knockout before recoil');
+ assert.equal(AI.strongestAffordableAttack(after,o.opponent.active),70,
+  'Rainbow counter creates a certain immediate knockout');
+ const withBench=AI.score(activeAttach,o,cfg,{});
+ const noBench=structuredClone(o);
+ noBench.self.bench=[];
+ assert.equal(withBench,AI.score(activeAttach,noBench,cfg,{}),
+  'a real immediate KO must not be treated as Energy stranded on a doomed Active');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[activeAttach],
+  'prepare the Rainbow knockout before an attack ends the turn');
+ o.self.hand=['base5-81']; // Neutral Energy cannot add a Rage counter.
+ assert.ok(AI.score(activeAttach,noBench,cfg,{})-AI.score(activeAttach,o,cfg,{})>=130,
+  'ordinary surplus Energy remains stranded with a useful Bench available');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach]),[attack,activeAttach],
+  'do not force a surplus attachment with no KO upgrade');
+ const lower=AI.configuration({side:1,level:7});
+ o.self.hand=['base5-80'];
+ assert.deepEqual(AI.energyPreparationActions(o,lower,[attack,activeAttach]),[attack,activeAttach],
+  'Level 7 retains its original action ordering');
+});
+
+test('Apex avoids surplus Active Energy when lethal Poison checkup comes first',()=>{
+ const o=board();
+ Object.assign(o,{phase:'game',round:5,turnSerial:11});
+ // Hitmonchan has a funded Jab, but will faint to Poison after attacking.
+ // The opposing Rattata has no Energy, so opponent-KO-only threat checks miss it.
+ o.self.active={id:HITMONCHAN,energies:[FIGHT,FIGHT,FIGHT],
+  damage:60,status:null,poison:true,poisonDamage:10};
+ o.self.bench=[{id:MACHOP,energies:[],damage:0}];
+ o.self.hand=[FIGHT];
+ o.opponent.active={id:RATTATA,energies:[],damage:0,status:null};
+ const activeAttach={type:'attach_energy',payload:{handIndex:0,slot:-1}};
+ const benchAttach={type:'attach_energy',payload:{handIndex:0,slot:0}};
+ const noBench=structuredClone(o);
+ noBench.self.bench=[];
+ const strandedScore=AI.score(activeAttach,o,cfg,{});
+ assert.ok(AI.score(activeAttach,noBench,cfg,{})-strandedScore>=130,
+  'a lethal Poison checkup strands surplus Energy even against an unready opponent');
+ assert.ok(AI.score(benchAttach,o,cfg,{})>strandedScore,
+  'preserve the attachment for a surviving Bench attacker');
+ assert.deepEqual(AI.energyPreparationActions(o,cfg,[attack,activeAttach,benchAttach]),
+  [activeAttach,benchAttach],'prepare Bench Energy before the attack ends the turn');
+ // Full Heal removes Poison and Potion heals enough to survive a 10-damage tick.
+ for(const rescue of ['base5-81','base5-82']){
+  o.self.hand=[rescue];
+  const rescued=structuredClone(o);rescued.self.bench=[];
+  assert.equal(AI.score(activeAttach,o,cfg,{}),AI.score(activeAttach,rescued,cfg,{}),
+   'a real Full Heal/Potion rescue must not count as stranded Energy');
+ }
+ o.self.hand=[FIGHT];
+ o.self.active.damage=50;
+ assert.equal(AI.score(activeAttach,o,cfg,{}),AI.score(activeAttach,{
+  ...o,self:{...o.self,bench:[]}},cfg,{}),
+  'a nonlethal Poison tick is not a doomed-Active threat');
+ o.self.active.damage=60;
+ const level7=AI.configuration({side:1,level:7});
+ assert.equal(AI.score(activeAttach,o,level7,{}),
+  AI.score(activeAttach,{...o,self:{...o.self,bench:[]}},level7,{}),
+  'Level 7 preserves its prior Energy scoring');
 });

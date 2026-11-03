@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '22'
       - name: Focused CPU, campaign and hidden-information tests
-        run: node --test tests/cpu_deep_levels.test.js tests/rpg_cpu_champion.test.js
+        run: node --test tests/cpu_apex_energy_sequence.test.js tests/cpu_apex_computer_search_energy.test.js
   rpg-tiers:
     name: RPG tier ${{ matrix.tier }}, seed ${{ matrix.seed }}
     runs-on: ubuntu-latest

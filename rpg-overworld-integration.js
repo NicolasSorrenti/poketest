@@ -222,11 +222,13 @@
       ['✧ Save Game',()=>document.getElementById('save')?.click()],
       ['◇ Discreet / Chibi Mode',()=>{toggleChibiPreference();refresh();}],
       ['⌾ Travel',()=>openSheet('travel')],
-      ['← Original RPG',()=>dismiss()]
+      ['← Original RPG',()=>dismiss()],
+      ['↻ Reset Campaign',()=>{const reset=bridge()?.resetCampaign;if(typeof reset==='function')void reset();else showNotice('Campaign reset is not available. Reload the page and try again.');}]
     ];
     for(const [label,action] of menuItems){
       const button=document.createElement('button');button.type='button';button.textContent=label;
       button.style.cssText='display:block;text-align:left;width:100%;padding:13px 11px;margin:5px 0;border:1px solid #735881;border-radius:9px;background:#322743;color:white;font:600 14px system-ui;cursor:pointer';
+      if(label.includes('Reset Campaign')){button.style.borderColor='#d68da2';button.style.color='#ffd0db';button.style.marginTop='16px';button.title='Erase this RPG campaign and return to Day 1';}
       button.onclick=()=>{hideMenu();action();};menu.append(button);
     }
 
@@ -376,19 +378,23 @@
       }
       // Pose triggers wait for an explicit character interaction.
     }
-    async function playPoseTrigger(item){
+    async function playPoseTrigger(item,clickedSource=null){
       if(poseTriggerBusy||poseTriggerAwaitingDialogue||overlay.hidden||suspendedForDuel)return false;
       const data=bridge()?.snapshot();
       if(!data||data.locked||data.location!==item.scene||!data.people.includes(item.id))return false;
       poseTriggerBusy=true;
       try{
+        // The clicked image is authoritative. Use precisely the same source for
+        // chime, the selected interaction, and Glance rather than three paths.
+        const source=bridge()?.setVisiblePose?.(item.id,clickedSource)?clickedSource:item.src;
+        if(!bridge()?.setVisiblePose?.(item.id,source))throw Error('Unable to preserve the triggered pose');
         try{sessionStorage.setItem(item.key,'1')}catch{}
-        if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(item.src,{top:0,bottom:1,left:0,right:1},1450);
+        if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(source,{top:0,bottom:1,left:0,right:1},1450);
         const current=bridge()?.snapshot();
         if(!current||current.location!==item.scene||!current.people.includes(item.id)){try{sessionStorage.removeItem(item.key)}catch{}poseTriggersById.delete(item.id);return false}
         if(current.locked){try{sessionStorage.removeItem(item.key)}catch{}return false}
         interactionFocus=item.id;
-        if(!showStory()||!bridge()?.poseTriggerDialogue?.(item.id,item.src)){
+        if(!showStory()||!bridge()?.poseTriggerDialogue?.(item.id,source)){
           interactionFocus=null;hideStory();showNotice('This pose could not start its dialogue.');
           try{sessionStorage.removeItem(item.key)}catch{}
           poseTriggersById.delete(item.id);
@@ -1421,8 +1427,10 @@
         if(message.id==='activities'||message.id==='events'){hideMenu();if(message.id==='activities')showActivities(bridge()?.activities()||[]);else showEvents();return;}
       }
       if(message.kind==='person'){
+        // Capture the exact rendered sprite before conversation UI takes over.
+        bridge()?.setVisiblePose?.(message.id,message.src);
         const poseTrigger=poseTriggersById.get(message.id);
-        if(poseTrigger){void playPoseTrigger(poseTrigger);return}
+        if(poseTrigger){void playPoseTrigger(poseTrigger,message.src);return}
         // Capture the explicitly tapped NPC before the native engine renders.
         interactionFocus=message.id;
         if(!showStory())dismiss();

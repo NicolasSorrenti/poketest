@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '22'
       - name: Validate policy and experimental levels
-        run: node --test tests/cpu_deep_levels.test.js
+        run: node --test tests/cpu_apex_energy_sequence.test.js tests/cpu_apex_computer_search_energy.test.js
       - name: Paired and mirrored matches against RPG Champion
         if: matrix.benchmark == 'classic'
         run: node scripts/benchmark-cpu-advanced.js --level ${{ matrix.level }} --pairs 25 --max-turns 120 --fixtures 8

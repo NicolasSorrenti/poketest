@@ -234,6 +234,44 @@ window.NeoRpgErrorReport?.setContextProvider(()=>{
   location:state.location,selectedCharacter:state.selected,activeType:active?.[0]||null,
   eventId:active?.[1]?.id||null,phase:active?.[1]?.phase||null};
 });
+// Both the classic and new overworld UIs share one guarded campaign reset.
+let campaignResetBusy=false;
+async function resetCampaign(){
+ if(campaignResetBusy)return false;
+ const cloud=window.NeoRpgCloudSave;
+ // A cached session can still be reconnecting. Do not let an unsynced local
+ // reset be silently replaced by the former cloud campaign on reload.
+ if(localStorage.getItem('neoRpgCloudSessionV1')&&!cloud?.isSignedIn?.()){
+  alert('Your cloud account is still reconnecting. Please reconnect or sign out before resetting your campaign.');
+  return false;
+ }
+ const signedIn=!!cloud?.isSignedIn?.();
+ if(!confirm('Reset your entire RPG campaign and start again on Day 1? This erases your current season, character relationships, decks and progress'+
+  (signedIn?' and replaces your signed-in cloud save':'')+'. This cannot be undone.'))return false;
+ campaignResetBusy=true;
+ const previous=state;
+ const previousScene=scene;
+ try{
+  state=defaults();
+  state.deckJourney=COLLECT.fresh();
+  for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};
+  persist();
+  // Do not reload before the new snapshot reaches the cloud.
+  if(signedIn){
+   const synced=await cloud.syncForReset?.();
+   if(!synced)throw Error('The cloud save could not be updated. Your previous campaign has been preserved. Please check your connection and try again.');
+  }
+  location.reload();
+  return true;
+ }catch(error){
+  state=previous;
+  scene=previousScene;
+  persist();
+  window.NeoRpgErrorReport?.capture?.(error,{source:'campaign-reset',action:'resetCampaign'});
+  alert(error.message||'Campaign reset failed. Your previous progress was preserved.');
+  return false;
+ }finally{campaignResetBusy=false;}
+}
 function recordIntention(kind){const result=INTENTIONS.record(state,kind);if(result)log('Daily priority fulfilled: '+result.title+' ('+result.rewardLabel+').');}
 function recordCG(kind,npc,context=null){
  const entries=CG.record(state,kind,npc,context);
@@ -418,7 +456,48 @@ function advanceConversation(){
  if(scene.index===scene.dialogue.length-1&&scene.asideId)MEM?.markAside(state,scene.asideId);
  state.scene=scene;persist();render();
 }
+// Outcome first, then the clock wipe: rewards are saved independently of time.
+function activityBalance(npc=null){
+ const result={};
+ for(const key of ['credits','focus','insight','reputation','preparation'])
+  result[key]=Number(state[key])||0;
+ if(npc){
+  const bond=state.relationships?.[npc]||state.bonds?.[npc]||{};
+  for(const key of ['affection','trust','respect','attraction'])
+   result[key]=Number(bond[key])||0;
+ }
+ return result;
+}
+function activityOutcome(speaker,description,before=null,npc=null,bonus=[],periodsToAdvance=1,source='activity'){
+ const earned=[...bonus],spent=[];
+ if(before){
+  const after=activityBalance(npc);
+  const names={credits:'credits',focus:'focus',insight:'insight',reputation:'reputation',
+   preparation:'duel prep',affection:'affection',trust:'trust',respect:'respect',attraction:'attraction'};
+  for(const key of Object.keys(before)){
+   const diff=(after[key]||0)-before[key];
+   if(diff>0)earned.push('+'+diff+' '+names[key]);
+   else if(diff<0)spent.push(diff+' '+names[key]);
+  }
+ }
+ const rewards=before?'\n\nEarned: '+(earned.join(' · ')||'No stat gains')+(spent.length?'\nSpent: '+spent.join(' · '):''):'';
+ scene={speaker,line:description+rewards,choices:[['Continue ›','activityContinue']],
+  activityAdvance:{periods:periodsToAdvance,source}};
+ state.scene=scene;persist();render();
+}
+function finishActivityOutcome(){
+ if(!scene?.activityAdvance)return false;
+ const {periods:n,source}=scene.activityAdvance;
+ state.scene=scene={speaker:'Narrator',line:'',choices:[]};
+ state.sceneCgId=null;
+ persist();
+ advance(n,source);
+ // Keep headless clients working when the transition module is absent.
+ if(!timeSequence.blocked)render();
+ return true;
+}
 function closeSceneDialogue(){
+ if(scene?.activityAdvance){finishActivityOutcome();return;}
  if(state.activeSliceOfLife||state.activeSituation||state.activeStory||state.activeEncounter||state.activeArc||state.activeSideQuest||state.pendingDuel||state.mandatoryEventState?.active)return;
  // Keep the current character selected after casual dialogue so Duel and Deck actions remain accessible.
  if(!state.selected||!cast[state.selected]||!currentPeople().includes(state.selected))state.selected=null;
@@ -445,8 +524,40 @@ function travelTo(placeId,{intro=true}={}){
 }
 let overworldScenePortraits={participants:[],focused:null,conversation:false};
 let overworldRenderedDialogue='';
+// The map/eye-level iframe reports the exact image the player interacted with.
+const overworldClickedPoses=new Map();
+function visibleOverworldPose(id){
+ const pose=overworldClickedPoses.get(id);
+ return pose&&pose.day===state.day&&pose.slot===state.slot&&pose.location===state.location?pose.src:null;
+}
+// Source of truth if a scene was resumed or the click-pose cache expired:
+// read the currently rendered sprite from the live, same-origin overworld.
+function liveOverworldPose(id){
+ const overlay=document.getElementById('neoOverworldOverlay');
+ if(!overlay||overlay.hidden)return null;
+ const frame=overlay.querySelector('iframe[title="Current Neo Campus location"]');
+ let map;try{map=frame?.contentDocument}catch{return null}
+ if(!map)return null;
+ const idSelector='[data-character="'+CSS.escape(id)+'"]';
+ const eyeLevel=map.body?.classList.contains('neo-eye-level');
+ const image=map.querySelector(eyeLevel?
+  '#neoEyeLevelStage .neo-eye-character'+idSelector+' img':
+  '#world .anchor'+idSelector+' img.sprite');
+ const source=image?.currentSrc||image?.getAttribute('src')||null;
+ if(source&&window.NeoRpgOverworldBridge?.setVisiblePose(id,source))return visibleOverworldPose(id);
+ return null;
+}
 // Optional overworld adapter: the existing campaign remains authoritative.
 window.NeoRpgOverworldBridge=Object.freeze({
+ resetCampaign,
+ setVisiblePose(id,src){
+  if(!cast[id]||!currentPeople().includes(id)||typeof src!=='string')return false;
+  let url;try{url=new URL(src,location.href)}catch{return false}
+  if(url.origin!==location.origin||!url.pathname.startsWith('/rpg-assets/characters/'+id+'/')||
+     !/\.(?:png|webp|jpe?g)$/i.test(url.pathname))return false;
+  overworldClickedPoses.set(id,{src:url.pathname+url.search,day:state.day,slot:state.slot,location:state.location});
+  return true;
+ },
  scenePortraits(){return overworldScenePortraits;},
  dialogueText(){return overworldRenderedDialogue;},
  portrait(id){
@@ -463,6 +574,8 @@ window.NeoRpgOverworldBridge=Object.freeze({
  poseTriggerDialogue(id,src){
   if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id)||
      typeof src!=='string'||!src.startsWith('/rpg-assets/characters/'))return false;
+  // The trigger close-up and the next Glance share the same selected image.
+  if(!this.setVisiblePose(id,src))return false;
   state.selected=id;
   state.overworldPoseIntro={id,src,location:state.location,day:state.day,slot:state.slot};
   scene={speaker:cast[id].name,line:'Uh, sorry… Give me a minute…',
@@ -573,9 +686,14 @@ function planSharedActivity(id){
 
 async function glanceAt(id){
  if(!cast[id]||!currentPeople().includes(id)||typeof window==='undefined')return;
- let portrait=scenePortraitSource(id,'neutral',activeOutfitSceneId);
+ // Glance must show the same sprite the player clicked, not a random
+ // alternate from the crop catalog or a dialogue-expression portrait.
+ const clickedPose=liveOverworldPose(id)||visibleOverworldPose(id);
+ const overlay=document.getElementById('neoOverworldOverlay');
+ const inOverworld=!!window.NeoRpgOverworldStandalone||!!overlay&&!overlay.hidden;
+ let portrait=clickedPose||scenePortraitSource(id,'neutral',activeOutfitSceneId);
  const currentName=portrait.split('/').pop().split('?')[0];
- let focus=null,duration=1500;
+ let focus=null;
  try{
   const [activeResponse,topResponse,overworldResponse]=await Promise.all([
    fetch('/rpg-assets/outfit-chime-focus.json?v=20261030-glance-overworld-1'),
@@ -587,14 +705,17 @@ async function glanceAt(id){
   const overworld=overworldResponse.ok?await overworldResponse.json():null;
   const activeEntry=active?.characters?.[id]?.variants?.[currentName]||null;
   const isSpecial=/special-day-\d+\.|\/overworld-variants\//i.test(portrait);
-  if(activeEntry){focus=activeEntry;}
+  const overworldVariants=Object.values(overworld?.characters?.[id]?.variants||{});
+  const exact=overworldVariants.find(entry=>String(entry?.image||'').replace(/[?].*$/,'')===String(portrait).replace(/[?].*$/,''));
+  if(clickedPose){
+   // Crop metadata may shape the initial view but cannot replace this image.
+   focus=exact||activeEntry||{top:0,bottom:1,left:0,right:1};
+  }else if(activeEntry){focus=activeEntry;}
   // Normal glances use the exact exported source path and crop preset.
   // Special looks stay on the active stage image and active special crop.
-  if(!isSpecial){
-   // A deliberate “Glance at” uses the image-specific overworld crop preset.
-   // Arrival chimes never read this file, so entering a location keeps its normal framing.
-   const overworldVariants=Object.values(overworld?.characters?.[id]?.variants||{});
-   const exact=overworldVariants.find(entry=>String(entry?.image||'').replace(/[?].*$/,'')===String(portrait).replace(/[?].*$/,''));
+  if(!clickedPose&&!isSpecial&&!inOverworld){
+   // Only the old interface can choose a catalog default. In the overworld,
+   // missing pose information must not quietly show a different sprite.
    const exportedOverworld=exact||overworldVariants[0]||null;
    if(exportedOverworld?.image){
     // The deliberate glance always presents the prepared overworld crop.
@@ -608,10 +729,9 @@ async function glanceAt(id){
     if(exported?.image){portrait=exported.image;focus=exported;}
    }
   }
-  duration=Math.max(0,Number(active?.durationMs)||1500);
  }catch(_error){}
  const fallback={top:.06,bottom:.53,left:0,right:1};
- if(window.NeoOutfitChime?.display)await window.NeoOutfitChime.display(portrait,focus||fallback,duration);
+ if(window.NeoOutfitChime?.glance)await window.NeoOutfitChime.glance(portrait,focus||fallback);
 }
 function showEncounter(){
  const a=state.activeEncounter,e=a&&WORLD.byEncounter(a.id);
@@ -645,6 +765,8 @@ function finishEncounter(){
 function performActivity(id){
  if(state.activeStory||state.activeEncounter||state.activeArc||state.pendingDuel||state.day>90)return;
  if(WORLD.activitiesAt(state).some(x=>x.id===id&&!x.disabledReason)&&!confirmTimeAdvance())return;
+ const entry=WORLD.activitiesAt(state).find(a=>a.id===id);
+ const before=activityBalance(entry?.npc);
  let result;try{result=WORLD.doActivity(state,id,currentPeople());}
  catch(err){$('notice').textContent=err.message;return;}
  const place=state.location;
@@ -655,7 +777,9 @@ function performActivity(id){
   result.summary+=' You earned a '+COLLECT.SETS[set].name+' booster voucher to redeem at the card shop.';
  }
  log('Activity completed at '+places[place][0]+': '+result.summary);recordIntention('activity');
- advance();persist();say('Narrator',result.summary);tutorialEvent('activities');
+ activityOutcome('Narrator',result.summary,before,entry?.npc,
+  result.voucherSet==='latest'?['1 booster voucher']:[]);
+ tutorialEvent('activities');
 }
 
 
@@ -808,6 +932,7 @@ function act(action){
   if(type==='sliceChoice'&&SLICE.choose(state,Number(id))){persist();render();return;}
   if(type==='sliceNext')return nextSliceOfLife();return;
  }
+ if(type==='activityContinue')return finishActivityOutcome();
  if(type==='chatNext')return advanceConversation();
  if(type==='poseTriggerContinue'){
   const intro=state.overworldPoseIntro;
@@ -951,12 +1076,12 @@ function act(action){
   try{
    const available=SOCIAL.options(state,id,currentPeople(),cast).find(x=>x.id===part&&!x.disabledReason);
    if(available&&!confirmTimeAdvance())return;
+   const before=activityBalance(id);
    const outcome=SOCIAL.complete(state,id,part,currentPeople(),cast);
    log('Spent time with '+cast[id].name+': '+outcome.title+'.');
    recordIntention('hangout');
    const memories=recordCG('hangout',id);
-   advance();
-   say(cast[id].name,outcome.line);
+   activityOutcome(cast[id].name,outcome.line,before,id);
    showCGMoment(memories[0]);return;
   }catch(err){
    return sayCharacterChoiceMenu(id,'SPEND TIME',err.message,sharedActivityChoices(id));
@@ -996,13 +1121,13 @@ function act(action){
   if(!plan)return;
   const person=cast[plan.npc];
   try{
+   const before=activityBalance(plan.npc);
    const outcome=DATES.attend(state,number,currentPeople(),{appointments:APPOINTMENTS,social:SOCIAL,cast});
    recordIntention('appointment');
    log('Kept '+(outcome.tone==='romantic'?'a date':outcome.tone==='rivalry'?'a friendly challenge':'a friendship outing')+' with '+(person?.name||'a trainer')+'.');
    const memories=recordCG('appointment',plan.npc);
    if(!outcome.legacy)for(const cg of recordCG('hangout',plan.npc))if(!memories.some(x=>x.id===cg.id))memories.push(cg);
-   advance();
-   say(person?.name||'Trainer',outcome.line);
+   activityOutcome(person?.name||'Trainer',outcome.line,before,plan.npc);
    showCGMoment(memories[0]);return;
   }catch(err){$('notice').textContent=err.message;return;}
  }
@@ -1013,7 +1138,7 @@ function act(action){
  }
  if(type==='home'){travelTo('home');return;}
  if(type==='where'){const c=cast[id],visit=SCHEDULES.nextVisit(id,state.day,state.slot,[]);return say('Narrator',c.name+(visit?' is usually around '+places[visit.place][0]+' on day '+visit.day+', '+periods[visit.slot]+'.':' has no announced public visits in the coming week.'),options(id));}
- if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;if(!confirmTimeAdvance(n))return;advance(n,'sleep');return say('Narrator','You wake up to a new day in Neo Harbor.');}
+ if(type==='sleep'){if(state.location!=='home')return;const n=3-state.slot;if(!confirmTimeAdvance(n))return activityOutcome('Narrator','You settle in for the night. A new morning awaits.',null,null,[],n,'sleep');}
  if(type==='close'||type==='dismissDialogue')return closeSceneDialogue();
  if(type==='duel')return startDuel(id||state.selected,false);
  if(type==='partnerDeck'){
@@ -1036,7 +1161,7 @@ function act(action){
  if(type==='event'){const e=scheduleEvent();if(!e)return;return startDuel(exhibitionOpponents[e.day]||'reina',e);}
  if(type==='work')return performActivity('shop_shift');
  if(type==='practice')return state.location==='library'?performActivity('library_research'):state.location==='center'?performActivity('center_scrimmage'):performActivity('home_reflect');
- if(type==='rest'){if(state.day>90||!confirmTimeAdvance())return;advance();return say('Narrator','You take a break. Other lives in the town carry on.');}
+ if(type==='rest'){if(state.day>90||!confirmTimeAdvance())return activityOutcome('Narrator','You take a break. Other lives in the town carry on.');}
  if(type==='replay'){
   if(!EPILOGUE.completed(state)||mandatoryClosureDue())return;
   if(confirm('Start New Game+? Your completed season report will be archived. Relationships, standings and credits will reset.')){
@@ -1044,7 +1169,7 @@ function act(action){
   }
   return;
  }
- if(type==='new'){if(confirm('Start a new season? This overwrites this browser save.')){state=defaults();state.deckJourney=COLLECT.fresh();for(const id of Object.keys(cast))state.bonds[id]={affection:0,trust:0,duels:0};persist();location.reload();}return;}
+ if(type==='new')return resetCampaign();
  if(!cast[id]||!currentPeople().includes(id))return say('Narrator','They have already moved on. Try another time.');
  const c=cast[id],bond=state.bonds[id],key=atKey(id);
  if(type==='talk'){
@@ -1251,11 +1376,9 @@ function purchaseBoosterPack(packId,useVoucher=false){
   const opened=state.deckJourney?.lastPack;
   const name=COLLECT.THEMED_PACKS?.find(x=>x.id===opened?.theme)?.name||
    COLLECT.SETS[packId]?.name||'Booster';
-  const welcome=opened?.kind==='welcome';
   log('Opened '+name+' booster: '+cards.map(labelCard).join(', ')+'.');
   persist();
-  // Leave the shop open underneath the reveal, so buying another pack needs no re-entry.
-  say('Card Shop',(welcome?'Your welcome ':'Your ')+name+' booster is ready! Reveal your cards, then use the Deck Studio to improve your deck.');
+  // The reveal is the confirmation. No blocking conversation behind the shop.
   showPackReveal();
  }catch(e){
   $('boosterShopStatus').textContent=e.message;

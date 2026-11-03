@@ -1,7 +1,7 @@
 // Blocking, data-driven overworld close-ups. Never creates replacement artwork.
 const NeoOutfitChime=(()=>{
  const focusUrl='/rpg-assets/outfit-chime-focus.json?v=20261028-akari-day5-tight-crop-2';
- let focusPromise=null,visible=null,timer=null;
+ let focusPromise=null,visible=null,timer=null,panzoom=null;
  const load=()=>focusPromise||(focusPromise=new Promise(resolve=>{const timeout=setTimeout(()=>resolve(null),1500);fetch(focusUrl,{cache:'force-cache'}).then(r=>r.ok?r.json():null).catch(()=>null).then(data=>{clearTimeout(timeout);resolve(data);});}));
  load();
  function firstMeetingFocus(id){return id==='hana'?{top:.31,bottom:.53,left:.20,right:.90}:{top:.06,bottom:.53};}
@@ -11,7 +11,7 @@ const NeoOutfitChime=(()=>{
   style.textContent='@keyframes neoOutfitChimeFade{from{opacity:0}to{opacity:1}}@keyframes neoOutfitChimeEnter{from{opacity:0;transform:translateX(110%) skewX(-9deg)}to{opacity:1;transform:translateX(0) skewX(0)}}@keyframes neoOutfitChimeExit{from{opacity:1;transform:translateX(0) skewX(0)}to{opacity:0;transform:translateX(110%) skewX(-9deg)}}@media(max-width:620px){.neo-outfit-chime-group{flex-direction:column!important;gap:10px!important;max-height:94dvh}.neo-outfit-chime-card{max-height:39dvh}}@media(prefers-reduced-motion:reduce){.neo-outfit-chime,.neo-outfit-chime-panel{animation:none!important}}';
   document.head.append(style);
  }
- function cancel(){if(timer)clearTimeout(timer);timer=null;visible?.remove();visible=null;}
+ function cancel(){if(timer)clearTimeout(timer);timer=null;panzoom?.destroy();panzoom=null;visible?.remove();visible=null;}
  function cropBounds(focus,img){
   const left=Math.max(0,Math.min(.8,Number(focus?.left??0)));
   const right=Math.max(left+.12,Math.min(1,Number(focus?.right??1)));
@@ -142,6 +142,38 @@ const NeoOutfitChime=(()=>{
   positionCropImage(img,viewport,crop);
   await slideOutAfter(screen,panel,duration);
  }
+ // Deliberate Glance stays open until closed; normal entry chimes still auto-dismiss.
+ async function glance(portrait,focus){
+  if(!portrait||typeof document==='undefined')return;
+  cancel();
+  const img=await loadPortrait(portrait);
+  if(!img)return;
+  const screen=document.createElement('div');screen.className='neo-outfit-glance-viewer';
+  screen.setAttribute('role','dialog');screen.setAttribute('aria-modal','true');screen.setAttribute('aria-label','Character close-up');
+  screen.style.cssText='position:fixed;inset:0;z-index:2147481000;display:flex;align-items:center;justify-content:center;padding:12px;background:#060a1be8';
+  const panel=document.createElement('div');
+  panel.style.cssText='width:min(94vw,640px);max-height:92dvh;display:flex;flex-direction:column;overflow:hidden;border:2px solid #fad59dd9;border-radius:17px;background:#151426;box-shadow:0 15px 65px #000d';
+  const toolbar=document.createElement('div');
+  toolbar.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 13px;color:#ffe3ef;font:700 12px system-ui';
+  const title=document.createElement('span');title.textContent='DRAG TO MOVE · PINCH OR SCROLL TO ZOOM';
+  const close=document.createElement('button');close.type='button';close.textContent='✕ Close';close.setAttribute('aria-label','Close glance');
+  close.style.cssText='padding:8px;border:1px solid #b78ca8;border-radius:9px;background:#43283e;color:white;cursor:pointer;font:700 13px system-ui';
+  toolbar.append(title,close);
+  const viewport=document.createElement('div');
+  viewport.style.cssText='position:relative;width:100%;height:min(70dvh,580px);min-height:220px;overflow:hidden;background:radial-gradient(ellipse at center,#403147,#12111e)';
+  img.style.cssText='position:absolute;max-width:none';img.alt='Character close-up';
+  viewport.append(img);
+  const footer=document.createElement('div');footer.textContent='Use Fit to show the entire image';
+  footer.style.cssText='padding:7px;text-align:center;color:#d6c3e0;font:12px system-ui';
+  panel.append(toolbar,viewport,footer);screen.append(panel);document.body.append(screen);visible=screen;
+  const closeViewer=()=>{if(visible===screen)cancel();};
+  close.onclick=closeViewer;
+  screen.addEventListener('pointerdown',e=>{if(e.target===screen)closeViewer();});
+  screen.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeViewer();}});
+  if(window.NeoRpgImagePanzoom)panzoom=window.NeoRpgImagePanzoom.mount(viewport,img,{focus,maxZoom:6});
+  window.dispatchEvent(new CustomEvent('neo-rpg-art-seen',{detail:{path:portrait}}));
+  close.focus();
+ }
  async function onEntry({characters=[],firstMeetings=[],blocked=false,sceneId=null}={}){
   if(blocked||sceneId)return;
   // Never let optional crop metadata delay or suppress the actual reveal.
@@ -181,7 +213,7 @@ const NeoOutfitChime=(()=>{
    if(item?.portrait&&!outfitIds.has(item.id))await display(item.portrait,firstMeetingFocus(item.id),durationMs);
   }
  }
- const api=Object.freeze({onEntry,cancel,renderPreview,displayTogether,display,firstMeeting:({portrait,id})=>display(portrait,firstMeetingFocus(id),1500)});
+ const api=Object.freeze({onEntry,cancel,renderPreview,displayTogether,display,glance,firstMeeting:({portrait,id})=>display(portrait,firstMeetingFocus(id),1500)});
  if(typeof window!=='undefined')window.NeoOutfitChime=api;
  return api;
 })();

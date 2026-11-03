@@ -156,6 +156,7 @@ window.NeoOverworldEyeLevel = (() => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'neo-eye-character';
+      button.dataset.character = p.id;
       button.title = 'Interact with ' + (profile?.name || p.id);
       button.setAttribute('aria-label', button.title);
       const img = document.createElement('img');
@@ -171,7 +172,7 @@ window.NeoOverworldEyeLevel = (() => {
       button.append(img, fallback, name);
       button.addEventListener('click', event => {
         if (suppressClick) { event.preventDefault(); return; }
-        openPerson(p);
+        openPerson(p,img.currentSrc||img.getAttribute('src')||art?.src||'');
       });
       cast.append(button);
       sprites.push({p,art,button,img});
