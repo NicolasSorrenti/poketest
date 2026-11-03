@@ -246,7 +246,10 @@ function powerPlan(g,plan,h){
   if(choose('prize',indices(p.prizes,()=>true,'prize'),'Choose a face-down Prize position to exchange'))return;
  }
  if(name==='Shift'){
-  const types=[...new Set(g.players.flatMap(player=>own(player).filter(x=>x!==u).flatMap(x=>card(x.id).types||[])))].filter(t=>t!=='Colorless');
+  // Shift copies the actual type of another Pokémon currently in play.
+  // A previously shifted Venomoth is no longer necessarily Grass.
+  const types=[...new Set(g.players.flatMap(player=>own(player).filter(x=>x!==u).flatMap(x=>
+   card(x.id).name==='Venomoth'&&x.shiftType?[x.shiftType]:(card(x.id).types||[]))))].filter(t=>t!=='Colorless');
   if(choose('type',types.map((t,i)=>({id:`type:${i}`,label:t})),'Choose a Pokémon type'))return;
   d.shiftType=types[selected(plan,'type')[0]];
  }
