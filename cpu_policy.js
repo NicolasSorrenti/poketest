@@ -1310,7 +1310,16 @@ function score(a,o,cfg,used){
   // Active, but do not sacrifice an immediate winning attack to flee.
   const oldDamage=strongestAffordableAttack(before,q.active,p.bench.length);
   const newDamage=strongestAffordableAttack(to,q.active,p.bench.length);
-  const lethalOwn=oldDamage>=hpRemaining(q.active)&&hpRemaining(q.active)>0;
+  // A printed, payable KO is not necessarily usable: Amnesia and Gym
+  // restrictions can block that attack, and coin-dependent attacks are not
+  // guaranteed. Do not penalize a defensive retreat by 300 for a phantom KO.
+  const lethalOwn=cfg.level===8?
+   hpRemaining(q.active)>0&&
+   (before.effectiveAttacks||card(before.id)?.attacks||[]).some((attack,index)=>
+    eligibleAttack(o,before,attack,index)&&
+    knockoutChance(attack,before,q.active,p.bench.length,
+     livePlusPowerBonus(o))*(before.status==='Confused'?.5:1)>=.999):
+   oldDamage>=hpRemaining(q.active)&&hpRemaining(q.active)>0;
   const counter=cfg.level===8?strongestUsableOpponentAttack(o,before):
    strongestAffordableAttack(q.active,before,q.bench.length);
   const counterTo=cfg.level===8?strongestUsableOpponentAttack(o,to):
