@@ -200,7 +200,7 @@ function liveFollowupContent(){
 }
 function liveCanRepeat(){
  const last=Number(state.liveRepeatLastDay)||0;
- return !!state.mandatoryEventState?.seen?.live_glance_next_morning&&state.slot===0&&
+ return !!(state.mandatoryEventState?.seen?.live_glance_next_morning||state.liveSpecialSeen?.live_glance_next_morning)&&state.slot===0&&
   (!last||state.day>=last+6);
 }
 const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
@@ -649,6 +649,14 @@ function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(!a||!e)return null;
  if(a.phase==='lines'){
+  if(e.id===LIVE_DAY_FOLLOWUP.id){
+   const follow=liveFollowupContent();
+   return {speaker:follow.speaker,line:follow.text,choices:[['Continue ›','mandatoryNext']]};
+  }
+  if(e.id===LIVE_REPEAT_MORNING.id){
+   const line=e.lines[a.index]||e.lines.at(-1);
+   return {speaker:line.speaker,line:line.text,choices:[['Continue ›','mandatoryNext']]};
+  }
   if(e.id===LIVE_LYLA_PHOTO_EVENT.id){
    const line=e.lines[a.index]||e.lines.at(-1);
    return {speaker:line.speaker==='Protagonist'?'You':line.speaker,line:line.text,
@@ -663,12 +671,20 @@ function renderMandatory(){
    const line=e.lines[a.index]||e.lines.at(-1);
    return {speaker:line.speaker,line:line.text,choices:[['Continue ›','mandatoryNext']]};
   }
-  const line=e.lines[a.index]||e.lines[e.lines.length-1];
+  const original=e.lines[a.index]||e.lines[e.lines.length-1];
+  const cooling=LIVE_ROTATING_IDS.has(e.id)&&Number(state.liveRepeatLastDay)>0&&
+    state.day>state.liveRepeatLastDay&&state.day<=state.liveRepeatLastDay+5;
+  const line=cooling&&original.speaker==='Live'&&a.index===1
+   ?{speaker:'Live',text:liveFollowupContent().text}:original;
   const name=line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker;
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
   return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice'){
+  if(e.id===LIVE_DAY_FOLLOWUP.id)
+   return {speaker:'Live',line:liveFollowupContent().text,choices:[['See you later ›','mandatoryChoice:0']]};
+  if(e.id===LIVE_REPEAT_MORNING.id)
+   return {speaker:'Narrator',line:'The morning passes quietly.',choices:[['Continue ›','mandatoryChoice:0']]};
   if(e.id===LIVE_LYLA_PHOTO_EVENT.id)return {speaker:'Live',line:e.lines.at(-1).text,
    choices:e.choices.map((choice,index)=>[choice.label,'mandatoryChoice:'+index])};
   if(e.id==='live_glance_next_morning')
@@ -681,6 +697,8 @@ function renderMandatory(){
   return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line:mandatoryText(last?.text||''),choices:LIVE_EVENT_ART[e.id]?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
  }
  const choice=e.choices[a.choice];
+ if(e.id===LIVE_REPEAT_MORNING.id)return {speaker:'Narrator',line:choice?.reply||'',choices:[['Continue ›','mandatoryFinish']]};
+ if(e.id===LIVE_DAY_FOLLOWUP.id)return {speaker:'Live',line:choice?.reply||'',choices:[['Leave now ›','mandatoryFinish']]};
  if(e.id===LIVE_LYLA_PHOTO_EVENT.id)return {speaker:'Live',line:choice?.reply||'',
   choices:[['Continue ›','mandatoryFinish']]};
  if(LIVE_SPECIAL_IDS.has(e.id)){
@@ -692,7 +710,10 @@ function renderMandatory(){
  const responseActor=[...e.lines].reverse().find(line=>cast[line.speaker])?.speaker;
  const remoteReply=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
  const actorName=cast[e.characterId]?.name||e.characterId;
- return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]?[['Leave now ›','mandatoryFinish'],['◉ Glance at Live','mandatoryGlance']]:[['Continue story ›','mandatoryFinish']]};
+ return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]?
+  [['Leave now ›','mandatoryFinish'],['◉ Glance at Live','mandatoryGlance'],
+   ...(liveCanRepeat()?[["Ask Live to spend another private morning together",'mandatoryRepeatLive']]:[])]:
+  [['Continue story ›','mandatoryFinish']]};
 }
 function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;
@@ -710,6 +731,17 @@ function mandatoryAction(type,id){
    if(state.liveGlanceCount>=30&&!state.liveThirtyGlancesDay)state.liveThirtyGlancesDay=state.day;
   }
  }
+ else if(type==='mandatoryRepeatLive'){
+  const activeId=state.mandatoryEventState.active.id;
+  if(!liveCanRepeat()||!LIVE_ROTATING_IDS.has(activeId)||state.mandatoryEventState.active.phase!=='response')return true;
+  const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
+  if(!outcome)return true;
+  state.liveRepeatCounts=state.liveRepeatCounts||{};
+  state.liveRepeatCounts[activeId]=(Number(state.liveRepeatCounts[activeId])||0)+1;
+  state.liveHomeActivityScene=null;
+  state.mandatoryEventState.active={id:LIVE_REPEAT_MORNING.id,phase:'lines',index:0,choice:null};
+  persist();render();return true;
+ }
  else if(type==='mandatoryGlance'){
   const activeId=state.mandatoryEventState.active.id;
   const cg=liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(activeId);
@@ -719,15 +751,26 @@ function mandatoryAction(type,id){
   if(typeof window.NeoOutfitChime?.glance!=='function')return true;
   const isFirstSpecial=activeId==='live_glance_talk_one';
   if(isFirstSpecial&&state.liveFirstCouchGlanced)return true;
-  state.liveGlanceCount=(Number(state.liveGlanceCount)||0)+1;
-  state.liveGlancesByEvent=state.liveGlancesByEvent||{};
-  state.liveGlancesByEvent[activeId]=(Number(state.liveGlancesByEvent[activeId])||0)+1;
+  // A returning visitor can view the same CG again, but a unique daily
+  // scene counts once, and no period can grant more than one glance.
+  const ledger=state.liveGlanceLedger?.day===state.day?state.liveGlanceLedger:
+   {day:state.day,slots:[],events:[]};
+  state.liveGlanceLedger=ledger;
+  const baseId=activeId===LIVE_DAY_FOLLOWUP.id?state.liveDayScene?.id||activeId:activeId;
+  const canCount=!ledger.slots.includes(state.slot)&&!ledger.events.includes(baseId);
+  if(canCount){
+   ledger.slots.push(state.slot);
+   ledger.events.push(baseId);
+   state.liveGlanceCount=(Number(state.liveGlanceCount)||0)+1;
+   state.liveGlancesByEvent=state.liveGlancesByEvent||{};
+   state.liveGlancesByEvent[baseId]=(Number(state.liveGlancesByEvent[baseId])||0)+1;
+  }
   if(isFirstSpecial)state.liveFirstCouchGlanced=true;
-  if(state.liveGlanceCount>=30&&!state.liveThirtyGlancesDay)
+  if(canCount&&state.liveGlanceCount>=30&&!state.liveThirtyGlancesDay)
    state.liveThirtyGlancesDay=state.day;
   const previousMilestone=state.liveFirstConversationGlanceCount||0;
   let milestone=null;
-  if(!LIVE_SPECIAL_IDS.has(activeId)){
+  if(canCount&&!LIVE_SPECIAL_IDS.has(activeId)){
    if(!state.liveSpecialSeen?.live_glance_talk_one&&state.liveGlanceCount>=6)
     milestone='live_glance_talk_one';
    else if(state.liveSpecialSeen?.live_glance_talk_one&&!state.liveSpecialSeen?.live_glance_talk_two&&
@@ -770,6 +813,12 @@ function mandatoryAction(type,id){
  else if(type==='mandatoryFinish'){
   const activeId=state.mandatoryEventState.active.id;
   const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
+  if(outcome&&activeId===LIVE_REPEAT_MORNING.id){
+   state.liveRepeatLastDay=state.day;
+   state.focus=Math.min(100,(Number(state.focus)||0)+5);
+   log('A restorative morning with Live: +5 focus. Live needs five days to recover.');
+   if(state.slot===0)advance(1,'live_repeat_morning');
+  }
   if(outcome&&LIVE_SPECIAL_IDS.has(activeId)){
    if(activeId==='live_glance_next_morning'){
     state.liveSpecialSeen={...(state.liveSpecialSeen||{}),live_glance_next_morning:true};
