@@ -130,6 +130,12 @@ function effectiveCard(g,u){
  // Clefairy Doll is printed and held as a Trainer, but becomes a Basic
  // Pokémon only after the Trainer effect puts it into play.
  if(printed.name==='Clefairy Doll')printed={...printed,supertype:'Pokémon',subtypes:['Basic']};
+ // Jungle Venomoth's Shift changes its in-play Pokémon type, not its attack
+ // cost/type. The chosen type is a resolved Power effect and persists even
+ // when Venomoth later becomes Paralyzed or moves to the Bench; disabling
+ // the Power prevents activation, not a previously resolved type change.
+ if(isClassicRules(g)&&printed.name==='Venomoth'&&u.shiftType)
+  printed={...printed,types:[u.shiftType]};
  // Neo Revelation Lanturn becomes Water until turn end while Submerge stays
  // active. The modified type must be used by combat/attack calculations.
  if(isClassicRules(g)&&u.submergeUntil>g.turnSerial&&
