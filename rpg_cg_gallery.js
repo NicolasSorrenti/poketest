@@ -19,7 +19,7 @@
   "title": "The Shop's Warm Welcome",
   "hint": "Meet Hana while visiting the neighborhood card scene.",
   "scene": "A welcoming moment behind the Lucky Draw counter; Hana offers the protagonist a neatly sleeved starter card.",
-  "composition": "Three-quarter medium shot, shop shelves softly receding; negative space at lower fifth for VN dialogue.",
+  "composition": "Three-quarter medium shot, shop shelves softly receding; natural framing.",
   "outfit": "Mint-green floral varsity jacket, white lace-trimmed top, denim shorts, cream hair bow, flower pins and shop lanyard.",
   "expression": "Bright sincere smile with a playful hint of nerves.",
   "environment": "Warm shop lighting; card binders, deck boxes, welcoming handmade signage.",
@@ -27,7 +27,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/hana_first_meeting.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/hana_first_meeting.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "hana",
@@ -41,7 +41,7 @@
   "title": "One More Match?",
   "hint": "Challenge Hana at the Lucky Draw after getting to know her.",
   "scene": "Hana sits at a trading table, checking the top card of her sleeved deck and looking up, delighted by the challenge.",
-  "composition": "Diagonal table-level three-quarter shot; clearly show deck box and her free hand, leaving lower fifth clear.",
+  "composition": "Diagonal table-level three-quarter shot; clearly show deck box and her free hand, leaving using the full frame.",
   "outfit": "Mint-green floral varsity jacket with rolled-up white sleeves, lace-trimmed white top, denim shorts, cream bow, flower pins and shop lanyard.",
   "expression": "Excited competitive smile, eye contact with player.",
   "environment": "Busy card shop after school hours, warm side lighting; tabletop playmat with no readable card text.",
@@ -49,7 +49,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/hana_shop_challenge.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/hana_shop_challenge.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "hana",
@@ -63,7 +63,7 @@
   "title": "Flyers and Riverside Breezes",
   "hint": "Spend time with Hana at the waterfront after establishing a friendship.",
   "scene": "Hana sits beside the player on a riverside picnic blanket, sorting community-event flyers between laughter.",
-  "composition": "Wide seated composition, character mid-right, river and silhouettes on left; dialogue-safe bottom.",
+  "composition": "Wide seated composition, character mid-right, river and silhouettes on left; full-frame composition.",
   "outfit": "Mint-green floral varsity jacket tied comfortably at the waist over her white top, practical denim shorts and sneakers; cream hair bow and daisy clips.",
   "expression": "Open laughter, relaxed and unguarded.",
   "environment": "Tree shade, riverboats at distance, paper flyers and card sleeves.",
@@ -71,7 +71,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/hana_flyer_afternoon.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/hana_flyer_afternoon.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "hana",
@@ -93,7 +93,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/hana_apron_mixup.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/hana_apron_mixup.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "dialogueSafe": "full-frame composition",
   "situationId": "hana_apron_mixup"
  },
  {
@@ -116,7 +116,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/reina_rival_intro.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/reina_rival_intro.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "reina",
@@ -138,7 +138,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/reina_center_predue.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/reina_center_predue.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "reina",
@@ -152,7 +152,7 @@
   "title": "After the Practice Session",
   "hint": "Spend time with Reina at the Center once she respects you.",
   "scene": "Reina leans against the empty practice-table rail, sharing strategy notes and a bottle of water after a long training session.",
-  "composition": "Wide two-point perspective with Reina on the right, note pages on table; dialogue-safe bottom.",
+  "composition": "Wide two-point perspective with Reina on the right, note pages on table; full-frame composition.",
   "outfit": "Tournament outfit, jacket resting on chair, practical fully covered athletic top.",
   "expression": "Rare unguarded smile, serious eyes.",
   "environment": "Community center at sunset, long warm bands of light across floor.",
@@ -160,7 +160,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/reina_training_break.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/reina_training_break.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "reina",
@@ -182,7 +182,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/reina_rain_catch.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/reina_rain_catch.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "dialogueSafe": "full-frame composition",
   "situationId": "reina_rain_catch"
  },
  {
@@ -205,7 +205,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/shiori_first_page.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/shiori_first_page.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "shiori",
@@ -227,7 +227,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/shiori_library_predue.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/shiori_library_predue.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "shiori",
@@ -241,7 +241,7 @@
   "title": "Between the Lines",
   "hint": "Spend a relaxed time with Shiori at the café.",
   "scene": "Shiori shares a surprisingly funny memory over tea, laughing into her sleeve while a hand-written list of deck ideas lies beside the cups.",
-  "composition": "Intimate café two-seat composition with Shiori central, leave dialogue-safe base.",
+  "composition": "Intimate café two-seat composition with Shiori central, leave full-frame composition.",
   "outfit": "Elegant long coat, fitted turtleneck and signature watch.",
   "expression": "Unexpected laughter, a little vulnerable.",
   "environment": "Warm café window, evening city glow and teacups.",
@@ -249,7 +249,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/shiori_cafe_conversation.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/shiori_cafe_conversation.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "shiori",
@@ -271,7 +271,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/shiori_bookstack_wobble.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/shiori_bookstack_wobble.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "dialogueSafe": "full-frame composition",
   "situationId": "shiori_bookstack_wobble"
  },
  {
@@ -294,7 +294,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/yuna_arrival.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/yuna_arrival.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "yuna",
@@ -316,7 +316,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/yuna_arcade_predue.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/yuna_arcade_predue.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "yuna",
@@ -338,7 +338,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/yuna_score_challenge.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/yuna_score_challenge.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "yuna",
@@ -360,7 +360,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/yuna_card_scatter.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/yuna_card_scatter.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "dialogueSafe": "full-frame composition",
   "situationId": "yuna_card_scatter"
  },
  {
@@ -375,7 +375,7 @@
   "title": "The Researcher's Question",
   "hint": "Meet Akari at the library or center.",
   "scene": "Akari studies a tablet of bracket statistics and raises her eyes just as the newcomer approaches.",
-  "composition": "Clean geometric medium shot with tabletop and reserved bottom area.",
+  "composition": "Clean geometric medium shot with tabletop and natural scene framing.",
   "outfit": "Angular indigo utility blazer, graphic mock-neck, cargo skirt, square glasses.",
   "expression": "Composed and curious; one raised eyebrow.",
   "environment": "Town Library research desk, sticky notes and tournament charts.",
@@ -383,7 +383,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/akari_data_intro.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_data_intro.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "akari",
@@ -397,7 +397,7 @@
   "title": "Predict the Draw",
   "hint": "Challenge Akari at the library after earning her attention.",
   "scene": "Akari aligns her deck and a set of handwritten probabilities on a desk, then closes the notebook with confidence.",
-  "composition": "Structured symmetric medium shot, tablet and deck visible, dialogue-safe lower band.",
+  "composition": "Structured symmetric medium shot, tablet and deck visible, full-frame composition.",
   "outfit": "Canonical blazer, cargo skirt, glossy high ponytail, glasses.",
   "expression": "Analytical smile, competitive spark.",
   "environment": "Study room desk lamp, mathematical notes without real card spoilers.",
@@ -405,7 +405,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/akari_library_predue.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_library_predue.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "akari",
@@ -419,7 +419,7 @@
   "title": "A Theory for Two",
   "hint": "Spend an afternoon analyzing matches alongside Akari.",
   "scene": "Akari explains an opening-hand puzzle on a whiteboard while the player offers a silly counterexample that makes her laugh.",
-  "composition": "Three-quarter shot with whiteboard left, character right, bottom space for UI.",
+  "composition": "Three-quarter shot with whiteboard left, character right, full-frame composition.",
   "outfit": "Fitted utility blazer, mock-neck, cargo skirt and glasses.",
   "expression": "Surprised smile breaking her usual composure.",
   "environment": "Community Center club classroom, marker pens and shuffled deck cases.",
@@ -427,7 +427,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/akari_center_workshop.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_center_workshop.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "akari",
@@ -449,7 +449,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/akari_notes_whirl.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/akari_notes_whirl.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "dialogueSafe": "full-frame composition",
   "situationId": "akari_notes_whirl"
  },
  {
@@ -472,7 +472,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/camila_collector_intro.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/camila_collector_intro.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "camila",
@@ -494,7 +494,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/camila_shop_predue.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/camila_shop_predue.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "camila",
@@ -516,7 +516,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/camila_cafe_bargain.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/camila_cafe_bargain.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "camila",
@@ -538,7 +538,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/camila_windy_receipts.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/camila_windy_receipts.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "dialogueSafe": "full-frame composition",
   "situationId": "camila_windy_receipts"
  },
  {
@@ -561,7 +561,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/marina_river_intro.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/marina_river_intro.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "marina",
@@ -575,7 +575,7 @@
   "title": "A Duel by the Water",
   "hint": "Challenge Marina in Riverside Park after meeting her.",
   "scene": "Marina sits on a sandy riverside blanket with a deck of sleeved cards in her lap, looking up to ask whether the player is ready.",
-  "composition": "Scenic seated full-body three-quarter shot, water and sandbar as background; dialogue-safe lower fifth.",
+  "composition": "Scenic seated full-body three-quarter shot, water and sandbar as background; full-frame composition.",
   "outfit": "Light swim cover-up over a modest one-piece swimsuit or linen summer outfit, canonical shell clip and braid.",
   "expression": "Warm, quietly determined expression.",
   "environment": "Riverside sandy bank, picnic bag, blanket, cards, glittering water.",
@@ -583,7 +583,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/marina_riverside_predue.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/marina_riverside_predue.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "marina",
@@ -605,7 +605,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/marina_sunset_cards.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/marina_sunset_cards.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "marina",
@@ -627,7 +627,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/marina_beach_towel.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/marina_beach_towel.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "dialogueSafe": "full-frame composition",
   "situationId": "marina_beach_towel"
  },
  {
@@ -650,7 +650,7 @@
   "fanservice": 0,
   "path": "/rpg-assets/events/cg/season01/kaede_new_arrival.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/kaede_new_arrival.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "kaede",
@@ -664,7 +664,7 @@
   "title": "Make It Interesting",
   "hint": "Challenge Kaede at the arcade after she arrives.",
   "scene": "Kaede leans over a duel table and cuts the deck with one hand, daring the player to make the first move.",
-  "composition": "Low side-angle medium shot, hands and card backs visible, dialogue-safe bottom.",
+  "composition": "Low side-angle medium shot, hands and card backs visible, full-frame composition.",
   "outfit": "Cropped punk leather jacket, layered top, fingerless accessories, utility boots.",
   "expression": "Crooked challenging grin.",
   "environment": "Pixel Palace at night, green-violet electric glow.",
@@ -672,7 +672,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/kaede_arcade_predue.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/kaede_arcade_predue.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "kaede",
@@ -694,7 +694,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/kaede_park_afterhours.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/kaede_park_afterhours.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI"
+  "dialogueSafe": "full-frame composition"
  },
  {
   "character": "kaede",
@@ -716,7 +716,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/kaede_jacket_prank.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/kaede_jacket_prank.webp",
-  "dialogueSafe": "Bottom 20% clear for dialogue UI",
+  "dialogueSafe": "full-frame composition",
   "situationId": "kaede_jacket_prank"
  },
 {
@@ -739,7 +739,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_sunhat_vote.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_sunhat_vote.webp",
-  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "dialogueSafe": "full-frame composition.",
   "situationId": "laca_sunhat_vote"
 },
 {
@@ -762,7 +762,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/laca_rescue_kit_reach.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_rescue_kit_reach.webp",
-  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "dialogueSafe": "full-frame composition.",
   "situationId": "laca_rescue_kit_reach"
 },
 {
@@ -785,7 +785,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/laca_swimsuit_verdict.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_swimsuit_verdict.webp",
-  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "dialogueSafe": "full-frame composition.",
   "situationId": "laca_swimsuit_verdict"
 },
 {
@@ -808,7 +808,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_card_floor.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_card_floor.webp",
-  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "dialogueSafe": "full-frame composition.",
   "situationId": "laca_card_floor"
 },
 {
@@ -831,7 +831,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_towel_break.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_towel_break.webp",
-  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "dialogueSafe": "full-frame composition.",
   "situationId": "laca_towel_break"
 },
 {
@@ -854,7 +854,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_borrowed_hoodie.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_borrowed_hoodie.webp",
-  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "dialogueSafe": "full-frame composition.",
   "situationId": "laca_borrowed_hoodie"
 },
 {
@@ -877,7 +877,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_stretch_challenge.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_stretch_challenge.webp",
-  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "dialogueSafe": "full-frame composition.",
   "situationId": "laca_stretch_challenge"
 },
 {
@@ -900,7 +900,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_second_look.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_second_look.webp",
-  "dialogueSafe": "Bottom 20% left clear for dialogue.",
+  "dialogueSafe": "full-frame composition.",
   "situationId": "laca_second_look"
 }
 ,
@@ -924,7 +924,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_route_1.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_1.webp",
-  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "dialogueSafe": "use the full frame",
   "sceneId": "laca_route_1"
 },
 {
@@ -947,7 +947,7 @@
   "fanservice": 2,
   "path": "/rpg-assets/events/cg/season01/laca_route_2.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_2.webp",
-  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "dialogueSafe": "use the full frame",
   "sceneId": "laca_route_2"
 },
 {
@@ -970,7 +970,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_route_3.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_3.webp",
-  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "dialogueSafe": "use the full frame",
   "sceneId": "laca_route_3"
 },
 {
@@ -993,7 +993,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_route_4.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_4.webp",
-  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "dialogueSafe": "use the full frame",
   "sceneId": "laca_route_4"
 },
 {
@@ -1016,7 +1016,7 @@
   "fanservice": 1,
   "path": "/rpg-assets/events/cg/season01/laca_route_5.webp",
   "thumb": "/rpg-assets/events/cg/season01/thumbs/laca_route_5.webp",
-  "dialogueSafe": "Leave lower fifth clear for dialogue",
+  "dialogueSafe": "use the full frame",
   "sceneId": "laca_route_5"
 }
 ,
@@ -1068,7 +1068,7 @@
 
  // Approved Daisy route CGs are attached to the authored relationship events.
  const DAISY_ROUTES=[['daisy_route_1','The Trouble With First Impressions','Complete Daisy’s first card-shop event.'],['daisy_route_2','Layers','Complete Daisy’s fabric-sketch café event.'],['daisy_route_3','The Girl Behind the Glasses','Complete Daisy’s arcade event.'],['daisy_route_4','A Flower That Kept Growing','Complete Daisy’s park conversation.']];
- for(const [id,title,hint] of DAISY_ROUTES){const path='/rpg-assets/events/cg/season01/'+id+'.png';catalog.push({character:'daisy',id,category:'social',trigger:'story_milestone',sceneId:id,place:null,minAffection:0,startDay:1,slot:null,title,hint,scene:'Approved Daisy route illustration for '+title+'.',composition:'Approved landscape CG with dialogue-safe lower fifth.',outfit:'Use Daisy’s approved outfit from this scene.',expression:'Authored route expression.',environment:'Neo Harbor',mood:'story',fanservice:0,path,thumb:path,dialogueSafe:'Lower fifth clear for dialogue UI'});}
+ for(const [id,title,hint] of DAISY_ROUTES){const path='/rpg-assets/events/cg/season01/'+id+'.png';catalog.push({character:'daisy',id,category:'social',trigger:'story_milestone',sceneId:id,place:null,minAffection:0,startDay:1,slot:null,title,hint,scene:'Approved Daisy route illustration for '+title+'.',composition:'Approved landscape CG with full-frame composition.',outfit:'Use Daisy’s approved outfit from this scene.',expression:'Authored route expression.',environment:'Neo Harbor',mood:'story',fanservice:0,path,thumb:path,dialogueSafe:'full-frame composition'});}
 
  // Lyla Route 7 uses two already-approved images: the opening frame for
  // the first dialogue beat, then the existing final frame on her personal line.
@@ -1088,7 +1088,7 @@
    environment:'Café',mood:'intimate',fanservice:0,
    path:LYLA_FINAL_ART.path,thumb:LYLA_FINAL_ART.path,
    openingPath:'/rpg-assets/characters/lyla/events/lyla_router_7_pre.png',
-   switchAtLine:LYLA_SWITCH_AT,dialogueSafe:'Lower fifth clear for dialogue UI'
+   switchAtLine:LYLA_SWITCH_AT,dialogueSafe:'full-frame composition'
   });
  }
 
@@ -1105,7 +1105,7 @@
    scene:'Approved original Lyla relationship-story illustration for '+event.title+'.',
    composition:'Approved single-frame cinematic story CG.',outfit:'Lyla\'s approved route styling.',
    expression:'Original authored story illustration.',environment:'Neo Harbor',mood:'story',
-   fanservice:0,path:art.path,thumb:art.path,dialogueSafe:'Lower fifth clear for dialogue UI'
+   fanservice:0,path:art.path,thumb:art.path,dialogueSafe:'full-frame composition'
   });
  }
 
@@ -1115,7 +1115,7 @@
  // Use safe descriptive metadata instead of aborting gallery initialization.
  for(const event of (Array.isArray(DAISY_EVENTS)?DAISY_EVENTS:DAISY_EVENTS.events||[]).filter(e=>typeof e?.id==='string'&&e.id.startsWith('daisy_random_')&&e.image)){
   const art=event.art||{};
-  catalog.push({character:'daisy',id:event.id,category:'social',trigger:'slice',place:event.place||null,minAffection:event.minAffection||0,startDay:event.start||1,slot:event.slot??null,title:event.title||'Daisy memory',hint:'Encounter this approved Daisy slice-of-life event.',scene:art.scene||event.title||'Daisy slice-of-life event',composition:art.composition||'Approved event illustration.',outfit:art.outfit||'Daisy approved outfit.',expression:art.expression||'Natural expression.',environment:art.environment||event.place||'Neo Harbor',mood:art.mood||'slice-of-life',fanservice:0,path:event.image,thumb:event.image,dialogueSafe:'Lower fifth clear for dialogue UI',sliceId:event.id,randomForced:true});
+  catalog.push({character:'daisy',id:event.id,category:'social',trigger:'slice',place:event.place||null,minAffection:event.minAffection||0,startDay:event.start||1,slot:event.slot??null,title:event.title||'Daisy memory',hint:'Encounter this approved Daisy slice-of-life event.',scene:art.scene||event.title||'Daisy slice-of-life event',composition:art.composition||'Approved event illustration.',outfit:art.outfit||'Daisy approved outfit.',expression:art.expression||'Natural expression.',environment:art.environment||event.place||'Neo Harbor',mood:art.mood||'slice-of-life',fanservice:0,path:event.image,thumb:event.image,dialogueSafe:'full-frame composition',sliceId:event.id,randomForced:true});
  }
  // Ambience CGs are separate from scheduled stories and relationship chapters.
  const SLICE=typeof module==='object'&&module.exports?require('./rpg_slice_of_life'):window.NeoRpgSliceOfLife;
@@ -1127,7 +1127,7 @@
   expression:moment.art.expression,environment:moment.art.environment,mood:moment.art.mood,fanservice:0,
   path:moment.image||(moment.npc==='barb'?'/rpg-assets/events/cg/season01/'+moment.id+'.webp':'/rpg-assets/events/cg/slice-life/'+moment.id+'.webp'),
   thumb:moment.image||(moment.npc==='barb'?'/rpg-assets/events/cg/season01/thumbs/'+moment.id+'.webp':'/rpg-assets/events/cg/slice-life/thumbs/'+moment.id+'.webp'),
-  dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:moment.id,randomForced:!!moment.randomForced
+  dialogueSafe:'full-frame composition',sliceId:moment.id,randomForced:!!moment.randomForced
  });
 
 
@@ -1136,9 +1136,9 @@
  const FIT=typeof module==='object'&&module.exports?require('./rpg_akari_barb_event'):window.NeoRpgAkariBarbFitting;
 
  const CROSS=typeof module==='object'&&module.exports?require('./rpg_cross_character_events'):window.NeoRpgCrossCharacterEvents;
- for(const event of CROSS?.events||[])if(event.id.startsWith('daisy_')&&!event.artPending){const details={character:'daisy',category:'social',trigger:'slice',place:null,minAffection:0,startDay:1,slot:null,title:event.title,hint:'Complete '+event.title+' to unlock this approved scene.',scene:event.art.scene,composition:event.art.composition,outfit:event.art.outfit,expression:event.art.expression,environment:event.art.environment,mood:event.art.mood,fanservice:event.art.fanservice||0,path:event.image,thumb:event.image,dialogueSafe:'Lower fifth clear for dialogue UI',sliceId:event.id};const prior=catalog.find(entry=>entry.id===event.id);if(prior)Object.assign(prior,details);else catalog.push({id:event.id,...details});if(event.cgSequence?.length>1&&event.cgSequence[0]!==event.id&&!catalog.some(x=>x.id===event.cgSequence[0]))catalog.push({id:event.cgSequence[0],...details,title:event.title+' — Part 1'});if(event.cgSequence?.length>1){for(const [index,id] of event.cgSequence.entries()){if(index===0)continue;const path='/rpg-assets/events/cg/season01/'+id+'.webp';catalog.push({character:'daisy',id,category:'social',trigger:'slice',place:null,minAffection:0,startDay:1,slot:null,title:event.title+' — Part '+(index+1),hint:'Complete '+event.title+' to unlock illustration '+(index+1)+'.',scene:event.art.scene,composition:event.art.composition,outfit:event.art.outfit,expression:event.art.expression,environment:event.art.environment,mood:event.art.mood,fanservice:event.art.fanservice||0,path,thumb:path,dialogueSafe:'Lower fifth clear for dialogue UI',sliceId:event.id});}}}
+ for(const event of CROSS?.events||[])if(event.id.startsWith('daisy_')&&!event.artPending){const details={character:'daisy',category:'social',trigger:'slice',place:null,minAffection:0,startDay:1,slot:null,title:event.title,hint:'Complete '+event.title+' to unlock this approved scene.',scene:event.art.scene,composition:event.art.composition,outfit:event.art.outfit,expression:event.art.expression,environment:event.art.environment,mood:event.art.mood,fanservice:event.art.fanservice||0,path:event.image,thumb:event.image,dialogueSafe:'full-frame composition',sliceId:event.id};const prior=catalog.find(entry=>entry.id===event.id);if(prior)Object.assign(prior,details);else catalog.push({id:event.id,...details});if(event.cgSequence?.length>1&&event.cgSequence[0]!==event.id&&!catalog.some(x=>x.id===event.cgSequence[0]))catalog.push({id:event.cgSequence[0],...details,title:event.title+' — Part 1'});if(event.cgSequence?.length>1){for(const [index,id] of event.cgSequence.entries()){if(index===0)continue;const path='/rpg-assets/events/cg/season01/'+id+'.webp';catalog.push({character:'daisy',id,category:'social',trigger:'slice',place:null,minAffection:0,startDay:1,slot:null,title:event.title+' — Part '+(index+1),hint:'Complete '+event.title+' to unlock illustration '+(index+1)+'.',scene:event.art.scene,composition:event.art.composition,outfit:event.art.outfit,expression:event.art.expression,environment:event.art.environment,mood:event.art.mood,fanservice:event.art.fanservice||0,path,thumb:path,dialogueSafe:'full-frame composition',sliceId:event.id});}}}
 
- for(const cg of FIT?.cgs||[])catalog.push({character:'akari',id:cg.id,category:'social',trigger:'slice',place:'shop',minAffection:0,startDay:18,slot:1,title:cg.id.endsWith('_01')?'The Perfect Fit — Measuring Up':'The Perfect Fit — One More Adjustment',hint:'Complete The Perfect Fit at Barb\'s workshop.',scene:'Akari and Barb share a swimsuit fitting at the workshop.',composition:'Approved cinematic story CG with lower fifth clear for dialogue.',outfit:'Approved swimsuit-fitting scene outfits',expression:'Natural flustered and professional expressions',environment:'Barb\'s workshop',mood:'lighthearted',fanservice:1,path:cg.path,thumb:cg.thumb,dialogueSafe:'Bottom 20% clear for dialogue UI',sliceId:FIT.event.id});
+ for(const cg of FIT?.cgs||[])catalog.push({character:'akari',id:cg.id,category:'social',trigger:'slice',place:'shop',minAffection:0,startDay:18,slot:1,title:cg.id.endsWith('_01')?'The Perfect Fit — Measuring Up':'The Perfect Fit — One More Adjustment',hint:'Complete The Perfect Fit at Barb\'s workshop.',scene:'Akari and Barb share a swimsuit fitting at the workshop.',composition:'Approved cinematic story CG with full-frame composition.',outfit:'Approved swimsuit-fitting scene outfits',expression:'Natural flustered and professional expressions',environment:'Barb\'s workshop',mood:'lighthearted',fanservice:1,path:cg.path,thumb:cg.thumb,dialogueSafe:'full-frame composition',sliceId:FIT.event.id});
  // UI-only fallback sequence. Never mistake placeholder artwork for a newly created CG.
  // Source-of-truth paths here are existing RPG art assets, not generated images.
  const matchCutins=new Set(['hana','reina','shiori','yuna','akari','camila','marina','kaede','alma','iris']);
