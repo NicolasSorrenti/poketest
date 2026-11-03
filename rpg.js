@@ -11,6 +11,7 @@ const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHar
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
+const LIVE_NEW=window.NeoRpgLiveEverydayEvents||{events:[],art:{},followups:{},artAt:()=>null,finalArt:()=>null,fallback:()=>null,byId:()=>null};
 const LIVE_EVENTS=[
  {id:'live_home_welcome',title:'Someone Is Already Home',kind:'season',priority:95,earliestDay:2,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:2},lines:[
   {speaker:'Narrator',text:'You wake up to the smell of fresh coffee. Someone is moving around the kitchen.'},
@@ -73,11 +74,13 @@ const REPEATABLE_LIVE_EVENTS=[
   {label:'Give her some privacy',reply:"Oh, sure! That's thoughtful of you. I'll be out in a moment."}
  ]}
 ];
-const REPEATABLE_LIVE_IDS=new Set(REPEATABLE_LIVE_EVENTS.map(event=>event.id));
+const REPEATABLE_LIVE_IDS=new Set([...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events].map(event=>event.id));
 // All ordinary apartment moments can repeat; the first introduction is unique.
-const LIVE_ROTATING_EVENTS=[...LIVE_EVENTS.filter(event=>event.id!=='live_home_welcome'),...REPEATABLE_LIVE_EVENTS];
+const LIVE_ROTATING_EVENTS=[...LIVE_EVENTS.filter(event=>event.id!=='live_home_welcome'),...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events];
 const LIVE_ROTATING_IDS=new Set(LIVE_ROTATING_EVENTS.map(event=>event.id));
 const LIVE_EVENT_ART={"live_clothe_washing":"/rpg-assets/characters/live/events/live_clothe_washing.jpg","live_cleaning":"/rpg-assets/characters/live/events/live_cleaning.jpg","live_cooking":"/rpg-assets/characters/live/events/live_cooking.jpg","live_library":"/rpg-assets/characters/live/events/live_library.jpg","live_sweater_bra":"/rpg-assets/characters/live/events/live_sweater_bra.jpg","live_home_welcome":"/rpg-assets/characters/live/events/live_couch_sweater.png","live_home_cooking":"/rpg-assets/characters/live/events/live_cooking_evening.png","live_home_reading":"/rpg-assets/characters/live/events/live_reading.png","live_home_relaxing":"/rpg-assets/characters/live/events/live_relaxing_sofa.png","live_brushing_teeth":"/rpg-assets/characters/live/events/live_brushing_teeth.png","live_getting_ready":"/rpg-assets/characters/live/events/live_getting_ready.png","live_cleaning_table":"/rpg-assets/characters/live/events/live_cleaning_table.png","live_vacuuming":"/rpg-assets/characters/live/events/live_vacuuming.png","live_laundry":"/rpg-assets/characters/live/events/live_laundry.png","live_workout_break":"/rpg-assets/characters/live/events/live_workout_break.png","live_workout_exhausted":"/rpg-assets/characters/live/events/live_workout_exhausted.png","live_extra_exhaused_workout":"/rpg-assets/characters/live/events/live_extra_exhaused_workout.jpg","live_waking_up_casual":"/rpg-assets/characters/live/events/live_waking_up_casual.png","live_waking_up_lavender":"/rpg-assets/characters/live/events/live_waking_up_lavender.png"};
+
+Object.assign(LIVE_EVENT_ART,LIVE_NEW.art);
 
 // Glance milestones are independent of the rotating apartment encounters.
 // The later two images can be added without changing event code; the CG
@@ -183,6 +186,7 @@ const LIVE_FOLLOWUPS={
  live_library:["I finally worked out the twist in that mystery.","I finished the book. Tomorrow I'll have to find another."],
  live_sweater_bra:["I found my cardigan and headed out after getting ready.","I laid out tomorrow's clothes. Hopefully no more lost keys."]
 };
+Object.assign(LIVE_FOLLOWUPS,LIVE_NEW.followups);
 const LIVE_AWAY_IDS=new Set(['live_vacuuming','live_getting_ready','live_sweater_bra','live_clothe_washing','live_library']);
 function liveFollowupContent(){
  const dayScene=state.liveDayScene||{},base=dayScene.id||'live_home_cooking';
@@ -212,14 +216,15 @@ const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kin
 const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundry','live_getting_ready','live_workout_break'].map(name=>'/rpg-assets/characters/live/events/'+name+'.png');
 function liveEventArt(id){
  if(id===LIVE_REPEAT_MORNING.id)return state.mandatoryEventState?.active?.index>=1?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning;
- if(id===LIVE_DAY_FOLLOWUP.id)return liveFollowupContent().away?null:state.liveDayScene?.cg||LIVE_EVENT_ART[state.liveDayScene?.id]||null;
+ if(id===LIVE_DAY_FOLLOWUP.id)return liveFollowupContent().away?null:LIVE_NEW.finalArt(state.liveDayScene?.id)||state.liveDayScene?.cg||LIVE_EVENT_ART[state.liveDayScene?.id]||null;
  if(LIVE_SPECIAL_IDS.has(id)){
   const base=id==='live_glance_next_morning'&&state.mandatoryEventState?.active?.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[id];
   return specialArtCandidates(base)[0];
  }
+ if(LIVE_NEW.byId(id))return LIVE_NEW.artAt(id,state.mandatoryEventState?.active?.id===id?Number(state.mandatoryEventState.active.index)||0:0);
  return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];
 }
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_SPECIAL_EVENTS,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -611,7 +616,7 @@ function maybeStartMandatory(){
   const lastLiveDay=Number(state.liveLastEventDay)||0;
   if(lastLiveDay!==state.day){
    const intro=LIVE_EVENTS.find(e=>e.id==='live_home_welcome'&&e.earliestDay<=state.day&&!m.seen[e.id]);
-   const available=LIVE_ROTATING_EVENTS.filter(e=>e.earliestDay<=state.day);
+   const available=LIVE_ROTATING_EVENTS.filter(e=>e.earliestDay<=state.day&&(!e.slots||e.slots.includes(state.slot)));
    const previous=state.liveLastRotatingId;
    const options=available.filter(e=>e.id!==previous);
    const rotation=options.length?options[(Number(state.liveDailyRotationCount)||0)%options.length]:available[0];
@@ -904,7 +909,7 @@ if(homeActivity&&state.day<=90){
  const lastCG=state.liveHomeActivityScene?.cg||LIVE_EVENT_ART[previous];
  // Alternate ordinary check-ins with the five repeatable CG encounters.
  // The rotation is save-stable, avoids immediate repeats, and never consumes an extra period.
- const pool=[LIVE_HOME_CHECKIN.id,...LIVE_ROTATING_EVENTS.filter(event=>event.earliestDay<=state.day).map(event=>event.id)];
+ const pool=[LIVE_HOME_CHECKIN.id,...LIVE_ROTATING_EVENTS.filter(event=>event.earliestDay<=state.day&&(!event.slots||event.slots.includes(state.slot))).map(event=>event.id)];
  const previousId=state.liveHomeLastSceneId;
  // Rotate through every scene before repeating, including laundry.
  let id=pool[(count-1)%pool.length];
@@ -2475,13 +2480,17 @@ function syncSceneCG(){
   const finalSecond=(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2)||
     (liveEventId===LIVE_REPEAT_MORNING.id&&state.mandatoryEventState.active.index>=1);
   // Include period and selected CG so repeated encounters update the bitmap.
-  const entry={id:[liveEventId,state.day,state.slot,state.liveDayScene?.id||'',finalSecond?'second':'first'].join(':'),
+  const entry={id:[liveEventId,state.day,state.slot,state.liveDayScene?.id||'',finalSecond?'second':'first',liveArt].join(':'),
    title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home'};
   const paths=liveDiscreetEnabled()?[LIVE_DISCREET_PLACEHOLDER]:liveEventId===LIVE_REPEAT_MORNING.id?
    [finalSecond?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning]:
    LIVE_SPECIAL_IDS.has(liveEventId)
    ?[...specialArtCandidates(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[liveEventId]),'/rpg-assets/characters/live/events/live_couch_sweater.png']
    :[liveArt];
+  // Until the new approved CG pack is uploaded, existing Live art stays visible.
+  const sourceId=liveEventId===LIVE_DAY_FOLLOWUP.id?state.liveDayScene?.id:liveEventId;
+  const fallbackArt=LIVE_NEW.fallback(sourceId);
+  if(fallbackArt&&!paths.includes(fallbackArt))paths.push(fallbackArt);
   cgScenePresenter.show(entry,paths.map(path=>({kind:'event',path})),()=>{},()=>{});
   return;
  }
