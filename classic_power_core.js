@@ -238,7 +238,13 @@ function powerPlan(g,plan,h){
  if(name==='Emerge'&&d.roll&&!have(plan,'evolution')){const a=indices(p.deck,c=>c.name==="Koga's Beedrill",'deck');if(a.length){if(choose('evolution',a,"Find Koga's Beedrill",{min:0,max:1,optional:true}))return;}else d.evolution=[];}
  if(name==='Call the Boss'&&!have(plan,'trainer')){const a=indices(p.deck,c=>c.supertype==='Trainer'&&c.name==='Giovanni','deck');if(a.length){if(choose('trainer',a,'Optional Giovanni Trainer search',{min:0,max:1,optional:true}))return;}else d.trainer=[];}
  if(name==='Step In'&&plan.slot<0)throw Error('Step In only works on Benched Dragonite');
- if(name==='Heal'&&choose('target',slotList(p,x=>x.damage>=10),'Choose Pokémon to heal'))return;
+ if(name==='Heal'){
+  // Vileplume flips first. Only heads offers a healing target; a tails
+  // result consumes this once-per-turn Power without a pointless prompt.
+  if(!have(plan,'healHeads'))d.healHeads=h.flip(g);
+  const targets=slotList(p,x=>x.damage>=10);
+  if(d.healHeads&&targets.length&&choose('target',targets,'Heal: choose Pokémon to remove 1 damage counter'))return;
+ }
  if(name==='Evolutionary Light'&&choose('deck',indices(p.deck,c=>c.subtypes?.includes('Stage 1')||c.subtypes?.includes('Stage 2'),'deck'),'Choose an Evolution card'))return;
  if(name==='Matter Exchange'&&choose('hand',indices(p.hand,()=>true,'hand'),'Choose a card to discard'))return;
  if(name==='Trickery'){
@@ -441,7 +447,13 @@ function doPower(g,plan,h){
    if(target.damage+10>=Number(card(target.id).hp)&&name!=='Curse')throw Error('Damage movement would knock out Pokémon');
    source.damage-=10;target.damage+=10;if(name==='Curse')h.knockOuts(g,'direct');break;
   }
-  case 'Heal':if(h.flip(g))pokemon(p,s('target')).damage=Math.max(0,pokemon(p,s('target')).damage-10);break;
+  case 'Heal':
+   if(d.healHeads&&have(plan,'target')){
+    const target=pokemon(p,s('target'));
+    if(!target||target.damage<10)throw Error('Heal target has no damage counter');
+    target.damage-=10;
+   }
+   break;
   case 'Step In':{const old=p.active;p.active=p.bench.splice(plan.slot,1,old)[0];STATUS.clearConditions(old);h.clearBenchEffects(old);break;}
   case 'Cowardice':{
    const removed=plan.slot===-1?(p.active=null,u):p.bench.splice(plan.slot,1)[0];p.hand.push(removed.under.length?removed.under.at(-1):removed.id);
