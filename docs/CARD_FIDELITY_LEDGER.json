@@ -2675,13 +2675,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Petal Dance",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Petal Dance 3 coins at 40/head and subsequent self Confusion inspected via classic_attack_extensions.js; Heal once-per-turn flip-before-target timing corrected in classic_power_core.js commit 6ed4ac03, including tails with no prompt, heads with eligible damaged targets, no-target heads, and once-per-turn use. Source inspection only; runtime checks outstanding. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification).",
+            "Vileplume Heal fixed directly in main: https://github.com/NicolasSorrenti/poketest/commit/6ed4ac03db539ef250f5219503a84bf4f4f1ff4a"
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Heal",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Petal Dance 3 coins at 40/head and subsequent self Confusion inspected via classic_attack_extensions.js; Heal once-per-turn flip-before-target timing corrected in classic_power_core.js commit 6ed4ac03, including tails with no prompt, heads with eligible damaged targets, no-target heads, and once-per-turn use. Source inspection only; runtime checks outstanding. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification).",
+            "Vileplume Heal fixed directly in main: https://github.com/NicolasSorrenti/poketest/commit/6ed4ac03db539ef250f5219503a84bf4f4f1ff4a"
+          ]
         }
       ]
     },
@@ -2694,13 +2704,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Lullaby",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Lullaby directly Asleep and Do the Wave 10 plus 10 per own Benched Pokémon inspected against status and bench-count reducer. Runtime checks and Bench-size effects outstanding. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Do the Wave",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Lullaby directly Asleep and Do the Wave 10 plus 10 per own Benched Pokémon inspected against status and bench-count reducer. Runtime checks and Bench-size effects outstanding. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         }
       ]
     },
@@ -2713,13 +2731,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Metronome",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Metronome copies selected Defending Pokémon attack without printed attack Energy cost; some unsupported copy families are excluded by reducer. Minimize sets 20-damage reduction shield for opponent next turn. Partial: printed choices and copied effects not exhaustively verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Minimize",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Metronome copies selected Defending Pokémon attack without printed attack Energy cost; some unsupported copy families are excluded by reducer. Minimize sets 20-damage reduction shield for opponent next turn. Partial: printed choices and copied effects not exhaustively verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         }
       ]
     },
@@ -2781,13 +2807,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Quick Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Quick Attack coin-bonus 10/30, Pin Missile four coin flips at 20/head inspected in compiler and reducer; flip sequencing and weakness/resistance interaction not runtime verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Pin Missile",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Quick Attack coin-bonus 10/30, Pin Missile four coin flips at 20/head inspected in compiler and reducer; flip sequencing and weakness/resistance interaction not runtime verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         }
       ]
     },
@@ -2800,13 +2834,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Fetch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Fetch draws one card, Comet Punch four 20-damage coin flips. Source checked; end-turn behavior and empty-deck cases not runtime verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Comet Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Fetch draws one card, Comet Punch four 20-damage coin flips. Source checked; end-turn behavior and empty-deck cases not runtime verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         }
       ]
     },
@@ -2819,13 +2861,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Meditate",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Meditate scales with defending damage counters; Invisible Wall prevents 30+ damage after Weakness/Resistance but not other effects when Power enabled. Source review; indirect effects and suppression edge cases not verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Invisible Wall",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Meditate scales with defending damage counters; Invisible Wall prevents 30+ damage after Weakness/Resistance but not other effects when Power enabled. Source review; indirect effects and suppression edge cases not verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         }
       ]
     },
@@ -2838,13 +2888,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Boyfriends",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Boyfriends adds 20 per own in-play Nidoking; Mega Punch flat 50. Count source reviewed; transformed/evolved cases not runtime verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Mega Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Boyfriends adds 20 per own in-play Nidoking; Mega Punch flat 50. Count source reviewed; transformed/evolved cases not runtime verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         }
       ]
     },
@@ -2886,13 +2944,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Irongrip",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Irongrip does 20 with heads-Paralyzed, Guillotine flat 50. Compiler and condition pipeline examined; attack timing not verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Guillotine",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Irongrip does 20 with heads-Paralyzed, Guillotine flat 50. Compiler and condition pipeline examined; attack timing not verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         }
       ]
     },
@@ -2905,13 +2971,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Swords Dance",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Swords Dance records next-turn Slash override 60 (otherwise 30); source checked against turnSerial and Bench effect clearing; no focused runtime check. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Slash",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Swords Dance records next-turn Slash override 60 (otherwise 30); source checked against turnSerial and Bench effect clearing; no focused runtime check. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         }
       ]
     },
@@ -2924,13 +2998,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Body Slam",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Body Slam 30 with heads-Paralyzed, Thick Skinned status immunity via protectsStatus while Power enabled. Checked source; suppression/condition interactions not runtime verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Thick Skinned",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Body Slam 30 with heads-Paralyzed, Thick Skinned status immunity via protectsStatus while Power enabled. Checked source; suppression/condition interactions not runtime verified. No new tests added.",
+          "evidence": [
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+          ]
         }
       ]
     },
