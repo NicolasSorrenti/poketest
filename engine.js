@@ -3278,7 +3278,8 @@ function attackScore(a,engine){
 function cpuBenchTarget(engine){return engine.foe.bench.map((u,i)=>({i,score:20+(u.damage+20>=+(engine.card(u).hp||0)?85:0)+u.damage/10})).sort((a,b)=>b.score-a.score)[0]?.i??0}
 // Each rival action is awaited; the CPU never starts a new action while an effect is on screen.
 async function waitForCoinAnimations(generation){
- while(generation===matchGeneration&&(coinBusy||coinQueue.length))await pause(80);
+ // Wait for every queued coin result and battle notice before advancing the CPU turn.
+ while(generation===matchGeneration&&(visualBusy||visualQueue.length))await pause(80);
 }
 async function cpu(generation){
  const valid=()=>generation===matchGeneration&&engine.turn===1&&!engine.over&&engine.phase==='game';
