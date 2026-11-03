@@ -80,7 +80,7 @@ const LIVE_ROTATING_EVENTS=[...LIVE_EVENTS.filter(event=>event.id!=='live_home_w
 const LIVE_ROTATING_IDS=new Set(LIVE_ROTATING_EVENTS.map(event=>event.id));
 const LIVE_EVENT_ART={"live_clothe_washing":"/rpg-assets/characters/live/events/live_clothe_washing.jpg","live_cleaning":"/rpg-assets/characters/live/events/live_cleaning.jpg","live_cooking":"/rpg-assets/characters/live/events/live_cooking.jpg","live_library":"/rpg-assets/characters/live/events/live_library.jpg","live_sweater_bra":"/rpg-assets/characters/live/events/live_sweater_bra.jpg","live_home_welcome":"/rpg-assets/characters/live/events/live_couch_sweater.png","live_home_cooking":"/rpg-assets/characters/live/events/live_cooking_evening.png","live_home_reading":"/rpg-assets/characters/live/events/live_reading.png","live_home_relaxing":"/rpg-assets/characters/live/events/live_relaxing_sofa.png","live_brushing_teeth":"/rpg-assets/characters/live/events/live_brushing_teeth.png","live_getting_ready":"/rpg-assets/characters/live/events/live_getting_ready.png","live_cleaning_table":"/rpg-assets/characters/live/events/live_cleaning_table.png","live_vacuuming":"/rpg-assets/characters/live/events/live_vacuuming.png","live_laundry":"/rpg-assets/characters/live/events/live_laundry.png","live_workout_break":"/rpg-assets/characters/live/events/live_workout_break.png","live_workout_exhausted":"/rpg-assets/characters/live/events/live_workout_exhausted.png","live_extra_exhaused_workout":"/rpg-assets/characters/live/events/live_extra_exhaused_workout.jpg","live_waking_up_casual":"/rpg-assets/characters/live/events/live_waking_up_casual.png","live_waking_up_lavender":"/rpg-assets/characters/live/events/live_waking_up_lavender.png"};
 
-Object.assign(LIVE_EVENT_ART,LIVE_NEW.art);
+Object.assign(LIVE_EVENT_ART,LIVE_NEW.art,{[LIVE_AFTER_EVENT.id]:LIVE_AFTER_ART});
 
 // Glance milestones are independent of the rotating apartment encounters.
 // The later two images can be added without changing event code; the CG
@@ -118,6 +118,7 @@ const LIVE_SPECIAL_ART={
  live_glance_next_morning:'/rpg-assets/characters/live/events/live_confy_scene.jpg'
 };
 const LIVE_FINAL_ART_2='/rpg-assets/characters/live/events/live_confy_scene2.jpg';
+const LIVE_AFTER_ART='/rpg-assets/characters/live/events/live_after.png';
 function startLiveGlanceMilestone(id){
  if(!LIVE_SPECIAL_IDS.has(id)||state.liveSpecialSeen?.[id])return;
  const active=state.mandatoryEventState?.active;
@@ -159,6 +160,13 @@ const LIVE_LYLA_PHOTO_EVENT={id:'live_lyla_photo_sighting',title:'A Familiar Fac
 const LIVE_DAY_FOLLOWUP={id:'live_day_followup',title:'Later at Home',kind:'season',priority:94,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},
  lines:[{speaker:'Live',text:'You came back.'}],
  choices:[{label:'See how her day went',reply:"It's been a full day."}]};
+const LIVE_AFTER_EVENT={id:'live_after_intimate',title:'After a Quiet Morning',kind:'season',priority:101,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
+ {speaker:'Narrator',text:'A little later, Live is still catching her breath, her expression soft and astonished.'},
+ {speaker:'Live',text:'Honey... that was so... wow.'},
+ {speaker:'Protagonist',text:'Are you okay?'},
+ {speaker:'Live',text:'More than okay. I just need a moment to find my words.'},
+ {speaker:'Narrator',text:'Live smiles at you, then takes a quiet moment to herself. Before long, you are both ready to return to the day.'}
+],choices:[{label:'Give her a moment',reply:'Thank you, honey. I will see you in a little while.'}]};
 const LIVE_REPEAT_MORNING={id:'live_repeat_private_morning',title:'A Morning Together',kind:'season',priority:99,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},
  lines:[
   {speaker:'Live',text:"Honey... let's keep this just between us, okay?"},
@@ -215,6 +223,7 @@ const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kin
 ],choices:[{label:'Leave now',reply:"I'll be here if you need anything."}]};
 const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundry','live_getting_ready','live_workout_break'].map(name=>'/rpg-assets/characters/live/events/'+name+'.png');
 function liveEventArt(id){
+ if(id===LIVE_AFTER_EVENT.id)return LIVE_AFTER_ART;
  if(id===LIVE_REPEAT_MORNING.id)return state.mandatoryEventState?.active?.index>=1?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning;
  if(id===LIVE_DAY_FOLLOWUP.id)return liveFollowupContent().away?null:LIVE_NEW.finalArt(state.liveDayScene?.id)||state.liveDayScene?.cg||LIVE_EVENT_ART[state.liveDayScene?.id]||null;
  if(LIVE_SPECIAL_IDS.has(id)){
@@ -224,7 +233,7 @@ function liveEventArt(id){
  if(LIVE_NEW.byId(id))return LIVE_NEW.artAt(id,state.mandatoryEventState?.active?.id===id?Number(state.mandatoryEventState.active.index)||0:0);
  return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];
 }
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -516,7 +525,7 @@ function queueMandatory(){
  // invalidates an active Live event on every render and restarts it.
  MANDATORY.queue(state,MANDATORY_EVENTS);
  const m=state.mandatoryEventState;
- if(m?.pending)m.pending=m.pending.filter(item=>!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id&&item.id!==LIVE_LYLA_PHOTO_EVENT.id&&item.id!==LIVE_DAY_FOLLOWUP.id&&item.id!==LIVE_REPEAT_MORNING.id);
+ if(m?.pending)m.pending=m.pending.filter(item=>item.id!==LIVE_AFTER_EVENT.id&&!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id&&item.id!==LIVE_LYLA_PHOTO_EVENT.id&&item.id!==LIVE_DAY_FOLLOWUP.id&&item.id!==LIVE_REPEAT_MORNING.id);
 }
 function autoTravelForEvent(place){
  if(!place||!places[place]||state.location===place)return false;
@@ -549,7 +558,17 @@ function maybeStartMandatory(){
  // Existing scripted dialogue, character choices, galleries, duel preparation and starter selection remain authoritative.
  if(state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
     ||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
- // A due meeting takes precedence over an automatic story that would relocate the player.
+ // This aftermath is a forced CG-only scene and must start only after the
+ // intimate scene's clock wipe has completely finished. Its pending flag is
+ // persisted before the transition, so reloading cannot silently lose it.
+ // It takes precedence over appointments and normal apartment encounters.
+ if(state.liveAfterPending&&state.location==='home'){
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  m.active={id:LIVE_AFTER_EVENT.id,phase:'lines',index:0,choice:null};
+  persist();
+  return;
+ }
+ // A due meeting takes precedence over a normal story that would relocate the player.
  if(TIME.dueNow(state).length)return;
  // The 30-glance scene is due from the *next* in-game day onward.
  // Don't restrict it to slot 0: a scheduled appointment, travel wipe, or
@@ -619,7 +638,11 @@ function maybeStartMandatory(){
    const available=LIVE_ROTATING_EVENTS.filter(e=>e.earliestDay<=state.day&&(!e.slots||e.slots.includes(state.slot)));
    const previous=state.liveLastRotatingId;
    const options=available.filter(e=>e.id!==previous);
-   const rotation=options.length?options[(Number(state.liveDailyRotationCount)||0)%options.length]:available[0];
+   // Prioritize unseen CG stories before replaying old ones; preserve the
+   // existing save-stable rotation and daily/period gates once all are seen.
+   const unseen=options.filter(e=>!m.seen[e.id]);
+   const pool=unseen.length?unseen:options;
+   const rotation=pool.length?pool[(Number(state.liveDailyRotationCount)||0)%pool.length]:available[0];
    const due=intro||rotation;
    if(due){
     if(LIVE_ROTATING_IDS.has(due.id)){
@@ -640,7 +663,7 @@ function maybeStartMandatory(){
  // The non-Live scheduler runs only when no Live scene is active.
  // Exclude the replayable pool so it cannot accidentally start on every render.
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
-  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id));
+  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -827,7 +850,13 @@ function mandatoryAction(type,id){
  else if(type==='mandatoryFinish'){
   const activeId=state.mandatoryEventState.active.id;
   const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
+  if(outcome&&activeId===LIVE_AFTER_EVENT.id){
+   state.liveAfterPending=false;
+   state.liveAfterLastCompletedDay=state.day;
+   log('A tender moment with Live after your private morning.');
+  }
   if(outcome&&activeId===LIVE_REPEAT_MORNING.id){
+   state.liveAfterPending=true;
    state.liveRepeatLastDay=state.day;
    state.focus=Math.min(100,(Number(state.focus)||0)+5);
    log('A restorative morning with Live: +5 focus. Live needs five days to recover.');
@@ -837,6 +866,7 @@ function mandatoryAction(type,id){
    if(activeId==='live_glance_next_morning'){
     state.liveSpecialSeen={...(state.liveSpecialSeen||{}),live_glance_next_morning:true};
     state.liveSuspendedEvent=null;
+    state.liveAfterPending=true;
     persist();
     // The CG sequence consumes the morning only. An overdue scene reached
     // after morning must not skip another period or change the date.
@@ -2474,7 +2504,7 @@ function syncSceneCG(){
  }
  const isLiveCg=!!liveEventId&&(!!LIVE_EVENT_ART[liveEventId]||
   LIVE_SPECIAL_IDS.has(liveEventId)||liveEventId===LIVE_HOME_CHECKIN.id||
-  liveEventId===LIVE_DAY_FOLLOWUP.id||liveEventId===LIVE_REPEAT_MORNING.id);
+  liveEventId===LIVE_DAY_FOLLOWUP.id||liveEventId===LIVE_REPEAT_MORNING.id||liveEventId===LIVE_AFTER_EVENT.id);
  const liveArt=isLiveCg?(liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:liveEventArt(liveEventId)):null;
  if(liveArt){
   const finalSecond=(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2)||
@@ -2482,7 +2512,7 @@ function syncSceneCG(){
   // Include period and selected CG so repeated encounters update the bitmap.
   const entry={id:[liveEventId,state.day,state.slot,state.liveDayScene?.id||'',finalSecond?'second':'first',liveArt].join(':'),
    title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home'};
-  const paths=liveDiscreetEnabled()?[LIVE_DISCREET_PLACEHOLDER]:liveEventId===LIVE_REPEAT_MORNING.id?
+  const paths=liveDiscreetEnabled()?[LIVE_DISCREET_PLACEHOLDER]:liveEventId===LIVE_AFTER_EVENT.id?[LIVE_AFTER_ART]:liveEventId===LIVE_REPEAT_MORNING.id?
    [finalSecond?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning]:
    LIVE_SPECIAL_IDS.has(liveEventId)
    ?[...specialArtCandidates(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[liveEventId]),'/rpg-assets/characters/live/events/live_couch_sweater.png']
@@ -3614,7 +3644,7 @@ function render(){
   const liveCgOnly=!!showingMandatory&&(showingMandatory.id===LIVE_HOME_CHECKIN.id||
   showingMandatory.id===LIVE_LYLA_PHOTO_EVENT.id||showingMandatory.id===LIVE_DAY_FOLLOWUP.id||
   showingMandatory.id===LIVE_REPEAT_MORNING.id||!!LIVE_EVENT_ART[showingMandatory.id]||
-  LIVE_SPECIAL_IDS.has(showingMandatory.id));
+  LIVE_SPECIAL_IDS.has(showingMandatory.id)||showingMandatory.id===LIVE_AFTER_EVENT.id);
  // Live has no portrait: her events are illustrated entirely by the scene CG.
  // Don't inherit a previously selected character's portrait either.
  const portraitId=liveCgOnly?null:mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');

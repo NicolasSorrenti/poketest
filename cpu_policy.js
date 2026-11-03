@@ -1233,12 +1233,20 @@ function score(a,o,cfg,used){
    return p.handCount<=2?225:p.handCount<=4?172:cfg.level>=3?50:110;
   }
   if(name==='Gust of Wind'){
+   // Apex must not Gust for a phantom Prize: a payable printed attack may
+   // be blocked by Amnesia/Gym restrictions, or fail its Confusion flip.
+   // Count only publicly legal attacks with a near-certain knockout.
+   const apexKo=defender=>!!defender&&hpRemaining(defender)>0&&
+    !['Asleep','Paralyzed'].includes(p.active?.status)&&
+    (p.active?.effectiveAttacks||card(p.active?.id)?.attacks||[]).some((attack,index)=>
+     eligibleAttack(o,p.active,attack,index)&&
+     knockoutChance(attack,p.active,defender,p.bench.length,
+      livePlusPowerBonus(o))*(p.active?.status==='Confused'?.5:1)>=.999);
    const current=strongestAffordableAttack(p.active,q.active,p.bench.length);
-   const opponentAlreadyLethal=current>=hpRemaining(q.active)&&hpRemaining(q.active)>0;
-   const vulnerable=q.bench.some(u=>{
-    const damage=strongestAffordableAttack(p.active,u,p.bench.length);
-    return damage>=hpRemaining(u)&&hpRemaining(u)>0;
-   });
+   const opponentAlreadyLethal=cfg.level===8?apexKo(q.active):
+    current>=hpRemaining(q.active)&&hpRemaining(q.active)>0;
+   const vulnerable=q.bench.some(u=>cfg.level===8?apexKo(u):
+    strongestAffordableAttack(p.active,u,p.bench.length)>=hpRemaining(u)&&hpRemaining(u)>0);
    return (vulnerable&&!opponentAlreadyLethal?cfg.level>=3?275:205:40)*style.control;
   }
   if(name==='Super Energy Removal'){
@@ -1389,7 +1397,12 @@ function projectedAttackValue(active,defender,turnSerial=0,benchCount=null){
     (active.gymAttackCooldown.index===null||active.gymAttackCooldown.index===i))continue;
   const dmg=estimatedDamage(attack,active,defender,benchCount),
     ko=knockoutChance(attack,active,defender,benchCount);
-  const impact=Math.min(dmg,hp)*1.05+ko*115+
+  // Confusion requires a successful coin flip before any attack resolves.
+  // The preparation and retreat forecasts must not value a hypothetical
+  // Confused attack as a guaranteed KO (or guaranteed damage). The status
+  // can be removed by a projected Full Heal Energy or evolution beforehand.
+  const confusionChance=active.status==='Confused'?.5:1;
+  const impact=(Math.min(dmg,hp)*1.05+ko*115)*confusionChance+
    (/Poison|Paraly|Sleep|Confus/i.test(attack.text||'')?10:0);
   best=Math.max(best,impact);
  }

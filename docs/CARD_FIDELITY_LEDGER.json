@@ -3025,13 +3025,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Quick Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Quick Attack 10/30 flip; Water Gun 30 +10 per unused Energy capped at +20. Inspected classic_attack_extensions and headless_duel extraAttackEnergy; mixed special energy payment not run. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Quick Attack 10/30 flip; Water Gun 30 +10 per unused Energy capped at +20. Inspected classic_attack_extensions and headless_duel extraAttackEnergy; mixed special energy payment not run. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
@@ -3044,13 +3052,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Venom Powder",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Venom Powder 10 plus on-heads dual Confusion/Poison; Shift once-turn chosen type, source and effectiveCard hooks inspected following e85e50e/5176866 fix; dynamic type interactions not run. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Shift",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Venom Powder 10 plus on-heads dual Confusion/Poison; Shift once-turn chosen type, source and effectiveCard hooks inspected following e85e50e/5176866 fix; dynamic type interactions not run. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
@@ -3063,13 +3079,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Lure",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Lure attacker chooses opposing Benched target; Acid 20 plus heads retreat restriction. Inspected choice/switch and attack compiler; locked targets not run. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Acid",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Lure attacker chooses opposing Benched target; Acid 20 plus heads retreat restriction. Inspected choice/switch and attack compiler; locked targets not run. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
@@ -3082,13 +3106,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Petal Dance",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Petal Dance 3 coins x40 and self Confused; Heal flips before targeting from 6ed4ac0 fix, once-use ledger source inspected; no focused gameplay reproduction. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Heal",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Petal Dance 3 coins x40 and self Confused; Heal flips before targeting from 6ed4ac0 fix, once-use ledger source inspected; no focused gameplay reproduction. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
@@ -3101,13 +3133,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Lullaby",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Lullaby guaranteed Asleep; Do the Wave 10 +10 per own Bench count; compiler and reducer source inspected. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Do the Wave",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Lullaby guaranteed Asleep; Do the Wave 10 +10 per own Bench count; compiler and reducer source inspected. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
@@ -3120,13 +3160,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Whirlwind",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Whirlwind 20 then opponent chooses its Benched replacement; Mega Drain 40 and heals half actual dealt damage rounded up to a counter; reducer source traced, no KO/promotion tests. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Mega Drain",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Whirlwind 20 then opponent chooses its Benched replacement; Mega Drain 40 and heals half actual dealt damage rounded up to a counter; reducer source traced, no KO/promotion tests. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
@@ -3139,13 +3187,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Rage",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Rage 10 +10 per own damage counter; Retreat Aid only while Benched and stacks as -1 Colorless each in retreatCost; source traced, suppression edge cases unchecked. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Retreat Aid",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Rage 10 +10 per own damage counter; Retreat Aid only while Benched and stacks as -1 Colorless each in retreatCost; source traced, suppression edge cases unchecked. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
@@ -3158,13 +3214,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Teleport",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Teleport exchanges with own Benched Pokémon; Big Eggsplosion coin flip per attached Energy card and 20 per heads; attack compiler and reducer inspected, special cards vs units runtime unchecked. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Big Eggsplosion",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Teleport exchanges with own Benched Pokémon; Big Eggsplosion coin flip per attached Energy card and 20 per heads; attack compiler and reducer inspected, special cards vs units runtime unchecked. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
@@ -3177,13 +3241,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Agility",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Agility 20 coin shield prevents all effects including damage during opponent next turn if heads; Drill Peck 40 flat. Source inspected; immunity/expire timing not runtime tested. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Drill Peck",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Agility 20 coin shield prevents all effects including damage during opponent next turn if heads; Drill Peck 40 flat. Source inspected; immunity/expire timing not runtime tested. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
@@ -3196,13 +3268,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Poisonpowder",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Poisonpowder guaranteed Poison; Foul Odor 20 and both Active Pokémon Confused after damage; source inspected, KO/status edge cases unverified. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Foul Odor",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Poisonpowder guaranteed Poison; Foul Odor 20 and both Active Pokémon Confused after damage; source inspected, KO/status edge cases unverified. Source inspection only; not fully verified.",
+          "evidence": [
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+          ]
         }
       ]
     },
