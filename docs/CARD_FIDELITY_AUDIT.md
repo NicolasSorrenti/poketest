@@ -524,3 +524,16 @@ The existing reducer correctly staged the hand/deck Pokémon exchange but omitte
 | Scoop Up (`base1-78`, `base4-107`) | Printed Basic-only return, evolutions and attached cards discarded, ownership of target selection, single-target auto-resolution, Active removal and promotion/loss behavior | classic_trainer_core.js source inspection (no new test files); [Limitless Base #78](https://limitlesstcg.com/cards/BS/78); [Bulbapedia print/reprint index](https://bulbapedia.bulbagarden.net/wiki/Scoop_Up_%28Expansion_Pack%29) | Partial; existing reducer's core Basic return and discard behavior matches the printed effect by source inspection, and a redundant forced-target prompt is removed on the audit branch. Broader historical rulings, interactions, real clients and live network behavior remain unchecked |
 
 The original reducer chose the lowest Basic in an evolved stack, returned only that card to hand and discarded its evolution stack and attachments. It also offered a target prompt even when exactly one Pokémon was in play. The change resolves that forced choice automatically; it preserves player ownership of choices when more than one target exists. Evolved Bench and only-Active outcomes were reviewed in source but not verified by new runtime tests. Existing checks and broader interactions remain pending.
+
+
+## Base Set and Base Set 2 Trainer batch (2026-11-03; ten printings)
+
+| Printings | Source-review findings | Status |
+| --- | --- | --- |
+| Defender (`base1-80`, `base4-109`) | Attached to an own Pokémon, expires after opponent's next turn, 20 attack-damage reduction after Weakness/Resistance in the reducer's attached-Trainer flow | Partial; no new runtime tests |
+| Energy Retrieval (`base1-81`, `base4-110`) | Other-hand-card discard cost, Basic Energy-only retrieval from own discard, up-to-two return and empty-target rejection present | Partial; no new runtime tests |
+| Full Heal (`base1-82`, `base4-111`) | Uses `STATUS.clearConditions` on own Active, clearing Sleep/Confusion/Paralysis and Poison | Partial; no new runtime tests |
+| Potion (`base1-94`, `base4-122`) | Own damaged Pokémon target and `Math.max(0, damage-20)` cap present | Partial; no new runtime tests |
+| Switch (`base1-95`, `base4-123`) | Chooses a Benched replacement, switches it with the Active, clears the outgoing Active's conditions and lingering effects | Partial; no new runtime tests |
+
+Printed wording cross-checked against [Base Set cards and text](https://pokemondungeon.com/base-set/) and [Base Set 2 cards and text](https://pokemondungeon.com/base-set-2/), plus both repository card catalogs. This was a **source-only** batch review, not runtime simulation, comprehensive historical rulings research, or end-to-end browser/network certification. Interactions (including stadium-based limits, effect locks, attack replacement/prevention, and unusual attached Trainer handling) remain pending. No test files or CI workflows were added or expanded.
