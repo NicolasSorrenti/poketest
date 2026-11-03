@@ -518,8 +518,14 @@ const homeActivity=transitionSource==='home_activity'&&state.location==='home'&&
 TIME.advanceClock(state,n);
 if(homeActivity&&state.day<=90){
  const count=(Number(state.liveHomeActivityCount)||0)+1;
+ const seen=state.mandatoryEventState?.seen||{};
+ const previous=Object.keys(seen).filter(id=>LIVE_EVENT_ART[id]).sort((a,b)=>
+  (Number(seen[b]?.day)||0)-(Number(seen[a]?.day)||0)||
+  (Number(seen[b]?.slot)||0)-(Number(seen[a]?.slot)||0))[0];
+ const lastCG=state.liveHomeActivityScene?.cg||LIVE_EVENT_ART[previous];
+ const choices=LIVE_HOME_CHECKIN_ART.filter(path=>path!==lastCG);
  state.liveHomeActivityCount=count;
- state.liveHomeActivityScene={pending:true,cg:LIVE_HOME_CHECKIN_ART[(count-1)%LIVE_HOME_CHECKIN_ART.length],day:state.day,slot:state.slot};
+ state.liveHomeActivityScene={pending:true,cg:choices[(count-1)%choices.length],day:state.day,slot:state.slot};
 }if(state.day>90)log('The Neo Harbor championship season has ended.');
 state.selected=null;
 if(state.day>beforeDay){
