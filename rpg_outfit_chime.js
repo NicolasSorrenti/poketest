@@ -143,7 +143,7 @@ const NeoOutfitChime=(()=>{
   await slideOutAfter(screen,panel,duration);
  }
  // Deliberate Glance stays open until closed; normal entry chimes still auto-dismiss.
- async function glance(portrait,focus){
+ async function glance(portrait,focus,onClose){
   if(!portrait||typeof document==='undefined')return;
   cancel();
   const img=await loadPortrait(portrait);
@@ -166,7 +166,7 @@ const NeoOutfitChime=(()=>{
   const footer=document.createElement('div');footer.textContent='Use Fit to show the entire image';
   footer.style.cssText='padding:7px;text-align:center;color:#d6c3e0;font:12px system-ui';
   panel.append(toolbar,viewport,footer);screen.append(panel);document.body.append(screen);visible=screen;
-  const closeViewer=()=>{if(visible===screen)cancel();};
+  const closeViewer=()=>{if(visible!==screen)return;cancel();if(typeof onClose==='function')onClose();};
   close.onclick=closeViewer;
   screen.addEventListener('pointerdown',e=>{if(e.target===screen)closeViewer();});
   screen.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeViewer();}});
