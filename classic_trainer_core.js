@@ -1065,7 +1065,17 @@ function commit(g,plan,h){
   case 'Maintenance':p.deck=h.shuffle(g,p.deck);h.draw(g,plan.side);break;
   case 'Computer Search':case 'Energy Search':case "The Boss's Way":case 'Poké Ball':
    if(chosen(d,'find')&&d.find.length){const [id]=take(p.deck,[pick('find')]);p.hand.push(id);}p.deck=h.shuffle(g,p.deck);break;
-  case 'Pokémon Trader':{const i=pick('trade'),handOffset=i>plan.handIndex?i-1:i;const [offered]=take(p.hand,[handOffset]);const [found]=take(p.deck,[pick('find')]);p.hand.push(found);p.deck=h.shuffle(g,[...p.deck,offered]);break;}
+  case 'Pokémon Trader':{
+   const i=pick('trade'),handOffset=i>plan.handIndex?i-1:i;
+   const [offered]=take(p.hand,[handOffset]);
+   const [found]=take(p.deck,[pick('find')]);
+   // Both traded cards must be shown to the opponent before the deck is
+   // shuffled. Use the public turn feed, not a private search-choice option.
+   h.log(g,`Pokémon Trader revealed ${get(offered).name} from hand and ${get(found).name} from deck.`);
+   p.hand.push(found);
+   p.deck=h.shuffle(g,[...p.deck,offered]);
+   break;
+  }
   case 'Item Finder':{
    const selection=d.recover[0];
    if(selection.startsWith('paid:')){
