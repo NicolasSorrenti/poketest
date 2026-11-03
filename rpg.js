@@ -619,7 +619,11 @@ function maybeStartMandatory(){
    const available=LIVE_ROTATING_EVENTS.filter(e=>e.earliestDay<=state.day&&(!e.slots||e.slots.includes(state.slot)));
    const previous=state.liveLastRotatingId;
    const options=available.filter(e=>e.id!==previous);
-   const rotation=options.length?options[(Number(state.liveDailyRotationCount)||0)%options.length]:available[0];
+   // Prioritize unseen CG stories before replaying old ones; preserve the
+   // existing save-stable rotation and daily/period gates once all are seen.
+   const unseen=options.filter(e=>!m.seen[e.id]);
+   const pool=unseen.length?unseen:options;
+   const rotation=pool.length?pool[(Number(state.liveDailyRotationCount)||0)%pool.length]:available[0];
    const due=intro||rotation;
    if(due){
     if(LIVE_ROTATING_IDS.has(due.id)){
