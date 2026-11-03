@@ -162,6 +162,14 @@
     // When collapsed or interrupted, it returns to the original RPG stage.
     const navStyle=document.createElement('style');
     navStyle.textContent=`
+      /* The new overworld owns navigation. Its shared native story stage
+         still contains the legacy Characters/Events/Circuit/Activities dock.
+         Hide only that dock while the new UI is open, regardless of whether
+         its stage has been reparented. The original RPG retains its dock. */
+      html:has(#neoOverworldOverlay:not([hidden])) #rpgActionDock,
+      #neoOverworldOverlay #rpgActionDock{
+        display:none!important;visibility:hidden!important;pointer-events:none!important;
+      }
       #neoOverworldOverlay .neo-ow-header{z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#16152ceb;border-bottom:1px solid #a881a65c;padding:9px max(12px,env(safe-area-inset-left));min-height:58px}
       #neoOverworldOverlay .neo-ow-place{display:flex;flex-direction:column;gap:3px}
       #neoOverworldOverlay .neo-ow-place strong{font-size:17px;line-height:1.1}
