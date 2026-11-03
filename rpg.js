@@ -3548,7 +3548,12 @@ function render(){
   $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
  }
  $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
- $('timeTrack').replaceChildren();periods.forEach((p,i)=>{const x=document.createElement('span');x.className='time-pill'+(i===state.slot?' active':i<state.slot?' past':'');x.textContent=(i===0?'☀ ':i===1?'◐ ':'☾ ')+p;$('timeTrack').append(x)});
+ // Calendar pills do not need to be recreated for every dialogue line.
+ if($('timeTrack').dataset.period!==String(state.slot)){
+  $('timeTrack').dataset.period=String(state.slot);
+  $('timeTrack').replaceChildren();
+  periods.forEach((p,i)=>{const x=document.createElement('span');x.className='time-pill'+(i===state.slot?' active':i<state.slot?' past':'');x.textContent=(i===0?'☀ ':i===1?'◐ ':'☾ ')+p;$('timeTrack').append(x)});
+ }
  $('day').textContent='DAY '+String(Math.min(state.day,90)).padStart(2,'0')+' / 90';
  $('period').textContent=ended?'SEASON COMPLETE':periods[state.slot].toUpperCase();
  $('chapterLabel').textContent='CHAPTER '+(state.day<=30?'I':state.day<=60?'II':'III')+' · '+(state.day<=30?'NEW FACES':state.day<=60?'RISING STAKES':'FINAL STRETCH');
@@ -3581,7 +3586,13 @@ function render(){
   });
  $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
  const bgFiles={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
- $('scene').style.backgroundImage="linear-gradient(0deg,#090b18ec 0%,#090b1860 80%),url('/rpg-assets/"+bgFiles[state.location]+"')";
+ // The standalone overworld owns the visible map; never load a second
+ // hidden classic background or reapply its image for every interaction.
+ const classicSceneMap=window.NeoRpgOverworldStandalone?'':bgFiles[state.location];
+ if($('scene').dataset.mapBackground!==classicSceneMap){
+  $('scene').dataset.mapBackground=classicSceneMap;
+  $('scene').style.backgroundImage=classicSceneMap?"linear-gradient(0deg,#090b18ec 0%,#090b1860 80%),url('/rpg-assets/"+classicSceneMap+"')":'none';
+ }
  const showingMandatory=state.mandatoryEventState?.active?MANDATORY_EVENTS.find(x=>x.id===state.mandatoryEventState.active.id):null;
  const mandatoryLine=showingMandatory?.lines?.[state.mandatoryEventState.active.index];
  const mandatoryPortrait=mandatoryLine&&cast[mandatoryLine.speaker]?mandatoryLine.speaker:(showingMandatory?.kind==='bond'?showingMandatory.characterId:null);
