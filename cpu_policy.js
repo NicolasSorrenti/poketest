@@ -1320,8 +1320,20 @@ function score(a,o,cfg,used){
    currentPressure>0&&currentIncoming<hpRemaining(before);
   // Expert profiles recognize when an incoming attack is likely to KO their
   // Active, but do not sacrifice an immediate winning attack to flee.
-  const oldDamage=strongestAffordableAttack(before,q.active,p.bench.length);
-  const newDamage=strongestAffordableAttack(to,q.active,p.bench.length);
+  // A payable attack can still be barred by Amnesia or Gym restrictions.
+  // Use actual legal attack pressure for Apex's retreat comparison, not
+  // theoretical damage from a move the Active cannot declare.
+  const legalPressure=(unit)=>{
+   const moves=unit.effectiveAttacks||card(unit.id)?.attacks||[];
+   return moves.reduce((best,attack,index)=>
+    eligibleAttack(o,unit,attack,index)?
+     Math.max(best,estimatedDamage(attack,unit,q.active,p.bench.length)*
+      (unit.status==='Confused'?.5:1)):best,0);
+  };
+  const oldDamage=cfg.level===8?legalPressure(before):
+   strongestAffordableAttack(before,q.active,p.bench.length);
+  const newDamage=cfg.level===8?legalPressure(to):
+   strongestAffordableAttack(to,q.active,p.bench.length);
   // A printed, payable KO is not necessarily usable: Amnesia and Gym
   // restrictions can block that attack, and coin-dependent attacks are not
   // guaranteed. Do not penalize a defensive retreat by 300 for a phantom KO.
