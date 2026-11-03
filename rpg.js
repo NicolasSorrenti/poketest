@@ -112,6 +112,16 @@ const LIVE_SPECIAL_ART={
  live_glance_next_morning:'/rpg-assets/characters/live/events/live_confy_scene'
 };
 const LIVE_FINAL_ART_2='/rpg-assets/characters/live/events/live_confy_scene2';
+function startLiveGlanceMilestone(id){
+ if(!LIVE_SPECIAL_IDS.has(id)||state.liveSpecialSeen?.[id])return;
+ const active=state.mandatoryEventState?.active;
+ if(!active||LIVE_SPECIAL_IDS.has(active.id))return;
+ const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+ state.liveSuspendedEvent={...active};
+ state.liveSpecialSeen={...(state.liveSpecialSeen||{}),[id]:true};
+ m.active={id,phase:'lines',index:0,choice:null};
+ persist();render();
+}
 function specialArtCandidates(path){
  if(!path)return [];
  if(/\.(?:png|jpe?g|webp)$/i.test(path))return [path];
@@ -518,6 +528,11 @@ function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(!a||!e)return null;
  if(a.phase==='lines'){
+  if(e.id==='live_glance_next_morning'){
+   const line=e.lines[a.index]||e.lines.at(-1);
+   return {speaker:line.speaker==='Protagonist'?'You':line.speaker,line:line.text,
+    choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
+  }
   if(e.id===LIVE_HOME_CHECKIN.id){
    const line=e.lines[a.index]||e.lines.at(-1);
    return {speaker:line.speaker,line:line.text,choices:[['Continue ›','mandatoryNext']]};
@@ -528,6 +543,8 @@ function renderMandatory(){
   return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice'){
+  if(e.id==='live_glance_next_morning')
+   return {speaker:'Narrator',line:'The morning slips by.',choices:[['Continue ›','mandatoryChoice:0']]};
   if(e.id===LIVE_HOME_CHECKIN.id)
    return {speaker:'Live',line:"Are you okay? Why didn't you go out?",choices:[['Leave now ›','mandatoryActivityLeave'],['◉ Glance at Live','mandatoryGlance']]};
   const last=e.lines.at(-1);
@@ -536,6 +553,12 @@ function renderMandatory(){
   return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line:mandatoryText(last?.text||''),choices:LIVE_EVENT_ART[e.id]?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
  }
  const choice=e.choices[a.choice];
+ if(LIVE_SPECIAL_IDS.has(e.id)){
+  const extra=e.id==='live_glance_talk_one'&&!state.liveFirstCouchGlanced
+    ?[['◉ Glance at Live','mandatoryGlance']]:[];
+  return {speaker:e.id==='live_glance_next_morning'?'Narrator':'Live',line:mandatoryText(choice?.reply||''),
+   choices:[['Continue ›','mandatoryFinish'],...extra]};
+ }
  const responseActor=[...e.lines].reverse().find(line=>cast[line.speaker])?.speaker;
  const remoteReply=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
  const actorName=cast[e.characterId]?.name||e.characterId;
@@ -544,7 +567,19 @@ function renderMandatory(){
 function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;
  if(type==='mandatoryNext')MANDATORY.advanceDialogue(state,MANDATORY_EVENTS);
- else if(type==='mandatoryChoice')MANDATORY.choose(state,MANDATORY_EVENTS,Number(id));
+ else if(type==='mandatoryChoice'){
+  const specialId=state.mandatoryEventState.active.id;
+  const selected=MANDATORY.choose(state,MANDATORY_EVENTS,Number(id));
+  if(selected&&specialId==='live_glance_talk_one'&&!state.liveFirstConversationGlanceCount){
+   // Acknowledging the first conversation counts as two more glances,
+   // but does not open the viewer or trigger another event.
+   state.liveGlanceCount=(Number(state.liveGlanceCount)||0)+2;
+   state.liveGlancesByEvent=state.liveGlancesByEvent||{};
+   state.liveGlancesByEvent[specialId]=(Number(state.liveGlancesByEvent[specialId])||0)+2;
+   state.liveFirstConversationGlanceCount=state.liveGlanceCount;
+   if(state.liveGlanceCount>=30&&!state.liveThirtyGlancesDay)state.liveThirtyGlancesDay=state.day;
+  }
+ }
  else if(type==='mandatoryGlance'){
   const activeId=state.mandatoryEventState.active.id;
   const cg=liveEventArt(activeId);
@@ -552,11 +587,48 @@ function mandatoryAction(type,id){
   // The existing glance viewer accepts a source image and a crop rectangle.
   // Count the deliberate choice, not modal reopens or automatic CG display.
   if(typeof window.NeoOutfitChime?.glance!=='function')return true;
+  const isFirstSpecial=activeId==='live_glance_talk_one';
+  if(isFirstSpecial&&state.liveFirstCouchGlanced)return true;
   state.liveGlanceCount=(Number(state.liveGlanceCount)||0)+1;
   state.liveGlancesByEvent=state.liveGlancesByEvent||{};
   state.liveGlancesByEvent[activeId]=(Number(state.liveGlancesByEvent[activeId])||0)+1;
+  if(isFirstSpecial)state.liveFirstCouchGlanced=true;
+  if(state.liveGlanceCount>=30&&!state.liveThirtyGlancesDay)
+   state.liveThirtyGlancesDay=state.day;
+  const previousMilestone=state.liveFirstConversationGlanceCount||0;
+  let milestone=null;
+  if(!LIVE_SPECIAL_IDS.has(activeId)){
+   if(!state.liveSpecialSeen?.live_glance_talk_one&&state.liveGlanceCount>=6)
+    milestone='live_glance_talk_one';
+   else if(state.liveSpecialSeen?.live_glance_talk_one&&!state.liveSpecialSeen?.live_glance_talk_two&&
+    previousMilestone&&state.liveGlanceCount>=previousMilestone+15)
+    milestone='live_glance_talk_two';
+  }
   persist();
-  Promise.resolve(window.NeoOutfitChime.glance(cg,{top:0,bottom:1,left:0,right:1})).catch(error=>console.warn('Live glance failed',error));
+  const onClose=()=>{if(milestone)startLiveGlanceMilestone(milestone);};
+  const candidates=LIVE_SPECIAL_IDS.has(activeId)
+    ?[...specialArtCandidates(LIVE_SPECIAL_ART[activeId]),'/rpg-assets/characters/live/events/live_couch_sweater.png']
+    :[cg];
+  const openGlance=async()=>{
+   // Resolve a missing future CG to the existing approved couch image.
+   let src=cg;
+   if(LIVE_SPECIAL_IDS.has(activeId)){
+    src=await new Promise(resolve=>{
+     let i=0;
+     const attempt=()=>{
+      if(i>=candidates.length){resolve(null);return;}
+      const candidate=candidates[i++],test=new Image();
+      test.onload=()=>resolve(candidate);
+      test.onerror=attempt;
+      test.src=candidate;
+     };
+     attempt();
+    });
+   }
+   if(!src){onClose();return;}
+   await window.NeoOutfitChime.glance(src,{top:0,bottom:1,left:0,right:1},onClose);
+  };
+  Promise.resolve(openGlance()).catch(error=>{console.warn('Live glance failed',error);onClose();});
   return true;
  }
  else if(type==='mandatoryActivityLeave'){
@@ -566,7 +638,21 @@ function mandatoryAction(type,id){
   if(outcome){state.liveHomeActivityScene=null;log('Live checked in after an activity at home.');}
  }
  else if(type==='mandatoryFinish'){
+  const activeId=state.mandatoryEventState.active.id;
   const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
+  if(outcome&&LIVE_SPECIAL_IDS.has(activeId)){
+   if(activeId==='live_glance_next_morning'){
+    state.liveSuspendedEvent=null;
+    persist();
+    // The special morning ends in the afternoon; ordinary play resumes.
+    advance(1,'live_special_morning');
+   }else{
+    const suspended=state.liveSuspendedEvent;
+    state.liveSuspendedEvent=null;
+    if(suspended&&!state.mandatoryEventState.seen?.[suspended.id])
+     state.mandatoryEventState.active=suspended;
+   }
+  }
   if(outcome){
    if(REPEATABLE_LIVE_IDS.has(outcome.event.id)){
     state.liveRepeatCounts=state.liveRepeatCounts||{};
@@ -2156,7 +2242,8 @@ function syncSceneCG(){
  const liveEventId=state.mandatoryEventState?.active?.id;
  const liveArt=liveEventArt(liveEventId);
  if(liveArt){
-  const entry={id:liveEventId,title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home',character:'live'};
+  const finalSecond=liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2;
+  const entry={id:liveEventId+(finalSecond?'_second':''),title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home',character:'live'};
   const paths=LIVE_SPECIAL_IDS.has(liveEventId)
    ?[...specialArtCandidates(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[liveEventId]),'/rpg-assets/characters/live/events/live_couch_sweater.png']
    :[liveArt];
