@@ -558,17 +558,18 @@ function maybeStartMandatory(){
  // Existing scripted dialogue, character choices, galleries, duel preparation and starter selection remain authoritative.
  if(state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
     ||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
- // A due meeting takes precedence over an automatic story that would relocate the player.
- if(TIME.dueNow(state).length)return;
  // This aftermath is a forced CG-only scene and must start only after the
  // intimate scene's clock wipe has completely finished. Its pending flag is
  // persisted before the transition, so reloading cannot silently lose it.
+ // It takes precedence over appointments and normal apartment encounters.
  if(state.liveAfterPending&&state.location==='home'){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   m.active={id:LIVE_AFTER_EVENT.id,phase:'lines',index:0,choice:null};
   persist();
   return;
  }
+ // A due meeting takes precedence over a normal story that would relocate the player.
+ if(TIME.dueNow(state).length)return;
  // The 30-glance scene is due from the *next* in-game day onward.
  // Don't restrict it to slot 0: a scheduled appointment, travel wipe, or
  // resumed dialogue must not permanently make the event missable.
