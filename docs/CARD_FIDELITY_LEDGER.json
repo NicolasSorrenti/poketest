@@ -1901,7 +1901,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed Basic-only return, evolved stack/attachments discard, target selection, forced sole-target auto-resolution, and Active/Bench consequences. Source review only across Base and Base Set 2; existing tests were not expanded. Historical edge rulings and network/client integration remain unreviewed.",
+          "evidence": [
+            "Source inspection of classic_trainer_core.js (no new tests added)",
+            "Printed Base Set #78 and Base Set 2 #107 English text compared via Limitless and catalog. Existing reducer returned the bottom Basic and discarded evolutions/attachments; forced sole-target prompt was unnecessary."
+          ]
         }
       ]
     },
@@ -6854,7 +6859,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed Basic-only return, evolved stack/attachments discard, target selection, forced sole-target auto-resolution, and Active/Bench consequences. Source review only across Base and Base Set 2; existing tests were not expanded. Historical edge rulings and network/client integration remain unreviewed.",
+          "evidence": [
+            "Source inspection of classic_trainer_core.js (no new tests added)",
+            "Printed Base Set #78 and Base Set 2 #107 English text compared via Limitless and catalog. Existing reducer returned the bottom Basic and discarded evolutions/attachments; forced sole-target prompt was unnecessary."
+          ]
         }
       ]
     },
