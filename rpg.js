@@ -566,8 +566,9 @@ if(homeActivity&&state.day<=90){
  // The rotation is save-stable, avoids immediate repeats, and never consumes an extra period.
  const pool=[LIVE_HOME_CHECKIN.id,...REPEATABLE_LIVE_EVENTS.map(event=>event.id)];
  const previousId=state.liveHomeLastSceneId;
- const eligible=pool.filter(id=>id!==previousId);
- const id=eligible[(count-1)%eligible.length];
+ // Rotate through every scene before repeating, including laundry.
+ let id=pool[(count-1)%pool.length];
+ if(id===previousId)id=pool[count%pool.length];
  const cg=id===LIVE_HOME_CHECKIN.id
   ?LIVE_HOME_CHECKIN_ART.filter(path=>path!==lastCG)[(count-1)%Math.max(1,LIVE_HOME_CHECKIN_ART.filter(path=>path!==lastCG).length)]
   :LIVE_EVENT_ART[id];
