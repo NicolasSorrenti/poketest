@@ -152,6 +152,57 @@ const LIVE_LYLA_PHOTO_EVENT={id:'live_lyla_photo_sighting',title:'A Familiar Fac
  {label:"Yeah, that's Lyla from the card shop",reply:"I thought so! She looks different in a magazine, but I'd recognize that face."},
  {label:"I didn't know her pictures were everywhere",reply:"Neither did I! Imagine seeing your card-shop friends on the side of a bus."}
 ]};
+
+const LIVE_DAY_FOLLOWUP={id:'live_day_followup',title:'Later at Home',kind:'season',priority:94,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},
+ lines:[{speaker:'Live',text:'You came back.'}],
+ choices:[{label:'See how her day went',reply:"It's been a full day."}]};
+const LIVE_REPEAT_MORNING={id:'live_repeat_private_morning',title:'A Morning Together',kind:'season',priority:99,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},
+ lines:[
+  {speaker:'Live',text:"Honey... let's keep this just between us, okay?"},
+  {speaker:'Narrator',text:"You spend a quiet morning together, away from the rest of the world."},
+  {speaker:'Narrator',text:"The scene fades to black. By the time you return to the living room, the morning has passed."}
+ ],choices:[{label:'Continue the day',reply:"Live smiles and says she'll see you later."}]};
+const LIVE_FOLLOWUPS={
+ live_home_cooking:["I kept some of the sauce for you. It turned out even better after resting.","Dinner was lovely! I put the leftovers in the fridge."],
+ live_home_reading:["I finished another chapter. I'm starting to suspect everyone.","I finally found the answer. No spoilers until you've read it."],
+ live_home_relaxing:["That little break did wonders. I feel much better now.","I'm calling it an early night. Don't stay up too late."],
+ live_brushing_teeth:["The bathroom's all yours now; I finished getting ready.","Everything's tidied up. I left you a fresh towel."],
+ live_getting_ready:["I finally found my keys and got everything sorted.","I'm all set for tomorrow now."],
+ live_cleaning_table:["The table looks so much better. I even polished it.","Everything's clean now. Let's keep it that way for a few hours."],
+ live_vacuuming:["I finished the vacuuming. Much quieter in here now, isn't it?","I put the vacuum away. It's time for a rest."],
+ live_laundry:["The clothes are dry now. I folded yours too.","Everything's put away. One less chore for tomorrow."],
+ live_workout_break:["My legs are complaining, but it was a good workout.","I stretched and had some water. I think I'll rest now."],
+ live_workout_exhausted:["I'm feeling a little more human after that workout.","I'm still worn out. No more exercise for me today."],
+ live_extra_exhaused_workout:["I'm still recovering from that workout. I may have overdone it.","I've earned an early night after all that exercise."],
+ live_waking_up_casual:["I finally woke up properly. Coffee really does help.","This morning feels ages ago. What a day."],
+ live_waking_up_lavender:["I changed and made some breakfast after you left.","I was so sleepy this morning. Tomorrow I'm setting two alarms."],
+ live_clothe_washing:["The wash is finished! Everything smells fresh.","The laundry's folded and put away. That's one job done."],
+ live_cleaning:["I finished tidying. It feels nice to sit down now.","The apartment's spotless. I think I'll rest."],
+ live_cooking:["The recipe turned out really well! I saved you a portion.","That meal was delicious, if I say so myself. There are leftovers."],
+ live_library:["I finally worked out the twist in that mystery.","I finished the book. Tomorrow I'll have to find another."],
+ live_sweater_bra:["I found my cardigan and headed out after getting ready.","I laid out tomorrow's clothes. Hopefully no more lost keys."]
+};
+const LIVE_AWAY_IDS=new Set(['live_vacuuming','live_getting_ready','live_sweater_bra','live_clothe_washing','live_library']);
+function liveFollowupContent(){
+ const dayScene=state.liveDayScene||{},base=dayScene.id||'live_home_cooking';
+ const lines=LIVE_FOLLOWUPS[base]||["I finished up what I was doing earlier. Thanks for checking in.","It's been quite a day. I'm glad to be resting now."];
+ const evening=state.slot===2;
+ const away=evening&&LIVE_AWAY_IDS.has(base);
+ const cooldown=Number(state.liveRepeatLastDay)||0;
+ const cooling=cooldown>0&&state.day>cooldown&&state.day<=cooldown+5;
+ if(away)return {away:true,speaker:'Narrator',text:base==='live_library'?
+  'Live left to return her library book. A note on the table says she will be back later.':
+  'Live has gone out after finishing her errands. She left you a quick note on the table.'};
+ if(cooling)return {away:false,speaker:'Live',text:state.day%2===0?
+  "I'm still tired from our last quiet morning. Let's take it easy for a few days, okay?":
+  "I have to leave in a little while. Let's save some time together for another day."};
+ return {away:false,speaker:'Live',text:lines[evening?1:0]};
+}
+function liveCanRepeat(){
+ const last=Number(state.liveRepeatLastDay)||0;
+ return !!state.mandatoryEventState?.seen?.live_glance_next_morning&&state.slot===0&&
+  (!last||state.day>=last+6);
+}
 const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
  {speaker:'Narrator',text:'After spending time at home, you notice Live looking over from the living room.'},
  {speaker:'Live',text:"Oh, you're still here! I thought you might be heading out."},
@@ -159,13 +210,15 @@ const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kin
 ],choices:[{label:'Leave now',reply:"I'll be here if you need anything."}]};
 const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundry','live_getting_ready','live_workout_break'].map(name=>'/rpg-assets/characters/live/events/'+name+'.png');
 function liveEventArt(id){
+ if(id===LIVE_REPEAT_MORNING.id)return state.mandatoryEventState?.active?.index>=1?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning;
+ if(id===LIVE_DAY_FOLLOWUP.id)return liveFollowupContent().away?null:state.liveDayScene?.cg||LIVE_EVENT_ART[state.liveDayScene?.id]||null;
  if(LIVE_SPECIAL_IDS.has(id)){
   const base=id==='live_glance_next_morning'&&state.mandatoryEventState?.active?.index>=2?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART[id];
   return specialArtCandidates(base)[0];
  }
  return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];
 }
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_SPECIAL_EVENTS,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN];
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_SPECIAL_EVENTS,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -457,7 +510,7 @@ function queueMandatory(){
  // invalidates an active Live event on every render and restarts it.
  MANDATORY.queue(state,MANDATORY_EVENTS);
  const m=state.mandatoryEventState;
- if(m?.pending)m.pending=m.pending.filter(item=>!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id&&item.id!==LIVE_LYLA_PHOTO_EVENT.id);
+ if(m?.pending)m.pending=m.pending.filter(item=>!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id&&item.id!==LIVE_LYLA_PHOTO_EVENT.id&&item.id!==LIVE_DAY_FOLLOWUP.id&&item.id!==LIVE_REPEAT_MORNING.id);
 }
 function autoTravelForEvent(place){
  if(!place||!places[place]||state.location===place)return false;
@@ -517,6 +570,24 @@ function maybeStartMandatory(){
   persist();
   return;
  }
+ // Once Live's daily scene is established, do not reroll it on a return
+ // visit. Later periods receive a contextual follow-up with the SAME CG.
+ const daily=state.liveDayScene;
+ if(state.location==='home'&&daily?.day===state.day&&
+    daily.lastSeenSlot!==state.slot&&state.slot>daily.firstSlot){
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  delete m.seen[LIVE_DAY_FOLLOWUP.id];
+  m.active={id:LIVE_DAY_FOLLOWUP.id,phase:'lines',index:0,choice:null};
+  daily.lastSeenSlot=state.slot;
+  state.liveHomeActivityScene=null;
+  persist();
+  return;
+ }
+ if(state.location==='home'&&daily?.day===state.day){
+  // Re-entering in the same period does not launch a new encounter.
+  state.liveHomeActivityScene=null;
+  return;
+ }
  // The activity check-in is scheduled only once the clock wipe has settled.
  if(state.location==='home'&&state.liveHomeActivityScene?.pending){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
@@ -525,6 +596,7 @@ function maybeStartMandatory(){
    const id=LIVE_ROTATING_IDS.has(chosen)?chosen:LIVE_HOME_CHECKIN.id;
    delete m.seen[id]; // repeatable events may run again on another apartment activity
    m.active={id,phase:'lines',index:0,choice:null};
+   state.liveDayScene={day:state.day,id,cg:state.liveHomeActivityScene.cg||liveEventArt(id),firstSlot:state.slot,lastSeenSlot:state.slot};
    state.liveHomeActivityScene.pending=false;
    state.liveLastEventDay=state.day;
    persist();
@@ -550,6 +622,7 @@ function maybeStartMandatory(){
      state.liveDailyRotationCount=(Number(state.liveDailyRotationCount)||0)+1;
     }
     m.active={id:due.id,phase:'lines',index:0,choice:null};
+    state.liveDayScene={day:state.day,id:due.id,cg:LIVE_EVENT_ART[due.id],firstSlot:state.slot,lastSeenSlot:state.slot};
     state.liveLastEventDay=state.day;
     persist();
     return;
@@ -561,7 +634,7 @@ function maybeStartMandatory(){
  // The non-Live scheduler runs only when no Live scene is active.
  // Exclude the replayable pool so it cannot accidentally start on every render.
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
-  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id));
+  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
