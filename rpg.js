@@ -47,7 +47,14 @@ const LIVE_EVENTS=[
  {id:'live_waking_up_lavender',title:'A Slow Start',kind:'season',priority:90,earliestDay:46,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_waking_up_casual'},lines:[{speaker:'Narrator',text:"Live emerges from her room with a sleepy smile."},{speaker:'Live',text:"I think the alarm clock and I have agreed to disagree today."},{speaker:'Protagonist',text:"Coffee?"}],choices:[{label:'Spend a moment with Live',reply:"Please. You're a lifesaver. And I promise I'll make the next pot."}]}
 ];
 const LIVE_EVENT_ART={"live_home_welcome":"/rpg-assets/characters/live/events/live_couch_sweater.png","live_home_cooking":"/rpg-assets/characters/live/events/live_cooking_evening.png","live_home_reading":"/rpg-assets/characters/live/events/live_reading.png","live_home_relaxing":"/rpg-assets/characters/live/events/live_relaxing_sofa.png","live_brushing_teeth":"/rpg-assets/characters/live/events/live_brushing_teeth.png","live_getting_ready":"/rpg-assets/characters/live/events/live_getting_ready.png","live_cleaning_table":"/rpg-assets/characters/live/events/live_cleaning_table.png","live_vacuuming":"/rpg-assets/characters/live/events/live_vacuuming.png","live_laundry":"/rpg-assets/characters/live/events/live_laundry.png","live_workout_break":"/rpg-assets/characters/live/events/live_workout_break.png","live_workout_exhausted":"/rpg-assets/characters/live/events/live_workout_exhausted.png","live_waking_up_casual":"/rpg-assets/characters/live/events/live_waking_up_casual.png","live_waking_up_lavender":"/rpg-assets/characters/live/events/live_waking_up_lavender.png"};
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS];
+const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
+ {speaker:'Narrator',text:'After spending time at home, you notice Live looking over from the living room.'},
+ {speaker:'Live',text:"Oh, you're still here! I thought you might be heading out."},
+ {speaker:'Live',text:"Are you okay? Why didn't you go out?"}
+],choices:[{label:'Leave now',reply:"I'll be here if you need anything."}]};
+const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundry','live_getting_ready','live_workout_break'].map(name=>'/rpg-assets/characters/live/events/'+name+'.png');
+function liveEventArt(id){return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];}
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,LIVE_HOME_CHECKIN];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -335,7 +342,11 @@ const cgScenePresenter=CG_SCENE?.create($('scene'),$('rpgSceneCG'),document)||nu
 
 function queueMandatory(){
  if(!MANDATORY)return;
- MANDATORY.queue(state,MANDATORY_EVENTS.filter(e=>!LIVE_EVENTS.includes(e)));
+ // Hydrate with the complete catalog: using a filtered catalog here
+ // invalidates an active Live event on every render and restarts it.
+ MANDATORY.queue(state,MANDATORY_EVENTS);
+ const m=state.mandatoryEventState;
+ if(m?.pending)m.pending=m.pending.filter(item=>!LIVE_EVENT_ART[item.id]&&item.id!==LIVE_HOME_CHECKIN.id);
 }
 function autoTravelForEvent(place){
  if(!place||!places[place]||state.location===place)return false;
@@ -370,6 +381,18 @@ function maybeStartMandatory(){
     ||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
  // A due meeting takes precedence over an automatic story that would relocate the player.
  if(TIME.dueNow(state).length)return;
+ // The activity check-in is scheduled only once the clock wipe has settled.
+ if(state.location==='home'&&state.liveHomeActivityScene?.pending){
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  if(!m.active){
+   delete m.seen[LIVE_HOME_CHECKIN.id];
+   m.active={id:LIVE_HOME_CHECKIN.id,phase:'lines',index:0,choice:null};
+   state.liveHomeActivityScene.pending=false;
+   state.liveLastEventDay=state.day;
+   persist();
+   return;
+  }
+ }
  // Live is a resident: her one-off scenes fire on a safe apartment arrival,
  // never remotely or after travelling the player elsewhere.
  if(state.location==='home'&&state.day<=90){
@@ -385,7 +408,10 @@ function maybeStartMandatory(){
    }
   }
  }
- const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>!LIVE_EVENTS.includes(e)));
+ // The scheduler must also receive the complete catalog to preserve Live's
+ // active dialogue; Live is selected only by the apartment-specific gate.
+ const started=MANDATORY.takeNext(state,MANDATORY_EVENTS);
+ if(started&&(LIVE_EVENT_ART[started.id]||started.id===LIVE_HOME_CHECKIN.id)){state.mandatoryEventState.active=null;return;}
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -400,22 +426,28 @@ function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(!a||!e)return null;
  if(a.phase==='lines'){
+  if(e.id===LIVE_HOME_CHECKIN.id){
+   const line=e.lines[a.index]||e.lines.at(-1);
+   return {speaker:line.speaker,line:line.text,choices:[['Continue ›','mandatoryNext']]};
+  }
   const line=e.lines[a.index]||e.lines[e.lines.length-1];
   const name=line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker;
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
-  return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
+  return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice'){
+  if(e.id===LIVE_HOME_CHECKIN.id)
+   return {speaker:'Live',line:"Are you okay? Why didn't you go out?",choices:[['Leave now ›','mandatoryActivityLeave'],['◉ Glance at Live','mandatoryGlance']]};
   const last=e.lines.at(-1);
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
   const speaker=last?.speaker==='Protagonist'?'You':(cast[last?.speaker]?.name||last?.speaker||'Narrator');
-  return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line:mandatoryText(last?.text||''),choices:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
+  return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line:mandatoryText(last?.text||''),choices:LIVE_EVENT_ART[e.id]?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
  }
  const choice=e.choices[a.choice];
  const responseActor=[...e.lines].reverse().find(line=>cast[line.speaker])?.speaker;
  const remoteReply=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
  const actorName=cast[e.characterId]?.name||e.characterId;
- return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]?[['Leave now ›','mandatoryFinish'],['Glance at Live ›','mandatoryGlance']]:[['Continue story ›','mandatoryFinish']]};
+ return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]?[['Leave now ›','mandatoryFinish'],['◉ Glance at Live','mandatoryGlance']]:[['Continue story ›','mandatoryFinish']]};
 }
 function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;
@@ -423,8 +455,8 @@ function mandatoryAction(type,id){
  else if(type==='mandatoryChoice')MANDATORY.choose(state,MANDATORY_EVENTS,Number(id));
  else if(type==='mandatoryGlance'){
   const activeId=state.mandatoryEventState.active.id;
-  const cg=LIVE_EVENT_ART[activeId];
-  if(!cg||state.mandatoryEventState.active.phase!=='response')return true;
+  const cg=liveEventArt(activeId);
+  if(!cg||!['lines','choice','response'].includes(state.mandatoryEventState.active.phase))return true;
   // The existing glance viewer accepts a source image and a crop rectangle.
   // Count the deliberate choice, not modal reopens or automatic CG display.
   if(typeof window.NeoOutfitChime?.glance!=='function')return true;
@@ -434,6 +466,12 @@ function mandatoryAction(type,id){
   persist();
   Promise.resolve(window.NeoOutfitChime.glance(cg,{top:0,bottom:1,left:0,right:1})).catch(error=>console.warn('Live glance failed',error));
   return true;
+ }
+ else if(type==='mandatoryActivityLeave'){
+  if(state.mandatoryEventState.active.id!==LIVE_HOME_CHECKIN.id||state.mandatoryEventState.active.phase!=='choice')return true;
+  MANDATORY.choose(state,MANDATORY_EVENTS,0);
+  const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
+  if(outcome){state.liveHomeActivityScene=null;log('Live checked in after an activity at home.');}
  }
  else if(type==='mandatoryFinish'){
   const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
@@ -475,7 +513,20 @@ function disableTutorials(disabled){
  persist();
 }
 const atKey=(id)=>state.day+':'+state.slot+':'+id;
-function advance(n=1,transitionSource='activity',suppressTimeFlash=false){const beforeDay=state.day,beforeSlot=state.slot;TIME.advanceClock(state,n);if(state.day>90)log('The Neo Harbor championship season has ended.');
+function advance(n=1,transitionSource='activity',suppressTimeFlash=false){const beforeDay=state.day,beforeSlot=state.slot;
+const homeActivity=transitionSource==='home_activity'&&state.location==='home'&&state.day<=90;
+TIME.advanceClock(state,n);
+if(homeActivity&&state.day<=90){
+ const count=(Number(state.liveHomeActivityCount)||0)+1;
+ const seen=state.mandatoryEventState?.seen||{};
+ const previous=Object.keys(seen).filter(id=>LIVE_EVENT_ART[id]).sort((a,b)=>
+  (Number(seen[b]?.day)||0)-(Number(seen[a]?.day)||0)||
+  (Number(seen[b]?.slot)||0)-(Number(seen[a]?.slot)||0))[0];
+ const lastCG=state.liveHomeActivityScene?.cg||LIVE_EVENT_ART[previous];
+ const choices=LIVE_HOME_CHECKIN_ART.filter(path=>path!==lastCG);
+ state.liveHomeActivityCount=count;
+ state.liveHomeActivityScene={pending:true,cg:choices[(count-1)%choices.length],day:state.day,slot:state.slot};
+}if(state.day>90)log('The Neo Harbor championship season has ended.');
 state.selected=null;
 if(state.day>beforeDay){
  // A new calendar day always begins at home, regardless of yesterday's last stop.
@@ -853,7 +904,7 @@ function performActivity(id){
  }
  log('Activity completed at '+places[place][0]+': '+result.summary);recordIntention('activity');
  activityOutcome('Narrator',result.summary,before,entry?.npc,
-  result.voucherSet==='latest'?['1 booster voucher']:[]);
+  result.voucherSet==='latest'?['1 booster voucher']:[],1,place==='home'?'home_activity':'activity');
  tutorialEvent('activities');
 }
 
@@ -1994,9 +2045,9 @@ function showCGMoment(entry){
 function syncSceneCG(){
  if(!cgScenePresenter)return;
  const liveEventId=state.mandatoryEventState?.active?.id;
- const liveArt=LIVE_EVENT_ART[liveEventId];
+ const liveArt=liveEventArt(liveEventId);
  if(liveArt){
-  const entry={id:liveEventId,title:LIVE_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home',character:'live'};
+  const entry={id:liveEventId,title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home',character:'live'};
   cgScenePresenter.show(entry,[{kind:'event',path:liveArt}],()=>{},()=>{});
   return;
  }
