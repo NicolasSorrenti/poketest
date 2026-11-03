@@ -54,13 +54,26 @@ const LIVE_EVENTS=[
   {label:'Sit beside her until she recovers',reply:"This is nice. I mean, the company—not the part where I can barely move my legs!",flag:'live_extra_workout_company'}
  ]},
  {id:'live_waking_up_casual',title:'The Early Riser',kind:'season',priority:90,earliestDay:41,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_extra_exhaused_workout'},lines:[{speaker:'Narrator',text:"The apartment is quiet until Live appears in the kitchen, still sleepy."},{speaker:'Live',text:"Morning. I was hoping to get breakfast ready before you woke up."},{speaker:'Protagonist',text:"You can sleep in sometimes, you know."}],choices:[{label:'Spend a moment with Live',reply:"I know. I just like having someone to make breakfast for."}]},
- {id:'live_waking_up_lavender',title:'A Slow Start',kind:'season',priority:90,earliestDay:46,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_waking_up_casual'},lines:[{speaker:'Narrator',text:"Live emerges from her room with a sleepy smile."},{speaker:'Live',text:"I think the alarm clock and I have agreed to disagree today."},{speaker:'Protagonist',text:"Coffee?"}],choices:[{label:'Spend a moment with Live',reply:"Please. You're a lifesaver. And I promise I'll make the next pot."}]},
- {id:'live_clothe_washing',title:"An Extra Load",kind:'season',priority:90,earliestDay:50,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_waking_up_lavender'},lines:[{"speaker":"Narrator","text":"The washing machine is running when you find Live sorting clothes in the apartment."},{"speaker":"Live","text":"Oh, you're home! I thought I could finish the washing before you noticed the laundry basket was full."},{"speaker":"Protagonist","text":"You do know you can leave some of that for me."},{"speaker":"Live","text":"I know. It's just satisfying to get it all done before lunch."}],choices:[{"label":"Offer to help fold","reply":"Then we're a team. You can take the towels!","flag":"live_clothes_help"},{"label":"Tell her to take a break","reply":"All right, but only if you promise not to do it all yourself.","flag":"live_clothes_break"}]},
- {id:'live_cleaning',title:"A Little Tidying",kind:'season',priority:90,earliestDay:54,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_clothe_washing'},lines:[{"speaker":"Narrator","text":"You find Live busy cleaning the apartment, carefully working around the furniture."},{"speaker":"Live","text":"There you are! I was trying to make the place feel a little brighter."},{"speaker":"Protagonist","text":"It already looked fine to me."},{"speaker":"Live","text":"That's sweet. But it feels even nicer when everything has its place."}],choices:[{"label":"Help her finish","reply":"That'll make this go twice as fast. Thank you!","flag":"live_cleaning_help"},{"label":"Tell her she has done enough","reply":"Maybe you're right. I could use a cup of tea.","flag":"live_cleaning_rest"}]},
- {id:'live_cooking',title:"Something on the Stove",kind:'season',priority:90,earliestDay:58,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_cleaning'},lines:[{"speaker":"Narrator","text":"A familiar smell drifts out of the apartment kitchen as Live watches something simmer."},{"speaker":"Live","text":"Oh! You're just in time to try this. I changed the recipe a little."},{"speaker":"Protagonist","text":"It smells great. What's different?"},{"speaker":"Live","text":"That's the secret. Well, mostly I added more herbs."}],choices:[{"label":"Taste her cooking","reply":"You like it? Good! I'll write down what I changed.","flag":"live_cooking_taste_new"},{"label":"Offer to set the table","reply":"Perfect. I'll bring everything over in a minute.","flag":"live_cooking_table_new"}]},
- {id:'live_library',title:"A Borrowed Afternoon",kind:'season',priority:90,earliestDay:62,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_cooking'},lines:[{"speaker":"Narrator","text":"You find Live at home with a book and several notes spread across the table."},{"speaker":"Live","text":"I borrowed this from the library. It was supposed to be a quick read, but I lost track of time."},{"speaker":"Protagonist","text":"What has you so interested?"},{"speaker":"Live","text":"A little mystery. I'm trying to solve it before the last chapter."}],choices:[{"label":"Ask her to read you a passage","reply":"Okay, but you have to promise not to guess the ending out loud.","flag":"live_library_read"},{"label":"Try to solve the mystery with her","reply":"Now that's an idea. Let's compare notes.","flag":"live_library_guess"}]},
- {id:'live_sweater_bra',title:"The Sweater Mix-Up",kind:'season',priority:90,earliestDay:66,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_library'},lines:[{"speaker":"Narrator","text":"Live looks up from a pile of clothes in the apartment, holding a sweater she had been looking for."},{"speaker":"Live","text":"Oh! There it is. I thought I'd put it away, but apparently I left it here."},{"speaker":"Protagonist","text":"Were you searching for it all morning?"},{"speaker":"Live","text":"Longer than I'd like to admit. At least I found it before going out."}],choices:[{"label":"Help her put things away","reply":"Thank you. Maybe next time I'll remember where everything belongs.","flag":"live_sweater_help"},{"label":"Tease her about losing things","reply":"I know, I know. I'm getting a little too good at it!","flag":"live_sweater_tease"}]}
+ {id:'live_waking_up_lavender',title:'A Slow Start',kind:'season',priority:90,earliestDay:46,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_waking_up_casual'},lines:[{speaker:'Narrator',text:"Live emerges from her room with a sleepy smile."},{speaker:'Live',text:"I think the alarm clock and I have agreed to disagree today."},{speaker:'Protagonist',text:"Coffee?"}],choices:[{label:'Spend a moment with Live',reply:"Please. You're a lifesaver. And I promise I'll make the next pot."}]}
 ];
+// Everyday apartment moments are replayable; they never join the one-time Live storyline.
+const REPEATABLE_LIVE_EVENTS=[
+ {id:'live_clothe_washing',title:"An Extra Load",kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[{"speaker":"Narrator","text":"The washing machine is running when you find Live sorting clothes in the apartment."},{"speaker":"Live","text":"Oh, you're home! I thought I could finish the washing before you noticed the laundry basket was full."},{"speaker":"Protagonist","text":"You do know you can leave some of that for me."},{"speaker":"Live","text":"I know. It's just satisfying to get it all done before lunch."}],choices:[{"label":"Offer to help fold","reply":"Then we're a team. You can take the towels!","flag":"live_clothes_help"},{"label":"Tell her to take a break","reply":"All right, but only if you promise not to do it all yourself.","flag":"live_clothes_break"}]},
+ {id:'live_cleaning',title:"A Little Tidying",kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[{"speaker":"Narrator","text":"You find Live busy cleaning the apartment, carefully working around the furniture."},{"speaker":"Live","text":"There you are! I was trying to make the place feel a little brighter."},{"speaker":"Protagonist","text":"It already looked fine to me."},{"speaker":"Live","text":"That's sweet. But it feels even nicer when everything has its place."}],choices:[{"label":"Help her finish","reply":"That'll make this go twice as fast. Thank you!","flag":"live_cleaning_help"},{"label":"Tell her she has done enough","reply":"Maybe you're right. I could use a cup of tea.","flag":"live_cleaning_rest"}]},
+ {id:'live_cooking',title:"Something on the Stove",kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[{"speaker":"Narrator","text":"A familiar smell drifts out of the apartment kitchen as Live watches something simmer."},{"speaker":"Live","text":"Oh! You're just in time to try this. I changed the recipe a little."},{"speaker":"Protagonist","text":"It smells great. What's different?"},{"speaker":"Live","text":"That's the secret. Well, mostly I added more herbs."}],choices:[{"label":"Taste her cooking","reply":"You like it? Good! I'll write down what I changed.","flag":"live_cooking_taste_new"},{"label":"Offer to set the table","reply":"Perfect. I'll bring everything over in a minute.","flag":"live_cooking_table_new"}]},
+ {id:'live_library',title:"A Borrowed Afternoon",kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[{"speaker":"Narrator","text":"You find Live at home with a book and several notes spread across the table."},{"speaker":"Live","text":"I borrowed this from the library. It was supposed to be a quick read, but I lost track of time."},{"speaker":"Protagonist","text":"What has you so interested?"},{"speaker":"Live","text":"A little mystery. I'm trying to solve it before the last chapter."}],choices:[{"label":"Ask her to read you a passage","reply":"Okay, but you have to promise not to guess the ending out loud.","flag":"live_library_read"},{"label":"Try to solve the mystery with her","reply":"Now that's an idea. Let's compare notes.","flag":"live_library_guess"}]},
+ {id:'live_sweater_bra',title:'Getting Ready',kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
+  {speaker:'Narrator',text:"You stop by the apartment to find Live getting dressed for the day, pulling on her sweater over her everyday underclothes. She doesn't seem bothered by your presence."},
+  {speaker:'Protagonist',text:"Oh—sorry. I didn't know you were changing."},
+  {speaker:'Live',text:"It's okay! I trust you. I was just finishing getting ready."},
+  {speaker:'Narrator',text:"Live smiles casually, apparently unaware that the moment has left you a little flustered."},
+  {speaker:'Live',text:"Could you hand me the cardigan on the chair? I keep forgetting where I put things."}
+ ],choices:[
+  {label:'Hand her the cardigan',reply:"Thank you! You're always so helpful. Now, where did I put my keys?"},
+  {label:'Give her some privacy',reply:"Oh, sure! That's thoughtful of you. I'll be out in a moment."}
+ ]}
+];
+const REPEATABLE_LIVE_IDS=new Set(REPEATABLE_LIVE_EVENTS.map(event=>event.id));
 const LIVE_EVENT_ART={"live_clothe_washing":"/rpg-assets/characters/live/events/live_clothe_washing.jpg","live_cleaning":"/rpg-assets/characters/live/events/live_cleaning.jpg","live_cooking":"/rpg-assets/characters/live/events/live_cooking.jpg","live_library":"/rpg-assets/characters/live/events/live_library.jpg","live_sweater_bra":"/rpg-assets/characters/live/events/live_sweater_bra.jpg","live_home_welcome":"/rpg-assets/characters/live/events/live_couch_sweater.png","live_home_cooking":"/rpg-assets/characters/live/events/live_cooking_evening.png","live_home_reading":"/rpg-assets/characters/live/events/live_reading.png","live_home_relaxing":"/rpg-assets/characters/live/events/live_relaxing_sofa.png","live_brushing_teeth":"/rpg-assets/characters/live/events/live_brushing_teeth.png","live_getting_ready":"/rpg-assets/characters/live/events/live_getting_ready.png","live_cleaning_table":"/rpg-assets/characters/live/events/live_cleaning_table.png","live_vacuuming":"/rpg-assets/characters/live/events/live_vacuuming.png","live_laundry":"/rpg-assets/characters/live/events/live_laundry.png","live_workout_break":"/rpg-assets/characters/live/events/live_workout_break.png","live_workout_exhausted":"/rpg-assets/characters/live/events/live_workout_exhausted.png","live_extra_exhaused_workout":"/rpg-assets/characters/live/events/live_extra_exhaused_workout.jpg","live_waking_up_casual":"/rpg-assets/characters/live/events/live_waking_up_casual.png","live_waking_up_lavender":"/rpg-assets/characters/live/events/live_waking_up_lavender.png"};
 const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
  {speaker:'Narrator',text:'After spending time at home, you notice Live looking over from the living room.'},
@@ -69,7 +82,7 @@ const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kin
 ],choices:[{label:'Leave now',reply:"I'll be here if you need anything."}]};
 const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundry','live_getting_ready','live_workout_break'].map(name=>'/rpg-assets/characters/live/events/'+name+'.png');
 function liveEventArt(id){return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];}
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,LIVE_HOME_CHECKIN];
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,LIVE_HOME_CHECKIN];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -400,8 +413,10 @@ function maybeStartMandatory(){
  if(state.location==='home'&&state.liveHomeActivityScene?.pending){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   if(!m.active){
-   delete m.seen[LIVE_HOME_CHECKIN.id];
-   m.active={id:LIVE_HOME_CHECKIN.id,phase:'lines',index:0,choice:null};
+   const chosen=state.liveHomeActivityScene.id||LIVE_HOME_CHECKIN.id;
+   const id=REPEATABLE_LIVE_IDS.has(chosen)?chosen:LIVE_HOME_CHECKIN.id;
+   delete m.seen[id]; // repeatable events may run again on another apartment activity
+   m.active={id,phase:'lines',index:0,choice:null};
    state.liveHomeActivityScene.pending=false;
    state.liveLastEventDay=state.day;
    persist();
@@ -425,8 +440,10 @@ function maybeStartMandatory(){
  }
  // The scheduler must also receive the complete catalog to preserve Live's
  // active dialogue; Live is selected only by the apartment-specific gate.
- const started=MANDATORY.takeNext(state,MANDATORY_EVENTS);
- if(started&&(LIVE_EVENT_ART[started.id]||started.id===LIVE_HOME_CHECKIN.id)){state.mandatoryEventState.active=null;return;}
+ // The non-Live scheduler runs only when no Live scene is active.
+ // Exclude the replayable pool so it cannot accidentally start on every render.
+ const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
+  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -490,7 +507,14 @@ function mandatoryAction(type,id){
  }
  else if(type==='mandatoryFinish'){
   const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
-  if(outcome)log('Story milestone: '+(outcome.event.title||outcome.event.id)+'.');
+  if(outcome){
+   if(REPEATABLE_LIVE_IDS.has(outcome.event.id)){
+    state.liveRepeatCounts=state.liveRepeatCounts||{};
+    state.liveRepeatCounts[outcome.event.id]=(Number(state.liveRepeatCounts[outcome.event.id])||0)+1;
+    state.liveHomeActivityScene=null;
+    log('A moment at home with Live: '+outcome.event.title+'.');
+   }else log('Story milestone: '+(outcome.event.title||outcome.event.id)+'.');
+  }
  }else return true; // No competing action may take control of an active mandatory scene.
  persist();render();
  return true;
@@ -538,9 +562,18 @@ if(homeActivity&&state.day<=90){
   (Number(seen[b]?.day)||0)-(Number(seen[a]?.day)||0)||
   (Number(seen[b]?.slot)||0)-(Number(seen[a]?.slot)||0))[0];
  const lastCG=state.liveHomeActivityScene?.cg||LIVE_EVENT_ART[previous];
- const choices=LIVE_HOME_CHECKIN_ART.filter(path=>path!==lastCG);
+ // Alternate ordinary check-ins with the five repeatable CG encounters.
+ // The rotation is save-stable, avoids immediate repeats, and never consumes an extra period.
+ const pool=[LIVE_HOME_CHECKIN.id,...REPEATABLE_LIVE_EVENTS.map(event=>event.id)];
+ const previousId=state.liveHomeLastSceneId;
+ const eligible=pool.filter(id=>id!==previousId);
+ const id=eligible[(count-1)%eligible.length];
+ const cg=id===LIVE_HOME_CHECKIN.id
+  ?LIVE_HOME_CHECKIN_ART.filter(path=>path!==lastCG)[(count-1)%Math.max(1,LIVE_HOME_CHECKIN_ART.filter(path=>path!==lastCG).length)]
+  :LIVE_EVENT_ART[id];
  state.liveHomeActivityCount=count;
- state.liveHomeActivityScene={pending:true,cg:choices[(count-1)%choices.length],day:state.day,slot:state.slot};
+ state.liveHomeLastSceneId=id;
+ state.liveHomeActivityScene={pending:true,id,cg,day:state.day,slot:state.slot};
 }if(state.day>90)log('The Neo Harbor championship season has ended.');
 state.selected=null;
 if(state.day>beforeDay){
