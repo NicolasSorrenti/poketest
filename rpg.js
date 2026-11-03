@@ -335,7 +335,11 @@ const cgScenePresenter=CG_SCENE?.create($('scene'),$('rpgSceneCG'),document)||nu
 
 function queueMandatory(){
  if(!MANDATORY)return;
- MANDATORY.queue(state,MANDATORY_EVENTS.filter(e=>!LIVE_EVENTS.includes(e)));
+ // Hydrate with the complete catalog: using a filtered catalog here
+ // invalidates an active Live event on every render and restarts it.
+ MANDATORY.queue(state,MANDATORY_EVENTS);
+ const m=state.mandatoryEventState;
+ if(m?.pending)m.pending=m.pending.filter(item=>!LIVE_EVENT_ART[item.id]);
 }
 function autoTravelForEvent(place){
  if(!place||!places[place]||state.location===place)return false;
@@ -385,7 +389,10 @@ function maybeStartMandatory(){
    }
   }
  }
- const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>!LIVE_EVENTS.includes(e)));
+ // The scheduler must also receive the complete catalog to preserve Live's
+ // active dialogue; Live is selected only by the apartment-specific gate.
+ const started=MANDATORY.takeNext(state,MANDATORY_EVENTS);
+ if(started&&LIVE_EVENT_ART[started.id]){state.mandatoryEventState.active=null;return;}
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
