@@ -2543,7 +2543,10 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   if(!p.bench.length){g.over=true;g.winner=1-side;log(g,`${p.name} has no Pokémon remaining.`);return;}
   g.pendingPromotions=[side];g.promotionAfter='checkup';finishPromotions(g);return;
  }
- if(roll.bounceDefender&&f.active&&!jawClampLocks(g,1-side)){
+ // Returning a Pokémon and its attachments to hand is neither retreating nor
+ // switching to the Bench. Mean Look/Jaw Clamp-style restrictions cannot
+ // prevent Hurricane's printed return-to-hand effect.
+ if(roll.bounceDefender&&f.active){
   const returned=f.active;returnUnitToHand(g,1-side,returned);
   f.active=null;
   if(!f.bench.length){g.over=true;g.winner=side;log(g,`${f.name} has no Pokémon remaining.`);return;}
