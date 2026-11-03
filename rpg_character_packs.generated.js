@@ -1776,17 +1776,17 @@ const packs=[
     {
      "sceneId": "barb_route_1",
      "path": "/rpg-assets/characters/barb/events/barb_display_table.webp",
-     "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. At the card shop, Barb proudly arranges pink-star custom deck boxes and playmat swatches on a craft table; warm afternoon sun, full outfit and floral tattoo visible. Keep bottom 20% free for dialogue; 16:9."
+     "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. At the card shop, Barb proudly arranges pink-star custom deck boxes and playmat swatches on a craft table; warm afternoon sun, full outfit and floral tattoo visible. use the full frame; 16:9."
     },
     {
      "sceneId": "barb_route_2",
      "path": "/rpg-assets/characters/barb/events/barb_prototype_arcade.webp",
-     "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb in the arcade under colored neon, showing a slightly scuffed handmade deck box to protagonist off camera; no legible branding, expressive and comic. Keep bottom 20% free for dialogue; 16:9."
+     "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb in the arcade under colored neon, showing a slightly scuffed handmade deck box to protagonist off camera; no legible branding, expressive and comic. use the full frame; 16:9."
     },
     {
      "sceneId": "barb_route_3",
      "path": "/rpg-assets/characters/barb/events/barb_cafe_draft.webp",
-     "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb at the café with laptop, two cups and sketchbook, vulnerable thoughtful look before sending an important message; intimate but fully clothed. Keep bottom 20% free for dialogue; 16:9."
+     "prompt": "One single fully composed horizontal anime/JRPG event CG, NOT a grid or character sheet, SFW adult woman age 21, height 161 cm, copper red hair, green-hazel eyes, septum, butterfly pendant and left-shoulder rose tattoo, black Y2K punk-cute clothes, proportional compact adult figure with natural fuller bust. Adult Barb at the café with laptop, two cups and sketchbook, vulnerable thoughtful look before sending an important message; intimate but fully clothed. use the full frame; 16:9."
     },
     {
      "sceneId": "barb_route_4",
@@ -2447,7 +2447,7 @@ const packs=[
     {
      "sceneId": "daisy_route_1",
      "path": "/rpg-assets/events/cg/season01/daisy_route_1.png",
-     "prompt": "Daisy at a card shop table with the newcomer, burgundy mesh top with opaque underlayer and lined sheer black skirt, nose hoop, accurate sleeve tattoos and center lotus sternum tattoo; playful over-the-shoulder close-up across scattered cards, energetic cinematic anime 16:9, bottom dialogue-safe composition."
+     "prompt": "Daisy at a card shop table with the newcomer, burgundy mesh top with opaque underlayer and lined sheer black skirt, nose hoop, accurate sleeve tattoos and center lotus sternum tattoo; playful over-the-shoulder close-up across scattered cards, energetic cinematic anime 16:9, full-frame composition."
     },
     {
      "sceneId": "daisy_route_2",
@@ -3040,12 +3040,12 @@ const packs=[
     {
      "sceneId": "elena_route_1",
      "path": "/rpg-assets/characters/elena/elena_after_hours.webp",
-     "prompt": "Adult 26 year old Elena Crowe, anime visual novel style, long dark brown hair in a low elegant twist, deep hazel-green eyes, perfect makeup and full lips, wearing a tailored charcoal blazer over cream silk blouse and pencil skirt, standing in a quiet café after work looking composed but slightly tired, refined beauty, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+     "prompt": "Adult 26 year old Elena Crowe, anime visual novel style, long dark brown hair in a low elegant twist, deep hazel-green eyes, perfect makeup and full lips, wearing a tailored charcoal blazer over cream silk blouse and pencil skirt, standing in a quiet café after work looking composed but slightly tired, refined beauty, fully clothed SFW, Neo Harbor aesthetic, full-frame composition"
     },
     {
      "sceneId": "elena_route_3",
      "path": "/rpg-assets/characters/elena/elena_unguarded.webp",
-     "prompt": "Adult 26 year old Elena Crowe sitting at a café table in the evening, long dark brown hair slightly loosened, deep hazel-green eyes with a rare soft expression, full lips, charcoal blazer draped over the chair, cream blouse with one extra button undone, refined and quietly vulnerable, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+     "prompt": "Adult 26 year old Elena Crowe sitting at a café table in the evening, long dark brown hair slightly loosened, deep hazel-green eyes with a rare soft expression, full lips, charcoal blazer draped over the chair, cream blouse with one extra button undone, refined and quietly vulnerable, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, full-frame composition"
     }
    ]
   }
@@ -3990,52 +3990,52 @@ const packs=[
     {
      "sceneId": "jicy_route_1",
      "path": "/rpg-assets/characters/jicy/events/jicy_route_1.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Card That Almost Got Away. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Card That Almost Got Away. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, full-frame composition. Do not make the suit or public reactions to it the subject."
     },
     {
      "sceneId": "jicy_route_2",
      "path": "/rpg-assets/characters/jicy/events/jicy_route_2.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Table for Two. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Table for Two. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, full-frame composition. Do not make the suit or public reactions to it the subject."
     },
     {
      "sceneId": "jicy_route_3",
      "path": "/rpg-assets/characters/jicy/events/jicy_route_3.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Quiet Between Pages. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Quiet Between Pages. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, full-frame composition. Do not make the suit or public reactions to it the subject."
     },
     {
      "sceneId": "jicy_route_4",
      "path": "/rpg-assets/characters/jicy/events/jicy_route_4.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Little More Courage. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Little More Courage. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, full-frame composition. Do not make the suit or public reactions to it the subject."
     },
     {
      "sceneId": "jicy_route_5",
      "path": "/rpg-assets/characters/jicy/events/jicy_route_5.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Words She Practiced. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, lower fifth clear for UI dialogue. Do not make the suit or public reactions to it the subject."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Words She Practiced. Jicy and the protagonist in the scene described by the event; preserve Jicy's approved adult design, blonde high ponytail and clean sleeveless pink suit. Warm, character-led composition, natural expressions, no other named characters, no dialogue text, full-frame composition. Do not make the suit or public reactions to it the subject."
     },
     {
      "sceneId": "jicy_random_bookmark",
      "path": "/rpg-assets/characters/jicy/events/jicy_random_bookmark.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Bookmark for Later. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Bookmark for Later. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, full-frame composition. Keep the moment about the activity and their connection, not the outfit."
     },
     {
      "sceneId": "jicy_random_high_score",
      "path": "/rpg-assets/characters/jicy/events/jicy_random_high_score.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for One More Try. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for One More Try. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, full-frame composition. Keep the moment about the activity and their connection, not the outfit."
     },
     {
      "sceneId": "jicy_random_card_art",
      "path": "/rpg-assets/characters/jicy/events/jicy_random_card_art.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Picture in the Corner. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for The Picture in the Corner. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, full-frame composition. Keep the moment about the activity and their connection, not the outfit."
     },
     {
      "sceneId": "jicy_random_clouds",
      "path": "/rpg-assets/characters/jicy/events/jicy_random_clouds.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for Cloud Shapes. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for Cloud Shapes. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, full-frame composition. Keep the moment about the activity and their connection, not the outfit."
     },
     {
      "sceneId": "jicy_random_small_win",
      "path": "/rpg-assets/characters/jicy/events/jicy_random_small_win.webp",
-     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Small Win. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, lower fifth clear for UI dialogue. Keep the moment about the activity and their connection, not the outfit."
+     "prompt": "Cinematic 16:9 Neo Harbor visual-novel CG for A Small Win. Jicy and the protagonist sharing this small everyday moment; preserve her approved adult design, blonde high ponytail and canonical pink sleeveless suit. Friendly, wholesome, slice-of-life composition; no other named characters, no dialogue text, full-frame composition. Keep the moment about the activity and their connection, not the outfit."
     }
    ]
   }
@@ -4796,22 +4796,22 @@ const packs=[
     {
      "sceneId": "jinx_route_1",
      "path": "/rpg-assets/characters/jinx/jinx_arcade_challenge.webp",
-     "prompt": "Adult 18 year old Jinx Rivera, anime visual novel JRPG style, leaning against an arcade machine in black micro-shorts and cropped magenta tank, long silver-white hair with pink underlights, sharp amber eyes and signature smirk, heavy fanservice silhouette but fully clothed and SFW, neon arcade lighting, confident posture, bottom 20 percent clear for text"
+     "prompt": "Adult 18 year old Jinx Rivera, anime visual novel JRPG style, leaning against an arcade machine in black micro-shorts and cropped magenta tank, long silver-white hair with pink underlights, sharp amber eyes and signature smirk, heavy fanservice silhouette but fully clothed and SFW, neon arcade lighting, confident posture, full-frame composition"
     },
     {
      "sceneId": "jinx_route_3",
      "path": "/rpg-assets/characters/jinx/jinx_unguarded.webp",
-     "prompt": "Adult 18 year old Jinx Rivera sitting on a park bench at dusk, oversized open hoodie over her usual short outfit, long silver-pink hair down, rare unguarded soft expression instead of the usual smirk, cinematic anime VN composition, warm evening light, entirely SFW, bottom 20 percent clear for dialogue"
+     "prompt": "Adult 18 year old Jinx Rivera sitting on a park bench at dusk, oversized open hoodie over her usual short outfit, long silver-pink hair down, rare unguarded soft expression instead of the usual smirk, cinematic anime VN composition, warm evening light, entirely SFW, full-frame composition"
     },
     {
      "sceneId": "jinx_marina_cross_1",
      "path": "/rpg-assets/characters/jinx/jinx_marina_park.webp",
-     "prompt": "Adult 18 year old Jinx Rivera and Marina at a waterfront park railing, Jinx in micro-shorts + cropped top looking slightly annoyed but listening, long silver-pink hair, sharp amber eyes, heavy fanservice silhouette still fully clothed and SFW, Marina in practical clothes, daylight anime visual novel style, bottom 20 percent clear for text"
+     "prompt": "Adult 18 year old Jinx Rivera and Marina at a waterfront park railing, Jinx in micro-shorts + cropped top looking slightly annoyed but listening, long silver-pink hair, sharp amber eyes, heavy fanservice silhouette still fully clothed and SFW, Marina in practical clothes, daylight anime visual novel style, full-frame composition"
     },
     {
      "sceneId": "jinx_alma_cross_1",
      "path": "/rpg-assets/characters/jinx/jinx_alma_cafe.webp",
-     "prompt": "Adult 18 year old Jinx Rivera perched on a cafe counter being told to get down by Alma, Jinx in short skirt and cropped top with signature smirk, long silver-white hair with pink underlights, fanservicey but fully clothed SFW anime JRPG style, warm cafe interior, bottom 20 percent clear for dialogue"
+     "prompt": "Adult 18 year old Jinx Rivera perched on a cafe counter being told to get down by Alma, Jinx in short skirt and cropped top with signature smirk, long silver-white hair with pink underlights, fanservicey but fully clothed SFW anime JRPG style, warm cafe interior, full-frame composition"
     }
    ]
   }
@@ -6266,7 +6266,7 @@ const packs=[
     {
      "sceneId": "luna_route_1",
      "path": "/rpg-assets/characters/luna/luna_spill.webp",
-     "prompt": "Adult 18 year old Luna Quinn, soft anime visual novel style, extremely large breasts straining a too-small cream crop sweater, long pastel-lavender hair, violet eyes looking apologetic, she has just spilled a drink down her front, cardigan slipping off one shoulder, heavy unintentional fanservice, fully clothed SFW, café interior, Neo Harbor aesthetic, bottom 20 percent clear for text"
+     "prompt": "Adult 18 year old Luna Quinn, soft anime visual novel style, extremely large breasts straining a too-small cream crop sweater, long pastel-lavender hair, violet eyes looking apologetic, she has just spilled a drink down her front, cardigan slipping off one shoulder, heavy unintentional fanservice, fully clothed SFW, café interior, Neo Harbor aesthetic, full-frame composition"
     },
     {
      "sceneId": "luna_route_3",
@@ -9238,12 +9238,12 @@ const packs=[
     {
      "sceneId": "rina_route_1",
      "path": "/rpg-assets/characters/rina/rina_stage_after.webp",
-     "prompt": "Adult 18 year old Rina Hoshino, anime visual novel idol style, long pastel-pink hair in twin tails with ribbons, large aqua-blue eyes sparkling, wearing a short frilly stage skirt and cropped star-motif top with open sparkly jacket, bright cheerful smile, colorful and energetic, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+     "prompt": "Adult 18 year old Rina Hoshino, anime visual novel idol style, long pastel-pink hair in twin tails with ribbons, large aqua-blue eyes sparkling, wearing a short frilly stage skirt and cropped star-motif top with open sparkly jacket, bright cheerful smile, colorful and energetic, fully clothed SFW, Neo Harbor aesthetic, full-frame composition"
     },
     {
      "sceneId": "rina_route_3",
      "path": "/rpg-assets/characters/rina/rina_cards.webp",
-     "prompt": "Adult 18 year old Rina Hoshino sitting at a café table showing her card binder, long pastel-pink hair, genuine excited expression, still wearing parts of her idol outfit under a soft cardigan, large aqua eyes sparkling, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+     "prompt": "Adult 18 year old Rina Hoshino sitting at a café table showing her card binder, long pastel-pink hair, genuine excited expression, still wearing parts of her idol outfit under a soft cardigan, large aqua eyes sparkling, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, full-frame composition"
     }
    ]
   }
@@ -9827,12 +9827,12 @@ const packs=[
     {
      "sceneId": "sierra_route_1",
      "path": "/rpg-assets/characters/sierra/sierra_after_shoot.webp",
-     "prompt": "Adult 18 year old Sierra Holt, anime visual novel style, extremely slim with tiny breasts and large round heavy ass, long dark brunette hair, hazel-green eyes, wearing a coral string bikini with an open sheer cover-up, standing near a park bench looking slightly tired but guarded, heavy lower-body fanservice, fully clothed SFW, Neo Harbor aesthetic, bottom 20 percent clear for text"
+     "prompt": "Adult 18 year old Sierra Holt, anime visual novel style, extremely slim with tiny breasts and large round heavy ass, long dark brunette hair, hazel-green eyes, wearing a coral string bikini with an open sheer cover-up, standing near a park bench looking slightly tired but guarded, heavy lower-body fanservice, fully clothed SFW, Neo Harbor aesthetic, full-frame composition"
     },
     {
      "sceneId": "sierra_route_3",
      "path": "/rpg-assets/characters/sierra/sierra_deck_talk.webp",
-     "prompt": "Adult 18 year old Sierra Holt sitting at a café table, long dark brunette hair, soft genuine expression while talking about cards, extremely slim upper body with tiny chest and large round ass visible even seated, casual crop top and tiny shorts, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, bottom 20 percent clear for dialogue"
+     "prompt": "Adult 18 year old Sierra Holt sitting at a café table, long dark brunette hair, soft genuine expression while talking about cards, extremely slim upper body with tiny chest and large round ass visible even seated, casual crop top and tiny shorts, anime visual novel CG, warm lighting, fully clothed SFW, Neo Harbor style, full-frame composition"
     }
    ]
   }
@@ -10659,12 +10659,12 @@ const packs=[
     {
      "sceneId": "sol_route_1",
      "path": "/rpg-assets/characters/sol/sol_scavenger_hunt.webp",
-     "prompt": "Adult 26 year old Sol Varela, anime visual novel JRPG, playful outdoor waterfront scavenger hunt, her turquoise/coral resort bikini under an open bright tropical shirt, sparkling joyful expression, entirely SFW, wide environmental CG; bottom 20 percent kept clear for text"
+     "prompt": "Adult 26 year old Sol Varela, anime visual novel JRPG, playful outdoor waterfront scavenger hunt, her turquoise/coral resort bikini under an open bright tropical shirt, sparkling joyful expression, entirely SFW, wide environmental CG; full-frame composition"
     },
     {
      "sceneId": "sol_route_3",
      "path": "/rpg-assets/characters/sol/sol_unguarded_cafe.webp",
-     "prompt": "Adult 26 year old Sol Varela in a relaxed cardigan over colorful resort wear, sitting quietly in cafe when festival plans go wrong; genuine vulnerable expression, cinematic anime VN composition, warm sunset atmosphere, SFW and character-led; bottom 20 percent clear for dialogue."
+     "prompt": "Adult 26 year old Sol Varela in a relaxed cardigan over colorful resort wear, sitting quietly in cafe when festival plans go wrong; genuine vulnerable expression, cinematic anime VN composition, warm sunset atmosphere, SFW and character-led; full-frame composition."
     }
    ]
   }
