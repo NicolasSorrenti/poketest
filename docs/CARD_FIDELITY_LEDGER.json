@@ -2264,7 +2264,11 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/print-classification review: Basic Psychic Energy contributes a single Psychic cost unit, pays Colorless requirements, and is exempt from the deck four-copy limit. Other interactions and live runtime unchecked.",
+          "evidence": [
+            "2026-11-03 grouped audit: base1-101, base4-129; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         }
       ]
     },
@@ -2275,7 +2279,11 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/print-classification review: Basic Water contributes one typed cost unit, participates in typed discard and Hydro Pump extra Water counting, and is exempt from the deck four-copy limit. Other interactions and live runtime unchecked.",
+          "evidence": [
+            "2026-11-03 grouped audit: base1-102, base4-130; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         }
       ]
     },
@@ -2288,13 +2296,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Metronome",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle Metronome copied attack chooser and zero-cost copy planning inspected; Minimize 20-damage reduction shield compiled from printed text. Some copied attacks deliberately unsupported/omitted; full copying interactions, shield timing and live runtime pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-1; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Minimize",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle Metronome copied attack chooser and zero-cost copy planning inspected; Minimize 20-damage reduction shield compiled from printed text. Some copied attacks deliberately unsupported/omitted; full copying interactions, shield timing and live runtime pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-1; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         }
       ]
     },
@@ -2307,13 +2323,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle Tackle and Chain Lightning printed costs/text compared to attack compiler. Flat Tackle and chain-lightning effect, base damage 20 and 10 Bench spread to same-type Pokémon on both sides source reviewed. Dynamic type changes, damage prevention, KO ordering and live runtime pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-2, base2-18; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Chain Lightning",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle Tackle and Chain Lightning printed costs/text compared to attack compiler. Flat Tackle and chain-lightning effect, base damage 20 and 10 Bench spread to same-type Pokémon on both sides source reviewed. Dynamic type changes, damage prevention, KO ordering and live runtime pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-2, base2-18; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         }
       ]
     },
@@ -2424,13 +2448,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Wing Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Wing Attack: printed Colorless cost and fixed damage checked against flat reducer. Hurricane: print says return Defending Pokémon with attachments to hand if not KO; reducer source traced attack extension and defender return. A retreat/switch lock incorrectly suppressed Hurricane return; guard removed in main commit 3281bfe495864a1661b0b185674a71c24b7c7d86. Source-level fix only; KO timing, promotions, network UI, and broader cases pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-8, base2-24, base4-14; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests.",
+            "Jungle Pidgeot Hurricane card text: https://limitlesstcg.com/cards/JU/8; WotC-era retreat vs switching rule: https://pokemon1999.org/the-rules-of-old-school-pokemon/; code fix commit 3281bfe495864a1661b0b185674a71c24b7c7d86."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hurricane",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Wing Attack: printed Colorless cost and fixed damage checked against flat reducer. Hurricane: print says return Defending Pokémon with attachments to hand if not KO; reducer source traced attack extension and defender return. A retreat/switch lock incorrectly suppressed Hurricane return; guard removed in main commit 3281bfe495864a1661b0b185674a71c24b7c7d86. Source-level fix only; KO timing, promotions, network UI, and broader cases pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-8, base2-24, base4-14; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests.",
+            "Jungle Pidgeot Hurricane card text: https://limitlesstcg.com/cards/JU/8; WotC-era retreat vs switching rule: https://pokemon1999.org/the-rules-of-old-school-pokemon/; code fix commit 3281bfe495864a1661b0b185674a71c24b7c7d86."
+          ]
         }
       ]
     },
@@ -2614,13 +2648,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle Tackle and Chain Lightning printed costs/text compared to attack compiler. Flat Tackle and chain-lightning effect, base damage 20 and 10 Bench spread to same-type Pokémon on both sides source reviewed. Dynamic type changes, damage prevention, KO ordering and live runtime pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-2, base2-18; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Chain Lightning",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle Tackle and Chain Lightning printed costs/text compared to attack compiler. Flat Tackle and chain-lightning effect, base damage 20 and 10 Bench spread to same-type Pokémon on both sides source reviewed. Dynamic type changes, damage prevention, KO ordering and live runtime pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-2, base2-18; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         }
       ]
     },
@@ -2731,13 +2773,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Wing Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Wing Attack: printed Colorless cost and fixed damage checked against flat reducer. Hurricane: print says return Defending Pokémon with attachments to hand if not KO; reducer source traced attack extension and defender return. A retreat/switch lock incorrectly suppressed Hurricane return; guard removed in main commit 3281bfe495864a1661b0b185674a71c24b7c7d86. Source-level fix only; KO timing, promotions, network UI, and broader cases pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-8, base2-24, base4-14; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests.",
+            "Jungle Pidgeot Hurricane card text: https://limitlesstcg.com/cards/JU/8; WotC-era retreat vs switching rule: https://pokemon1999.org/the-rules-of-old-school-pokemon/; code fix commit 3281bfe495864a1661b0b185674a71c24b7c7d86."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hurricane",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Wing Attack: printed Colorless cost and fixed damage checked against flat reducer. Hurricane: print says return Defending Pokémon with attachments to hand if not KO; reducer source traced attack extension and defender return. A retreat/switch lock incorrectly suppressed Hurricane return; guard removed in main commit 3281bfe495864a1661b0b185674a71c24b7c7d86. Source-level fix only; KO timing, promotions, network UI, and broader cases pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-8, base2-24, base4-14; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests.",
+            "Jungle Pidgeot Hurricane card text: https://limitlesstcg.com/cards/JU/8; WotC-era retreat vs switching rule: https://pokemon1999.org/the-rules-of-old-school-pokemon/; code fix commit 3281bfe495864a1661b0b185674a71c24b7c7d86."
+          ]
         }
       ]
     },
@@ -4847,13 +4899,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Wing Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Wing Attack: printed Colorless cost and fixed damage checked against flat reducer. Hurricane: print says return Defending Pokémon with attachments to hand if not KO; reducer source traced attack extension and defender return. A retreat/switch lock incorrectly suppressed Hurricane return; guard removed in main commit 3281bfe495864a1661b0b185674a71c24b7c7d86. Source-level fix only; KO timing, promotions, network UI, and broader cases pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-8, base2-24, base4-14; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests.",
+            "Jungle Pidgeot Hurricane card text: https://limitlesstcg.com/cards/JU/8; WotC-era retreat vs switching rule: https://pokemon1999.org/the-rules-of-old-school-pokemon/; code fix commit 3281bfe495864a1661b0b185674a71c24b7c7d86."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hurricane",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Wing Attack: printed Colorless cost and fixed damage checked against flat reducer. Hurricane: print says return Defending Pokémon with attachments to hand if not KO; reducer source traced attack extension and defender return. A retreat/switch lock incorrectly suppressed Hurricane return; guard removed in main commit 3281bfe495864a1661b0b185674a71c24b7c7d86. Source-level fix only; KO timing, promotions, network UI, and broader cases pending.",
+          "evidence": [
+            "2026-11-03 grouped audit: base2-8, base2-24, base4-14; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests.",
+            "Jungle Pidgeot Hurricane card text: https://limitlesstcg.com/cards/JU/8; WotC-era retreat vs switching rule: https://pokemon1999.org/the-rules-of-old-school-pokemon/; code fix commit 3281bfe495864a1661b0b185674a71c24b7c7d86."
+          ]
         }
       ]
     },
@@ -7246,7 +7308,11 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/print-classification review: Basic Psychic Energy contributes a single Psychic cost unit, pays Colorless requirements, and is exempt from the deck four-copy limit. Other interactions and live runtime unchecked.",
+          "evidence": [
+            "2026-11-03 grouped audit: base1-101, base4-129; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         }
       ]
     },
@@ -7257,7 +7323,11 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Source/print-classification review: Basic Water contributes one typed cost unit, participates in typed discard and Hydro Pump extra Water counting, and is exempt from the deck four-copy limit. Other interactions and live runtime unchecked.",
+          "evidence": [
+            "2026-11-03 grouped audit: base1-102, base4-130; source inspection of cards/base1.json, cards/base2.json, cards/base4.json, classic_attack_extensions.js, headless_duel.js and core_rules.js where relevant. No new tests."
+          ]
         }
       ]
     },
