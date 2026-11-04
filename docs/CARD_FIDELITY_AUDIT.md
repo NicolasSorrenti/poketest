@@ -654,3 +654,18 @@ PR [#440](https://github.com/NicolasSorrenti/poketest/pull/440) was already merg
 | [Spearow #62](https://limitlesstcg.com/cards/JU/62) (`base2-62`) | Peck: C for 10; Mirror Move: CCC, repeat previous attack's final result. `headless_duel.js` lastAttackImpact capture and replay inspected. | **Partial**; potentially missing impact record for a previous attack that dealt zero damage and no status; must reproduce before changing engine. Check Weakness/Resistance, status, prevention and switch edge cases. |
 
 The ledger was updated for exactly these five printings. No defect was proven in an executed scenario, so no engine fix was applied. **0 / 1,123 printings are fully certified; 1,123 remain not fully verified** (including partial and unreviewed records). Continue with prior partials or Jungle #63 onward without reusing this five-card batch.
+
+
+## 2026-11-04 — Jungle #63–64 and Fossil #1–3 (five-printing source audit)
+
+No open card-fidelity PR found at start; earlier #440 already merged. Exactly five previously unreviewed printings examined, using catalogue, printed-card reference and relevant headless/legacy engine paths. All remain **partial**; no full reducer or browser scenario executed, no confirmed defect, no engine/test/CI changes.
+
+| Printing | Source inspection and unresolved validation | Status |
+| --- | --- | --- |
+| [Venonat Jungle #63](https://www.serebii.net/card/jungle/063.shtml) (`base2-63`) | Stun Spore G 10 + heads Paralysis, Leech Life GC 10 and healing from final damage. Headless `drain` and `healFromDamage`, legacy `drainDamage` inspected. Verify actual healing after Weakness/Resistance, shielding and status. | **partial** |
+| [Poké Ball Jungle #64](https://limitlesstcg.com/cards/JU/64) (`base2-64`) | Heads-only optional Pokémon search/reveal, hand transfer and shuffle in `classic_trainer_core.js`; validate flip persistence, tails, fail-to-find, empty deck and reveal privacy. | **partial** |
+| [Aerodactyl Fossil #1](https://limitlesstcg.com/cards/FO/1) (`base3-1`) | Wing Attack CCC 30 and Prehistoric Power evolution restriction; `headless_duel.js` `powerInPlay` and legacy `continuousPower` guards inspected. Validate status suppression and other evolution-entry paths. | **partial** |
+| [Articuno Fossil #2](https://limitlesstcg.com/cards/FO/2) (`base3-2`) | Freeze Dry WWW 30 + heads Paralysis; Blizzard WWWW 50 + heads opposing/tails own Bench 10. `bench-splash-coin` and legacy `coinBenchSpread` inspected. Validate both flip outcomes, Bench immunity, damage/KO ordering. | **partial** |
+| [Ditto Fossil #3](https://limitlesstcg.com/cards/FO/3) (`base3-3`) | Transform Active-only, copies Defending Pokémon except evolution and own Power, flexible attached Energy. `effectiveCard` and payment handling inspected; test dynamic HP/KO, status suppression, mirrored Ditto and energy costs. | **partial** |
+
+**Validation:** source inspection only, not reducer execution. Historical rulings not independently exhausted. No card promoted to fully verified. Continue with next unreviewed printings or revisit these partials with actual scenarios.
