@@ -2282,9 +2282,13 @@ class Engine{
   const reduction=Number(t.match(/reduce(?:d)? by (\d+)/i)?.[1]||0);
   u.attackShield=reduction;
   this.log(`${p.name}: ${c.name} used ${a.name}; incoming attack damage reduced by ${reduction} during the rival's next turn.`);
-  render();
-  if(!deferTurnEnd)this.end();
-  return true;
+  // Damaging protection attacks (e.g. Persian's Pounce) must still
+  // resolve their printed damage using the normal attack pipeline.
+  if(!dmg){
+   render();
+   if(!deferTurnEnd)this.end();
+   return true;
+  }
  }
 if(a.name==='Water Gun'&&/Does 10 damage plus 10 more damage for each Water Energy/i.test(t)){const paid=(a.cost||[]).filter(e=>e==='Water').length;dmg=10+Math.min(20,Math.max(0,this.energies(u).filter(e=>e==='Water').length-paid)*10)}
  if(a.name==='Hydro Pump'&&/Does 40 damage plus 10 more damage for each Water Energy/i.test(t)){dmg=40+Math.min(20,Math.max(0,this.energies(u).filter(e=>e==='Water').length-3)*10)}
