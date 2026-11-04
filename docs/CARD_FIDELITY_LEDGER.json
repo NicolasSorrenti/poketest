@@ -4138,13 +4138,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Slam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Slam: four Colorless Energy and two independent 40-damage coin flips; compiler/roll path inspected; 0/1/2 heads and Resistance require reducer execution."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Step In",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Step In: printed once during own turn from Bench; classic_power_core.js ONCE/Step In Bench selection and swap inspected; legacy stepIn checks Bench and Power but repeated-use, status and switching interaction require reducer validation."
+          ]
         }
       ]
     },
@@ -4157,13 +4163,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Dark Mind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Dark Mind: PPP, 30 Active plus 10 selected opposing Bench without Weakness/Resistance; target and no-Bench behavior require reducer validation."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Curse",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Curse: printed once per turn, move one opponent damage counter to another even if KO; classic_power_core.js allows KO and resolves prizes. Legacy engine.js incorrectly forbade lethal destination and did not resolve KO; corrected in audit branch; pending validation."
+          ]
         }
       ]
     },
@@ -4176,13 +4188,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Nightmare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Transparency: printed prevention of all attack effects on heads, only disabled while Asleep; headless defender coin branch clears damage/status but other effect channels and zero-damage attacks require verification."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Transparency",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Transparency: printed prevention of all attack effects on heads, only disabled while Asleep; headless defender coin branch clears damage/status but other effect channels and zero-damage attacks require verification."
+          ]
         }
       ]
     },
@@ -4195,13 +4213,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Stretch Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Stretch Kick: FF, 20 chosen opposing Bench and no Active damage; legacy engine.js rejects missing Bench and applies 20 direct; test target choice, bench protection, prizes and headless reducer."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "High Jump Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "High Jump Kick: FFF, flat 50 Active; Weakness/Resistance, Energy legality and KO checks pending."
+          ]
         }
       ]
     },
@@ -4214,13 +4238,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Prophecy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Prophecy: P, look at up to 3 top cards of either deck and reorder; headless validates deckOwner/deckOrder presence; legality, permutation, privacy, 0-2 cards and legacy decision paths need execution."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dark Mind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Dark Mind: PPP, 30 Active and 10 selected opposing Bench; verify selection, shields and simultaneous KO in reducer."
+          ]
         }
       ]
     },
