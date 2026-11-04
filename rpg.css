@@ -168,37 +168,17 @@
 .rpg-panel-tabs{position:sticky;top:-8px;z-index:8;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:12px 0;background:#141b2b}
 .rpg-panel-tabs button{padding:10px 3px;font:800 13px 'Barlow Condensed';letter-spacing:.5px;background:#283148}
 .rpg-panel-tabs button.active{background:#a14369;border-color:#f3aac1;color:white}
-.rpg-scene-cast{position:absolute;z-index:2;inset:26% 2% 145px 2%;display:flex;align-items:end;justify-content:space-evenly;gap:2px;pointer-events:none}
-.rpg-cast-member{pointer-events:auto;background:transparent;border:0;box-shadow:none;position:relative;min-width:0;flex:1;max-width:220px;height:100%;padding:0;display:flex;align-items:center;flex-direction:column;justify-content:end;filter:drop-shadow(0 9px 12px #000c);transition:transform .2s}
-.rpg-cast-member img{width:100%;height:calc(100% - 27px);object-fit:contain;object-position:bottom}
-.rpg-cast-member span:last-child{background:#171627d9;border:1px solid #d88eac;border-radius:7px;padding:5px 11px;color:white;font:800 16px 'Barlow Condensed'}
-.rpg-cast-member:hover:not(:disabled),.rpg-cast-member.selected{transform:translateY(-11px);background:transparent;box-shadow:none}
-.rpg-cast-member:focus-visible{outline:3px solid #ffb2cf}
-.rpg-action-dock{position:absolute;z-index:5;bottom:15px;left:18px;right:18px;max-height:48%;overflow:auto;border:1px solid #c06f96;border-radius:13px;padding:16px;background:#11182bed;backdrop-filter:blur(9px);box-shadow:0 15px 45px #0009}
 .rpg-dock-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px}.rpg-dock-header strong{font:900 23px 'Barlow Condensed'}
-.rpg-dock-tabs{display:flex;gap:6px}.rpg-dock-tabs button{padding:7px 12px;font:800 13px 'Barlow Condensed'}.rpg-dock-tabs button.active{background:#ad4c76;border-color:#f6afc8}
-.rpg-dock-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:8px}.rpg-dock-items p{color:#bdc4d4}
 .rpg-dock-action{text-align:left;background:#283449;border-color:#635875;font:700 14px 'Barlow Condensed';padding:12px}
-@media(max-width:1050px){.rpg-scene-cast{inset:29% 1% 150px 1%}.rpg-action-dock{max-height:55%}}
-@media(max-width:600px){.rpg-cast-member span:last-child{font-size:12px;padding:4px}.rpg-action-dock{left:8px;right:8px;padding:10px}.rpg-dock-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-/* VN composition: show only conversation participants and highlight the speaker */
-.rpg-scene-cast.is-conversation .rpg-cast-member{transition:transform .28s ease,filter .28s ease,opacity .28s ease}
-.rpg-scene-cast.is-conversation .rpg-cast-member.is-listening{opacity:.53;filter:brightness(.55) saturate(.72) drop-shadow(0 8px 14px #000c);transform:scale(.91);transform-origin:center bottom}
-.rpg-scene-cast.is-conversation .rpg-cast-member.is-speaking{opacity:1;filter:brightness(1.13) drop-shadow(0 11px 20px #000d);transform:translateY(-14px) scale(1.08);transform-origin:center bottom;z-index:3}
-.rpg-scene-cast.is-conversation .rpg-cast-member.is-speaking span:last-child{background:#a74670;border-color:#ffc3d3}
-.rpg-scene-cast.is-conversation .rpg-cast-member:disabled{opacity:inherit;cursor:default}
-.rpg-scene-cast.is-conversation .rpg-cast-member.is-listening:disabled{opacity:.53}
-@media(prefers-reduced-motion:reduce){.rpg-scene-cast.is-conversation .rpg-cast-member{transition:none}}
+@media(max-width:1050px){}
+@media(max-width:600px){}
+@media(prefers-reduced-motion:reduce){}
 
 /* Visual novel portrait staging and expressive transitions */
 @keyframes rpgPortraitEnter{from{opacity:0;translate:0 35px}to{opacity:1;translate:0 0}}
 @keyframes rpgExpressionIn{from{opacity:.55;filter:brightness(1.35)}to{opacity:1;filter:brightness(1)}}
-.rpg-cast-member.is-entering{animation:rpgPortraitEnter .36s ease-out both}
-.rpg-cast-member img.expression-change{animation:rpgExpressionIn .24s ease-out}
-.rpg-scene-cast:not(.is-conversation) .rpg-cast-member{transition:transform .28s ease,opacity .28s ease,filter .28s ease}
 .dialogue:not([hidden]){animation:rpgPortraitEnter .2s ease-out}
-@media(prefers-reduced-motion:reduce){.rpg-cast-member.is-entering,.rpg-cast-member img.expression-change,.dialogue:not([hidden]){animation:none!important}}
+@media(prefers-reduced-motion:reduce){.dialogue:not([hidden]){animation:none!important}}
 
 /* Earned ten-card booster reveal, shared by real duel prizes and shop purchases. */
 .deck-collection .studio-open{background:linear-gradient(110deg,#8d4d75,#ae729d);border:1px solid #f1b9d5;font-weight:900;letter-spacing:.4px}
@@ -397,36 +377,21 @@
    composition remains visible, with normal dialogue and response UI above it. */
 #scene.has-story-cg{background-color:#090e1c}
 #scene .rpg-scene-cg{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:contain;object-position:center;background:#090e1c;pointer-events:none}
-#scene.has-story-cg::after{display:none}#scene.has-story-cg .rpg-scene-cast, #scene.has-story-cg .rpg-discreet-stage, #scene.has-story-cg .rpg-action-dock{display:none!important}
+#scene.has-story-cg::after{display:none}
 #scene.has-story-cg .dialogue{z-index:4}
 #scene.has-story-cg .player-choice-prompt{z-index:6}
 
 
 /* Dialogue portrait: keep original files, clip the viewport from hair to
-   the end of the chest, matching the 457:312 Marina reference. */
-.rpg-scene-cast .rpg-cast-member{max-width:min(44vw,400px)}
-.rpg-cast-member .rpg-stage-persona-frame{
- position:relative;display:block;flex:none;overflow:hidden;
- width:100%;max-width:100%;height:auto;max-height:calc(100% - 27px);
- aspect-ratio:457 / 312;
-}
-.rpg-cast-member .rpg-stage-persona-frame>img:not(.rpg-safe-avatar){
- position:absolute;display:block;top:0;left:0;
- width:100%;height:var(--rpg-dialogue-bust-height,278%);
- max-width:none;max-height:none;object-fit:cover;object-position:center top;
- transform:none;
-}
+   the end of the chest{max-width:min(44vw,400px)}
 @media(max-width:600px){
- .rpg-cast-member .rpg-stage-persona-frame{max-height:calc(100% - 23px)}
 }
-/* Discreet Mode keeps its own complete chibi image, never a clipped bust. */
-:root[data-rpg-discreet="on"] .rpg-cast-member .rpg-stage-persona-frame{visibility:hidden}
+/* Discreet Mode keeps its own complete chibi image{visibility:hidden}
 .stage-planner{margin:12px 0 0;padding:14px;min-width:0;border:1px solid #55516c;border-radius:12px;background:linear-gradient(150deg,#1c263b,#151c2e)}
 @media(max-width:700px){
  .stage-panel .character-actions:not([hidden]){position:relative;bottom:auto;z-index:auto}
  .stage-planner{margin:9px 0 12px;padding:11px}
 }
-.stage-panel #scene .rpg-scene-cast{bottom:0}
 .stage-panel #dialogue{
  position:relative;inset:auto;z-index:auto;min-height:0;max-height:none;
  margin:12px 0 0;overflow:visible;
@@ -488,18 +453,10 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
 .cg-character-card .cg-character-avatar .avatar-fallback{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:26px;color:#fff}
 .cg-character-card:focus-visible,.cg-category-tab:focus-visible{outline:3px solid #d7b5ff;outline-offset:2px}
 
-/* Desktop and mobile: location art is a dedicated scene, action dock follows below. */
-.stage-panel > #rpgActionDock{position:relative;inset:auto;left:auto;right:auto;bottom:auto;z-index:auto;width:100%;max-height:none;overflow:visible;box-sizing:border-box;margin:12px 0 0;backdrop-filter:none}
-.stage-panel > #rpgActionDock[hidden]{display:none!important}
+/* Desktop and mobile: location art is a dedicated scene{position:relative;inset:auto;left:auto;right:auto;bottom:auto;z-index:auto;width:100%;max-height:none;overflow:visible;box-sizing:border-box;margin:12px 0 0;backdrop-filter:none}
 @media(max-width:700px){
- .stage-panel > #rpgActionDock{margin:10px 0 0;padding:12px}
- .stage-panel > #rpgActionDock .rpg-dock-tabs{flex-wrap:wrap}
 }
-.stage-panel > #rpgActionDock{
- transform:none;animation:none;left:auto;right:auto;bottom:auto;
- width:100%;max-width:none;margin:12px 0 0;
-}
-@media(max-width:700px){.stage-panel > #rpgActionDock{width:100%;margin:10px 0 0}}
+@media(max-width:700px){}
 
 /* Desktop VN layout: retain a generous illustration stage when dialogue is open. */
 @media(min-width:701px){
@@ -539,12 +496,11 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
   max-height:480px;
   flex:none;
  }
- .stage-panel #scene .rpg-scene-cast{top:24%;bottom:0}
 }
 
 /* Hidden choice overlays must never capture input after boosters or other modals. */
 #playerChoicePrompt[hidden],#playerChoicePanel[hidden],
-#dialogue[hidden],#rpgActionDock[hidden],#packDialog:not([open]){
+#dialogue[hidden],#packDialog:not([open]){
  display:none!important;pointer-events:none!important;
 }
 #packDialog[open]{pointer-events:auto}
