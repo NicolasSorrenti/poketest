@@ -788,3 +788,18 @@ Previously merged [PR #484](https://github.com/NicolasSorrenti/poketest/pull/484
 | `base3-38` | Flail W 10 per Kingler damage counter, Crabhammer WWC 40 flat. Check 0 to near-KO counters, W/R, protection, and energy payment. | partial |
 
 The current compiler has a `drain` pattern for Golbat Leech Life, `damage-shield` threshold for Graveler Harden, `flail-counters` for Kingler Flail, and `bench-both-recoil` for Golem Selfdestruct. Hyper Beam has a defending Energy-selection path in `headless_duel.js`. These are handler/code-path observations, **not executed proof**. No confirmed new-engine defect, no gameplay changes, no tests or CI added. 312 partially reviewed, 811 unreviewed, 0 fully verified, 1123 not fully verified.
+
+
+## 2026-11-04 — Current-engine Fossil #39–43 (five distinct printings)
+
+The previous audit PR [#492](https://github.com/NicolasSorrenti/poketest/pull/492) is merged and no outstanding card-fidelity PR was found. Active authority remains `classic_local_service.js` importing `headless_duel.js`; attack compilation is `attack_effects_core.js` plus `classic_attack_extensions.js`, and Pokémon Powers are in `classic_power_core.js`. Imported `cards/base3.json` supplied the transcribed card text. **No executable reducer scenarios or independent historical ruling verification were performed in this pass.** All five remain partial, and absence of a detected bug is not proof of correctness.
+
+| Printing | Current-engine review; unresolved execution/rulings | Status |
+| --- | --- | --- |
+| `base3-39` Magmar | Smokescreen F: 10 and next-turn attack-failure coin. `headless_duel.js` checks `attackPenalty` before Confusion; Smog FF: 20 and heads Poisoned. Need both coins, discard-payment ordering, switch/reset, protection and expiry scenarios. | partial |
+| `base3-40` Omastar | Water Gun WC: 20+; imported text says each extra Energy (not Water-specific), cap +20; generic `extra-energy` compiler identified. Spike Cannon WW: two 30-per-head flips. Need mixed Energy, exact cost allocation, 0/1/2 heads and W/R. | partial |
+| `base3-41` Sandslash | Slash CC: flat 20. Fury Swipes FF: 20 per head across three flips, `coin-times` compiler. Need 0–3 heads, cost, Grass weakness, Lightning resistance and prevention. | partial |
+| `base3-42` Seadra | Water Gun WC: 20+ and generic `extra-energy` compiler, cap +20. **Do not apply the user-confirmed Lapras-specific Water-only ruling to Seadra without independent evidence.** Agility WCC: 20, heads prevents next-turn damage and effects; check all outcomes, status effects, switch and expiration. | partial |
+| `base3-43` Slowbro | Psyshock PP: 20, heads Paralysis. Strange Behavior is activated in `classic_power_core.js`: select damaged friendly source and transfer one counter to Slowbro without KO. Need repeat use, status suppression, legal source, bench, 50/60 damage threshold, and timing checks. | partial |
+
+No gameplay fix confirmed. No test files, suites, or CI changed. A full ledger recount after this update yields **317 partial**, **805 unreviewed**, **1 verified**, **1122 not fully verified**, total 1123. The single verified printing predates this batch and has not been revalidated here.
