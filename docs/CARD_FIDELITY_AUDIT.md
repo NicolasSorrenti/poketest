@@ -596,3 +596,15 @@ Scope: exact five unreviewed Jungle printings; catalogue effect text/costs compa
 | [Persian JU #42](https://limitlesstcg.com/cards/JU/42) (`base2-42`) | Scratch / Pounce — partial | **Fixed** `defendReduce` returning before Pounce's printed 30 damage; now the +10 protection logic returns early only for attacks with zero printed damage. Specific-Defending-Pokémon requirement, switching termination and runtime checks remain open. |
 
 Code change: `engine.js` keeps the existing early return for non-damaging reduction attacks (such as Minimize), while damaging protection attacks fall through to the ordinary damage, weakness/resistance, and KO pipeline. Targeted static reasoning only; no execution or CI validation claimed here.
+
+## 2026-11-04 — Jungle printings 43–47 (five-card batch)
+
+Source audit only; five distinct unreviewed printings, ten attacks. **All five partial, zero fully verified.** Compared TCGdex catalogue (`cards/base2.json`), printed Jungle card listings (https://limitlesstcg.com/cards/JU/43 through /47), and `engine.js` attack classifiers, coin branches, Energy costs, damage and switch handling. No new tests or CI changes.
+
+- `base2-43` Primeape: Fury Swipes (three flips, 20 per heads), Tantrum (50 then tails self-Confusion). Patterns `multi` and `coinSelfConfuse` present; runtime status timing untested. **Partial.**
+- `base2-44` Rapidash: Stomp (20/30), Agility (30 and heads shield). `coinDamageChoice` and `agilityShield` present; protection expiration and switch behavior not exercised. **Partial.**
+- `base2-45` Rhydon: Horn Attack (30), Ram (50, 20 self-recoil, opponent selects forced switch even if Rhydon KOs itself). **Confirmed discrepancy:** shared `recoilForceSwitch` uses first opposing Bench slot by default, not an actual opponent-controlled selection when multiple choices exist; fix requires an asynchronous defending-player choice path, so no unsafe shortcut was committed. Self-KO ordering not runtime tested. **Partial, defect outstanding.**
+- `base2-46` Seaking: Horn Attack (10) and Waterfall (30) map to `plain` damage; no special-effect paths. **Partial.**
+- `base2-47` Tauros: Stomp (20/30) and Rampage (20 + 10 per own damage counter, tails self-Confusion) match `coinDamageChoice` and `selfDamageBonusConfuse` source paths. **Partial.**
+
+Follow-up: exercise deterministic heads/tails and self-KO/switch choice cases using existing runtime checks, verify WotC-era rulings and fix Ram's choice ownership. Avoid declaring any of these verified until then.
