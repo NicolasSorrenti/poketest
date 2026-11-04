@@ -1689,7 +1689,7 @@ class Engine{
  return false; // Buzzap needs a separate recipient-selection and KO transaction; not silently approximated.
  }
  // Fossil Gengar: transfer one damage counter between opposing Pokémon once per turn, without a Knock Out.
- curse(fromSlot,toSlot){const foe=this.foe,from=fromSlot===-1?foe.active:foe.bench[fromSlot],to=toSlot===-1?foe.active:foe.bench[toSlot],source=this.powerSources('Curse').find(u=>!u.powerUses?.curse);if(!source||!from||!to||from===to||from.damage<10||to.damage+10>=Number(this.card(to)?.hp||0))return false;from.damage-=10;to.damage+=10;source.powerUses.curse=true;this.log(`${this.me.name} used Curse to move 1 damage counter.`);render();return true}
+ curse(fromSlot,toSlot){const foe=this.foe,from=fromSlot===-1?foe.active:foe.bench[fromSlot],to=toSlot===-1?foe.active:foe.bench[toSlot],source=this.powerSources('Curse').find(u=>!u.powerUses?.curse);if(!source||!from||!to||from===to||from.damage<10)return false;from.damage-=10;to.damage+=10;source.powerUses.curse=true;this.log(`${this.me.name} used Curse to move 1 damage counter.`);this.resolveKO();render();return true}
  // Jungle Vileplume: once per turn flip a coin; on heads remove one damage counter from each of your Pokémon.
  healPower(){const source=this.powerSources('Heal').find(u=>!u.powerUses?.heal);if(!source)return false;source.powerUses.heal=true;const success=coin('Vileplume — Heal');if(success)for(const u of [this.me.active,...this.me.bench])if(u)u.damage=Math.max(0,u.damage-10);this.log(`Vileplume used Heal: ${success?'heads — healed 10 from each Pokémon':'tails — no healing'}.`);render();return true}
  // Fossil Dragonite Step In: may switch itself from the Bench into the Active position during its owner's turn.
@@ -3145,7 +3145,7 @@ const TARGET_RULES={
  'Super Potion':{side:0,zone:'any',valid:u=>u.damage>0&&u.energies.length>0},
  'Stretch Kick':{side:1,zone:'bench'},'Bench attack':{side:1,zone:'bench'},'Rain Dance':{side:0,zone:'any',valid:u=>engine.card(u)?.types?.includes('Water')},'Energy Trans source':{side:0,zone:'any',valid:u=>u.energies.some(id=>lookup.get(id)?.name==='Grass Energy')},'Energy Trans destination':{side:0,zone:'any'},Retreat:{side:0,zone:'bench'}
 };
-TARGET_RULES['Strange Behavior source']={side:0,valid:u=>u.damage>=10};TARGET_RULES['Strange Behavior destination']={side:0,valid:u=>engine.card(u)?.name==='Slowbro'&&u.damage+10<Number(engine.card(u)?.hp||0)};TARGET_RULES['Curse source']={side:1,valid:u=>u.damage>=10};TARGET_RULES['Curse destination']={side:1,valid:u=>u.damage+10<Number(engine.card(u)?.hp||0)};
+TARGET_RULES['Strange Behavior source']={side:0,valid:u=>u.damage>=10};TARGET_RULES['Strange Behavior destination']={side:0,valid:u=>engine.card(u)?.name==='Slowbro'&&u.damage+10<Number(engine.card(u)?.hp||0)};TARGET_RULES['Curse source']={side:1,valid:u=>u.damage>=10};TARGET_RULES['Curse destination']={side:1,valid:u=>Boolean(u)};
 TARGET_RULES['Damage Swap source']={side:0,valid:u=>u.damage>=10};TARGET_RULES['Damage Swap destination']={side:0,valid:u=>u.damage+10<Number(engine.card(u)?.hp||0)};
 TARGET_RULES['Gather Fire source']={side:0,valid:u=>u.energies.some(id=>lookup.get(id)?.name==='Fire Energy')};
 TARGET_RULES['Fire Recharge target']={side:0,valid:u=>engine.card(u)?.types?.includes('Fire')};
