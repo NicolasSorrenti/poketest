@@ -1,6 +1,16 @@
 'use strict';
 // Primary RPG overworld presentation. All gameplay commands use the RPG state bridge.
 (()=>{
+  // Bootstrap the canonical story DOM from the overworld's own template.
+  // This runs before rpg.js so its scene/choice/CG bindings see exactly one
+  // stable set of nodes, without loading or borrowing the retired RPG layout.
+  const stageTemplate=document.getElementById('neoOverworldStageTemplate');
+  if(!stageTemplate?.content?.querySelector('#neoOverworldStage'))
+    throw Error('Overworld story-stage template is missing.');
+  if(!document.getElementById('neoOverworldStage')){
+    const stage=stageTemplate.content.querySelector('#neoOverworldStage').cloneNode(true);
+    document.body.append(stage);
+  }
   const bridge=()=>window.NeoRpgOverworldBridge;
   function mount(){
     if(document.getElementById('neoOverworldOverlay')||!bridge())return;
@@ -292,11 +302,10 @@
       button.onclick=()=>{hideMenu();action();};menu.append(button);
     }
 
-    // Reparent the live RPG stage rather than cloning dialogue/CG/choice handlers.
-    // Every existing event listener and rendered state stays attached to the same nodes.
-    const stage=document.querySelector('.stage-panel');
-    // Overworld-only presentation: scene portraits and CGs above the map;
-    // original dialogue and choice DOM stays live, without its old room backdrop.
+    // One overworld-owned stage remains stable across all dialogue/CG changes.
+    // Its nodes already existed before the controller loaded; no old RPG
+    // stage or fallback interface is involved.
+    const stage=document.getElementById('neoOverworldStage');
     const visualStyle=document.createElement('style');
     visualStyle.textContent=`
       /* Time wipes are appended to the page body; keep them above this full-screen overlay. */
@@ -350,9 +359,7 @@
       // throughout VN dialogue/CGs. The iframe can reload when schedules change.
       frame.contentWindow?.postMessage({type:'neo-overworld-story-visibility',hidden:!!locked},location.origin);
       frame.style.pointerEvents=locked?'none':'auto';
-      // Keep the UI switcher available during story locks. Returning to the
-      // original interface only changes presentation; it does not advance or
-      // resolve the active event.
+      // The new header remains available while story input is locked.
       toolbar.style.pointerEvents='auto';
       menuButton.disabled=false;
       next.disabled=locked;
@@ -380,8 +387,8 @@
       #neoOverworldOverlay:has(#neoOverworldStoryDock:not([hidden])) #neoOverworldBottom{visibility:hidden}
       #neoOverworldStoryDock #scene .home-banner{display:none!important}
     `;
-    // Keep the original RPG's interaction buttons wired to their native handlers,
-    // but reveal them only when the player deliberately opens Actions.
+    // Keep current campaign action handlers attached to the stable stage nodes;
+    // reveal them when the player opens Actions.
     const actionTray=document.createElement('div');
     actionTray.id='neoOverworldActionTray';
     const actionToggle=document.createElement('button');
@@ -1306,7 +1313,7 @@
     }
     function hideStory(){
       if(!stage)return;
-      // Keep the controller's story stage mounted in the overworld across conversations.
+      // Keep the overworld-owned story stage mounted across conversations.
       if(storyDock)storyDock.hidden=true;
       lockMapForStory(false);
       portraitWindow?.reset();lastPortraitSignature='';
@@ -1578,8 +1585,8 @@
         event.preventDefault();setChoicesCollapsed(true);syncChoicePresentation(false);return;
       }
       if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}event.preventDefault();});
-    // Battles run in the original full-screen duel layer. Resume the map as soon as
-    // its battle layer closes, without restarting the campaign or changing saves.
+    // Battles run in the authoritative full-screen duel layer. Restore the
+    // overworld when it closes, without restarting or modifying the campaign save.
     const duel=document.getElementById('duel');
     if(duel){
       syncDuel=()=>{
