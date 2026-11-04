@@ -776,8 +776,10 @@ function prizeRaceBonus(action,o,cfg){
   // Sleeping/Paralyzed Pokémon cannot immediately attack. An omniscient
   // "potential attack" should not provoke a desperate unnecessary retreat.
   if(['Asleep','Paralyzed'].includes(enemy.active.status))return 0;
-  const outgoing=strongestAffordableAttack(enemy.active,old,enemy.bench.length);
-  const incoming=strongestAffordableAttack(enemy.active,alternate,enemy.bench.length);
+  const outgoing=cfg.level===8?strongestUsableOpponentAttack(o,old):
+   strongestAffordableAttack(enemy.active,old,enemy.bench.length);
+  const incoming=cfg.level===8?strongestUsableOpponentAttack(o,alternate):
+   strongestAffordableAttack(enemy.active,alternate,enemy.bench.length);
   const deadly=outgoing>=hpRemaining(old)&&outgoing>0;
   const escape=incoming<hpRemaining(alternate);
   const myKO=strongestAffordableAttack(old,enemy.active,own.bench.length)>=hpRemaining(enemy.active);
@@ -801,14 +803,22 @@ function opponentResponseBonus(action,o,cfg){
  if(['Asleep','Paralyzed'].includes(q.active.status))return 0;
  const attacker=p.active,next=p.bench[action.payload.slot];
  if(!next)return 0;
- const now=strongestAffordableAttack(q.active,attacker,q.bench.length);
- const after=strongestAffordableAttack(q.active,next,q.bench.length);
+ // Apex must evaluate attacks the opponent can actually declare. Printed
+ // payable damage is not a threat while Amnesia or Gym locks prevent it.
+ const now=cfg.level===8?strongestUsableOpponentAttack(o,attacker):
+  strongestAffordableAttack(q.active,attacker,q.bench.length);
+ const after=cfg.level===8?strongestUsableOpponentAttack(o,next):
+  strongestAffordableAttack(q.active,next,q.bench.length);
  const threat=now>=hpRemaining(attacker)&&now>0;
  if(!threat||after>=hpRemaining(next))return 0;
  const currentKO=(attacker.effectiveAttacks||card(attacker.id)?.attacks||[])
-  .some(a=>canPayEnergy(a.cost||[],energyPool(attacker))&&knockoutChance(a,attacker,q.active,p.bench.length)>=.75);
+  .some((a,i)=>(cfg.level===8?eligibleAttack(o,attacker,a,i):
+   canPayEnergy(a.cost||[],energyPool(attacker)))&&
+   knockoutChance(a,attacker,q.active,p.bench.length)*
+    (cfg.level===8&&attacker.status==='Confused'?.5:1)>=.75);
  if(currentKO)return 0;
- const replacement=strongestAffordableAttack(next,q.active,p.bench.length);
+ const replacement=cfg.level===8?projectedAttackValue(next,q.active,o.turnSerial,p.bench.length):
+  strongestAffordableAttack(next,q.active,p.bench.length);
  if(!replacement)return 0; // Do not flee into a passive Bench that cannot defend itself.
  const lostEnergy=Math.min(attacker.energies?.length||0,(card(attacker.id)?.retreatCost||[]).length);
  const advantage=Math.max(0,replacement-strongestAffordableAttack(attacker,q.active,p.bench.length))*.25;
