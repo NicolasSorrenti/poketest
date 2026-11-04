@@ -809,8 +809,14 @@ function opponentResponseBonus(action,o,cfg){
   strongestAffordableAttack(q.active,attacker,q.bench.length);
  const after=cfg.level===8?strongestUsableOpponentAttack(o,next):
   strongestAffordableAttack(q.active,next,q.bench.length);
- const threat=now>=hpRemaining(attacker)&&now>0;
- if(!threat||after>=hpRemaining(next))return 0;
+ // A Confused opponent has only a 50% chance to execute its attack.
+ // Use the existing likely-KO forecast for Apex rather than granting a
+ // full rescue bonus for an uncertain knockout.
+ const threat=cfg.level===8?likelyOpponentKnockout(o,attacker,true):
+  now>=hpRemaining(attacker)&&now>0;
+ const replacementThreat=cfg.level===8?likelyOpponentKnockout(o,next,true):
+  after>=hpRemaining(next);
+ if(!threat||replacementThreat)return 0;
  const currentKO=(attacker.effectiveAttacks||card(attacker.id)?.attacks||[])
   .some((a,i)=>(cfg.level===8?eligibleAttack(o,attacker,a,i):
    canPayEnergy(a.cost||[],energyPool(attacker)))&&
