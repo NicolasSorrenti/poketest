@@ -2214,28 +2214,22 @@ function renderBoosterShop(message=''){
  }))throw Error('The overworld booster shop presenter did not load.');
 }
 function renderDeckWorkshop(){
- const j=state.deckJourney;if(!j?.starter)return;
- const draft=COLLECT.draft(state),owned=j.owned;
- const counts=COLLECT.rank(draft),remove=$('deckRemove'),add=$('deckAdd');
- const previousRemove=remove.value,previousAdd=add.value;
- remove.replaceChildren();add.replaceChildren();
- const label=(id,n)=>labelCard(id)+' · '+n+' copy'+(n===1?'':'ies');
- for(const [id,n] of Object.entries(counts)){
-  const option=document.createElement('option');option.value=id;option.textContent=label(id,n);remove.append(option);
- }
- for(const [id,n] of Object.entries(owned)){
-  if(!n)continue;
-  const option=document.createElement('option');option.value=id;option.textContent=label(id,n)+' owned / '+(counts[id]||0)+' in deck';add.append(option);
- }
- if(counts[previousRemove])remove.value=previousRemove;
- if(owned[previousAdd])add.value=previousAdd;
+ const journey=state.deckJourney;if(!journey?.starter)return;
+ const draft=COLLECT.draft(state),owned=journey.owned,counts=COLLECT.rank(draft);
+ const label=(id,count)=>labelCard(id)+' · '+count+' copy'+(count===1?'':'ies');
  const valid=COLLECT.check(draft,owned);
- $('deckEditStats').textContent=COLLECT.byId(j.starter).name+' · '+draft.length+'/60 cards · '+(valid.valid?'Ready to battle':'Deck needs attention');
- $('deckEditError').textContent=valid.errors[0]||'Swap any card you own, one for one. Only your saved deck goes into battle.';
- const list=$('deckList');list.replaceChildren();
- for(const [id,n] of Object.entries(counts)){
-  const item=document.createElement('span');item.textContent=n+'× '+labelCard(id);list.append(item);
- }
+ const model={
+  remove:Object.entries(counts).map(([id,count])=>({id,label:label(id,count)})),
+  add:Object.entries(owned).filter(([,count])=>count>0).map(([id,count])=>({
+   id,label:label(id,count)+' owned / '+(counts[id]||0)+' in deck'
+  })),
+  stats:COLLECT.byId(journey.starter).name+' · '+draft.length+
+   '/60 cards · '+(valid.valid?'Ready to battle':'Deck needs attention'),
+  message:valid.errors[0]||'Swap any card you own, one for one. Only your saved deck goes into battle.',
+  deck:Object.entries(counts).map(([id,count])=>({id,count,label:labelCard(id)}))
+ };
+ if(!window.NeoRpgOverworldCollection?.renderDeck?.(document,model))
+  throw Error('The overworld deck editor presenter did not load.');
 }
 function openDeckWorkshop(){
  if(controlsLocked()||!state.deckJourney?.starter)return;
