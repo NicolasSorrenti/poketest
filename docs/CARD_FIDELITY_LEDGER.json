@@ -4889,13 +4889,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Wing Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Wing Attack CCC 30 is flat damage; Leech Life GGC 20 drains damage actually dealt after W/R, limited by existing damage counters."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Leech Life",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Wing Attack CCC 30 is flat damage; Leech Life GGC 20 drains damage actually dealt after W/R, limited by existing damage counters."
         }
       ]
     },
@@ -4908,13 +4924,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Psyshock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Psyshock P 10 has heads Paralysis; Hyper Beam WWC 20 discards a selected defending attached Energy, when present."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hyper Beam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Psyshock P 10 has heads Paralysis; Hyper Beam WWC 20 discards a selected defending attached Energy, when present."
         }
       ]
     },
@@ -4927,13 +4959,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Avalanche",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Avalanche FFFC 60 is flat damage; Selfdestruct FFFF 100 hits both Benches for 20 without W/R and self for 100."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Selfdestruct",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Avalanche FFFC 60 is flat damage; Selfdestruct FFFF 100 hits both Benches for 20 without W/R and self for 100."
         }
       ]
     },
@@ -4946,13 +4994,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Harden",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Harden FF prevents <=30 post-W/R incoming damage next opponent turn but not attack side effects; Rock Throw FFC 40 flat."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rock Throw",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Harden FF prevents <=30 post-W/R incoming damage next opponent turn but not attack side effects; Rock Throw FFC 40 flat."
         }
       ]
     },
@@ -4965,13 +5029,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Flail",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Flail W 10 per Kingler damage counter, Crabhammer WWC 40 flat."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Crabhammer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Flail W 10 per Kingler damage counter, Crabhammer WWC 40 flat."
         }
       ]
     },
