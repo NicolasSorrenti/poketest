@@ -25,6 +25,9 @@
     title.append(locationName,dayLabel);
     const note=document.createElement('div');note.id='neoOverworldNotice';note.hidden=true;note.setAttribute('role','status');note.setAttribute('aria-live','polite');
     const showNotice=message=>{note.textContent=message;note.hidden=false;};
+    window.addEventListener('neo-rpg-save-status',event=>{
+      if(event.detail?.message)showNotice(event.detail.message);
+    });
     const frame=document.createElement('iframe');frame.title='Current Neo Campus location';Object.assign(frame.style,{flex:'1',minHeight:'0',width:'100%',border:'0'});
     // A map is a persistent view, not a disposable result of each RPG render.
     let activeMapKey='',activeCastKey='',lastIndicatorKey='';
@@ -200,7 +203,7 @@
     }
     quickButton('Events','▦',showEvents);
     quickButton('Deck','▤',()=>showDeck());
-    quickButton('Status','♥',()=>document.getElementById('statusBtn')?.click());
+    quickButton('Status','♥',()=>bridge()?.openStatus?.());
     // The real planner DOM (including its action handlers) moves into the sheet.
     // When collapsed or interrupted, it returns to the original RPG stage.
     const navStyle=document.createElement('style');
@@ -337,11 +340,11 @@
     menuButton.onclick=()=>{closeSheet();menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));};
     const menuItems=[
       ['▣ Deck Studio',showDeck],
-      ['▧ CG Gallery',()=>document.getElementById('galleryBtn')?.click()],
-      ['♥ Status & Relationships',()=>document.getElementById('statusBtn')?.click()],
-      ['▦ Calendar',()=>document.getElementById('calendarBtn')?.click()],
+      ['▧ CG Gallery',()=>bridge()?.openGallery?.()],
+      ['♥ Status & Relationships',()=>bridge()?.openStatus?.()],
+      ['▦ Calendar',()=>bridge()?.openCalendar?.()],
       ['🏆 Circuit & Tournaments',()=>showEvents('circuit')],
-      ['✧ Save Game',()=>document.getElementById('save')?.click()],
+      ['✧ Save Game',()=>{void bridge()?.saveCampaign?.();}],
       ['◇ Discreet / Chibi Mode',()=>{toggleChibiPreference();refresh();}],
       ['♫ Audio Settings',showAudioSettings],
       ['⌾ Travel',()=>openSheet('travel')],
@@ -1564,7 +1567,7 @@
       if(overlay.classList.contains('neo-ow-activity-open')||!storyShield.hidden)return;
       if(message.kind==='navigation'){
         if(message.id==='deck'){showDeck();return;}
-        if(message.id==='status'){document.getElementById('statusBtn')?.click();return;}
+        if(message.id==='status'){bridge()?.openStatus?.();return;}
         if(message.id==='activities'||message.id==='events'){hideMenu();if(message.id==='activities')showActivities(bridge()?.activities()||[]);else showEvents();return;}
       }
       if(message.kind==='person'){
