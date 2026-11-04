@@ -94,5 +94,50 @@
   }
   return true;
  }
- return Object.freeze({populateCharacters,render});
+ // Reuse one live artwork dialog across CG and other art categories. The
+ // request counter ensures an old image load never marks a newer card viewed.
+ let lightbox=null,lightboxSequence=0;
+ function openLightbox(doc,entry,handlers){
+  if(!doc||!entry?.unlocked)return false;
+  if(!lightbox){
+   const dialog=doc.createElement('dialog');dialog.className='cg-lightbox';
+   dialog.setAttribute('aria-label','Full-screen unlocked artwork');
+   const toolbar=element(doc,'div','cg-lightbox-toolbar');
+   const title=element(doc,'span','cg-lightbox-title');
+   const close=element(doc,'button','cg-lightbox-close','✕ Close');
+   close.type='button';close.setAttribute('aria-label','Close full-screen image');
+   close.onclick=()=>dialog.close();
+   toolbar.append(title,close);
+   const stage=element(doc,'div','cg-lightbox-stage');
+   dialog.append(toolbar,stage);
+   dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
+   dialog.addEventListener('close',()=>{lightboxSequence++;});
+   doc.body.append(dialog);lightbox=dialog;
+  }
+  const request=++lightboxSequence;
+  const title=lightbox.querySelector('.cg-lightbox-title');
+  const stage=lightbox.querySelector('.cg-lightbox-stage');
+  title.textContent=entry.title||'Artwork';
+  stage.replaceChildren();
+  if(entry.character)handlers?.discreetAvatar?.(stage,entry.character);
+  const img=doc.createElement('img');img.alt=entry.title||'Artwork';img.hidden=true;
+  const pending=element(doc,'p','cg-pending','Artwork not installed yet.');
+  pending.hidden=true;stage.append(img,pending);
+  if(!lightbox.open)lightbox.showModal();
+  const current=()=>lightboxSequence===request&&lightbox.open;
+  const missing=()=>{if(current()){img.hidden=true;pending.hidden=false;}};
+  const success=()=>{
+   if(!current())return;
+   img.hidden=false;pending.hidden=true;
+   handlers?.onViewed?.();
+  };
+  if(entry.type){
+   img.onload=success;img.onerror=missing;
+   img.src=entry.path;
+  }else if(handlers?.loadCG){
+   handlers.loadCG(img,entry,success,missing);
+  }else missing();
+  return true;
+ }
+ return Object.freeze({populateCharacters,render,openLightbox});
 });
