@@ -757,3 +757,19 @@ Scope is the current game engine only: `play.html` routes single play to `classi
 | `base3-28` Muk | Current `classic_power_core.js` checks Toxic Gas suppression and status locks; Sludge coin-status path identified. Multiple Muk, status changes, other Powers and damage prevention unexecuted. | partial |
 
 Source inspection and a code change are **not runtime verification**. No new tests, suites, or CI changes. Printed-card references and historical ruling gaps from the previous Fossil #24–28 entry remain relevant; this entry corrects engine provenance and the user-confirmed Water-only interpretation. All five remain partial.
+
+## 2026-11-04 — Active-engine Fossil #29–33 (five distinct printings)
+
+At start, [PR #464](https://github.com/NicolasSorrenti/poketest/pull/464) was confirmed merged as [597d5524](https://github.com/NicolasSorrenti/poketest/commit/597d5524fa1c652a1a1faf219ae2f7ff3b565833), and no open card-fidelity PR was found. Live match authority: `play.html` → `classic_live.html` → `classic_local_service.js` → `headless_duel.js`; RPG bridge delegates to the same local authority. Attack effects compile through `attack_effects_core.js` / `classic_attack_extensions.js`. Legacy `engine.js` was not used as evidence.
+
+Five **previously unreviewed** Fossil printings compared to imported TCGdex card text in `cards/base3.json` and the active compiler/reducer source. **No current-reducer runtime scenario was executed**, and independent historical ruling checks remain outstanding; every status is **partial** rather than verified.
+
+| Printing | Active-engine evidence and outstanding runtime scenarios | Status |
+| --- | --- | --- |
+| [Raichu #29](https://limitlesstcg.com/cards/FO/29) `base3-29` | Gigashock LLLL: 30 Active + 10 each to exactly 3 distinct opposing Bench targets (or all if fewer). `classic_attack_extensions.js` compiles `bench-up-to-three`; `headless_duel.js` requests exactly three distinct choices for Bench >3. Test Bench 0–5, shields, cost, and KOs. | **partial** |
+| [Zapdos #30](https://limitlesstcg.com/cards/FO/30) `base3-30` | Thunderstorm LLLL: 40 Active, independent coin for each opposing Bench, 20 each heads and 10 self per tails. Dedicated `thunderstorm` compiler identified; no coin, self-KO or protection runtime scenarios. | **partial** |
+| [Arbok #31](https://limitlesstcg.com/cards/FO/31) `base3-31` | Terror Strike G: 10 then heads-only opponent-chosen switch; `coin-defender-switch` compiler identified. Poison Fang GGC: 20 and Poison. Test defender KO before switch, choice ownership, no Bench, statuses. | **partial** |
+| [Cloyster #32](https://limitlesstcg.com/cards/FO/32) `base3-32` | Clamp WW: heads 30 and Paralysis, tails nothing; `coin-clamp` compiler identified. Spike Cannon WW: two flips, 30 per heads. Test all flips, status immunity, prevention. | **partial** |
+| [Gastly #33](https://limitlesstcg.com/cards/FO/33) `base3-33` | Lick P: 10 and heads Paralysis. Energy Conversion PP: recover 0–2 discard Energy, then 10 self-damage. Dedicated compiler and `headless_duel.js` discard-recovery choice/validation inspected. Test empty discard, special Energy, self-KO, ordering. | **partial** |
+
+No current-engine defect was confirmed from source inspection alone, so no gameplay code was modified. No test files, suites, or CI configuration were added. Ledger after this batch: **307 partially reviewed**, **816 unreviewed**, **0 fully verified**, **1123 not fully verified** of 1123. The new batch requires real reducer execution and historical rulings before promotion.

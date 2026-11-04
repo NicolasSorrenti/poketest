@@ -4766,7 +4766,12 @@
           "kind": "attack",
           "index": 0,
           "name": "Gigashock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: cards/base3.json Gigashock LLLL 30 plus 10 to exactly three distinct opponent Benched Pokémon if at least three; otherwise all. classic_attack_extensions.js compiles bench-up-to-three and headless_duel.js creates an exactly-three target decision when Bench >3, validating distinct indices.",
+            "No current-reducer runtime execution; Bench sizes 0–5, attack payment, Bench shields and simultaneous KOs remain unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
@@ -4779,7 +4784,12 @@
           "kind": "attack",
           "index": 0,
           "name": "Thunderstorm",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Thunderstorm LLLL 40; classic_attack_extensions.js compiles thunderstorm with 20 per opposing Bench heads and 10 self per tails; headless_duel.js imports attack_effects_core.js for resolution.",
+            "No current-reducer runtime execution; independent flips, Weakness/Resistance, empty Bench, self-KO and prizes remain unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
@@ -4792,13 +4802,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Terror Strike",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Terror Strike G 10 plus heads-only opponent-chosen switch after damage compiled as coin-defender-switch in classic_attack_extensions.js; Poison Fang GGC 20 and unconditional Poison from printed card text.",
+            "No current-reducer runtime execution; opponent choice ownership, KO-before-switch, empty Bench, coin outcomes and status shields unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Poison Fang",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Terror Strike G 10 plus heads-only opponent-chosen switch after damage compiled as coin-defender-switch in classic_attack_extensions.js; Poison Fang GGC 20 and unconditional Poison from printed card text.",
+            "No current-reducer runtime execution; opponent choice ownership, KO-before-switch, empty Bench, coin outcomes and status shields unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
@@ -4811,13 +4831,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Clamp",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Clamp WW 30 heads with Paralysis, tails no damage or effect compiled as coin-clamp; Spike Cannon WW 30 per heads on two flips, printed in cards/base3.json.",
+            "No current-reducer runtime execution; both Clamp outcomes, Spike Cannon 0/1/2 heads, damage prevention and status interactions unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Spike Cannon",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Clamp WW 30 heads with Paralysis, tails no damage or effect compiled as coin-clamp; Spike Cannon WW 30 per heads on two flips, printed in cards/base3.json.",
+            "No current-reducer runtime execution; both Clamp outcomes, Spike Cannon 0/1/2 heads, damage prevention and status interactions unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
@@ -4830,13 +4860,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Lick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Lick P 10 plus heads Paralysis; Energy Conversion PP retrieves up to two Energy cards from own discard and deals 10 self-damage. classic_attack_extensions.js compiles energy-conversion; headless_duel.js offers 0–2 discard-recovery choices and validates indices.",
+            "No current-reducer runtime execution; empty discard, special Energy eligibility, self-KO/prizes and ordering unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Energy Conversion",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Lick P 10 plus heads Paralysis; Energy Conversion PP retrieves up to two Energy cards from own discard and deals 10 self-damage. classic_attack_extensions.js compiles energy-conversion; headless_duel.js offers 0–2 discard-recovery choices and validates indices.",
+            "No current-reducer runtime execution; empty discard, special Energy eligibility, self-KO/prizes and ordering unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
