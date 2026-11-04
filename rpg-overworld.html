@@ -91,67 +91,16 @@ body > #app > footer { visibility: hidden !important; }
     <button id="dismissReceipt" type="button">Continue exploring →</button>
   </section>
 
-  <main class="layout">
-    <aside id="rpgMapPanel" class="locations-panel" aria-label="Town map" aria-hidden="true">
-      <div class="rpg-drawer-header"><strong>☷ TOWN MAP</strong><button type="button" class="rpg-drawer-close" aria-label="Close town map">✕</button></div>
-      <div class="panel-label">NEIGHBORHOODS</div>
-      <h2>Explore the town</h2>
-      <p>Choose where to go. Traveling does not consume time.</p>
-      <nav id="places" aria-label="Town locations"></nav>
-      <div class="legend">
-        <strong>HOW TIME WORKS</strong>
-        <div><span>→</span> Travel and short chats <b>FREE</b></div>
-        <div><span>⏳</span> Hangouts and duels <b>1 PERIOD</b></div>
-        <div><span>☾</span> After evening comes <b>NEW DAY</b></div>
-      </div>
-    </aside>
-
-    <aside id="rpgInfoPanel" class="sidebar" aria-label="Story and progress" aria-hidden="true">
-      <div class="rpg-drawer-header"><strong>✧ TOWN INFO</strong><button type="button" class="rpg-drawer-close" aria-label="Close town information">✕</button></div>
-      <section class="side-section">
-        <div class="sidebar-title"><span>AROUND TOWN NOW</span><small>FREE TRAVEL</small></div>
-        <div id="townRadar" class="town-radar" aria-label="Other available trainers and where to find them"></div>
-      </section>
-      <section class="side-section">
-        <div class="sidebar-title"><span>WHO'S HERE</span><small>AVAILABLE NOW</small></div>
-        <div id="people" class="people-list"></div>
-      </section>
-      <section class="side-section world-section">
-        <div class="sidebar-title"><span>◈ TOWN LIFE</span><small>YOUR PROGRESS</small></div>
-        <div id="lifeStats" class="life-stats" aria-label="Focus, reputation, insight and duel preparation"></div>
-      </section>
-      <section class="side-section quest-section">
-        <div class="sidebar-title"><span>◆ SIDE QUESTS</span><small>OPTIONAL TOWN STORIES</small></div>
-        <div id="sideQuestJournal" class="quest-journal" aria-label="Side quest progress"></div>
-      </section>
-      <section class="side-section">
-        <div class="sidebar-title"><span>YOUR DECK</span><small>CHOOSE FOR NEXT DUEL</small></div>
-        <label class="decklabel" for="deckPicker">ACTIVE 60-CARD DECK</label>
-        <select id="deckPicker"></select>
-        <div id="deckCollection" class="deck-collection" aria-live="polite"></div>
-      </section>
-      <section class="side-section">
-        <div class="sidebar-title"><span>SEASON JOURNAL</span><small>NO SPOILERS</small></div>
-        <div id="journal"></div>
-      </section>
-    </aside>
-  </main>
-  <footer>NEO HARBOR · 90 DAYS TO MAKE YOUR MARK <span>CHARACTERS HAVE THEIR OWN LIVES · CHOICES MATTER</span></footer>
+  <!-- State-only input retained for saved deck compatibility; no hidden
+       map, sidebar or retired RPG navigation DOM is rendered. -->
+  <div id="neoRpgDeckState" hidden><select id="deckPicker" aria-label="Saved RPG deck"></select></div>
 </div>
 
 <!-- The overworld instantiates this dedicated story stage before the RPG controller loads. -->
 <template id="neoOverworldStageTemplate">
     <section id="neoOverworldStage" class="stage-panel neo-ow-stage" style="display:none" aria-label="Current RPG dialogue and scenes">
       <div id="scene" class="scene">
-        <div class="scene-head">
-          <span id="whereLabel" class="here-label">⌂ YOU ARE HOME</span>
-          <strong id="placeTitle">Your Apartment</strong>
-          <span id="placeDetail">Your base during the championship season.</span>
-        </div>
-        <div class="home-banner" id="homeBanner">YOUR APARTMENT — Prepare, plan or rest.</div>
-        <div class="rpg-discreet-stage" aria-hidden="true"><span class="rpg-discreet-stage__symbol">N/H</span><span class="rpg-discreet-stage__subtitle">STORY · TACTICS · CONNECTIONS</span></div>
         <img id="rpgSceneCG" class="rpg-scene-cg" alt="" aria-label="Scene illustration" hidden>
-        <div id="portrait" class="portrait" aria-label="Character illustration"></div>
       </div>
       <div id="dialogue" class="dialogue" aria-live="polite">
         <div class="dialogue-title"><span id="speaker">Narrator</span><span class="vn-label">NEO HARBOR / STORY</span></div>
@@ -165,10 +114,6 @@ body > #app > footer { visibility: hidden !important; }
         </div>
       </div>
       <div id="characterActions" class="character-actions" aria-label="Selected character actions" hidden></div>
-      <div class="scene-foot">
-        <span>LOCATION SCENE · INTERACTIVE VISUAL NOVEL</span>
-        <span>Press SPACE to advance story dialogue</span>
-      </div>
       <div class="campaign-complete" id="endSeason" hidden></div>
     </section>
 
