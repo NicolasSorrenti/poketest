@@ -323,16 +323,6 @@
     frame.addEventListener('load',()=>{
       frame.contentWindow?.postMessage({type:'neo-overworld-story-visibility',hidden:!storyShield.hidden},location.origin);
     });
-    visualStyle.textContent+=`
-      #neoOverworldStoryDock{z-index:5!important;pointer-events:auto}
-      #neoOverworldStoryDock .stage-panel{max-width:none!important;width:100%!important}
-      #neoOverworldStoryDock #scene{display:flex!important;align-items:flex-end!important;justify-content:center!important}
-      /* The overworld owns the active VN portraits. */
-      #neoOverworldStoryDock #dialogue{width:100%!important}
-      #neoOverworldStoryDock #characterActions{margin-top:8px!important}
-      #neoOverworldOverlay:has(#neoOverworldStoryDock:not([hidden])) #neoOverworldBottom{visibility:hidden}
-      #neoOverworldStoryDock #scene .home-banner{display:none!important}
-    `;
     // Keep current campaign action handlers attached to the stable stage nodes;
     // reveal them when the player opens Actions.
     const actionTray=document.createElement('div');
@@ -517,15 +507,6 @@
       scenePeople.hidden=!visibleParticipants.length;
       sceneArea?.classList.toggle('neo-ow-participants',!!visibleParticipants.length);
     }
-    visualStyle.textContent+=`
-      #neoOverworldStoryDock #neoOverworldScenePeople{display:flex;align-items:flex-end;justify-content:center;gap:clamp(3px,2vw,20px);width:100%;max-height:39dvh;overflow:hidden}
-      #neoOverworldStoryDock #neoOverworldScenePeople[hidden]{display:none!important}
-      #neoOverworldStoryDock .neo-ow-person{display:flex;flex:1 1 0;min-width:0;max-width:260px;max-height:38dvh;align-items:center;flex-direction:column;justify-content:flex-end;transition:opacity .2s,filter .2s,transform .2s}
-      #neoOverworldStoryDock .neo-ow-person img{object-fit:contain;object-position:center bottom;width:100%;max-height:34dvh;min-height:0;filter:drop-shadow(0 6px 12px #0009)}
-      #neoOverworldStoryDock .neo-ow-person span{background:#16132acc;border:1px solid #b88dbe;border-radius:7px;padding:3px 8px;font:600 12px system-ui}
-      #neoOverworldStoryDock .neo-ow-person.is-listening{opacity:.57;filter:brightness(.7);transform:scale(.95)}
-      @media(max-width:650px){#neoOverworldStoryDock #neoOverworldScenePeople{max-height:31dvh}#neoOverworldStoryDock .neo-ow-person img{max-height:26dvh}}
-    `;
 
 
     // Story-only phone layout: same full-width portrait treatment as the
