@@ -4388,7 +4388,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Gigashock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed LLLL 30 Active plus 10 to up to three distinct opposing Benched Pokémon; fewer than three means all. Compared base3 catalogue text and legacy benchSpreadChoose mapping; headless bench-up-to-three resolver inspected. Need deterministic target-choice, no/short Bench, damage prevention and simultaneous KO checks."
+          ]
         }
       ]
     },
@@ -4401,7 +4404,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Thunderstorm",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed LLLL 40 Active; independently flip once per opposing Bench Pokémon, heads 20 to that Bench target, tails 10 recoil to Zapdos. classic_attack_extensions thunderstorm compiler/resolver inspected; verify independent rolls, self-KO, zero Bench and shields in reducer."
+          ]
         }
       ]
     },
@@ -4414,13 +4420,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Wing Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed CCC 30; basic flat damage path and energy payment inspected. Need runtime W/R, cost and KO validation."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Prehistoric Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed passive forbids playing Evolution cards while Aerodactyl is not Asleep/Confused/Paralyzed. headless evolution gate and classic_power_core passive registry inspected; test status suppression, bench scope, multiple Aerodactyl and alternate evolution entry."
+          ]
         }
       ]
     },
@@ -4433,13 +4445,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Freeze Dry",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed WWW 30 and heads Paralysis; core coin-status route inspected. Need both coin outcomes, immunity, cost and KO validation."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Blizzard",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed WWWW 50 Active plus heads 10 all opposing Bench or tails 10 own Bench, ignoring W/R on Bench. Core bench-splash-coin and headless application inspected; need deterministic rolls, protections, Bench KO and prizes."
+          ]
         }
       ]
     },
@@ -4452,7 +4470,10 @@
           "kind": "power",
           "index": 0,
           "name": "Transform",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed Active-only copy of opposing Pokémon including HP/type/Weakness/attacks, except Ditto cannot evolve, keeps Transform and treats attached Energy as any type; disabled while Asleep/Confused/Paralyzed. headless effectiveCard and payment exception, legacy dynamic card examined. Need reducer tests for mirrored Ditto, changing HP and KO, energy units, suppression and evolution restrictions."
+          ]
         }
       ]
     },
