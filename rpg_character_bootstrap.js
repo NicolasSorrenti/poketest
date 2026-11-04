@@ -75,6 +75,7 @@
  "/rpg_overworld_gallery.js?v=gallery-split-20261104",
  "/rpg_overworld_collection_view.js?v=collection-split-20261104",
  "/rpg_overworld_preduel_view.js?v=preduel-split-20261104",
+ "/rpg_overworld_pack_view.js?v=pack-split-20261104",
  "/rpg_character_motion.js",
  "/rpg_scene_cast.js?v=two-voice-window-20261029",
  "/rpg_event_invites.js?v=1",
@@ -85,7 +86,7 @@
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=preduel-split-20261104"
+ "/rpg.js?v=pack-split-20261104"
 ];
   function registry(packs){
     // Normalize the authenticated/API roster too (not just the generated file).
