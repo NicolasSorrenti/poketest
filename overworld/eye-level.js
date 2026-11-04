@@ -89,7 +89,7 @@ window.NeoOverworldEyeLevel = (() => {
     const productionBackgrounds = {
       arcade:'arcade-eye-level-v2.webp',
       cafe:'cafe-eye-level-v2.webp',
-      park:'park-eye-level.png',
+      park:'park-eye-level-v2.webp',
       home:'apartment-eye-level.png',
       center:'tournament-eye-level.png',
       library:'library-eye-level.png'
@@ -103,7 +103,8 @@ window.NeoOverworldEyeLevel = (() => {
     const sources = map.id === 'shop'
       ? [classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
       : [productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' :
-         map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level.png' : null,
+         map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level.png' :
+         map.id === 'park' ? '/rpg-assets/eye-level/park-eye-level.png' : null,
          panoramaUrl, classicUrl, map.image].filter(Boolean);
     let sourceIndex = 0;
     const sourceImage = new Image();
@@ -226,7 +227,7 @@ window.NeoOverworldEyeLevel = (() => {
       const sceneStaging = {
         shop:    {slots:[.23,.44,.66,.83],ground:.085,scale:1.00,cropTop:0},
         arcade:  {slots:[.16,.32,.50,.68,.84],ground:.09,scale:.98,cropTop:.05},
-        park:    {slots:[.15,.32,.50,.68,.85],ground:.085,scale:1.00,cropTop:.14},
+        park:    {slots:[.15,.32,.50,.68,.85],ground:.085,scale:1.00,cropTop:0},
         cafe:    {slots:[.19,.39,.61,.81],ground:.095,scale:.96,cropTop:.08},
         home:    {slots:[.23,.48,.75],ground:.09,scale:.94,cropTop:.18},
         center:  {slots:[.15,.32,.50,.68,.85],ground:.09,scale:1.00,cropTop:.18},
