@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/rpg.css?v=dialogue-bust-20261031">
 <link rel="stylesheet" href="/rpg_cloud_save.css?v=cloud-login-visible-20261030">
 <link rel="stylesheet" href="/rpg_time_transitions.css">
-<link rel="stylesheet" href="/rpg_ui_motion.css">
+
 <link rel="stylesheet" href="/rpg_character_motion.css">
 <link rel="stylesheet" href="/rpg_victory_presentation.css?v=20261102-expressionsv2-top-bust">
 <link rel="stylesheet" href="/rpg_tournament_presentation.css">
@@ -51,8 +51,6 @@ body > #app { visibility: hidden !important; }
     <div class="utility-left"><span class="live-dot"></span><span>NEO HARBOR · TOWN EXPLORATION</span><span class="utility-sep">/</span><span id="notice" aria-live="polite">Travel & talk are free · ⏳ actions advance time</span></div>
     <div class="utility-actions">
       <button id="statusBtn" class="toolbar-btn status-launch" type="button" aria-haspopup="dialog" aria-controls="statusDialog">♥ STATUS</button>
-      <button id="rpgMapToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgMapPanel" aria-expanded="false" aria-label="Open town map">☷ MAP</button>
-      <button id="rpgInfoToggle" class="toolbar-btn rpg-nav-toggle" type="button" aria-controls="rpgInfoPanel" aria-expanded="false" aria-label="Open story and progress panels">✧ INFO</button>
       <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
       <button id="calendarBtn" class="toolbar-btn" type="button">▦ CALENDAR</button>
       <details class="rpg-more-menu" id="rpgMoreMenu">
@@ -88,7 +86,6 @@ body > #app { visibility: hidden !important; }
     <button id="dismissReceipt" type="button">Continue exploring →</button>
   </section>
 
-  <button id="rpgDrawerBackdrop" class="rpg-drawer-backdrop" type="button" aria-label="Close navigation panel" hidden></button>
   <main class="layout">
     <aside id="rpgMapPanel" class="locations-panel" aria-label="Town map" aria-hidden="true">
       <div class="rpg-drawer-header"><strong>☷ TOWN MAP</strong><button type="button" class="rpg-drawer-close" aria-label="Close town map">✕</button></div>
@@ -348,7 +345,7 @@ body > #app { visibility: hidden !important; }
 <script src="/rpg_cg_viewer.js?v=1" defer></script>
 <script src="/rpg_image_panzoom.js?v=20261102-panzoom1"></script>
 <script src="/rpg_outfit_chime.js?v=20261102-glance-panzoom1"></script>
-<script>window.NeoRpgOverworldStandalone=true;</script>
+
 <script src="/rpg_overworld_text_pages.js?v=20261029-measured-pages-v1"></script>
 <script src="/rpg-overworld-integration.js?v=map-paint-stability-v2-20261103"></script>
 <script src="/rpg_character_bootstrap.js?v=live-after-20261103"></script>
