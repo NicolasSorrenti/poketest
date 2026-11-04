@@ -2064,32 +2064,16 @@ function showPackReveal(){
   art.onerror=tryNext;
   tryNext();
  }
- const target=$('packCards');target.replaceChildren();
- const cards=[];
- for(const [index,id] of pack.cards.entries()){
-  const button=document.createElement('button');button.type='button';button.className='pack-card';button.title='Reveal card '+(index+1);
-  button.style.setProperty('--card-position',String(index));
-  const back=document.createElement('span');back.className='pack-card-back';back.textContent='✦';button.append(back);
-  const reveal=(silent=false)=>{
-   if(button.className.includes('revealed'))return;
-   if(!silent)window.NeoRpgAudio?.play?.('flip');
-   button.className+=' revealed';button.replaceChildren();
-   const detail=document.createElement('strong');detail.textContent=labelCard(id);
-   const info=cardNames.get(id)||id;
-   const row=document.createElement('span');row.className='pack-card-number';row.textContent='CARD '+(index+1)+' / '+pack.cards.length;
-   button.append(row);
-   const data=cardImages.get(id);
-   if(data){
-    const img=document.createElement('img');img.alt=info;img.src=data;img.loading='lazy';img.onerror=()=>img.replaceWith(document.createTextNode('✦'));
-    button.append(img);
-   }else{
-    const symbol=document.createElement('span');symbol.className='pack-card-placeholder';symbol.textContent='✦';button.append(symbol);
-   }
-   button.append(detail);
-  };
-  button.onclick=reveal;cards.push(reveal);target.append(button);
- }
- $('packRevealAll').onclick=()=>{cards.forEach(show=>show(true));window.NeoRpgAudio?.play?.('flip');};
+ const packCards=pack.cards.map(id=>({
+  id,label:labelCard(id),name:cardNames.get(id)||id,image:cardImages.get(id)||null
+ }));
+ const packView=window.NeoRpgOverworldCollection?.renderPackCards?.(
+  $('packCards'),packCards,()=>window.NeoRpgAudio?.play?.('flip')
+ );
+ if(!packView)throw Error('The overworld booster reveal presenter did not load.');
+ $('packRevealAll').onclick=()=>{
+  packView.revealAll();window.NeoRpgAudio?.play?.('flip');
+ };
  $('packContinue').type='button';
  $('packRevealAll').type='button';
  $('packContinue').onclick=()=>{
