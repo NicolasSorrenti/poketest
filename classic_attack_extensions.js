@@ -98,7 +98,11 @@ function compile(a){
  if(text==='Put up to 2 Energy cards from your discard pile into your hand. Gastly does 10 damage to itself.'&&damage==='')return fixed('energy-conversion',0,{subject:'Gastly',selfDamage:10});
  if(text==='Search your deck for an Evolution card named Gyarados or Dark Gyarados and put it on Magikarp. (This counts as evolving Magikarp.) Shuffle your deck afterward.'&&damage==='')return fixed('rapid-evolution',0,{subject:'Magikarp'});
  if(text==='Search your deck for a Energy card and attach it to Slowpoke. Shuffle your deck afterward.'&&damage==='')return fixed('afternoon-nap',0,{subject:'Slowpoke'});
- // Rhydon's Ram remains unported until KO/switch timing is implemented.
+ // Rhydon (Jungle) Ram: the defender owns the forced-switch choice, which
+ // the headless reducer resolves before any recoil Knock Out promotion.
+ // Keep the complete WotC card text/cost check to avoid matching other Ram attacks.
+ if(a.name==='Ram'&&damage==='50'&&JSON.stringify(a.cost)===JSON.stringify(['Fighting','Fighting','Fighting','Fighting'])&&text==="Rhydon does 20 damage to itself. If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon. (Do the damage before switching the Pokémon. Switch the Pokémon even if Rhydon is knocked out.)")
+  return fixed('ram',50,{subject:'Rhydon',selfDamage:20});
  return null;
 }
 function resolve(p,flip,ctx){
@@ -155,6 +159,7 @@ function resolve(p,flip,ctx){
  case 'bench-up-to-three':return {...base,benchChosenDamage:p.benchDamage};
  case 'optional-switch-self':return {...base,optionalSwitch:true};
  case 'recoil-switch':return {...base,selfDamage:p.selfDamage,forceSwitch:'switch-defender'};
+ case 'ram':return {...base,selfDamage:p.selfDamage};
 
  case 'rampage':return {...base,damage:p.damage+p.factor*(ctx.selfCounters||0),selfStatus:toss()?null:'Confused'};
  case 'coins-until-tails':{let heads=0;while(heads<1000){if(!toss())break;heads++;}if(heads===1000)throw Error('Coin sequence exceeded safety bound');return {...base,damage:heads*p.each};}
