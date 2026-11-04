@@ -3400,6 +3400,7 @@ function render(){
  // A finished narration may be acknowledged even while its time wipe has locked travel.
  if((!locked||timeSequence.blocked&&!timeSequence.running)&&shown?.line&&!shown?.choices?.length)
   choiceItems.push({label:'Continue ›',continue:true,finish:true});
+ const people=currentPeople();
  const sceneScript=showingMandatory?.lines||
   (showingStory?storyDialogueLines(showingStory.id):null)||
   (showingArc?ARC.linesFor(state,showingArc.id):null)||
