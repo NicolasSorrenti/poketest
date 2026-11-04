@@ -3529,7 +3529,8 @@
           "evidence": [
             "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-45) matched against attackPattern and attack() in engine.js.",
             "Printed reference: https://limitlesstcg.com/cards/JU/45.",
-            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding.",
+            "2026-11-04 follow-up (not part of the new five): classic_attack_extensions.js now compiles exact Jungle Rhydon Ram (50 damage, 20 self-damage) into existing defender-owned ram_switch decision code in headless_duel.js. An isolated compiler/resolve check passes; live duel flow and legacy engine.js still require verification."
           ]
         }
       ]
@@ -3605,13 +3606,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Poisonpowder",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #48 printed one-Grass attack does 10 damage, then one coin flip; only heads applies Poison. Headless compiler coin-status-alias/coin-status; no damage/status timing execution performed.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/48: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Razor Leaf",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #48 printed two-Grass attack deals flat 30 damage, no extra effect. Generic flat damage compiler path inspected.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/48: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },
@@ -3624,13 +3637,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Vine Whip",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #49 printed one-Grass attack deals 10 damage; normal flat damage compiler.",
+          "evidence": [
+            "https://www.serebii.net/card/jungle/049.shtml: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Call for Family",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #49 printed one-Grass attack searches Basic Bellsprout, puts it on own Bench, then shuffles deck; cannot announce if Bench full. headless call-family compile, familyCandidates and optional fail-to-find choice inspected; actual choice/run not executed.",
+          "evidence": [
+            "https://www.serebii.net/card/jungle/049.shtml: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },
@@ -3643,13 +3668,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Snivel",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #50 printed one-Colorless attack, no damage, reduces by 20 only damage from named Defending Pokémon when it attacks Cubone on next turn; benching either ends effect. Headless reactive-shield compiler and sourceId guarded reduction inspected. Source-ID versus Pokémon-instance identity and complete switch/expiry interactions remain unresolved.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/50: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rage",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #50 printed two-Fighting attack does 10 + 10 per existing damage counter on Cubone, calculated before attack damage; headless own-counters path inspected, runtime modifiers untested.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/50: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },
@@ -3662,13 +3699,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Tail Wag",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #51 printed one-Colorless coin attack; heads prevents Defending Pokémon attacking this Eevee next turn; benching either ends effect. Headless coin-attack-lock/attackLock targetId source inspected. Same-printing target identity and bench/switch edge cases need runtime review.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/51: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Quick Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #51 printed two-Colorless attack: 30 on heads, 10 on tails; CLASSIC coin-more and generic coin-bonus signature inspected. Real coin selection/attack damage not executed.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/51: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },
@@ -3681,13 +3730,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Hypnosis",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #52 printed one-Psychic attack inflicts Sleep without damage or coin. Generic status compiler and application inspected; status immunity/timing untested.",
+          "evidence": [
+            "https://ns5.serebii.net/card/jungle/052.shtml: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Leech Seed",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #52 printed two-Grass 20-damage attack plus 10 HP healing if damage is dealt; historical WotC erratum removes optional may. CLASSIC leech-seed and headless healFromDamage='seed' enforce compulsory one-counter healing when post-modifier damage > 0. Prevention/modified damage runtime cases untested.",
+          "evidence": [
+            "https://ns5.serebii.net/card/jungle/052.shtml: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "https://jklaczpokemon.com/wotc-erratas/: WotC-era Exeggcute Leech Seed healing is compulsory, not optional.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },

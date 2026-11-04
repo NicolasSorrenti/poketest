@@ -29,6 +29,8 @@ for(const v of variants){
  const card=CATALOG.get(v.id);
  assert.equal(card.name,'Gust of Wind');
  assert.deepEqual(card.rules,["Choose 1 of your opponent's Benched Pokémon and switch it with his or her Active Pokémon."]);
+ // The transactional reducer replaces game.players after each command; assertions
+ // must read g.players rather than references captured before applyCommand.
  // Sole target is forced; clear conditions from the Active as it moves to Bench.
  {
   const g=game(v),player=g.players[0],foe=g.players[1];
@@ -37,11 +39,11 @@ for(const v of variants){
   foe.bench=[unit('base1-56')];
   act(g,0,'play_trainer',{handIndex:0});
   assert.equal(g.pendingDecision,null,'one opposing Benched Pokémon needs no target prompt');
-  assert.equal(foe.active.id,'base1-56','the chosen Benched Pokémon becomes Active');
-  assert.equal(foe.bench[0].id,'base1-46','the former Active moves to the Bench');
-  assert.equal(foe.bench[0].status,null,'conditions clear when the former Active is Benched');
-  assert.equal(foe.bench[0].poison,false,'Poison clears when the former Active is Benched');
-  assert.deepEqual(player.discard,[v.id]);
+  assert.equal(g.players[1].active.id,'base1-56','the chosen Benched Pokémon becomes Active');
+  assert.equal(g.players[1].bench[0].id,'base1-46','the former Active moves to the Bench');
+  assert.equal(g.players[1].bench[0].status,null,'conditions clear when the former Active is Benched');
+  assert.equal(g.players[1].bench[0].poison,false,'Poison clears when the former Active is Benched');
+  assert.deepEqual(g.players[0].discard,[v.id]);
   scenarios++;
  }
  // With multiple candidates, the player using Gust owns the target choice.
@@ -56,8 +58,8 @@ for(const v of variants){
   assert.deepEqual(d.options.map(o=>o.id),['bench:0','bench:1']);
   act(g,0,'choose',{decisionId:d.id,selected:['bench:1']});
   assert.equal(g.pendingDecision,null);
-  assert.equal(foe.active.id,'base1-47','the selected target becomes Active');
-  assert.deepEqual(foe.bench.map(u=>u.id),['base1-56','base1-46']);
+  assert.equal(g.players[1].active.id,'base1-47','the selected target becomes Active');
+  assert.deepEqual(g.players[1].bench.map(u=>u.id),['base1-56','base1-46']);
   scenarios++;
  }
 }
