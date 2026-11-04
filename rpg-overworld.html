@@ -106,37 +106,6 @@ body > #app > footer { visibility: hidden !important; }
       </div>
     </aside>
 
-    <section class="stage-panel">
-      <div id="scene" class="scene">
-        <div class="scene-head">
-          <span id="whereLabel" class="here-label">⌂ YOU ARE HOME</span>
-          <strong id="placeTitle">Your Apartment</strong>
-          <span id="placeDetail">Your base during the championship season.</span>
-        </div>
-        <div class="home-banner" id="homeBanner">YOUR APARTMENT — Prepare, plan or rest.</div>
-        <div class="rpg-discreet-stage" aria-hidden="true"><span class="rpg-discreet-stage__symbol">N/H</span><span class="rpg-discreet-stage__subtitle">STORY · TACTICS · CONNECTIONS</span></div>
-        <img id="rpgSceneCG" class="rpg-scene-cg" alt="" aria-label="Scene illustration" hidden>
-        <div id="portrait" class="portrait" aria-label="Character illustration"></div>
-      </div>
-      <div id="dialogue" class="dialogue" aria-live="polite">
-        <div class="dialogue-title"><span id="speaker">Narrator</span><span class="vn-label">NEO HARBOR / STORY</span></div>
-        <p id="line"></p>
-        <div id="choices" class="choice-list"></div>
-        <div id="playerChoicePrompt" class="player-choice-prompt" hidden aria-label="Choose your response">
-          <div id="playerChoicePanel" class="player-choice-panel">
-            <span class="player-choice-eyebrow">YOUR RESPONSE</span>
-            <strong>What will you say?</strong>
-          </div>
-        </div>
-      </div>
-      <div id="characterActions" class="character-actions" aria-label="Selected character actions" hidden></div>
-      <div class="scene-foot">
-        <span>LOCATION SCENE · INTERACTIVE VISUAL NOVEL</span>
-        <span>Press SPACE to advance story dialogue</span>
-      </div>
-      <div class="campaign-complete" id="endSeason" hidden></div>
-    </section>
-
     <aside id="rpgInfoPanel" class="sidebar" aria-label="Story and progress" aria-hidden="true">
       <div class="rpg-drawer-header"><strong>✧ TOWN INFO</strong><button type="button" class="rpg-drawer-close" aria-label="Close town information">✕</button></div>
       <section class="side-section">
@@ -169,6 +138,41 @@ body > #app > footer { visibility: hidden !important; }
   </main>
   <footer>NEO HARBOR · 90 DAYS TO MAKE YOUR MARK <span>CHARACTERS HAVE THEIR OWN LIVES · CHOICES MATTER</span></footer>
 </div>
+
+<!-- The overworld instantiates this dedicated story stage before the RPG controller loads. -->
+<template id="neoOverworldStageTemplate">
+    <section id="neoOverworldStage" class="stage-panel neo-ow-stage" style="display:none" aria-label="Current RPG dialogue and scenes">
+      <div id="scene" class="scene">
+        <div class="scene-head">
+          <span id="whereLabel" class="here-label">⌂ YOU ARE HOME</span>
+          <strong id="placeTitle">Your Apartment</strong>
+          <span id="placeDetail">Your base during the championship season.</span>
+        </div>
+        <div class="home-banner" id="homeBanner">YOUR APARTMENT — Prepare, plan or rest.</div>
+        <div class="rpg-discreet-stage" aria-hidden="true"><span class="rpg-discreet-stage__symbol">N/H</span><span class="rpg-discreet-stage__subtitle">STORY · TACTICS · CONNECTIONS</span></div>
+        <img id="rpgSceneCG" class="rpg-scene-cg" alt="" aria-label="Scene illustration" hidden>
+        <div id="portrait" class="portrait" aria-label="Character illustration"></div>
+      </div>
+      <div id="dialogue" class="dialogue" aria-live="polite">
+        <div class="dialogue-title"><span id="speaker">Narrator</span><span class="vn-label">NEO HARBOR / STORY</span></div>
+        <p id="line"></p>
+        <div id="choices" class="choice-list"></div>
+        <div id="playerChoicePrompt" class="player-choice-prompt" hidden aria-label="Choose your response">
+          <div id="playerChoicePanel" class="player-choice-panel">
+            <span class="player-choice-eyebrow">YOUR RESPONSE</span>
+            <strong>What will you say?</strong>
+          </div>
+        </div>
+      </div>
+      <div id="characterActions" class="character-actions" aria-label="Selected character actions" hidden></div>
+      <div class="scene-foot">
+        <span>LOCATION SCENE · INTERACTIVE VISUAL NOVEL</span>
+        <span>Press SPACE to advance story dialogue</span>
+      </div>
+      <div class="campaign-complete" id="endSeason" hidden></div>
+    </section>
+
+</template>
 
 <div id="timeFlash" class="time-flash" role="status" aria-live="polite"></div>
 <aside id="gameplayTutorial" class="gameplay-tutorial" aria-live="polite" hidden>
@@ -309,7 +313,7 @@ body > #app > footer { visibility: hidden !important; }
 <script src="/rpg_outfit_chime.js?v=20261102-glance-panzoom1"></script>
 
 <script src="/rpg_overworld_text_pages.js?v=20261029-measured-pages-v1"></script>
-<script src="/rpg-overworld-integration.js?v=circuit-view-20261104"></script>
-<script src="/rpg_character_bootstrap.js?v=circuit-view-20261104"></script>
+<script src="/rpg-overworld-integration.js?v=owned-stage-20261104"></script>
+<script src="/rpg_character_bootstrap.js?v=owned-stage-20261104"></script>
 </body>
 </html>
