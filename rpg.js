@@ -2064,32 +2064,16 @@ function showPackReveal(){
   art.onerror=tryNext;
   tryNext();
  }
- const target=$('packCards');target.replaceChildren();
- const cards=[];
- for(const [index,id] of pack.cards.entries()){
-  const button=document.createElement('button');button.type='button';button.className='pack-card';button.title='Reveal card '+(index+1);
-  button.style.setProperty('--card-position',String(index));
-  const back=document.createElement('span');back.className='pack-card-back';back.textContent='✦';button.append(back);
-  const reveal=(silent=false)=>{
-   if(button.className.includes('revealed'))return;
-   if(!silent)window.NeoRpgAudio?.play?.('flip');
-   button.className+=' revealed';button.replaceChildren();
-   const detail=document.createElement('strong');detail.textContent=labelCard(id);
-   const info=cardNames.get(id)||id;
-   const row=document.createElement('span');row.className='pack-card-number';row.textContent='CARD '+(index+1)+' / '+pack.cards.length;
-   button.append(row);
-   const data=cardImages.get(id);
-   if(data){
-    const img=document.createElement('img');img.alt=info;img.src=data;img.loading='lazy';img.onerror=()=>img.replaceWith(document.createTextNode('✦'));
-    button.append(img);
-   }else{
-    const symbol=document.createElement('span');symbol.className='pack-card-placeholder';symbol.textContent='✦';button.append(symbol);
-   }
-   button.append(detail);
-  };
-  button.onclick=reveal;cards.push(reveal);target.append(button);
- }
- $('packRevealAll').onclick=()=>{cards.forEach(show=>show(true));window.NeoRpgAudio?.play?.('flip');};
+ const packCards=pack.cards.map(id=>({
+  id,label:labelCard(id),name:cardNames.get(id)||id,image:cardImages.get(id)||null
+ }));
+ const packView=window.NeoRpgOverworldCollection?.renderPackCards?.(
+  $('packCards'),packCards,()=>window.NeoRpgAudio?.play?.('flip')
+ );
+ if(!packView)throw Error('The overworld booster reveal presenter did not load.');
+ $('packRevealAll').onclick=()=>{
+  packView.revealAll();window.NeoRpgAudio?.play?.('flip');
+ };
  $('packContinue').type='button';
  $('packRevealAll').type='button';
  $('packContinue').onclick=()=>{
@@ -2131,21 +2115,22 @@ function controlsLocked({allowStarterIntro=false}={}){
 }
 function showStarterChoice(){
  if(controlsLocked({allowStarterIntro:true}))return;
- const root=$('starterChoices');root.replaceChildren();
- for(const starter of COLLECT.starters){
-  const button=document.createElement('button');button.className='starter-choice';
-  const heading=document.createElement('strong');heading.textContent=starter.name+' · '+starter.types.join(' / ');
-  const detail=document.createElement('small');detail.textContent=starter.description+' · 60 cards · 20 Pokémon / 16 Trainers / 24 Energy';
-  button.append(heading,detail);
-  button.onclick=()=>{
-   if(controlsLocked({allowStarterIntro:true}))return;
-   try{COLLECT.choose(state,starter.id);log('Chose '+starter.name+' as your first deck.');persist();
-    if($('starterDialog').open)$('starterDialog').close();
-    say('Narrator','Your '+starter.name+' deck is ready. The Lucky Draw has two free welcome mini packs waiting for you—choose from three different types. Later packs unlock as you explore; old ones are still worth opening.');
-   }catch(e){$('notice').textContent=e.message;}
-  };
-  root.append(button);
- }
+ const starters=COLLECT.starters.map(starter=>({
+  id:starter.id,
+  label:starter.name+' · '+starter.types.join(' / '),
+  description:starter.description+' · 60 cards · 20 Pokémon / 16 Trainers / 24 Energy'
+ }));
+ if(!window.NeoRpgOverworldCollection?.renderStarters?.($('starterChoices'),starters,id=>{
+  if(controlsLocked({allowStarterIntro:true}))return;
+  const starter=COLLECT.starters.find(item=>item.id===id);
+  if(!starter)return;
+  try{
+   COLLECT.choose(state,starter.id);
+   log('Chose '+starter.name+' as your first deck.');persist();
+   if($('starterDialog').open)$('starterDialog').close();
+   say('Narrator','Your '+starter.name+' deck is ready. The Lucky Draw has two free welcome mini packs waiting for you—choose from three different types. Later packs unlock as you explore; old ones are still worth opening.');
+  }catch(error){$('notice').textContent=error.message;}
+ }))throw Error('The overworld starter deck presenter did not load.');
  if(!$('starterDialog').open)$('starterDialog').showModal();
 }
 function openBoosterShop(){
@@ -2170,86 +2155,65 @@ function purchaseBoosterPack(packId,useVoucher=false){
  }
 }
 function renderBoosterShop(message=''){
- const root=$('boosterShopGrid');root.replaceChildren();
  const remaining=state.deckJourney?.welcomePacks||0;
- $('boosterShopBalance').textContent='◈ '+(state.credits||0)+' credits · Day '+state.day+
-  (remaining?' · '+remaining+' welcome mini pack'+(remaining===1?'':'s')+' to choose':'');
- $('boosterShopStatus').textContent=message||
-  (remaining?'Choose any two opening mini packs for free. All three starter varieties stay in the shop afterward.':'Each pack has its own card pool. Earlier packs stay useful even as later eras unlock.');
+ const locked=controlsLocked();
  const wishes=(state.deckStrategy?.wishlist||[]).filter(id=>!(state.deckJourney?.owned?.[id]>0));
- for(const offer of COLLECT.themedPacks(state)){
-  const box=document.createElement('article');box.className='booster-offer'+(offer.unlocked?'':' is-locked');
-  const eyebrow=document.createElement('small');eyebrow.className='booster-offer-edition';
-  eyebrow.textContent=offer.unlocked?'THEMED BOOSTER · AVAILABLE':'THEMED BOOSTER · LOCKED';
-  const title=document.createElement('h3');title.textContent=offer.name;
-  const desc=document.createElement('p');desc.textContent=offer.description;
-  const sources=document.createElement('small');sources.className='booster-offer-edition';
-  sources.textContent='PRINTINGS · '+(offer.sources.length?offer.sources.slice(0,3).map(s=>COLLECT.SETS[s]?.name||s).join(' · ')+(offer.sources.length>3?' · +'+(offer.sources.length-3)+' more':''):'Not yet discovered');
-  const progress=document.createElement('div');progress.className='booster-collection-progress';
-  const track=document.createElement('div');track.className='booster-collection-track';
-  const fill=document.createElement('span');fill.style.width=offer.completion+'%';track.append(fill);
-  const count=document.createElement('small');count.textContent=offer.owned+' / '+offer.total+' possible cards discovered · '+offer.completion+'%';
-  progress.append(track,count);
-  const targets=wishes.filter(id=>COLLECT.themeContains(state,offer.id,id));
-  if(targets.length){
-   const tip=document.createElement('small');tip.className='booster-offer-targets';
-   tip.textContent='✦ '+targets.length+' missing tracked card'+(targets.length===1?'':'s')+
-    ' could appear here · no card guaranteed';
-   progress.append(tip);
-  }
-  const reason=document.createElement('p');reason.className='booster-offer-unlock';
+ const offers=COLLECT.themedPacks(state).map(offer=>{
   const free=offer.welcome>0&&offer.unlocked;
-  reason.textContent=!offer.unlocked?offer.unlockHint:
+  const affordable=(state.credits||0)>=offer.price;
+  let reason=!offer.unlocked?offer.unlockHint:
    free?'Welcome choice · five cards · one Rare and one Basic Energy':
    'Ten cards · one Rare and one Basic Energy · original card rarities';
-  if(offer.discount&&offer.unlocked&&!free)reason.textContent='Insight savings: -'+offer.discount+' credits · '+reason.textContent;
-  const buy=document.createElement('button');buy.type='button';buy.className='booster-offer-buy';
-  const affordable=(state.credits||0)>=offer.price;
-  buy.disabled=!offer.unlocked||(!free&&!affordable)||controlsLocked();
-  buy.textContent=free?'Choose free mini pack · '+offer.welcome+' left':
-   offer.unlocked?'Buy · '+offer.price+' credits':'Unlocks later';
+  if(offer.discount&&offer.unlocked&&!free)
+   reason='Insight savings: -'+offer.discount+' credits · '+reason;
   if(offer.unlocked&&!free&&!affordable)
-   reason.textContent='Need '+(offer.price-(state.credits||0))+' more credits · '+reason.textContent;
-  buy.onclick=()=>purchaseBoosterPack(offer.id,false);
-  box.append(eyebrow,title,desc,sources,progress,reason,buy);root.append(box);
- }
- // Chapter and tournament rewards earned in old or current saves remain
- // redeemable as their original source-set vouchers, separate from the new shop.
- for(const offer of COLLECT.shopPacks(state).filter(x=>x.vouchers>0)){
-  const box=document.createElement('article');box.className='booster-offer';
-  const eyebrow=document.createElement('small');eyebrow.className='booster-offer-edition';
-  eyebrow.textContent='EARNED EXPANSION VOUCHER';
-  const title=document.createElement('h3');title.textContent=offer.name+' · '+offer.vouchers+' free';
-  const desc=document.createElement('p');desc.textContent='A ten-card reward from '+offer.name+' (original expansion printings).';
-  const button=document.createElement('button');button.type='button';button.className='booster-offer-buy';
-  button.textContent='Redeem gift voucher · free';button.disabled=controlsLocked();
-  button.onclick=()=>purchaseBoosterPack(offer.set,true);
-  box.append(eyebrow,title,desc,button);root.append(box);
- }
+   reason='Need '+(offer.price-(state.credits||0))+' more credits · '+reason;
+  return {
+   id:offer.id,unlocked:offer.unlocked,name:offer.name,description:offer.description,
+   sourcesLabel:'PRINTINGS · '+(offer.sources.length?
+    offer.sources.slice(0,3).map(set=>COLLECT.SETS[set]?.name||set).join(' · ')+
+    (offer.sources.length>3?' · +'+(offer.sources.length-3)+' more':''):
+    'Not yet discovered'),
+   completion:offer.completion,owned:offer.owned,total:offer.total,
+   targetCount:wishes.filter(id=>COLLECT.themeContains(state,offer.id,id)).length,
+   reason,disabled:!offer.unlocked||(!free&&!affordable)||locked,
+   buyLabel:free?'Choose free mini pack · '+offer.welcome+' left':
+    offer.unlocked?'Buy · '+offer.price+' credits':'Unlocks later'
+  };
+ });
+ const vouchers=COLLECT.shopPacks(state).filter(offer=>offer.vouchers>0).map(offer=>({
+  name:offer.name,set:offer.set,vouchers:offer.vouchers,disabled:locked
+ }));
+ const model={
+  balance:'◈ '+(state.credits||0)+' credits · Day '+state.day+
+   (remaining?' · '+remaining+' welcome mini pack'+(remaining===1?'':'s')+' to choose':''),
+  status:message||(remaining?
+   'Choose any two opening mini packs for free. All three starter varieties stay in the shop afterward.':
+   'Each pack has its own card pool. Earlier packs stay useful even as later eras unlock.'),
+  offers,vouchers
+ };
+ if(!window.NeoRpgOverworldCollection?.renderShop?.(document,model,(id,voucher)=>{
+  if(controlsLocked())return;
+  purchaseBoosterPack(id,voucher);
+ }))throw Error('The overworld booster shop presenter did not load.');
 }
 function renderDeckWorkshop(){
- const j=state.deckJourney;if(!j?.starter)return;
- const draft=COLLECT.draft(state),owned=j.owned;
- const counts=COLLECT.rank(draft),remove=$('deckRemove'),add=$('deckAdd');
- const previousRemove=remove.value,previousAdd=add.value;
- remove.replaceChildren();add.replaceChildren();
- const label=(id,n)=>labelCard(id)+' · '+n+' copy'+(n===1?'':'ies');
- for(const [id,n] of Object.entries(counts)){
-  const option=document.createElement('option');option.value=id;option.textContent=label(id,n);remove.append(option);
- }
- for(const [id,n] of Object.entries(owned)){
-  if(!n)continue;
-  const option=document.createElement('option');option.value=id;option.textContent=label(id,n)+' owned / '+(counts[id]||0)+' in deck';add.append(option);
- }
- if(counts[previousRemove])remove.value=previousRemove;
- if(owned[previousAdd])add.value=previousAdd;
+ const journey=state.deckJourney;if(!journey?.starter)return;
+ const draft=COLLECT.draft(state),owned=journey.owned,counts=COLLECT.rank(draft);
+ const label=(id,count)=>labelCard(id)+' · '+count+' copy'+(count===1?'':'ies');
  const valid=COLLECT.check(draft,owned);
- $('deckEditStats').textContent=COLLECT.byId(j.starter).name+' · '+draft.length+'/60 cards · '+(valid.valid?'Ready to battle':'Deck needs attention');
- $('deckEditError').textContent=valid.errors[0]||'Swap any card you own, one for one. Only your saved deck goes into battle.';
- const list=$('deckList');list.replaceChildren();
- for(const [id,n] of Object.entries(counts)){
-  const item=document.createElement('span');item.textContent=n+'× '+labelCard(id);list.append(item);
- }
+ const model={
+  remove:Object.entries(counts).map(([id,count])=>({id,label:label(id,count)})),
+  add:Object.entries(owned).filter(([,count])=>count>0).map(([id,count])=>({
+   id,label:label(id,count)+' owned / '+(counts[id]||0)+' in deck'
+  })),
+  stats:COLLECT.byId(journey.starter).name+' · '+draft.length+
+   '/60 cards · '+(valid.valid?'Ready to battle':'Deck needs attention'),
+  message:valid.errors[0]||'Swap any card you own, one for one. Only your saved deck goes into battle.',
+  deck:Object.entries(counts).map(([id,count])=>({id,count,label:labelCard(id)}))
+ };
+ if(!window.NeoRpgOverworldCollection?.renderDeck?.(document,model))
+  throw Error('The overworld deck editor presenter did not load.');
 }
 function openDeckWorkshop(){
  if(controlsLocked()||!state.deckJourney?.starter)return;
