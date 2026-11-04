@@ -92,7 +92,7 @@ window.NeoOverworldEyeLevel = (() => {
       park:'park-eye-level-v2.webp',
       home:'apartment-eye-level-v2.webp',
       center:'tournament-eye-level-v2.webp',
-      library:'library-eye-level.png'
+      library:'library-eye-level-v2.webp'
     };
     const productionUrl = productionBackgrounds[map.id]
       ? '/rpg-assets/eye-level/' + productionBackgrounds[map.id] : null;
@@ -106,7 +106,8 @@ window.NeoOverworldEyeLevel = (() => {
          map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level.png' :
          map.id === 'park' ? '/rpg-assets/eye-level/park-eye-level.png' :
           map.id === 'center' ? '/rpg-assets/eye-level/tournament-eye-level.png' :
-         map.id === 'home' ? '/rpg-assets/eye-level/apartment-eye-level.png' : null,
+         map.id === 'home' ? '/rpg-assets/eye-level/apartment-eye-level.png' :
+         map.id === 'library' ? '/rpg-assets/eye-level/library-eye-level.png' : null,
          panoramaUrl, classicUrl, map.image].filter(Boolean);
     let sourceIndex = 0;
     const sourceImage = new Image();
@@ -233,7 +234,7 @@ window.NeoOverworldEyeLevel = (() => {
         cafe:    {slots:[.19,.39,.61,.81],ground:.095,scale:.96,cropTop:.08},
         home:    {slots:[.23,.48,.75],ground:.09,scale:.94,cropTop:.04},
         center:  {slots:[.15,.32,.50,.68,.85],ground:.09,scale:1.00,cropTop:.04},
-        library: {slots:[.19,.39,.61,.81],ground:.09,scale:.96,cropTop:.18}
+        library: {slots:[.19,.39,.61,.81],ground:.09,scale:.96,cropTop:.02}
       };
       const zone = sceneStaging[map.id] || sceneStaging.shop;
       // Only trim the dedicated 3200x1080 scene artwork. Legacy panoramas
