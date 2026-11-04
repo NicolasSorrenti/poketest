@@ -5333,7 +5333,12 @@
           "kind": "attack",
           "index": 0,
           "name": "Smokescreen",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Smokescreen damage and attack-penalty handler; coin, switch and expiration not executed"
         }
       ]
     },
@@ -5346,13 +5351,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Scratch and passive Kabuto Armor after Weakness/Resistance; damage rounding/status suppression not executed"
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Kabuto Armor",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Scratch and passive Kabuto Armor after Weakness/Resistance; damage rounding/status suppression not executed"
         }
       ]
     },
@@ -5365,13 +5380,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Call for Family",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Call for Family bench-full legality, named Krabby deck choice and Irongrip; reducer decisions not executed"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Irongrip",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Call for Family bench-full legality, named Krabby deck choice and Irongrip; reducer decisions not executed"
         }
       ]
     },
@@ -5384,13 +5409,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Clairvoyance passive and Water Gun extra-Water-only compiler correction; mixed-Energy reducer cases not executed"
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Clairvoyance",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Clairvoyance passive and Water Gun extra-Water-only compiler correction; mixed-Energy reducer cases not executed"
         }
       ]
     },
@@ -5403,13 +5438,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Headache",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Headache Trainer lock and Fury Swipes three-coin resolver; duration and coin scenarios not executed"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Fury Swipes",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Headache Trainer lock and Fury Swipes three-coin resolver; duration and coin scenarios not executed"
         }
       ]
     },
