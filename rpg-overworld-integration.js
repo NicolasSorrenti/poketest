@@ -145,18 +145,44 @@
       quick.append(b);
     }
     quickButton('Activities','🎮',()=>showActivities(bridge()?.activities()||[]));
-    const eventList=document.getElementById('storyEvents');
-    const eventHome=eventList?.parentNode;
-    const eventNext=eventList?.nextSibling||null;
+    // Events are authored by the RPG controller, but this is their sole UI.
+    // Move live lists into the overworld panel without cloning handlers.
+    const eventSources=[
+      ['storyEvents','Story events'],
+      ['situationEvents','Unexpected moments'],
+      ['sideQuestEvents','Side quests'],
+      ['townEncounters','Local encounters']
+    ].map(([id,label])=>{
+      const node=document.getElementById(id);
+      return {id,label,node,home:node?.parentNode,next:node?.nextSibling||null};
+    }).filter(item=>item.node);
     const eventPanel=document.createElement('section');eventPanel.id='neoOverworldEvents';eventPanel.hidden=true;
     eventPanel.style.cssText='position:absolute;z-index:7;left:50%;top:12%;transform:translateX(-50%);width:min(620px,94vw);max-height:75dvh;overflow:auto;background:#19172cf5;border:1px solid #b58cc7;border-radius:14px;padding:15px;box-shadow:0 18px 55px #000c';
     const eventHead=document.createElement('div');eventHead.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:10px';
     const eventTitle=document.createElement('strong');eventTitle.textContent='▦ EVENTS';
     const eventClose=document.createElement('button');eventClose.type='button';eventClose.textContent='✕ Close';eventClose.style.cssText='padding:8px;background:#453153;color:white;border:1px solid #a98bb6;border-radius:8px';
     eventHead.append(eventTitle,eventClose);eventPanel.append(eventHead);overlay.append(eventPanel);
-    function hideEvents(){if(eventHome&&eventList){if(eventNext&&eventNext.parentNode===eventHome)eventHome.insertBefore(eventList,eventNext);else eventHome.append(eventList);}eventPanel.hidden=true;}
+    function hideEvents(){
+      for(const item of eventSources){
+        if(!item.home||item.node.parentNode===item.home)continue;
+        if(item.next?.parentNode===item.home)item.home.insertBefore(item.node,item.next);
+        else item.home.append(item.node);
+      }
+      eventPanel.hidden=true;
+    }
     eventClose.onclick=hideEvents;
-    function showEvents(){closeSheet();if(!eventList){showNotice('Events are not available yet.');return;}hideMenu();eventPanel.append(eventList);eventPanel.hidden=false;}
+    function showEvents(){
+      closeSheet();
+      if(!eventSources.length){showNotice('Events are not available yet.');return;}
+      hideMenu();hideEvents();
+      eventPanel.replaceChildren(eventHead);
+      for(const item of eventSources){
+        const heading=document.createElement('h3');heading.textContent=item.label;
+        heading.style.cssText='font:700 13px system-ui;color:#f5c9e9;margin:14px 0 7px';
+        eventPanel.append(heading,item.node);
+      }
+      eventPanel.hidden=false;
+    }
     quickButton('Events','▦',showEvents);
     quickButton('Deck','▤',()=>showDeck());
     quickButton('Status','♥',()=>document.getElementById('statusBtn')?.click());
@@ -1388,6 +1414,13 @@
       storySyncQueued=true;
       queueMicrotask(()=>{storySyncQueued=false;syncStory();});
     }
+    window.addEventListener('neo-rpg-focus-opportunities',event=>{
+      if(overlay.hidden||bridge()?.snapshot()?.locked)return;
+      const kind=String(event.detail?.kind||'');
+      if(kind==='activity'||kind==='tournament'||kind==='event'||kind==='Official event'){
+        showActivities(bridge()?.activities()||[]);
+      }else showEvents();
+    });
     window.addEventListener('neo-rpg-overworld-render',()=>{
       if(overlay.hidden||suspendedForDuel)return;
       refresh();
