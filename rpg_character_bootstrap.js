@@ -69,8 +69,8 @@
  "/rpg_time_transitions.js?v=rpg-scene-wipe-20261031-1",
  "/rpg_render_perf.js",
  "/rpg_overworld_stage_view.js?v=stage-presenter-20261104",
- "/rpg_overworld_opportunities.js?v=circuit-view-20261104",
- "/rpg_overworld_guide.js?v=guide-view-20261104",
+ "/rpg_overworld_opportunities.js?v=owned-stage-20261104",
+ "/rpg_overworld_guide.js?v=owned-stage-20261104",
  "/rpg_character_motion.js",
  "/rpg_scene_cast.js?v=two-voice-window-20261029",
  "/rpg_event_invites.js?v=1",
@@ -81,7 +81,7 @@
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=circuit-view-20261104"
+ "/rpg.js?v=owned-stage-20261104"
 ];
   function registry(packs){
     // Normalize the authenticated/API roster too (not just the generated file).

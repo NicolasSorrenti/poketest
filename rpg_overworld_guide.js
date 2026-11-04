@@ -96,6 +96,36 @@
   journey.append(button('Open memory album · '+progress.unlocked+'/'+progress.total,'gallery','',false,'journey-gallery'));
   parts.push(journey);
 
+  // The retired sidebar used to be the only place showing focus, credits,
+  // quest-season notes and other progression. Keep that information accessible
+  // as a collapsible native view without retaining the old sidebar DOM.
+  const progressSummary=data.townProgress;
+  if(progressSummary){
+   const details=element('details','neo-ow-guide-history');
+   const heading=element('summary',null,
+    '◈ Town progress · '+progressSummary.points+' circuit points · '+progressSummary.credits+' credits');
+   details.append(heading);
+   const stats=element('div','neo-ow-guide-stats');
+   for(const item of progressSummary.stats||[]){
+    const line=element('p','neo-ow-guide-stat');
+    line.title=item.detail||'';
+    line.append(element('strong',null,item.name),
+     element('span',null,item.value+' / '+item.max));
+    stats.append(line);
+   }
+   details.append(stats);
+   if(progressSummary.upcoming?.length){
+    details.append(element('h4',null,'Upcoming fixtures'));
+    for(const item of progressSummary.upcoming)
+     details.append(element('p','neo-ow-guide-log','Day '+item.day+' · '+item.title+' ('+item.period+')'));
+   }
+   if(progressSummary.recent?.length){
+    details.append(element('h4',null,'Recent journal'));
+    for(const note of progressSummary.recent)details.append(element('p','neo-ow-guide-log','• '+note));
+   }
+   parts.push(details);
+  }
+
   root.replaceChildren(...parts);
   return true;
  }

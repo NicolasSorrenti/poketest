@@ -1176,6 +1176,11 @@ function overworldOpportunities(){
    kind:'sidequest',id:entry.quest.id,label:'◆ '+entry.stage.title+' · ⏳ 1 period',
    description:cast[entry.stage.npc].name+' · '+entry.quest.title,disabled:locked
   })),
+  questJournal:SIDE.journal(state).map(entry=>({
+   status:entry.status,title:entry.title,
+   summary:entry.status==='active'?String(entry.summary||'').replace(/shop|cafe|park|center|arcade|library/g,
+    place=>places[place]?.[0]||place):String(entry.summary||'')
+  })),
   encounter:WORLD.availableEncounters(state,present).map(entry=>({
    kind:'encounter',id:entry.id,label:'✧ '+entry.title+' · ⏳ 1 period',
    description:(entry.npc?cast[entry.npc].name:'The neighborhood')+
@@ -1257,6 +1262,19 @@ function overworldGuide(){
     (item.action==='travel'?'Go to '+(places[item.place]?.[0]||item.place)+' · free':'Show me where · free'):''
   }))},
   priority:goal,appointments,
+  townProgress:{
+   points:state.points,credits:state.credits,
+   stats:[
+    {name:'FOCUS',value:state.focus,max:100,detail:'Energy for town activities and outings'},
+    {name:'INSIGHT',value:state.insight,max:99,detail:'Unlocks booster savings and masterclasses'},
+    {name:'REPUTATION',value:state.reputation,max:100,detail:'Unlocks clinics and sponsored boosters'},
+    {name:'DUEL PREP',value:state.preparation,max:3,detail:'Bonus credits after your next duel'}
+   ],
+   upcoming:eventCards.filter(event=>event.day>=state.day).slice(0,2).map(event=>({
+    day:event.day,title:event.title,period:periods[event.slot]
+   })),
+   recent:state.journal.slice(0,3)
+  },
   journey:{
    overview:'Season '+journey.run+' · Day '+journey.day+' / 90 · '+
     journey.gallery.unlocked+'/'+journey.gallery.total+' memories across runs',
@@ -2107,40 +2125,6 @@ function showStarterChoice(){
  }
  if(!$('starterDialog').open)$('starterDialog').showModal();
 }
-function renderCollection(){
- const root=$('deckCollection');root.replaceChildren();
- const journey=state.deckJourney,locked=controlsLocked();
- if(journey===null){
-  const p=document.createElement('p');p.textContent='Legacy campaign: your current theme deck remains available. Switch to a limited collection whenever you want a new challenge.';
-  const btn=document.createElement('button');btn.textContent='Begin starter-deck journey';btn.disabled=locked;
-  btn.onclick=showStarterChoice;root.append(p,btn);return;
- }
- if(!journey.starter){
-  const btn=document.createElement('button');btn.textContent='Choose one of three mixed-type starters';btn.disabled=locked;
-  btn.onclick=showStarterChoice;root.append(btn);return;
- }
- const starter=COLLECT.byId(journey.starter);
- const picker=$('deckPicker');
- if(picker.options?.length!==1||picker.options[0]?.value!=='custom'){
-  picker.replaceChildren();
-  const opt=document.createElement('option');opt.value='custom';opt.textContent=starter.name+' · Your collection';picker.append(opt);
- }else picker.options[0].textContent=starter.name+' · Your collection';
- picker.value='custom';picker.disabled=true;
- const total=Object.values(journey.owned).reduce((a,n)=>a+n,0);
- const summary=document.createElement('p');summary.textContent=starter.name+' · 60-card deck · '+total+' owned cards · '+journey.packs+' paid/voucher packs opened'+(journey.welcomePacks?' · '+journey.welcomePacks+' free welcome pick'+(journey.welcomePacks===1?'':'s')+' remaining':'');
- const studio=document.createElement('button');studio.className='studio-open';studio.textContent='✦ Build / edit your deck';studio.disabled=locked;
- studio.onclick=()=>{persist();location.assign('/rpg_deck_studio.html');};
- root.append(summary,studio);
- if(state.location==='shop'){
-  const shop=document.createElement('button');
-  shop.className='studio-open';
-  shop.textContent='✦ Browse booster packs · The Lucky Draw';
-  shop.disabled=locked||state.day>90;
-  shop.onclick=openBoosterShop;
-  root.append(shop);
-
- }
-}
 function openBoosterShop(){
  if(controlsLocked()||state.day>90||state.location!=='shop'||!state.deckJourney?.starter)return;
  renderBoosterShop();
@@ -2271,7 +2255,6 @@ async function loadCardNames(){
  try{const files=await Promise.all(Object.keys(COLLECT.SETS).map(async set=>{const res=await fetch('/cards/'+set+'.json');return res.ok?res.json():[];}));
   const cards=files.flat();
   for(const c of cards)if(c?.id&&c.name){cardNames.set(c.id,c.name);if(/^https:\/\//.test(c.images?.small||''))cardImages.set(c.id,c.images.small);else cardImages.set(c.id,'/api/cube-card-image/'+encodeURIComponent(c.id));}
-  renderCollection();
  }catch{}
 }
 
@@ -3364,7 +3347,6 @@ function render(){
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
- renderCollection();
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
  const receipt=state.lastDuelReceipt;
  $('duelReceipt').hidden=!receipt;
@@ -3373,44 +3355,6 @@ function render(){
   $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+(receipt.tournamentBonus?.points?' · tournament bonus included':'')+(receipt.competitiveBonus?' · local circuit bonus included':'')+' · Time advanced one period.';
   $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
  }
- $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
- // Calendar pills do not need to be recreated for every dialogue line.
- if($('timeTrack').dataset.period!==String(state.slot)){
-  $('timeTrack').dataset.period=String(state.slot);
-  $('timeTrack').replaceChildren();
-  periods.forEach((p,i)=>{const x=document.createElement('span');x.className='time-pill'+(i===state.slot?' active':i<state.slot?' past':'');x.textContent=(i===0?'☀ ':i===1?'◐ ':'☾ ')+p;$('timeTrack').append(x)});
- }
- $('day').textContent='DAY '+String(Math.min(state.day,90)).padStart(2,'0')+' / 90';
- $('period').textContent=ended?'SEASON COMPLETE':periods[state.slot].toUpperCase();
- $('chapterLabel').textContent='CHAPTER '+(state.day<=30?'I':state.day<=60?'II':'III')+' · '+(state.day<=30?'NEW FACES':state.day<=60?'RISING STAKES':'FINAL STRETCH');
- $('weekdayLabel').textContent=['MON','TUE','WED','THU','FRI','SAT','SUN'][(state.day-1)%7]+' · WEEK '+Math.ceil(Math.min(90,state.day)/7);
- $('campaignFill').style.width=Math.min(100,state.day/90*100)+'%';
- $('timeHint').textContent=state.slot===2?'Next time action starts a NEW DAY.':'Next: '+periods[state.slot+1]+' · ⏳';
- $('quickNext').textContent=state.slot===2?'☾ END DAY · ⏳':'▶ NEXT PERIOD · ⏳';
- $('quickNext').disabled=ended||locked;
- $('quickHome').disabled=locked||state.location==='home';
- const placeEntries=Object.entries(places).map(([id,[name,detail]])=>({key:id,id,name,detail}));
- window.NeoRpgRenderPerf.reconcileKeyed($('places'),placeEntries,
-  ()=>{const button=document.createElement('button');button.type='button';const status=document.createElement('span');
-   status.className='place-status';button.append(status);return button;},
-  (button,item)=>{
-   const {id,name,detail}=item;
-   const glyph={home:'⌂',shop:'♠',arcade:'✦',park:'❀',cafe:'☕',center:'♜',library:'▤'}[id];
-   const selected=id===state.location;
-   const desired=glyph+'  '+name;
-   if(button.firstChild?.nodeType===3){
-    if(button.firstChild.nodeValue!==desired)button.firstChild.nodeValue=desired;
-   }else button.prepend(document.createTextNode(desired));
-   button.className='place'+(selected?' selected':'');
-   button.disabled=locked;
-   button.setAttribute('aria-current',selected?'location':'false');
-   button.onclick=()=>travelTo(id);
-   const status=button.querySelector('.place-status');
-   const count=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,id,publicAppointments(id)).length:0;
-   const label=selected?'HERE':count?count+' HERE':'›';
-   if(status.textContent!==label)status.textContent=label;
-  });
- $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
  // Location artwork is rendered only by the persistent overworld iframe.
  const showingMandatory=state.mandatoryEventState?.active?MANDATORY_EVENTS.find(x=>x.id===state.mandatoryEventState.active.id):null;
  const mandatoryLine=showingMandatory?.lines?.[state.mandatoryEventState.active.index];
@@ -3427,14 +3371,8 @@ function render(){
   LIVE_SPECIAL_IDS.has(showingMandatory.id)||showingMandatory.id===LIVE_AFTER_EVENT.id);
  // Live has no portrait: her events are illustrated entirely by the scene CG.
  // Don't inherit a previously selected character's portrait either.
- const portraitId=liveCgOnly?null:mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
+ const portraitId=liveCgOnly?null:mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected;
  activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
- // The overworld owns character art; never create a hidden duplicate.
- if(portraitRoot.childNodes.length)portraitRoot.replaceChildren();
- portraitRoot.dataset.npc='';
- portraitRoot.dataset.artSrc='';
- $('homeBanner').hidden=state.location!=='home'||!!portraitId;
- $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingMandatory?renderMandatory():showingSlice?renderSliceOfLife():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
  overworldRenderedDialogue=String(shown?.line||'');
  // Gameplay decides which actions are legal; the overworld view owns DOM
@@ -3465,71 +3403,7 @@ function render(){
  // A finished narration may be acknowledged even while its time wipe has locked travel.
  if((!locked||timeSequence.blocked&&!timeSequence.running)&&shown?.line&&!shown?.choices?.length)
   choiceItems.push({label:'Continue ›',continue:true,finish:true});
- // Stable keyed list updates: preserve existing avatar image nodes and focus.
- // Full replaceChildren here used to retrigger image loading during every dialogue.
- const elsewhere=[];
- for(const place of Object.keys(places)){
-  if(place==='home'||place===state.location)continue;
-  const visible=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,place,publicAppointments(place)):[];
-  for(const id of visible)if(!elsewhere.some(e=>e.id===id))elsewhere.push({id,place});
- }
- const radarItems=elsewhere.length?elsewhere.map(item=>({...item,key:'radar:'+item.id})):
-  [{key:'empty',empty:true}];
- window.NeoRpgRenderPerf.reconcileKeyed($('townRadar'),radarItems,
-  item=>{
-   if(item.empty){const p=document.createElement('p');p.className='empty-note';return p;}
-   const button=document.createElement('button');button.className='radar-person';
-   const label=document.createElement('strong'),where=document.createElement('small');
-   const avatar=document.createElement('span');avatar.className='radar-person-avatar';
-   window.NeoRpgDiscreetAvatars?.set?.(avatar,item.id,'neutral',cast[item.id].name);
-   button.append(avatar,label,where);return button;
-  },
-  (button,item)=>{
-   if(item.empty){button.textContent='No other trainers are around town this period.';return;}
-   button.disabled=locked;
-   const name=cast[item.id].name,placeName=places[item.place][0];
-   const label=button.querySelector('strong'),where=button.querySelector('small');
-   if(label.textContent!==name)label.textContent=name;
-   if(where.textContent!=='↗ '+placeName)where.textContent='↗ '+placeName;
-   button.title='Travel for free to '+placeName;
-   button.onclick=()=>travelTo(item.place);
-  });
  const people=currentPeople();
- const peopleItems=people.length?people.map(id=>({key:'person:'+id,id})):
-  [{key:'empty',empty:true}];
- window.NeoRpgRenderPerf.reconcileKeyed($('people'),peopleItems,
-  item=>{
-   if(item.empty){const p=document.createElement('p');p.className='empty-note';return p;}
-   const id=item.id,c=cast[id],button=document.createElement('button');
-   button.className='person';
-   const avatar=document.createElement('span');avatar.className='person-avatar';
-   avatar.dataset.initials=c.name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();
-   avatar.append(makeAvatar(id));
-   window.NeoRpgDiscreetAvatars?.set?.(avatar,id,'neutral',c.name);
-   const label=document.createElement('span');label.className='person-info';
-   const name=document.createElement('strong'),sub=document.createElement('small');
-   const chapter=document.createElement('small');chapter.className='character-chapter-progress';
-   const cue=document.createElement('small');cue.className='character-reaction-hint';cue.hidden=true;
-   label.append(name,sub,chapter,cue);button.append(avatar,label);return button;
-  },
-  (button,item)=>{
-   if(item.empty){button.textContent='No regulars here at this time. Try another location or time period.';return;}
-   const id=item.id,c=cast[id],label=button.querySelector('.person-info');
-   button.className='person'+(state.selected===id?' selected':'');
-   button.disabled=locked;button.onclick=()=>selectPerson(id);
-   const name=label.querySelector('strong'),sub=label.querySelector('small'),chapter=label.querySelector('.character-chapter-progress');
-   if(name.textContent!==c.name)name.textContent=c.name;
-   if(sub.textContent!==c.style)sub.textContent=c.style;
-   const bond=BONDS.progress(state,id,BOND_PLAN);
-   const chapterText='♥ Character chapters '+bond.completed+' / '+bond.total+(state.bondTrials?.[id]?' · Personal challenge won':'');
-   if(chapter.textContent!==chapterText)chapter.textContent=chapterText;
-   const cue=label.querySelector('.character-reaction-hint');
-   const invite=!locked?availableInvitation(id,people):null;
-   const cueText=invite?(invite.kind==='appointment'?'✦ Waiting for you':'✦ Wants to talk'):
-    (!locked&&state['met_'+id]&&REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ)?'✦ Something to say':'');
-   if(cue.textContent!==cueText)cue.textContent=cueText;
-   cue.hidden=!cueText;
-  });
  const sceneScript=showingMandatory?.lines||
   (showingStory?storyDialogueLines(showingStory.id):null)||
   (showingArc?ARC.linesFor(state,showingArc.id):null)||
@@ -3591,33 +3465,7 @@ function render(){
    }else if(command==='deck')act('partnerDeck:'+id);
   }
  });
- portraitRoot.hidden=state.location!=='home'&&(people.length>0||!!portraitId);
- $('lifeStats').replaceChildren();
- const lifeGauges=[['FOCUS',state.focus,100,'Energy for town activities and outings'],['INSIGHT',state.insight,99,'6 Insight: -3 credits on themed boosters; 15 Insight: -5 credits; 10 unlocks masterclasses'],['REPUTATION',state.reputation,100,'6 Reputation unlocks paid clinics; 15 unlocks weekly sponsored boosters'],['DUEL PREP',state.preparation,3,'Each point awards 14 credits on a win or 8 on a draw/loss after a duel']];
- for(const [label,value,max,title] of lifeGauges){
-  const item=document.createElement('div');item.className='life-stat';item.title=title;
-  const row=document.createElement('div');row.className='life-stat-label';
-  const name=document.createElement('b');name.textContent=label;
-  const val=document.createElement('span');val.textContent=value+' / '+max;row.append(name,val);
-  const track=document.createElement('div');track.className='life-track';
-  const fill=document.createElement('div');fill.className='life-fill';fill.style.width=(value/max*100)+'%';track.append(fill);
-  item.append(row,track);
-  const perk=label==='INSIGHT'?state.insight>=15?'Themed boosters: -5 credits':state.insight>=6?'Themed boosters: -3 credits':'6 Insight unlocks booster savings':
-   label==='REPUTATION'?state.reputation>=15?'Sponsored vouchers unlocked':state.reputation>=6?'Paid clinics unlocked':'6 Reputation unlocks paid clinics':
-   label==='DUEL PREP'?'Next duel: '+(state.preparation?'+14 win / +8 otherwise':'no bonus queued'):'';
-  if(perk){const tip=document.createElement('small');tip.textContent=perk;item.append(tip);}
-  $('lifeStats').append(item);
- }
- $('sideQuestJournal').replaceChildren();
- for(const info of SIDE.journal(state)){
-  const row=document.createElement('div');row.className='calendar-entry';
-  row.textContent=(info.status==='complete'?'✓ ':info.status==='missed'?'– ':'◆ ')+info.title+' · '+(info.status==='active'?info.summary.replace(/shop|cafe|park|center|arcade|library/g,m=>places[m][0]):info.summary);
-  $('sideQuestJournal').append(row);
- }
  renderSeasonReport();
- $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
- for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
- for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
  $('notice').textContent=conversationInProgress()?'Finish the conversation before traveling or starting another activity.':state.mandatoryEventState?.active?'Incoming story — finish this moment to continue.':state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  simplifyRpgLabels();
  window.NeoRpgCharacterMotion?.update?.({
@@ -3647,13 +3495,6 @@ $('statusBtn').onclick=()=>{
 };
 $('statusClose').onclick=()=>window.NeoRpgStatus.close();
 $('galleryBtn').onclick=openGallery;
-const moreMenu=$('rpgMoreMenu');
-moreMenu?.addEventListener('click',event=>{
- if(event.target.closest('#galleryBtn,#rpgDiscreetToggle,a[href]'))moreMenu.open=false;
-});
-document.addEventListener('pointerdown',event=>{
- if(moreMenu?.open&&!moreMenu.contains(event.target))moreMenu.open=false;
-});
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryBack').onclick=()=>{galleryCharacterPage='';$('galleryCharacter').value='';$('galleryCategory').value='cg';renderGallery();};
 $('galleryCharacter').onchange=()=>{galleryCharacterPage=$('galleryCharacter').value;renderGallery();};$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
@@ -3662,7 +3503,7 @@ $('preDuelNext').onclick=advancePreparedDuel;
 $('preDuelStart').onclick=launchPreparedDuel;
 $('preDuelSkip').onclick=launchPreparedDuel;
 $('preDuelDialog').addEventListener('cancel',e=>{e.preventDefault();cancelPreparedDuel();});
-$('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
+$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
 $('save').onclick=async()=>{persist();const cloud=window.NeoRpgCloudSave?.isSignedIn?.();const ok=await window.NeoRpgCloudSave?.syncNow();$('notice').textContent=cloud?(ok?'Cloud campaign synced.':'Cloud sync pending. Progress is cached on this device until it reconnects.'):'Campaign saved in this browser.';};
 $('tutorialDismiss').onclick=()=>{tutorialQueue.shift();displayTutorial();};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
