@@ -102,8 +102,10 @@ window.NeoOverworldEyeLevel = (() => {
     // Build a wider legacy variant only if the new original panorama cannot load.
     // Evening uses a distinct dusk grade of the approved cafe scene; the
     // daytime plate remains the fallback and is unchanged for other slots.
-    const eveningPlateUrl = map.id === 'cafe' && slot === 2
-      ? '/rpg-assets/eye-level/cafe-eye-level-evening-v2.webp' : null;
+    const eveningPlateUrl = slot === 2
+      ? (map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level-evening-v2.webp'
+        : map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level-night-v2.webp' : null)
+      : null;
     const sources = map.id === 'shop'
       ? [productionUrl, classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
       : [eveningPlateUrl, productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' :
