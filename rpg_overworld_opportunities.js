@@ -44,6 +44,21 @@
     button.onclick=()=>onChoose?.(String(item.kind),String(item.id));
     group.append(button);
    }
+   if(section.id==='sidequest'&&Array.isArray(groups?.questJournal)&&groups.questJournal.length){
+    const details=doc.createElement('details');
+    details.className='neo-ow-quest-journal';
+    const summary=doc.createElement('summary');
+    summary.textContent='◆ Side-quest journal · '+groups.questJournal.length+' records';
+    details.append(summary);
+    for(const item of groups.questJournal){
+     const entry=doc.createElement('p');
+     entry.className='calendar-entry';
+     entry.textContent=(item.status==='complete'?'✓ ':item.status==='missed'?'– ':'◆ ')+
+      item.title+' · '+item.summary;
+     details.append(entry);
+    }
+    group.append(details);
+   }
    if(section.id==='circuit'){
     if(groups?.circuitNote){
      const note=doc.createElement('p');
