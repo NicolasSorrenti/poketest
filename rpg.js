@@ -1176,6 +1176,11 @@ function overworldOpportunities(){
    kind:'sidequest',id:entry.quest.id,label:'◆ '+entry.stage.title+' · ⏳ 1 period',
    description:cast[entry.stage.npc].name+' · '+entry.quest.title,disabled:locked
   })),
+  questJournal:SIDE.journal(state).map(entry=>({
+   status:entry.status,title:entry.title,
+   summary:entry.status==='active'?String(entry.summary||'').replace(/shop|cafe|park|center|arcade|library/g,
+    place=>places[place]?.[0]||place):String(entry.summary||'')
+  })),
   encounter:WORLD.availableEncounters(state,present).map(entry=>({
    kind:'encounter',id:entry.id,label:'✧ '+entry.title+' · ⏳ 1 period',
    description:(entry.npc?cast[entry.npc].name:'The neighborhood')+
@@ -1257,6 +1262,19 @@ function overworldGuide(){
     (item.action==='travel'?'Go to '+(places[item.place]?.[0]||item.place)+' · free':'Show me where · free'):''
   }))},
   priority:goal,appointments,
+  townProgress:{
+   points:state.points,credits:state.credits,
+   stats:[
+    {name:'FOCUS',value:state.focus,max:100,detail:'Energy for town activities and outings'},
+    {name:'INSIGHT',value:state.insight,max:99,detail:'Unlocks booster savings and masterclasses'},
+    {name:'REPUTATION',value:state.reputation,max:100,detail:'Unlocks clinics and sponsored boosters'},
+    {name:'DUEL PREP',value:state.preparation,max:3,detail:'Bonus credits after your next duel'}
+   ],
+   upcoming:eventCards.filter(event=>event.day>=state.day).slice(0,2).map(event=>({
+    day:event.day,title:event.title,period:periods[event.slot]
+   })),
+   recent:state.journal.slice(0,3)
+  },
   journey:{
    overview:'Season '+journey.run+' · Day '+journey.day+' / 90 · '+
     journey.gallery.unlocked+'/'+journey.gallery.total+' memories across runs',
