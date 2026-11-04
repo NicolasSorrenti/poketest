@@ -1264,6 +1264,16 @@ function overworldGuide(){
   priority:goal,appointments,
   townProgress:{
    points:state.points,credits:state.credits,
+   lastDuel:state.lastDuelReceipt?{
+    title:state.lastDuelReceipt.outcome.toUpperCase()+' · '+state.lastDuelReceipt.name,
+    description:'+'+state.lastDuelReceipt.points+' circuit points · +'+
+     state.lastDuelReceipt.credits+' credits · +'+state.lastDuelReceipt.trust+' trust'+
+     (state.lastDuelReceipt.bonus?' (includes +'+state.lastDuelReceipt.bonus+' exhibition points)':'')+
+     (state.lastDuelReceipt.trainingBonus?' · +'+state.lastDuelReceipt.trainingBonus+' training credits':'')+
+     (state.lastDuelReceipt.tournamentBonus?.points?' · tournament bonus included':'')+
+     (state.lastDuelReceipt.competitiveBonus?' · local circuit bonus included':'')+
+     ' · Time advanced one period.'
+   }:null,
    stats:[
     {name:'FOCUS',value:state.focus,max:100,detail:'Energy for town activities and outings'},
     {name:'INSIGHT',value:state.insight,max:99,detail:'Unlocks booster savings and masterclasses'},
@@ -1289,6 +1299,9 @@ function overworldGuide(){
 function runOverworldGuideAction(kind,id){
  if(overworldControlsLocked())return false;
  if(kind==='gallery'){openGallery();return true;}
+ if(kind==='dismissReceipt'&&state.lastDuelReceipt){
+  state.lastDuelReceipt=null;persist();render();return true;
+ }
  if(state.day>90)return false;
  if(kind==='planner'){
   const item=PLANNER.recommend(state,plannerDependencies()).find(item=>
@@ -2296,16 +2309,11 @@ function cancelPreparedDuel(){
 }
 let battleRecoveryTimer=null,battleReadyDuelId=null;
 function ensureBattleRecovery(){
- let panel=$('battleRecovery');
- if(panel)return panel;
- panel=document.createElement('section');panel.id='battleRecovery';panel.hidden=true;
- panel.setAttribute('role','status');panel.setAttribute('aria-live','polite');
- panel.style.cssText='position:fixed;z-index:100;left:50%;bottom:20px;transform:translateX(-50%);width:min(560px,calc(100vw - 24px));padding:16px;border:1px solid #c59bd1;border-radius:14px;background:#17152af2;color:#fff;box-shadow:0 10px 40px #000b;text-align:center';
- const message=document.createElement('p');message.textContent='The duel has not responded. You can retry loading it or return to your campaign.';
- message.style.margin='0 0 12px';
- const retry=document.createElement('button');retry.type='button';retry.textContent='Retry duel';retry.style.margin='4px';retry.onclick=retryPendingBattle;
- const abandon=document.createElement('button');abandon.type='button';abandon.textContent='Return to campaign';abandon.style.margin='4px';abandon.onclick=abandonPendingBattle;
- panel.append(message,retry,abandon);document.body.append(panel);return panel;
+ const panel=window.NeoRpgOverworldDuelRecovery?.ensure?.(
+  document,retryPendingBattle,abandonPendingBattle
+ );
+ if(!panel)throw Error('The overworld duel recovery presenter did not load.');
+ return panel;
 }
 function scheduleBattleRecovery(){
  clearTimeout(battleRecoveryTimer);
@@ -3230,13 +3238,6 @@ function render(){
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
- const receipt=state.lastDuelReceipt;
- $('duelReceipt').hidden=!receipt;
- if(receipt){
-  $('receiptTitle').textContent=receipt.outcome.toUpperCase()+' · '+receipt.name;
-  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+(receipt.tournamentBonus?.points?' · tournament bonus included':'')+(receipt.competitiveBonus?' · local circuit bonus included':'')+' · Time advanced one period.';
-  $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
- }
  // Location artwork is rendered only by the persistent overworld iframe.
  const showingMandatory=state.mandatoryEventState?.active?MANDATORY_EVENTS.find(x=>x.id===state.mandatoryEventState.active.id):null;
  const mandatoryLine=showingMandatory?.lines?.[state.mandatoryEventState.active.index];
@@ -3380,7 +3381,6 @@ $('preDuelSkip').onclick=launchPreparedDuel;
 $('preDuelDialog').addEventListener('cancel',e=>{e.preventDefault();cancelPreparedDuel();});
 $('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
 $('tutorialDismiss').onclick=()=>{tutorialQueue.shift();displayTutorial();};
-$('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if($('statusDialog')?.open)return;if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(scene.dialogue&&scene.index<scene.dialogue.length-1&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeArc&&!state.activeSideQuest){e.preventDefault();act('chatNext');}else if(state.mandatoryEventState?.active?.phase==='lines'){e.preventDefault();act('mandatoryNext');}else if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
 async function initDecks(){
  try{
