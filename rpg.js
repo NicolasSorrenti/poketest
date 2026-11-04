@@ -2753,69 +2753,64 @@ function galleryOpenViewer(entry){
   pending.hidden=true;if(entry.type)artViewed[entry.path]=true;else CG.markViewed(state,entry.id);persist();renderGallery();
  },()=>{pending.hidden=false;});
 }
+function galleryCharacterIds(){
+ return [...new Set([...Object.keys(cast),...CG.catalog.map(entry=>entry.character)])]
+  .filter(id=>!!cast[id])
+  .sort((a,b)=>cast[a].name.localeCompare(cast[b].name));
+}
 function populateGalleryCharacters(){
- const select=$('galleryCharacter'),previous=select.value;
- const ids=[...new Set([...Object.keys(cast),...CG.catalog.map(entry=>entry.character)])].filter(id=>!!cast[id]);
- ids.sort((a,b)=>cast[a].name.localeCompare(cast[b].name));
- const everyone=document.createElement('option');everyone.value='';everyone.textContent='All characters';select.replaceChildren(everyone);
- for(const id of ids){const option=document.createElement('option');option.value=id;option.textContent=cast[id].name;select.append(option);}
- select.value=ids.includes(previous)?previous:'';
+ const items=galleryCharacterIds().map(id=>({id,name:cast[id].name}));
+ if(!window.NeoRpgOverworldGallery?.populateCharacters?.($('galleryCharacter'),items))
+  throw Error('The overworld gallery character list is unavailable.');
+}
+function galleryViewModel(){
+ buildArtEntries();
+ const select=$('galleryCharacter'),category=$('galleryCategory');
+ if(!galleryCharacterPage){
+  const ids=[...select.options].map(option=>option.value).filter(Boolean);
+  const all=[...CG.gallery(state),...artEntries.values()].map(entry=>({
+   ...entry,character:entry.character||entry.id
+  }));
+  return {
+   page:'',characters:ids.map(id=>{
+    const matches=all.filter(entry=>entry.character===id);
+    return {id,name:cast[id]?.name||id,total:matches.length,
+     earned:matches.filter(entry=>entry.unlocked).length};
+   })
+  };
+ }
+ const type=category.value;
+ const all=type==='cg'||!type?CG.gallery(state,{character:galleryCharacterPage}):
+  [...artEntries.values()]
+   .filter(entry=>entry.id===galleryCharacterPage&&entry.type===type)
+   .map(entry=>({...entry,character:entry.id,thumb:entry.path}));
+ const visible=$('galleryUnseen').checked?
+  all.filter(entry=>entry.unlocked&&!entry.viewed):all;
+ return {
+  page:galleryCharacterPage,title:cast[galleryCharacterPage]?.name||galleryCharacterPage,
+  type:category.value,categories:ART_TYPES,all,visible
+ };
 }
 function renderGallery(){
- const root=$('galleryGrid'),progress=$('galleryProgress');root.replaceChildren();progress.replaceChildren();$('galleryCharacterPage').replaceChildren();
- const select=$('galleryCharacter'),category=$('galleryCategory');
- const characterPage=$('galleryCharacterPage'),albumPage=$('galleryAlbumPage');
- characterPage.hidden=!!galleryCharacterPage;albumPage.hidden=!galleryCharacterPage;
- if(!galleryCharacterPage){
-  const ids=[...select.options].map(x=>x.value).filter(Boolean);
-  buildArtEntries();const all=[...CG.gallery(state),...artEntries.values()].map(e=>({...e,character:e.character||e.id}));
-  $('galleryCount').textContent='Choose a character to explore their memories.';
-  for(const id of ids){
-   const entries=all.filter(e=>e.character===id),earned=entries.filter(e=>e.unlocked);
-   const btn=document.createElement('button');btn.type='button';btn.className='cg-character-card';
-   const avatar=document.createElement('div');avatar.className='cg-character-avatar';
-   // Use the same canonical portrait and broken-image fallback as the RPG roster.
-   const face=makeAvatar(id);
-   face.alt=cast[id]?.name||id;
-   face.loading='lazy';
-   avatar.append(face);
-   const name=document.createElement('strong');name.textContent=cast[id]?.name||id;
-   const stat=document.createElement('small');stat.textContent=earned.length+' / '+entries.length+' memories unlocked';
-   btn.append(avatar,name,stat);
-   btn.onclick=()=>{galleryCharacterPage=id;select.value=id;category.value='cg';renderGallery();};
-   characterPage.append(btn);
-  }
-  return;
- }
- select.value=galleryCharacterPage;
- $('galleryCharacterTitle').textContent=cast[galleryCharacterPage]?.name||galleryCharacterPage;
- buildArtEntries();const type=category.value;const all=type==='cg'||!type?CG.gallery(state,{character:galleryCharacterPage}):[...artEntries.values()].filter(e=>e.id===galleryCharacterPage&&e.type===type).map(e=>({...e,character:e.id,thumb:e.path}));
- const visible=$('galleryUnseen').checked?all.filter(e=>e.unlocked&&!e.viewed):all;
- if(!visible.length){const empty=document.createElement('p');empty.className='cg-gallery-empty';empty.textContent=all.length?'No artwork matches this filter. Try turning off “Only new”.':'No artwork cataloged in this category yet.';root.append(empty);}
- const earned=all.filter(e=>e.unlocked).length;
- $('galleryCount').textContent=earned+' / '+all.length+' unlocked · '+visible.length+' shown';
- const categories=ART_TYPES;
- for(const cat of categories){
-  const btn=document.createElement('button');btn.type='button';btn.className='cg-category-tab'+(category.value===cat.id?' selected':'');
-  btn.textContent=cat.label;btn.setAttribute('aria-pressed',String(category.value===cat.id));
-  btn.onclick=()=>{category.value=cat.id;renderGallery();};progress.append(btn);
- }
-
- for(const entry of visible){
-  const tile=document.createElement('button');tile.type='button';tile.className='cg-tile'+(entry.unlocked?' unlocked':' locked');
-  tile.dataset.character=entry.character||'';
-  tile.disabled=!entry.unlocked;
-  const thumb=document.createElement('div');thumb.className='cg-thumb';
-  if(entry.character)window.NeoRpgDiscreetAvatars?.set?.(thumb,entry.character,'neutral',entry.character);
-  if(entry.unlocked){
-   const img=document.createElement('img');img.alt='';img.hidden=true;thumb.append(img);
-   if(entry.type){img.onload=()=>{img.hidden=false;};img.onerror=()=>{img.hidden=true;thumb.textContent='Artwork unavailable';};img.src=entry.path;}
-   else loadCGArt(img,entry,true,kind=>{img.classList.toggle('is-fallback',kind!=='event');},()=>{thumb.textContent='Artwork unavailable';});
-  }else{const mystery=document.createElement('span');mystery.textContent='🔒';thumb.append(mystery);}
-  const title=document.createElement('strong');title.textContent=entry.unlocked?entry.title:'???';
-  const note=document.createElement('small');note.textContent=entry.unlocked?(entry.viewed?'Viewed':'New · tap to view'):'Locked · discover in the story';
-  tile.append(thumb,title,note);tile.onclick=()=>entry.type?showOtherArt(entry):galleryOpenViewer(entry);root.append(tile);
- }
+ const model=galleryViewModel();
+ if(!window.NeoRpgOverworldGallery?.render?.(document,model,{
+  avatar:id=>makeAvatar(id),
+  chooseCharacter:id=>{
+   if(!cast[id])return;
+   galleryCharacterPage=id;
+   $('galleryCharacter').value=id;$('galleryCategory').value='cg';
+   renderGallery();
+  },
+  chooseCategory:id=>{
+   if(!ART_TYPES.some(type=>type.id===id))return;
+   $('galleryCategory').value=id;renderGallery();
+  },
+  discreetAvatar:(target,id)=>
+   window.NeoRpgDiscreetAvatars?.set?.(target,id,'neutral',id),
+  loadCG:(img,entry,onSuccess,onMissing)=>
+   loadCGArt(img,entry,true,onSuccess,onMissing),
+  open:entry=>entry.type?showOtherArt(entry):galleryOpenViewer(entry)
+ }))throw Error('The overworld gallery renderer is unavailable.');
 }
 function openGallery(){
  galleryCharacterPage='';$('galleryUnseen').checked=false;
