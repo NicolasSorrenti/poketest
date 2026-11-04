@@ -773,3 +773,18 @@ Five **previously unreviewed** Fossil printings compared to imported TCGdex card
 | [Gastly #33](https://limitlesstcg.com/cards/FO/33) `base3-33` | Lick P: 10 and heads Paralysis. Energy Conversion PP: recover 0–2 discard Energy, then 10 self-damage. Dedicated compiler and `headless_duel.js` discard-recovery choice/validation inspected. Test empty discard, special Energy, self-KO, ordering. | **partial** |
 
 No current-engine defect was confirmed from source inspection alone, so no gameplay code was modified. No test files, suites, or CI configuration were added. Ledger after this batch: **307 partially reviewed**, **816 unreviewed**, **0 fully verified**, **1123 not fully verified** of 1123. The new batch requires real reducer execution and historical rulings before promotion.
+
+
+## 2026-11-04 — Current-engine Fossil #34–38 (five distinct printings)
+
+Previously merged [PR #484](https://github.com/NicolasSorrenti/poketest/pull/484) was confirmed merged; no open card-fidelity PR found. Current match authority is `classic_local_service.js` importing `headless_duel.js`, which compiles effects via `attack_effects_core.js` and `classic_attack_extensions.js`. `classic_live.html` loads the RPG duel bridge. Legacy `engine.js` was excluded. Source evidence is imported `cards/base3.json` text and current compiler/reducer code, **not** deterministic runtime execution or a full historical ruling cross-check. All five remain **partial**.
+
+| Printing | Active-engine source review and outstanding validation | Status |
+| --- | --- | --- |
+| `base3-34` | Wing Attack CCC 30 is flat damage; Leech Life GGC 20 drains damage actually dealt after W/R, limited by existing damage counters. Check prevented damage, W/R, full HP, and defender KO sequencing. | partial |
+| `base3-35` | Psyshock P 10 has heads Paralysis; Hyper Beam WWC 20 discards a selected defending attached Energy, when present. Check target choice across different Energy names, protected Energy, empty attachments and KO timing. | partial |
+| `base3-36` | Avalanche FFFC 60 is flat damage; Selfdestruct FFFF 100 hits both Benches for 20 without W/R and self for 100. Check simultaneous KOs, self-damage W/R immunity, bench protection, and prize order. | partial |
+| `base3-37` | Harden FF prevents <=30 post-W/R incoming damage next opponent turn but not attack side effects; Rock Throw FFC 40 flat. Check exact 30/40 thresholds, W/R ordering, non-damage statuses, bench/reset and turn expiration. | partial |
+| `base3-38` | Flail W 10 per Kingler damage counter, Crabhammer WWC 40 flat. Check 0 to near-KO counters, W/R, protection, and energy payment. | partial |
+
+The current compiler has a `drain` pattern for Golbat Leech Life, `damage-shield` threshold for Graveler Harden, `flail-counters` for Kingler Flail, and `bench-both-recoil` for Golem Selfdestruct. Hyper Beam has a defending Energy-selection path in `headless_duel.js`. These are handler/code-path observations, **not executed proof**. No confirmed new-engine defect, no gameplay changes, no tests or CI added. 312 partially reviewed, 811 unreviewed, 0 fully verified, 1123 not fully verified.
