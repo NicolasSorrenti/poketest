@@ -3261,7 +3261,7 @@ function cleanRpgLabel(value){
 }
 function simplifyRpgLabels(){
  if(typeof document.querySelector!=='function')return;
- for(const id of ['choices','storyEvents','situationEvents','townActivities','townEncounters','sideQuestEvents','activities']){
+ for(const id of ['choices','activities']){
   const root=$(id);if(!root)continue;
   for(const button of root.querySelectorAll('button')){
    const walk=document.createTreeWalker(button,NodeFilter.SHOW_TEXT);
@@ -3638,17 +3638,6 @@ function render(){
    label==='DUEL PREP'?'Next duel: '+(state.preparation?'+14 win / +8 otherwise':'no bonus queued'):'';
   if(perk){const tip=document.createElement('small');tip.textContent=perk;item.append(tip);}
   $('lifeStats').append(item);
- }
- $('townActivities').replaceChildren();
- for(const entry of WORLD.activitiesAt(state)){
-  const b=document.createElement('button');b.className='town-activity';b.dataset.plannerKey=entry.id;b.disabled=locked||!!entry.disabledReason;
-  const title=document.createElement('strong');title.textContent=entry.title+' · ⏳ 1 period';
-  const description=document.createElement('small');
-  const gains=Object.entries(entry.change).filter(([,v])=>v>0).map(([key,value])=>'+'+value+' '+key);
-  if(entry.voucherSet==='latest')gains.push('1 unlocked expansion booster voucher');
-  description.textContent=(entry.disabledReason?entry.disabledReason+' · ':'')+'Focus cost '+entry.focus+(entry.cost?' · '+entry.cost+' credits':'')+' · '+gains.join(' · ');
-  b.append(title,description);b.title=entry.text;b.onclick=()=>act('townActivity:'+entry.id);
-  $('townActivities').append(b);
  }
  $('sideQuestJournal').replaceChildren();
  for(const info of SIDE.journal(state)){
