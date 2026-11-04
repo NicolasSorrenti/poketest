@@ -1224,7 +1224,9 @@ function score(a,o,cfg,used){
   // scored separately, so a 120-damage attack against 20 HP should not win
   // solely on excess damage over a cheaper, equally reliable knockout.
   const direct=(cfg.level===8?Math.min(boostedDamage,hp):boostedDamage)*style.damage*confusionChance;
-  const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
+  // Status effects resolve only when the attack succeeds its Confusion flip.
+  // Match damage and KO expected-value handling at Apex without changing lower tiers.
+  const statusValue=(/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0)*confusionChance;
   // A retreat-lock such as Murkrow's Mean Look does not stack. Once the
   // defending Pokemon is already unable to retreat, repeating the zero-damage
   // move forfeits an entire attack. Prefer a payable damaging attack instead.
