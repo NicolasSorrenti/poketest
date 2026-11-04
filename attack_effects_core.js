@@ -85,6 +85,13 @@
   if(DISCOVERY){const discovery=DISCOVERY.compile(attack);if(discovery)return discovery;}
   if(FINAL){const final=FINAL.compile(attack);if(final)return final;}
   if(GYM){const gym=GYM.compile(attack);if(gym)return gym;}
+  // Fossil Lapras Water Gun: only extra Water-providing Energy contributes.
+  // The imported generic "each Energy" transcription is not authoritative for
+  // this printing; use the user-confirmed printed Water-only interpretation.
+  if(attack.name==='Water Gun'&&attack.damage==='10+'&&
+     JSON.stringify(attack.cost)===JSON.stringify(['Water'])&&
+     /^Does 10 damage plus 10 more damage for each Energy attached to Lapras but not used to pay for this attack's Energy cost\./.test(String(attack.text||'')))
+   return Object.freeze({kind:'water-extra',damage:10,factor:10,subject:'Lapras',cap:20});
   if(CLASSIC){const specific=CLASSIC.compile(attack);if(specific)return specific;}
   const text=String(attack.text||'').trim(),damage=String(attack.damage||'');
   // Neo Revelation Entei #6: the printed two-card discard is an attack
