@@ -145,42 +145,29 @@
       quick.append(b);
     }
     quickButton('Activities','🎮',()=>showActivities(bridge()?.activities()||[]));
-    // Events are authored by the RPG controller, but this is their sole UI.
-    // Move live lists into the overworld panel without cloning handlers.
-    const eventSources=[
-      ['storyEvents','Story events'],
-      ['situationEvents','Unexpected moments'],
-      ['sideQuestEvents','Side quests'],
-      ['townEncounters','Local encounters']
-    ].map(([id,label])=>{
-      const node=document.getElementById(id);
-      return {id,label,node,home:node?.parentNode,next:node?.nextSibling||null};
-    }).filter(item=>item.node);
+    // The current overworld renders typed event data. No hidden dashboard
+    // list is cloned, moved or kept in sync behind the screen.
     const eventPanel=document.createElement('section');eventPanel.id='neoOverworldEvents';eventPanel.hidden=true;
     eventPanel.style.cssText='position:absolute;z-index:7;left:50%;top:12%;transform:translateX(-50%);width:min(620px,94vw);max-height:75dvh;overflow:auto;background:#19172cf5;border:1px solid #b58cc7;border-radius:14px;padding:15px;box-shadow:0 18px 55px #000c';
     const eventHead=document.createElement('div');eventHead.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:10px';
     const eventTitle=document.createElement('strong');eventTitle.textContent='▦ EVENTS';
     const eventClose=document.createElement('button');eventClose.type='button';eventClose.textContent='✕ Close';eventClose.style.cssText='padding:8px;background:#453153;color:white;border:1px solid #a98bb6;border-radius:8px';
-    eventHead.append(eventTitle,eventClose);eventPanel.append(eventHead);overlay.append(eventPanel);
-    function hideEvents(){
-      for(const item of eventSources){
-        if(!item.home||item.node.parentNode===item.home)continue;
-        if(item.next?.parentNode===item.home)item.home.insertBefore(item.node,item.next);
-        else item.home.append(item.node);
-      }
-      eventPanel.hidden=true;
-    }
+    const eventContent=document.createElement('div');
+    eventContent.id='neoOverworldOpportunityGroups';
+    eventHead.append(eventTitle,eventClose);eventPanel.append(eventHead,eventContent);overlay.append(eventPanel);
+    function hideEvents(){eventPanel.hidden=true;}
     eventClose.onclick=hideEvents;
     function showEvents(){
-      closeSheet();
-      if(!eventSources.length){showNotice('Events are not available yet.');return;}
-      hideMenu();hideEvents();
-      eventPanel.replaceChildren(eventHead);
-      for(const item of eventSources){
-        const heading=document.createElement('h3');heading.textContent=item.label;
-        heading.style.cssText='font:700 13px system-ui;color:#f5c9e9;margin:14px 0 7px';
-        eventPanel.append(heading,item.node);
-      }
+      closeSheet();hideMenu();
+      const api=window.NeoRpgOverworldOpportunities;
+      if(!api?.render||!bridge()?.opportunities){showNotice('Events are not available yet.');return;}
+      api.render(eventContent,bridge().opportunities(),(kind,id)=>{
+        if(!bridge()?.runOpportunity?.(kind,id)){
+          showNotice('This event is no longer available.');showEvents();return;
+        }
+        hideEvents();
+        queueStorySync();
+      },document);
       eventPanel.hidden=false;
     }
     quickButton('Events','▦',showEvents);
