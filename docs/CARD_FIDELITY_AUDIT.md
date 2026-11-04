@@ -608,3 +608,19 @@ Source audit only; five distinct unreviewed printings, ten attacks. **All five p
 - `base2-47` Tauros: Stomp (20/30) and Rampage (20 + 10 per own damage counter, tails self-Confusion) match `coinDamageChoice` and `selfDamageBonusConfuse` source paths. **Partial.**
 
 Follow-up: exercise deterministic heads/tails and self-KO/switch choice cases using existing runtime checks, verify WotC-era rulings and fix Ram's choice ownership. Avoid declaring any of these verified until then.
+
+## 2026-11-04 — Five Jungle printings #48–52; Rhydon Ram follow-up
+
+Reviewed **exactly five previously unreviewed printings** (ten attacks), comparing `cards/base2.json` with printed English Jungle card entries and the game code in `attack_effects_core.js`, `classic_attack_extensions.js`, `headless_duel.js`, and `engine.js`. Results are **partial**: no browser/online match or complete historical interaction matrix was executed, and this run did not add any tests or CI changes.
+
+| Card and printing | Attack review | Source-level conclusion |
+| --- | --- | --- |
+| [Weepinbell JU #48](https://limitlesstcg.com/cards/JU/48) (`base2-48`) | Poisonpowder; Razor Leaf | One Grass Energy → 10 + heads-only Poison; two Grass → plain 30. Headless status-coin and ordinary damage dispatch identified. **Partial.** |
+| [Bellsprout JU #49](https://www.serebii.net/card/jungle/049.shtml) (`base2-49`) | Vine Whip; Call for Family | Plain 10; one-Grass search specifically for Basic Bellsprout, Bench cap, shuffle and deck-choice contract identified. Actual choose/fail-to-find not run. **Partial.** |
+| [Cubone JU #50](https://limitlesstcg.com/cards/JU/50) (`base2-50`) | Snivel; Rage | Snivel's conditional 20 reduction uses the shared `reactive-shield` implementation; Rage is 10 + 10 per damage counter. The source-side shield records the printed source ID rather than a unique in-play target; same-printing copies and bench/switch timing need follow-up. **Partial.** |
+| [Eevee JU #51](https://limitlesstcg.com/cards/JU/51) (`base2-51`) | Tail Wag; Quick Attack | Headless `coin-attack-lock` and `coin-more` classify printed heads-only attack prevention and 10/30 attack. Lock tracking uses card ID, so alternate same-printing instances/bench transitions need careful validation. **Partial.** |
+| [Exeggcute JU #52](https://ns5.serebii.net/card/jungle/052.shtml) (`base2-52`) | Hypnosis; Leech Seed | Sleep requires Psychic Energy and no coin. Leech Seed does 20 for GG; [WotC-era erratum](https://jklaczpokemon.com/wotc-erratas/) makes its one-damage-counter healing compulsory when the attack actually deals damage. The headless `leech-seed` route uses final damage to decide automatic healing. **Partial.** |
+
+**Previous-batch defect repaired in this PR (not counted as a sixth newly reviewed card):** `base2-45` Rhydon / Ram. The authoritative headless reducer already had a `ram_switch` decision owned by the defending player, with the printed self-KO ordering, but the historical attack compiler returned `null`. Added an **exact Jungle Ram text, cost and damage** match to `classic_attack_extensions.js` and a corresponding resolver returning 50 damage plus 20 attacker self-damage; existing reducer logic now receives the `ram` program. An isolated in-memory compile/resolve check confirmed output `{ damage:50, selfDamage:20, flips:[] }`. No full reducer/gameplay test was run and the separate legacy `engine.js` path still defaults opponent replacements; do **not** mark Ram fully verified until those paths and historical rulings are addressed.
+
+**Validation:** the Classic attack compiler was evaluated in isolation without adding any test file. The patch specifically recognizes the Jungle Rhydon text and four Fighting Energy cost. All printings remain partial pending full in-game validation and relevant historical edge rulings.
