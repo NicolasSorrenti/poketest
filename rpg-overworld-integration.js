@@ -171,7 +171,7 @@
     eventHead.append(eventTitle,eventClose);eventPanel.append(eventHead,eventContent);overlay.append(eventPanel);
     function hideEvents(){eventPanel.hidden=true;}
     eventClose.onclick=hideEvents;
-    function showEvents(){
+    function showEvents(section='all'){
       closeSheet();hideMenu();
       const api=window.NeoRpgOverworldOpportunities;
       if(!api?.render||!bridge()?.opportunities){showNotice('Events are not available yet.');return;}
@@ -183,6 +183,10 @@
         queueStorySync();
       },document);
       eventPanel.hidden=false;
+      if(section==='circuit'){
+        const circuit=eventContent.querySelector('[data-opportunity-section="circuit"]');
+        if(circuit)eventPanel.scrollTop=Math.max(0,circuit.offsetTop-eventPanel.offsetTop-30);
+      }
     }
     quickButton('Events','▦',showEvents);
     quickButton('Deck','▤',()=>showDeck());
@@ -225,6 +229,11 @@
       #neoOverworldBottom .neo-ow-guide-section .journey-goal{display:flex;flex-direction:column;gap:2px;margin:3px 0}
       #neoOverworldBottom .neo-ow-guide-section .journey-gallery{padding:9px;border:1px solid #b58db7;border-radius:9px;background:#4c3458;color:#fff}
       #neoOverworldBottom .neo-ow-sheet-body .planner-card{background:#2c2440;border:1px solid #826a91;border-radius:10px;padding:10px}
+      #neoOverworldEvents .neo-ow-circuit-brackets{margin-top:10px;border:1px solid #8e759c;border-radius:11px;padding:11px;background:#251b37}
+      #neoOverworldEvents .neo-ow-circuit-brackets>summary{font:700 14px system-ui;color:#ffe0f0;cursor:pointer}
+      #neoOverworldEvents .neo-circuit-card{margin-top:11px;padding:12px;border:1px solid #765f89;border-radius:10px;background:#181429}
+      #neoOverworldEvents .neo-bracket-rounds{margin-top:6px}
+      #neoOverworldEvents .neo-bracket-round{display:flex;justify-content:space-between;gap:9px;padding:5px 0;font-size:12px}
       #neoOverworldBottom .neo-ow-sheet-body .planner-card strong{display:block;margin:4px 0}
       #neoOverworldBottom .neo-ow-sheet-body .planner-card p{margin:3px 0 8px}
       #neoOverworldBottom .neo-ow-sheet-body .planner-action{background:#58365e;color:#fff;border:1px solid #bd8fbc;border-radius:8px;padding:8px;cursor:pointer}
@@ -270,6 +279,7 @@
       ['▧ CG Gallery',()=>document.getElementById('galleryBtn')?.click()],
       ['♥ Status & Relationships',()=>document.getElementById('statusBtn')?.click()],
       ['▦ Calendar',()=>document.getElementById('calendarBtn')?.click()],
+      ['🏆 Circuit & Tournaments',()=>showEvents('circuit')],
       ['✧ Save Game',()=>document.getElementById('save')?.click()],
       ['◇ Discreet / Chibi Mode',()=>{toggleChibiPreference();refresh();}],
       ['⌾ Travel',()=>openSheet('travel')],
@@ -1432,9 +1442,10 @@
       if(!data||data.locked||data.arriving||data.storyActive)return;
       const kind=pendingOpportunityKind;
       pendingOpportunityKind=null;
-      if(['activity','tournament','event','Official event'].includes(kind)){
-        showActivities(bridge()?.activities()||[]);
-      }else showEvents();
+      if(kind==='activity')showActivities(bridge()?.activities()||[]);
+      else if(['tournament','event','Official event','cup','competitive'].includes(kind))
+        showEvents('circuit');
+      else showEvents();
     }
     window.addEventListener('neo-rpg-focus-opportunities',event=>{
       pendingOpportunityKind=String(event.detail?.kind||'story');
