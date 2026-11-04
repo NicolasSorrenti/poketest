@@ -818,3 +818,20 @@ At start [PR #440](https://github.com/NicolasSorrenti/poketest/pull/440) and [PR
 | `base3-48` Grimer | Nasty Goo C, 10 + heads Paralysis; Minimize G, 20 less incoming damage after W/R on opponent's next turn. `coin-status` and `damage-shield` compiler families; `headless_duel.js` subtracts `shield.reduce` after W/R. Need 0/10/20/30 damage, switch, expiry, non-damage effects, stacking. | partial |
 
 No current-engine defect confirmed, no gameplay or tests/CI changed. Ledger recount: **322 partial, 800 unreviewed, 1 verified**, **1122 not fully verified** of 1123. The single previously verified printing was not revalidated here.
+
+
+## 2026-11-04 — Current-engine Fossil #49–53 (five distinct printings)
+
+Checked [#440](https://github.com/NicolasSorrenti/poketest/pull/440) (merged) and searched for open card-fidelity PRs (none). The live authority is `classic_local_service.js` requiring `headless_duel.js`, with `rpg_duel_bridge.js` providing UI integration rather than independent battle rules. Current attack compilation/resolution is `attack_effects_core.js` + `classic_attack_extensions.js` + `headless_duel.js`; passive Powers use `classic_power_core.js`. Source catalogue: `cards/base3.json`. Compared historical printed text on [TCG Codex Omanyte](https://tcgcodex.com/card-details/357/omanyte), [Kabuto](https://tcgcodex.com/card-details/344/kabuto), and [Psyduck](https://tcgcodex.com/card-details/366/psyduck). Independent historical rulings and **real reducer/browser execution were not completed**; all remain partial.
+
+| Printing | Active-engine evidence / outstanding scenarios | Status |
+| --- | --- | --- |
+| `base3-49` Horsea | Smokescreen W: 10 plus next-turn attack-penalty coin, whose pre-Confusion gate is in `headless_duel.js`. Still need heads/tails, switching, expiry, W/R and prevention execution. | partial |
+| `base3-50` Kabuto | Scratch C: 10; Kabuto Armor passive appears in `classic_power_core.js` and `headless_duel.js` uses `Math.floor(dmg/20)*10` after W/R. Still need 10/20/30/40 incoming damage, status suppression, self-attack and other effects. | partial |
+| `base3-51` Krabby | Call for Family W: search named Basic Krabby and bench; full-Bench rejection and deck-search decisions exist in `headless_duel.js`. Irongrip WC: 20 flat. Still need no-match, full-Bench, search choice, shuffle and cost execution. | partial |
+| `base3-52` Omanyte | **Confirmed source mismatch:** printed Water Gun W: 10+ specifies *extra Water Energy*, but imported text says generic Energy and compiled `extra-energy`. Scoped override now compiles `water-extra`, +10 per qualifying extra Water Energy capped +20. Clairvoyance is a passive Power, disabled by Asleep/Confused/Paralyzed. Still need mixed Energy, cost allocation, status suppression, hand visibility and reset execution. | partial |
+| `base3-53` Psyduck | Headache P: next-turn Trainer lock (`trainer-lock`); Fury Swipes W: three coins, 10 per heads (`coin-times`). Still need Trainer legality across turn boundary, 0–3 heads, W/R and prevention execution. | partial |
+
+**Fix:** `attack_effects_core.js` now narrowly overrides Fossil Omanyte Water Gun before generic classic compilation, matching the printed Water-specific bonus. This is distinct from the user-confirmed Fossil Lapras ruling, which remains unchanged. No new tests, test suites or CI changes. No browser/reducer scenario was executed, so do not certify these cards as verified.
+
+Ledger recount after this batch: **327 partial, 795 unreviewed, 1 verified**, total 1123; **1122 not fully verified**. The single earlier verified printing was not retested.
