@@ -92,16 +92,16 @@ window.NeoOverworldEyeLevel = (() => {
       park:'park-eye-level-v2.webp',
       home:'apartment-eye-level-v2.webp',
       center:'tournament-eye-level-v2.webp',
-      library:'library-eye-level-v2.webp'
+      library:'library-eye-level-v2.webp',
+      shop:'shop-eye-level-v2.webp'
     };
     const productionUrl = productionBackgrounds[map.id]
       ? '/rpg-assets/eye-level/' + productionBackgrounds[map.id] : null;
     const panoramaUrl = '/rpg-assets/eye-level/' + map.id + '-panorama.svg';
-    // The original shop illustration is an eye-level plate already, but is too large
-    // for the repository connector to embed into an SVG. Build its wider version
-    // from that same artwork in the browser, without changing the source image.
+    // Fallback: the original shop illustration is a narrower eye-level plate.
+    // Build a wider legacy variant only if the new original panorama cannot load.
     const sources = map.id === 'shop'
-      ? [classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
+      ? [productionUrl, classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
       : [productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' :
          map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level.png' :
          map.id === 'park' ? '/rpg-assets/eye-level/park-eye-level.png' :
@@ -136,7 +136,7 @@ window.NeoOverworldEyeLevel = (() => {
     }
     sourceImage.onload = () => {
       try {
-        backdrop.src = map.id === 'shop' && sourceIndex < 2
+        backdrop.src = map.id === 'shop' && sourceIndex >= 1 && sourceIndex <= 2
           ? shopPanorama(sourceImage) || sourceImage.src
           : sourceImage.src;
       } catch(error) {
