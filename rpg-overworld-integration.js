@@ -292,6 +292,48 @@
     };
     deckClose.onclick=hideDeck;
     function hideMenu(){menu.hidden=true;menuButton.setAttribute('aria-expanded','false');}
+    // Audio preferences are now part of the overworld rather than an old
+    // utility bar. The shared audio service still persists the settings.
+    let audioSettingsPanel=null;
+    function showAudioSettings(){
+      hideMenu();closeSheet();
+      if(!audioSettingsPanel){
+        const panel=document.createElement('section');
+        panel.id='neoOverworldAudioSettings';
+        panel.setAttribute('role','dialog');
+        panel.setAttribute('aria-label','Audio settings');
+        panel.style.cssText='position:absolute;z-index:12;top:75px;right:12px;width:min(350px,calc(100vw - 24px));max-height:calc(100dvh - 95px);overflow:auto;padding:17px;background:#211934f7;border:1px solid #b28fb9;border-radius:13px;box-shadow:0 16px 42px #000b';
+        const heading=document.createElement('strong');heading.textContent='♫ Audio settings';
+        const toggle=document.createElement('button');toggle.type='button';
+        const volumeLabel=document.createElement('label');
+        volumeLabel.textContent='Volume';
+        const volume=document.createElement('input');volume.type='range';volume.min='0';volume.max='100';volume.step='5';
+        volume.setAttribute('aria-label','Sound effects volume');volumeLabel.append(volume);
+        const ambienceLabel=document.createElement('label');ambienceLabel.style.display='block';
+        const ambience=document.createElement('input');ambience.type='checkbox';
+        ambienceLabel.append(ambience,document.createTextNode(' Ambient sounds'));
+        const close=document.createElement('button');close.type='button';close.textContent='Close';
+        for(const el of [toggle,close])el.style.cssText='display:block;margin:12px 0;padding:9px 14px;border-radius:9px;border:1px solid #ae89b1;background:#392946;color:white;cursor:pointer';
+        volumeLabel.style.cssText='display:flex;flex-direction:column;gap:8px;margin:10px 0;font:600 13px system-ui';
+        panel.append(heading,toggle,volumeLabel,ambienceLabel,close);
+        toggle.onclick=()=>{
+          const audio=window.NeoRpgAudio;
+          audio?.setEnabled?.(!audio.settings.enabled);
+          toggle.textContent=audio?.settings?.enabled?'Sound effects: on':'Sound effects: off';
+          audio?.play?.('ui');
+        };
+        volume.oninput=()=>window.NeoRpgAudio?.setVolume?.(Number(volume.value)/100);
+        ambience.onchange=()=>window.NeoRpgAudio?.setAmbience?.(ambience.checked);
+        close.onclick=()=>{panel.hidden=true;};
+        overlay.append(panel);audioSettingsPanel=panel;
+      }
+      const settings=window.NeoRpgAudio?.settings||{};
+      const [toggle,volumeLabel,ambienceLabel]=audioSettingsPanel.querySelectorAll('button,input[type="range"],input[type="checkbox"]');
+      if(toggle)toggle.textContent=settings.enabled?'Sound effects: on':'Sound effects: off';
+      if(volumeLabel)volumeLabel.value=String(Math.round((settings.volume??.35)*100));
+      if(ambienceLabel)ambienceLabel.checked=!!settings.ambience;
+      audioSettingsPanel.hidden=false;
+    }
     menuButton.onclick=()=>{closeSheet();menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));};
     const menuItems=[
       ['▣ Deck Studio',showDeck],
@@ -301,6 +343,7 @@
       ['🏆 Circuit & Tournaments',()=>showEvents('circuit')],
       ['✧ Save Game',()=>document.getElementById('save')?.click()],
       ['◇ Discreet / Chibi Mode',()=>{toggleChibiPreference();refresh();}],
+      ['♫ Audio Settings',showAudioSettings],
       ['⌾ Travel',()=>openSheet('travel')],
       ['↻ Reset Campaign',()=>{const reset=bridge()?.resetCampaign;if(typeof reset==='function')void reset();else showNotice('Campaign reset is not available. Reload the page and try again.');}]
     ];
@@ -1576,6 +1619,7 @@
         cancel.onclick=closeActivities;panel.append(cancel);overlay.append(backdrop,panel);
     }
     document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;
+      if(audioSettingsPanel&&!audioSettingsPanel.hidden){event.preventDefault();audioSettingsPanel.hidden=true;return;}
       if(overlay.classList.contains('neo-ow-has-choices')&&!overlay.classList.contains('neo-ow-choices-collapsed')&&!overlay.classList.contains('neo-ow-paging')){
         event.preventDefault();setChoicesCollapsed(true);syncChoicePresentation(false);return;
       }
