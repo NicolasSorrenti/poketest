@@ -5064,13 +5064,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Smokescreen",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Smokescreen: current headless_duel.js attackPenalty pre-Confusion coin check; check attack costs, switching, bench status, expiry and both coin outcomes.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Smog",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Smog: coin-status Poisoned compiler; check both coin outcomes, prevention and W/R.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
@@ -5083,13 +5091,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Water Gun: generic extra-energy compiler for printed each Energy; 20 base +10 per extra attached Energy, capped +20; check multitype Energy, energy-cost allocation and 20/30/40.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Spike Cannon",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Spike Cannon: coin-times 2 flips at 30 each; check 0/1/2 heads and W/R.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
@@ -5102,13 +5118,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Slash",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Slash: flat 20 current attack compiler; check energy payment, weakness and resistance.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Fury Swipes",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fury Swipes: coin-times 3 flips at 20 each; check 0–3 heads and damage prevention.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
@@ -5121,13 +5145,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Water Gun: generic extra-energy 20+ with +10 each extra Energy, max +20; unlike user-confirmed Lapras-specific Water-only override; independently verify printed/errata interpretation.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Agility",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Agility: coin shield attack effect, check heads/tails, bench movement, next-turn expiration, damage and non-damage effects.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
@@ -5140,13 +5172,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Psyshock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Psyshock: coin-status Paralyzed compiler; check both coin outcomes and protection.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Strange Behavior",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Strange Behavior: classic_power_core.js activated power selects damaged friendly source and moves 10 damage to Slowbro, rejects KO; check status suppression, repeated uses, no legal source, bench interactions.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
