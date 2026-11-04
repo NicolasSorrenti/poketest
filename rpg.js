@@ -474,7 +474,7 @@ window.NeoRpgErrorReport?.setContextProvider(()=>{
   location:state.location,selectedCharacter:state.selected,activeType:active?.[0]||null,
   eventId:active?.[1]?.id||null,phase:active?.[1]?.phase||null};
 });
-// Both the classic and new overworld UIs share one guarded campaign reset.
+// The overworld UI uses one guarded campaign reset shared with cloud persistence.
 let campaignResetBusy=false;
 async function resetCampaign(){
  if(campaignResetBusy)return false;
@@ -1115,7 +1115,7 @@ function liveOverworldPose(id){
  if(source&&window.NeoRpgOverworldBridge?.setVisiblePose(id,source))return visibleOverworldPose(id);
  return null;
 }
-// Optional overworld adapter: the existing campaign remains authoritative.
+// Public command/query boundary between RPG state and its overworld presenter.
 window.NeoRpgOverworldBridge=Object.freeze({
  resetCampaign,
  setVisiblePose(id,src){
@@ -1182,7 +1182,7 @@ function overworldStoryActive(){
   state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter||conversationInProgress());
 }
 function notifyOverworldRendering(){
- if(window.NeoRpgOverworldStandalone)window.dispatchEvent(new Event('neo-rpg-overworld-render'));
+ window.dispatchEvent(new Event('neo-rpg-overworld-render'));
 }
 function overworldControlsLocked(){
  return controlsLocked()||arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active;
@@ -1276,8 +1276,6 @@ async function glanceAt(id){
  // Glance must show the same sprite the player clicked, not a random
  // alternate from the crop catalog or a dialogue-expression portrait.
  const clickedPose=liveOverworldPose(id)||visibleOverworldPose(id);
- const overlay=document.getElementById('neoOverworldOverlay');
- const inOverworld=!!window.NeoRpgOverworldStandalone||!!overlay&&!overlay.hidden;
  let portrait=clickedPose||scenePortraitSource(id,'neutral',activeOutfitSceneId);
  const currentName=portrait.split('/').pop().split('?')[0];
  let focus=null;
@@ -1300,7 +1298,7 @@ async function glanceAt(id){
   }else if(activeEntry){focus=activeEntry;}
   // Normal glances use the exact exported source path and crop preset.
   // Special looks stay on the active stage image and active special crop.
-  if(!clickedPose&&!isSpecial&&!inOverworld){
+  if(!clickedPose&&!isSpecial&&!document.getElementById('neoOverworldOverlay')){
    // Only the old interface can choose a catalog default. In the overworld,
    // missing pose information must not quietly show a different sprite.
    const exportedOverworld=exact||overworldVariants[0]||null;
@@ -2410,14 +2408,8 @@ function openPlannerSuggestion(id){
   if(invite?.kind===kind&&invite.id===pick.key)return selectPerson(actor);
  }
  // Never auto-start a duel or a story: highlight the actual action instead.
- rpgLocalTab=pick.kind==='tournament'||pick.kind==='event'?'circuit':
-  pick.kind==='activity'?'activities':'stories';
- renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});
+ window.dispatchEvent(new CustomEvent('neo-rpg-focus-opportunities',{detail:{kind:pick.kind,focusId:pick.focusId}}));
  const section=$(pick.focusId);
- const owner=section?.closest?.('.side-section');
- const heading=owner?.querySelector?.('.sidebar-title span')?.textContent||'';
- rpgActivePanel=Object.entries(rpgPanelGroups).find(([,names])=>names.some(name=>heading.includes(name)))?.[0]||'plans';
- refreshRpgPanels();
  // Planner navigation should never open the Info drawer. Keep the main game view visible.
  const buttons=[...(section?.querySelectorAll?.('button')||[])].filter(x=>!x.disabled);
  const action=buttons.find(b=>b.dataset?.plannerKey===pick.key)||
@@ -2921,7 +2913,7 @@ function openCalendar(){
     $('calendarDialog').close();
     if(entry.place!==state.location)travelTo(entry.place);
     else if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
-    else{rpgLocalTab=entry.kind==='Tournament'||entry.kind==='Official event'?'activities':'stories';renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});}
+    else window.dispatchEvent(new CustomEvent('neo-rpg-focus-opportunities',{detail:{kind:entry.kind==='Tournament'||entry.kind==='Official event'?'tournament':'story'}}));
     if(entry.place===state.location&&entry.npc&&currentPeople().includes(entry.npc))return;
     if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
    };
@@ -2932,7 +2924,7 @@ function openCalendar(){
  $('calendarDialog').showModal();
 }
 // Keep the previous portrait on screen until its replacement is fully decoded.
-const decodedPortraitAssets=new Map(),stagePortraitRequests=new WeakMap();
+const decodedPortraitAssets=new Map();
 function readyPortrait(path){
  if(!path)return Promise.resolve(false);
  if(decodedPortraitAssets.has(path))return decodedPortraitAssets.get(path);
@@ -2949,21 +2941,6 @@ function readyPortrait(path){
  decodedPortraitAssets.set(path,promise);
  if(decodedPortraitAssets.size>72)decodedPortraitAssets.delete(decodedPortraitAssets.keys().next().value);
  return promise;
-}
-function swapStagePortrait(image,paths,onReady,onMissing){
- const options=[...new Set(paths.filter(Boolean))],key=options.join('|');
- if(stagePortraitRequests.get(image)?.key===key)return;
- const request={key};stagePortraitRequests.set(image,request);
- void (async()=>{
-  for(const path of options){
-   if(!await readyPortrait(path)){failedScenePortraits.add(path);continue;}
-   if(stagePortraitRequests.get(image)!==request)return;
-   if(image.getAttribute('src')!==path)image.src=path;
-   onReady?.(path);
-   return;
-  }
-  if(stagePortraitRequests.get(image)===request)onMissing?.();
- })();
 }
 function makeAvatar(id,size=''){
  const img=document.createElement('img'),paths=size==='stage'?stagePortraitPaths(id,'neutral'):portraitPaths(id,'neutral');
@@ -3059,41 +3036,7 @@ function renderSeasonReport(){
  }else root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,past,footer);
 }
 
-// Presentation-only navigation: game state and action handlers remain authoritative.
-const rpgPanelGroups={
- scene:['WHO\'S HERE','YOUR DAY','TOWN LIFE','LOCAL CIRCUIT'],
- stories:['STORY OPPORTUNITIES','UNEXPECTED MOMENTS','SIDE QUESTS','LOCAL ENCOUNTERS'],
- plans:['WHAT NEXT?','TODAY\'S PRIORITY','UPCOMING PLANS','AROUND TOWN NOW'],
- progress:['YOUR 90-DAY JOURNEY','TOURNAMENT BRACKETS','YOUR DECK','SEASON JOURNAL']
-};
-let rpgActivePanel='plans',rpgLocalTab='people',lastRenderedLocation=null;
-function ensureRpgLayout(){
- if(typeof document.querySelector!=='function')return;
- const sidebar=document.querySelector('.sidebar'),sceneRoot=$('scene');
- if(!sidebar||!sceneRoot||$('rpgPanelTabs'))return;
- const nav=document.createElement('nav');nav.id='rpgPanelTabs';nav.className='rpg-panel-tabs';nav.setAttribute('aria-label','RPG information');
- for(const [id,label] of Object.entries({scene:'Here',plans:'Today',stories:'Stories',progress:'Progress'})){
-  const b=document.createElement('button');b.type='button';b.dataset.panel=id;b.textContent=label;
-  b.onclick=()=>{rpgActivePanel=id;refreshRpgPanels();};nav.append(b);
- }
- const drawerHeader=sidebar.querySelector(':scope > .rpg-drawer-header'); if(drawerHeader)drawerHeader.after(nav);else sidebar.prepend(nav);
- const castRoot=document.createElement('div');castRoot.id='rpgSceneCast';castRoot.className='rpg-scene-cast';castRoot.setAttribute('aria-label','Characters at this location');
- sceneRoot.append(castRoot);
- const dock=document.createElement('section');dock.id='rpgActionDock';dock.className='rpg-action-dock';
- dock.setAttribute('aria-label','Things to do here');sceneRoot.after(dock);
-}
-function refreshRpgPanels(){
- if(typeof document.querySelector!=='function')return;
- const sidebar=document.querySelector('.sidebar');if(!sidebar)return;
- for(const section of sidebar.querySelectorAll(':scope > .side-section')){
-  const heading=section.querySelector('.sidebar-title span')?.textContent||'';
-  const group=Object.entries(rpgPanelGroups).find(([,names])=>names.some(name=>heading.includes(name)))?.[0]||'progress';
-  section.hidden=group!==rpgActivePanel;
- }
- for(const button of $('rpgPanelTabs')?.querySelectorAll('button')||[]){
-  const active=button.dataset.panel===rpgActivePanel;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
- }
-}
+let lastRenderedLocation=null;
 // Keep the neutral character portrait as the only fallback when a v2 sheet is absent.
 const failedScenePortraits=new Set();
 let activeOutfitSceneId=null;
@@ -3178,16 +3121,6 @@ function defaultOverworldDialogueSource(id,expression,normal){
  return OVERWORLD_DIALOGUE_DEFAULTS[id]||null;
 }
 
-const PERSONA_C_CROPS={
- akari:[.028,0,.943,.597],alma:[.075,0,.868,.55],barb:[.296,0,.429,.363],
- camila:[.072,0,.894,.566],elena:[.225,0,.56,.355],elio:[.177,0,.673,.426],
- hana:[.054,0,.892,.565],iris:[.243,0,.52,.439],jinx:[.236,0,.508,.429],
- jun:[.165,0,.672,.567],kaede:[.053,0,.894,.566],laca:[.225,0,.505,.36],
- luna:[.276,0,.448,.378],marina:[.05,0,.9,.57],nereo:[.197,0,.616,.52],
- reina:[.053,0,.894,.566],rina:[.19,0,.627,.53],shiori:[.052,0,.896,.568],
- sierra:[.189,0,.626,.529],sol:[.18,0,.639,.54],teo:[.09,0,.819,.519],
- yuna:[.029,0,.943,.597]
-};
 function personaCStageCandidates(id,emotion,normal){
  const v2=rpgV2Expression(id,emotion);
  return v2?[v2]:normal.filter(src=>!/(?:\/expression-portraits\/|\/expression-faces\/|\/vn-expressions\/|\/expressions\/)/.test(src));
@@ -3251,25 +3184,6 @@ function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
  const paths=stagePortraitPaths(id,expression,sceneId);
  return paths.find(src=>!failedScenePortraits.has(src))||paths[paths.length-1]||cast[id].portrait||'/rpg-assets/'+id+'.png';
 }
-function applyPersonaCStageCrop(img,id){
- // Crop the UI only: approved artwork and overworld sprites remain intact.
- // Standing art shows its top ~36%, from hair to the lower chest.
- const src=img.currentSrc||img.getAttribute('src')||'';
- const approved=APPROVED_DIALOGUE_MASTERS[id]&&src.includes(APPROVED_DIALOGUE_MASTERS[id]);
- const defaultPose=OVERWORLD_DIALOGUE_DEFAULTS[id]&&src.includes(OVERWORLD_DIALOGUE_DEFAULTS[id]);
- const lacaPose=id==='laca'&&Object.values(LACA_OVERWORLD_DIALOGUE_DEFAULTS).some(path=>src.includes(path));
- const fullBody=approved||defaultPose||lacaPose||
-  (id==='camila'&&src.includes(CAMILA_DIALOGUE_MASTER))||
-  /\/(?:overworld|overworld-variants)\//.test(src)||
-  /\/standing-front\.png(?:[?#]|$)/.test(src)||
-  /\/portraits\/special-day-\d+\.png(?:[?#]|$)/.test(src);
- const alreadyCropped=/\/(?:expression-portraits|expression-faces|vn-expressions)\//.test(src);
- const v2FullBody=/\/expressionsv2\//.test(src);
- img.style.setProperty('--rpg-dialogue-bust-height',
-  (fullBody||v2FullBody)?'278%':alreadyCropped?'165%':'190%');
- // Old inline size and offsets stretched the original images.
- for(const prop of ['width','height','left','top'])img.style.removeProperty(prop);
-}
 function dialogueExpression(line){
  const s=String(line||'').toLowerCase();
  if(/[!?]{2}|\b(wow|what?!|seriously|no way)\b/.test(s))return 'surprised';
@@ -3284,12 +3198,9 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
   // Do not construct, preload or display any regular character portraits.
   // Live's authored CG is the entire illustration for this scene.
   overworldScenePortraits={conversation:false,focused:null,participants:[]};
-  const root=typeof document.querySelector==='function'?$('rpgSceneCast'):null;
-  if(root){root.hidden=true;if(root.childNodes.length)root.replaceChildren();}
   return;
  }
- // Scene composition is shared with the separate overworld, even when the
- // classic RPG scene-cast container is absent in that HTML document.
+ // Compute scene composition for the sole overworld presenter.
  const composition=SCENE_CAST.select({cast,present:ids,portraitId,shown,...context});
  const {focused,participants}=composition;
  overworldScenePortraits={
@@ -3325,74 +3236,6 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    }
   }
  }
- if(typeof document.querySelector!=='function')return;
- const root=$('rpgSceneCast');if(!root)return;
- // The dedicated overworld has its own two-portrait scene renderer.
- // Never construct the legacy scene-cast portraits behind it: doing so
- // duplicated characters and needlessly loaded their full-size images.
- if(window.NeoRpgOverworldStandalone){
-  root.hidden=true;
-  if(root.childNodes.length)root.replaceChildren();
-  return;
- }
- if(state.location==='home'||!participants.length){root.hidden=true;root.replaceChildren();return;}
- root.hidden=false;
- // Narrator and player lines should not dim every NPC in the location.
- const inConversation=!!focused&&!!(shown?.line||locked);
- root.classList.toggle('is-conversation',inConversation);
- // Preserve existing DOM nodes between dialogue lines so CSS transitions actually play.
- const existing=new Map([...root.children].map(node=>[node.dataset.npc,node]));
- for(const id of participants){
-  let button=existing.get(id);
-  if(!button){
-   button=document.createElement('button');button.type='button';button.dataset.npc=id;
-   button.className='rpg-cast-member is-entering';
-   button.dataset.initials=cast[id].name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();
-   const stageFrame=document.createElement('div');stageFrame.className='rpg-stage-persona-frame';
-   stageFrame.append(makeAvatar(id,'stage'));button.append(stageFrame);
-   const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];button.append(name);
-   button.onclick=()=>selectPerson(id);
-   button.addEventListener('animationend',event=>{if(event.target===button)button.classList.remove('is-entering');});
-  }
-  button.style.setProperty('--cast-order',String(participants.indexOf(id)));
-  const active=inConversation&&id===focused;
-  button.classList.toggle('is-speaking',active);
-  button.classList.toggle('is-listening',inConversation&&!active);
-  button.disabled=locked||inConversation;
-  button.title='Talk to '+cast[id].name;
-  button.setAttribute('aria-label','Talk to '+cast[id].name);
-  const image=button.querySelector('img');
-  if(image){
-   // Crop after selecting the current source to avoid stale portrait framing.
-   // Explicit reviewed sources, rather than transparent-margin heuristics.
-   const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
-   window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
-   const paths=stagePortraitPaths(id,expression,context.sceneId);
-   const path=scenePortraitSource(id,expression,context.sceneId);
-   if(image.getAttribute('src')===path){stagePortraitRequests.delete(image);applyPersonaCStageCrop(image,id);}
-   if(image.getAttribute('src')!==path){
-    // Preserve the last rendered expression while the next one loads.
-    // A newer dialogue line cancels an older pending source.
-    swapStagePortrait(image,[path,...paths.filter(src=>src!==path&&!failedScenePortraits.has(src))],()=>{
-     image.classList.remove('expression-change');
-     image.style.display='';
-     applyPersonaCStageCrop(image,id);
-     button.querySelector('.avatar-fallback')?.remove();
-     if(!window.NeoRpgCharacterMotion?.expressionChange?.(image))image.classList.add('expression-change');
-    },()=>{
-     if(image.naturalWidth)return;
-     image.style.display='none';
-     if(!button.querySelector('.avatar-fallback')){
-      const span=document.createElement('span');span.className='avatar-fallback';
-      span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');
-      button.insertBefore(span,button.lastElementChild);
-     }
-    });
-   }
-  }
-  root.append(button);existing.delete(id);
- }
- for(const node of existing.values())node.remove();
 }
 function cleanRpgLabel(value){
  return String(value||'')
@@ -3414,64 +3257,11 @@ function simplifyRpgLabels(){
  }
 }
 function renderRpgActions(locked,shown){
- if(typeof document.querySelector!=='function')return;
- const dock=$('rpgActionDock');if(!dock)return;
- const menuMode=shown?.presentation==='character-menu';
- if(menuMode){$('dialogue').hidden=true;dock.hidden=true;return;}
- const hasDialogue=locked||((shown?.choices?.length||0)>0)||!!(shown?.line);
- $('dialogue').hidden=!hasDialogue;
- dock.hidden=hasDialogue;
- if(hasDialogue)return;
- // The dock persists across dialogue/season updates: never throw away focused tabs
- // or the user's scroll position just to refresh event availability.
- let header=dock.querySelector('.rpg-dock-header');
- let body=dock.querySelector('.rpg-dock-items');
- if(!header||!body){
-  dock.replaceChildren();
-  header=document.createElement('div');header.className='rpg-dock-header';
-  const heading=document.createElement('strong');heading.className='rpg-dock-heading';
-  header.append(heading);
-  const tabs=document.createElement('div');tabs.className='rpg-dock-tabs';
-  for(const [id,title] of [['people','Characters'],['stories','Events'],['circuit','Circuit'],['activities','Activities']]){
-   const button=document.createElement('button');button.type='button';button.dataset.tab=id;
-   button.textContent=title;
-   button.onclick=()=>{rpgLocalTab=id;renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});};
-   tabs.append(button);
-  }
-  header.append(tabs);body=document.createElement('div');body.className='rpg-dock-items';
-  dock.append(header,body);
- }
- header.querySelector('.rpg-dock-heading').textContent='Explore '+places[state.location][0];
- for(const button of header.querySelectorAll('[data-tab]')){
-  const selected=button.dataset.tab===rpgLocalTab;
-  button.classList.toggle('active',selected);button.setAttribute('aria-pressed',String(selected));
- }
- const entries=[];
- const ids=rpgLocalTab==='people'?['people']:rpgLocalTab==='stories'?['storyEvents','situationEvents','sideQuestEvents','townEncounters']:rpgLocalTab==='circuit'?['competitiveEvents']:['townActivities','activities'];
- for(const id of ids){
-  const sources=[...($(id)?.children||[])];
-  for(let i=0;i<sources.length;i++){
-   const source=sources[i];if(source.tagName!=='BUTTON'||source.disabled)continue;
-   const text=source.querySelector('strong')?.textContent||source.textContent||'';
-   const label=text.replace(/\s*·\s*⏳[^·]*/g,'').replace(/\s*·\s*\+\d+[^·]*/g,'').trim();
-   entries.push({key:id+':'+i+':'+label,label,onClick:()=>source.click()});
-  }
- }
- if(rpgLocalTab==='activities'&&state.location==='shop'&&state.deckJourney?.starter&&!controlsLocked()){
-  entries.unshift({key:'shop:booster',label:'✦ Browse booster packs',onClick:openBoosterShop});
- }
- window.NeoRpgRenderPerf.reconcileKeyed(body,entries,
-  ()=>{const button=document.createElement('button');button.type='button';button.className='rpg-dock-action';return button;},
-  (button,item)=>{
-   if(button.textContent!==item.label)button.textContent=item.label;
-   button.onclick=item.onClick;
-   button.classList.toggle('booster-shop-entry',item.key==='shop:booster');
-  });
- if(!entries.length){
-  const p=document.createElement('p');p.className='empty-note';
-  p.textContent=rpgLocalTab==='people'?'Nobody is around right now. Try another period.':'Nothing available here right now.';
-  body.append(p);
- }
+ // Only dialogue visibility remains here; the overworld owns navigation and actions.
+ const dialogue=$('dialogue');
+ if(!dialogue)return;
+ const hasDialogue=locked||Boolean(shown?.choices?.length)||Boolean(shown?.line);
+ dialogue.hidden=shown?.presentation==='character-menu'||!hasDialogue;
 }
 // Day 91 year-end blooper reel; state lives in the campaign save for local/cloud persistence.
 function maybeShowYearEndFallReel(){
@@ -3595,7 +3385,6 @@ function render(){
   }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
- ensureRpgLayout();
  window.NeoRpgInterface?.init?.();
  if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
  renderJourney();
@@ -3648,14 +3437,7 @@ function render(){
    if(status.textContent!==label)status.textContent=label;
   });
  $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
- const bgFiles={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
- // The standalone overworld owns the visible map; never load a second
- // hidden classic background or reapply its image for every interaction.
- const classicSceneMap=window.NeoRpgOverworldStandalone?'':bgFiles[state.location];
- if($('scene').dataset.mapBackground!==classicSceneMap){
-  $('scene').dataset.mapBackground=classicSceneMap;
-  $('scene').style.backgroundImage=classicSceneMap?"linear-gradient(0deg,#090b18ec 0%,#090b1860 80%),url('/rpg-assets/"+classicSceneMap+"')":'none';
- }
+ // Location artwork is rendered only by the persistent overworld iframe.
  const showingMandatory=state.mandatoryEventState?.active?MANDATORY_EVENTS.find(x=>x.id===state.mandatoryEventState.active.id):null;
  const mandatoryLine=showingMandatory?.lines?.[state.mandatoryEventState.active.index];
  const mandatoryPortrait=mandatoryLine&&cast[mandatoryLine.speaker]?mandatoryLine.speaker:(showingMandatory?.kind==='bond'?showingMandatory.characterId:null);
@@ -3673,23 +3455,10 @@ function render(){
  // Don't inherit a previously selected character's portrait either.
  const portraitId=liveCgOnly?null:mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
  activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
- const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
- const nextArt=nextPortrait?scenePortraitSource(nextPortrait,'neutral'):'';
- if(window.NeoRpgOverworldStandalone){
-  // The overworld displays only its own live speaker portraits. Avoid fetching
-  // a second unused classic stage portrait behind the conversation.
-  portraitRoot.dataset.npc='';
-  portraitRoot.dataset.artSrc='';
-  if(portraitRoot.childNodes.length)portraitRoot.replaceChildren();
- }else{
-  if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
-   portraitRoot.dataset.npc=nextPortrait;portraitRoot.dataset.artSrc=nextArt;
-   portraitRoot.replaceChildren();
-   if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait,'stage'));
-   else delete portraitRoot.dataset.rpgSafeId;
-  }
-  if(nextPortrait)window.NeoRpgDiscreetAvatars?.set?.(portraitRoot,nextPortrait,'neutral',cast[nextPortrait].name);
- }
+ // The overworld owns character art; never create a hidden duplicate.
+ if(portraitRoot.childNodes.length)portraitRoot.replaceChildren();
+ portraitRoot.dataset.npc='';
+ portraitRoot.dataset.artSrc='';
  $('homeBanner').hidden=state.location!=='home'||!!portraitId;
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingMandatory?renderMandatory():showingSlice?renderSliceOfLife():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
@@ -3982,7 +3751,6 @@ function render(){
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
  $('notice').textContent=conversationInProgress()?'Finish the conversation before traveling or starting another activity.':state.mandatoryEventState?.active?'Incoming story — finish this moment to continue.':state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  simplifyRpgLabels();
- refreshRpgPanels();
  renderRpgActions(locked,shown);
  window.NeoRpgCharacterMotion?.update?.({
   location:state.location,speaker:shown?.speaker||'',line:shown?.line||'',
