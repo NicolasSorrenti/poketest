@@ -743,3 +743,17 @@ At start no open card-fidelity audit PR was found; #440 and previous audit PRs a
 | `base3-28` Muk | Sludge GGG 30 + heads Poison; Toxic Gas suppresses other Powers unless Muk status-locked. Multi-Muk and status transitions untested. | partial |
 
 No engine change, new tests, suites or CI changes. **Potential Lapras interpretation mismatch is unresolved**, not certified as a defect. Source review only, no new verified cards. Review evidence on 302/1,123 printings; remaining not fully verified 1,123.
+
+## 2026-11-04 — Active-engine follow-up: Fossil #24–28
+
+Scope is the current game engine only: `play.html` routes single play to `classic_live.html`; `classic_local_service.js` imports `headless_duel.js` and calls `createGame` / `reduce`. `rpg_duel_bridge.js` is a UI/result adapter, not a second card-rules engine. The current reducer uses `attack_effects_core.js`, `classic_attack_extensions.js`, and `classic_power_core.js`. Earlier `engine.js` legacy-only findings are NOT validation evidence.
+
+| Printing | Active-engine source review and unresolved cases | Status |
+| --- | --- | --- |
+| `base3-24` Kabutops | Sharp Sickle and Absorb compiled through current attack effects; half-damage healing, protection, weakness/resistance, KO and energy-cost scenarios still need reducer execution. | partial |
+| `base3-25` Lapras | Imported `cards/base3.json` says each Energy; user explicitly resolved Fossil Water Gun as **only extra Water Energy**, capped +20. Current `classic_attack_extensions.js` otherwise compiles generic `extra-energy`; scoped override in `attack_effects_core.js` now emits `water-extra` for the Lapras printing family, leaving other generic Energy attacks unchanged. Confuse Ray and actual damage cases still need reducer execution. | partial |
+| `base3-26` Magneton | Current reducer handles ignore-W/R and Bench recoil families; simultaneous knockouts, protections and prize ordering unexecuted. | partial |
+| `base3-27` Moltres | Current `headless_duel.js` offers Wildfire optional Fire Energy choices (0 to available), validates payment; Dive Bomb coin failure compiled. Short opponent deck and coin results unexecuted. | partial |
+| `base3-28` Muk | Current `classic_power_core.js` checks Toxic Gas suppression and status locks; Sludge coin-status path identified. Multiple Muk, status changes, other Powers and damage prevention unexecuted. | partial |
+
+Source inspection and a code change are **not runtime verification**. No new tests, suites, or CI changes. Printed-card references and historical ruling gaps from the previous Fossil #24–28 entry remain relevant; this entry corrects engine provenance and the user-confirmed Water-only interpretation. All five remain partial.
