@@ -85,9 +85,10 @@
     const placeArt={arcade:'arcade.jpg',home:'home.jpg',park:'park.jpg',shop:'card-shop-day.png',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
     const placeIcon={arcade:'🎮',home:'⌂',park:'🌳',shop:'🎁',cafe:'☕',center:'♟',library:'📚'};
     let expandedSheet=null;
+    let guideSignature='';
     function closeSheet(){
       if(!expandedSheet&&sheet.hidden)return;
-      expandedSheet=null;sheet.hidden=true;sheetBackdrop.hidden=true;
+      expandedSheet=null;guideSignature='';sheet.hidden=true;sheetBackdrop.hidden=true;
       next.setAttribute('aria-expanded','false');travelToggle.setAttribute('aria-expanded','false');
       next.classList.remove('is-open');travelToggle.classList.remove('is-open');
       sheetBody.replaceChildren();
@@ -101,11 +102,17 @@
         sheetBody.append(unavailable);
         return;
       }
-      view.render(sheetBody,api.guide(),(kind,id)=>{
+      const model=api.guide();
+      const signature=JSON.stringify(model);
+      if(signature===guideSignature&&sheetBody.children.length)return;
+      const scroll=sheetBody.scrollTop;
+      view.render(sheetBody,model,(kind,id)=>{
         closeSheet();
         if(!bridge()?.guideAction?.(kind,id))
           showNotice('That opportunity is no longer available. Refresh the guide to see current choices.');
       });
+      guideSignature=signature;
+      sheetBody.scrollTop=scroll;
     }
     function openSheet(kind){
       if(bridge()?.snapshot()?.locked||!storyShield.hidden){showNotice('Finish the current scene before opening another panel.');return;}
