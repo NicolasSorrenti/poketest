@@ -2654,38 +2654,33 @@ $('battle')?.addEventListener('load',()=>{
  try{attachArtworkTracker($('battle').contentDocument);}catch{ /* cross-origin iframe is not accessible */ }
 });
 buildArtEntries();
-function showOtherArt(entry){
- if(!entry.unlocked)return;
- if(!galleryViewer){galleryOpenViewer({...entry,unlocked:true,character:entry.id,thumb:entry.path});return;}
- const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
- if(entry.id)window.NeoRpgDiscreetAvatars?.set?.(stage,entry.id,'neutral',entry.id);
- const image=document.createElement('img');image.alt=entry.title;
- image.onload=()=>{if(!artViewed[entry.path]){artViewed[entry.path]=true;persist();renderGallery();}};
- image.onerror=()=>{stage.textContent='Artwork file unavailable.';};
- image.src=entry.path;
- stage.append(image);galleryViewer.querySelector('.cg-lightbox-title').textContent=entry.title;
- if(!galleryViewer.open)galleryViewer.showModal();
+let galleryCharacterPage='';
+function openGalleryArtwork(entry){
+ if(!entry?.unlocked)return false;
+ const view=window.NeoRpgOverworldGallery;
+ return !!view?.openLightbox?.(document,entry,{
+  discreetAvatar:(target,id)=>
+   window.NeoRpgDiscreetAvatars?.set?.(target,id,'neutral',id),
+  loadCG:(image,art,onSuccess,onMissing)=>
+   loadCGArt(image,art,false,onSuccess,onMissing),
+  onViewed:()=>{
+   if(entry.type){
+    if(artViewed[entry.path])return;
+    artViewed[entry.path]=true;
+   }else CG.markViewed(state,entry.id);
+   persist();renderGallery();
+  }
+ });
 }
-let galleryCharacterPage='',galleryViewer=null;
+function showOtherArt(entry){
+ if(!entry?.unlocked)return;
+ if(!openGalleryArtwork({...entry,character:entry.character||entry.id}))
+  throw Error('The overworld artwork viewer did not load.');
+}
 function galleryOpenViewer(entry){
- if(!entry.unlocked)return;
- if(!galleryViewer){
-  galleryViewer=document.createElement('dialog');galleryViewer.className='cg-lightbox';
-  galleryViewer.setAttribute('aria-label','Full-screen unlocked artwork');
-  galleryViewer.innerHTML='<div class="cg-lightbox-toolbar"><span class="cg-lightbox-title"></span><button type="button" class="cg-lightbox-close" aria-label="Close full-screen image">✕ Close</button></div><div class="cg-lightbox-stage"></div>';
-  galleryViewer.querySelector('.cg-lightbox-close').onclick=()=>galleryViewer.close();
-  galleryViewer.addEventListener('click',e=>{if(e.target===galleryViewer)galleryViewer.close();});
-  document.body.append(galleryViewer);
- }
- const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
- if(entry.character)window.NeoRpgDiscreetAvatars?.set?.(stage,entry.character,'neutral',entry.character);
- galleryViewer.querySelector('.cg-lightbox-title').textContent=entry.title;
- const image=document.createElement('img');image.alt=entry.title;image.hidden=true;stage.append(image);
- const pending=document.createElement('p');pending.className='cg-pending';pending.textContent='Artwork not installed yet.';pending.hidden=true;stage.append(pending);
- galleryViewer.showModal();
- loadCGArt(image,entry,false,()=>{
-  pending.hidden=true;if(entry.type)artViewed[entry.path]=true;else CG.markViewed(state,entry.id);persist();renderGallery();
- },()=>{pending.hidden=false;});
+ if(!entry?.unlocked)return;
+ if(!openGalleryArtwork(entry))
+  throw Error('The overworld CG viewer did not load.');
 }
 function galleryCharacterIds(){
  return [...new Set([...Object.keys(cast),...CG.catalog.map(entry=>entry.character)])]
