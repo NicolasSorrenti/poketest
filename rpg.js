@@ -1322,9 +1322,32 @@ function runOverworldGuideAction(kind,id){
  }
  return false;
 }
+// Direct commands for the overworld menu; no invisible legacy button proxies.
+function openStatusPanel(){
+ window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar,disableTutorials);
+ $('statusTutorialHelp').hidden=true;
+ if(!state.gameplayTutorials?.disabled)tutorialEvent('status','statusTutorialHelp');
+}
+async function saveCampaign(){
+ persist();
+ const cloud=window.NeoRpgCloudSave?.isSignedIn?.();
+ let ok=false;
+ try{ok=!!(await window.NeoRpgCloudSave?.syncNow?.());}
+ catch(error){console.warn('Explicit RPG cloud save failed',error);}
+ const message=cloud?
+  (ok?'Cloud campaign synced.':'Cloud sync pending. Progress is cached on this device until it reconnects.'):
+  'Campaign saved in this browser.';
+ $('notice').textContent=message;
+ window.dispatchEvent(new CustomEvent('neo-rpg-save-status',{detail:{message,ok:!cloud||ok}}));
+ return !cloud||ok;
+}
 // Public command/query boundary between RPG state and its overworld presenter.
 window.NeoRpgOverworldBridge=Object.freeze({
  resetCampaign,
+ openStatus:openStatusPanel,
+ openGallery,
+ openCalendar,
+ saveCampaign,
  guide:overworldGuide,
  guideAction:runOverworldGuideAction,
  opportunities:overworldOpportunities,
@@ -2799,54 +2822,32 @@ function openGallery(){
  populateGalleryCharacters();$('galleryCategory').value='cg';renderGallery();$('galleryDialog').showModal();
 }
 function openCommunityBoard(){
- const table=$('communityStandings'),news=$('communityNews'),connections=$('communityConnections');
- table.replaceChildren();news.replaceChildren();connections.replaceChildren();
- const standings=COMMUNITY.rank(state,cast);
- if(!standings.length){
-  const p=document.createElement('p');p.className='empty-note';
-  p.textContent='The club season has only just begun. Results will appear as days pass.';
-  table.append(p);
- }
- for(const [i,entry] of standings.slice(0,8).entries()){
-  const row=document.createElement('div');row.className='club-standing';
-  const label=document.createElement('strong');label.textContent=(i+1)+'. '+entry.name;
-  const score=document.createElement('span');score.textContent=entry.wins+' W · '+entry.losses+' L';
-  row.append(label,score);table.append(row);
- }
- const events=COMMUNITY.recent(state,8);
- if(!events.length){
-  const p=document.createElement('p');p.className='empty-note';p.textContent='The community board is quiet for now.';
-  news.append(p);
- }
- for(const event of events){
-  const row=document.createElement('div');row.className='club-news-entry';
-  const date=document.createElement('small');date.textContent='DAY '+event.day+' · '+places[event.place]?.[0];
-  const detail=document.createElement('p');detail.textContent=COMMUNITY.describe(event,cast);
-  row.append(date,detail);news.append(row);
- }
  const links=Object.entries(COMMUNITY.hydrate(state).links)
-  .filter(([,v])=>(v.matches||0)>=2||(v.meetings||0)>=2)
+  .filter(([,progress])=>(progress.matches||0)>=2||(progress.meetings||0)>=2)
   .sort((a,b)=>(b[1].matches||0)+(b[1].meetings||0)-(a[1].matches||0)-(a[1].meetings||0));
- for(const [pair,progress] of links.slice(0,4)){
-  const [a,b]=pair.split(':');
-  const p=document.createElement('p');p.className='club-link';
-  p.textContent=(cast[a]?.name||a)+' & '+(cast[b]?.name||b)+' · '+
-   ((progress.matches||0)>=2?'Competitive rivals':'Familiar friends');
-  connections.append(p);
- }
- if(!links.length){
-  const p=document.createElement('p');p.className='empty-note';
-  p.textContent='Friendships and rivalries emerge as the season progresses.';
-  connections.append(p);
- }
+ const model={
+  standings:COMMUNITY.rank(state,cast).slice(0,8).map(entry=>({
+   name:entry.name,wins:entry.wins,losses:entry.losses
+  })),
+  events:COMMUNITY.recent(state,8).map(event=>({
+   day:event.day,place:places[event.place]?.[0]||event.place,
+   description:COMMUNITY.describe(event,cast)
+  })),
+  connections:links.slice(0,4).map(([pair,progress])=>{
+   const [a,b]=pair.split(':');
+   return {label:(cast[a]?.name||a)+' & '+(cast[b]?.name||b)+' · '+
+    ((progress.matches||0)>=2?'Competitive rivals':'Familiar friends')};
+  })
+ };
+ if(!window.NeoRpgOverworldModals?.renderCommunity?.(document,model))
+  throw Error('The overworld community board is unavailable.');
  $('communityDialog').showModal();
 }
 // One spoiler-safe timeline for appointments, known stories and official fixtures.
-function openCalendar(){
- const root=$('calendarEntries');root.replaceChildren();
+function calendarEntries(){
  const now=APPOINTMENTS.stamp(state.day,state.slot);
  const rows=[];
- const add=(entry)=>{if(!places[entry.place])return;rows.push(entry);};
+ const add=entry=>{if(places[entry.place])rows.push(entry);};
  for(const plan of APPOINTMENTS.active(state)){
   if(APPOINTMENTS.stamp(plan.day,plan.slot)<now)continue;
   const activity=SOCIAL.activities?.find(item=>item.id===plan.activityId);
@@ -2854,19 +2855,21 @@ function openCalendar(){
    title:'Meet '+(cast[plan.npc]?.name||'your friend'),
    detail:activity?.title||'Agreed meet-up',npc:plan.npc});
  }
- for(const e of eventCards){
-  if(APPOINTMENTS.stamp(e.day,e.slot)<now||state.eventsDone?.[e.day+':'+e.title])continue;
-  add({day:e.day,slot:e.slot,place:e.place,kind:'Official event',title:e.title,
-   detail:'Scheduled circuit exhibition'});
+ for(const event of eventCards){
+  if(APPOINTMENTS.stamp(event.day,event.slot)<now||
+    state.eventsDone?.[event.day+':'+event.title])continue;
+  add({day:event.day,slot:event.slot,place:event.place,kind:'Official event',
+   title:event.title,detail:'Scheduled circuit exhibition'});
  }
  for(const cup of TOURNAMENTS.cups){
   const progress=TOURNAMENTS.status(state,cup.id);
-  if(cup.end<state.day||['champion','eliminated','expired','missed'].includes(progress.state))continue;
+  if(cup.end<state.day||
+    ['champion','eliminated','expired','missed'].includes(progress.state))continue;
   add({day:Math.max(state.day,cup.day),slot:null,place:cup.place,kind:'Tournament',
    title:cup.title,detail:'Registration: Days '+cup.day+'–'+cup.end+
     (progress.round?' · Round '+(progress.round+1)+'/3':'')});
  }
- // Only reveal a story already available to a character the player has met.
+ // Don't expose undiscovered character stories or unavailable schedule windows.
  for(const event of STORY.available(state)){
   if(!state['met_'+event.npc]&&!(event.npc==='reina'&&state.metReina))continue;
   if(event.slot!==null&&event.slot!==undefined&&event.slot!==state.slot)continue;
@@ -2878,37 +2881,34 @@ function openCalendar(){
    detail:'A conversation is available now',npc:event.npc});
  }
  rows.sort((a,b)=>a.day-b.day||(a.slot??0)-(b.slot??0)||a.kind.localeCompare(b.kind));
- if(!rows.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No known plans yet. Talk to people around town or check back later.';root.append(p);}
- let daySection=null,lastDay=null;
- for(const entry of rows){
-  if(entry.day!==lastDay){
-   lastDay=entry.day;daySection=document.createElement('section');daySection.className='rpg-calendar-day';
-   const heading=document.createElement('h3');heading.textContent='Day '+entry.day+(entry.day===state.day?' · Today':'');
-   daySection.append(heading);root.append(daySection);
-  }
-  const row=document.createElement('article');row.className='rpg-calendar-item';
-  const type=document.createElement('small');type.className='rpg-calendar-type';type.textContent=entry.kind;
-  const title=document.createElement('strong');title.textContent=entry.title;
-  const detail=document.createElement('p');detail.textContent=(entry.slot===null?'Any period':periods[entry.slot])+
-   ' · '+places[entry.place][0]+' · '+entry.detail;
-  row.append(type,title,detail);
-  const current=entry.day===state.day&&(entry.slot===null||entry.slot===state.slot);
-  if(current){
-   const action=document.createElement('button');action.type='button';
-   action.textContent=entry.place===state.location?'View here':'Visit '+places[entry.place][0]+' · free';
-   action.disabled=controlsLocked();
-   action.onclick=()=>{
-    $('calendarDialog').close();
-    if(entry.place!==state.location)travelTo(entry.place);
-    else if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
-    else window.dispatchEvent(new CustomEvent('neo-rpg-focus-opportunities',{detail:{kind:entry.kind==='Tournament'||entry.kind==='Official event'?'tournament':'story'}}));
-    if(entry.place===state.location&&entry.npc&&currentPeople().includes(entry.npc))return;
-    if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
-   };
-   row.append(action);
-  }
-  daySection.append(row);
- }
+ return rows;
+}
+function openCalendar(){
+ const rows=calendarEntries().map(entry=>({
+  ...entry,
+  period:entry.slot===null?'Any period':periods[entry.slot],
+  placeName:places[entry.place][0],
+  canVisit:entry.day===state.day&&(entry.slot===null||entry.slot===state.slot)
+ }));
+ const renderer=window.NeoRpgOverworldModals;
+ if(!renderer?.renderCalendar?.($('calendarEntries'),{
+  day:state.day,location:state.location,locked:controlsLocked(),entries:rows
+ },entry=>{
+  // Recheck the calendar against the authoritative state before following a
+  // shortcut. Calendar recommendations never auto-play a scene or start a duel.
+  const valid=calendarEntries().some(item=>
+   item.day===entry.day&&item.slot===entry.slot&&item.place===entry.place&&
+   item.kind===entry.kind&&item.title===entry.title&&item.npc===entry.npc);
+  if(!valid||controlsLocked())return;
+  $('calendarDialog').close();
+  if(entry.place!==state.location)travelTo(entry.place);
+  else if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
+  else window.dispatchEvent(new CustomEvent('neo-rpg-focus-opportunities',{
+   detail:{kind:entry.kind==='Tournament'||entry.kind==='Official event'?'tournament':'story'}
+  }));
+  if(entry.place===state.location&&entry.npc&&currentPeople().includes(entry.npc))return;
+  if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
+ }))throw Error('The overworld calendar is unavailable.');
  $('calendarDialog').showModal();
 }
 // Keep the previous portrait on screen until its replacement is fully decoded.
@@ -2952,57 +2952,15 @@ function mandatoryClosureDue(){
  return !!MANDATORY&&MANDATORY_EVENTS.some(e=>e.kind==='season'&&!state.mandatoryEventState?.seen?.[e.id]&&state.day>=e.earliestDay);
 }
 function renderSeasonReport(){
- const root=$('endSeason');root.replaceChildren();
  const complete=EPILOGUE.completed(state)&&!mandatoryClosureDue();
- root.hidden=!complete;
- if(!complete)return;
- const r=EPILOGUE.report(state);
- root.className='campaign-complete season-finale';
- const heading=document.createElement('h2');heading.textContent=r.title;
- const preface=document.createElement('p');preface.className='finale-subtitle';
- preface.textContent='NEO HARBOR · SEASON '+r.run+' · DAY 90 / 90';
- const closing=document.createElement('p');closing.className='finale-closing';closing.textContent=r.closing;
- const numbers=document.createElement('div');numbers.className='finale-stats';
- const details=[['Duels',r.played],['Victories',r.wins],['Draws',r.draws],['Circuit points',r.points],['Stories',r.storyScenes],['Town encounters',r.encounters],['Side quests',r.sidequests],['Plans kept',r.appointments],['Special moments',r.situations],['Gallery memories',r.galleryEarned]];
- for(const [key,value] of details){
-  const cell=document.createElement('div');cell.className='finale-stat';
-  const count=document.createElement('strong');count.textContent=String(value);
-  const label=document.createElement('small');label.textContent=key;cell.append(count,label);numbers.append(cell);
- }
- const trophyTitle=document.createElement('h3');trophyTitle.textContent='Your tournament record';
- const trophies=document.createElement('div');trophies.className='finale-cups';
- for(const cup of r.cups){
-  const el=document.createElement('div');el.className='finale-cup '+(cup.status==='champion'?'is-champion':'');
-  el.textContent=cup.title+' · '+(cup.status==='champion'?'Champion':cup.status==='eliminated'?'Eliminated after '+cup.roundsWon+' victories':cup.status==='missed'||cup.status==='expired'?'Not completed':cup.status);
-  trophies.append(el);
- }
- const social=document.createElement('p');social.className='finale-social';
- social.textContent=r.partner?'A bond that continues: '+r.partner+'.':r.closest.length?'People you grew closest to: '+r.closest.map(x=>x.name).join(', ')+'.':'The people of Neo Harbor are still there for a return visit.';
- const footer=document.createElement('div');footer.className='finale-actions';
- const replay=document.createElement('button');replay.className='time-advance';
- replay.textContent='↻ Start New Game+ · archive this season';replay.onclick=()=>act('replay');
- const explanation=document.createElement('small');explanation.textContent='Replaying starts a fresh 90-day season. Reports and your selected deck preset carry over; credits, character bonds and brackets reset.';
- footer.append(replay,explanation);
- const history=JOURNEY.archive(state),past=document.createElement('div');
- past.className='finale-archive';
- const archiveHeading=document.createElement('h3');archiveHeading.textContent='Your earlier seasons';
- past.append(archiveHeading);
- if(!history.length){
-  const first=document.createElement('p');first.textContent='Your first season will be saved here when you choose New Game+.';past.append(first);
- }else for(const season of history){
-  const row=document.createElement('p');row.className='finale-archive-entry';
-  row.textContent='Season '+season.run+' · '+season.title+' · '+season.wins+' wins · '+season.points+' points · '+season.memories+' collected memories';
-  past.append(row);
- }
- if(r.seasonLessons?.length){
-  const lessons=document.createElement('section');lessons.className='finale-lessons';
-  const title=document.createElement('h3');title.textContent='What changed along the way';
-  lessons.append(title);
-  for(const line of r.seasonLessons){
-   const item=document.createElement('p');item.textContent=line;lessons.append(item);
-  }
-  root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,lessons,past,footer);
- }else root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,past,footer);
+ if(!window.NeoRpgOverworldModals?.renderSeason?.(
+  $('endSeason'),{
+   complete,
+   report:complete?EPILOGUE.report(state):null,
+   history:complete?JOURNEY.archive(state):[]
+  },
+  ()=>act('replay')
+ ))throw Error('The overworld season report is unavailable.');
 }
 
 let lastRenderedLocation=null;
@@ -3487,14 +3445,7 @@ function render(){
  notifyOverworldRendering();
 }
 
-$('deckStudioBtn').onclick=()=>{if(!controlsLocked()&&state.deckJourney?.starter){persist();location.assign('/rpg_deck_studio.html');}};
-$('statusBtn').onclick=()=>{
- window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar,disableTutorials);
- $('statusTutorialHelp').hidden=true;
- if(!state.gameplayTutorials?.disabled)tutorialEvent('status','statusTutorialHelp');
-};
 $('statusClose').onclick=()=>window.NeoRpgStatus.close();
-$('galleryBtn').onclick=openGallery;
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryBack').onclick=()=>{galleryCharacterPage='';$('galleryCharacter').value='';$('galleryCategory').value='cg';renderGallery();};
 $('galleryCharacter').onchange=()=>{galleryCharacterPage=$('galleryCharacter').value;renderGallery();};$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
@@ -3503,8 +3454,7 @@ $('preDuelNext').onclick=advancePreparedDuel;
 $('preDuelStart').onclick=launchPreparedDuel;
 $('preDuelSkip').onclick=launchPreparedDuel;
 $('preDuelDialog').addEventListener('cancel',e=>{e.preventDefault();cancelPreparedDuel();});
-$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
-$('save').onclick=async()=>{persist();const cloud=window.NeoRpgCloudSave?.isSignedIn?.();const ok=await window.NeoRpgCloudSave?.syncNow();$('notice').textContent=cloud?(ok?'Cloud campaign synced.':'Cloud sync pending. Progress is cached on this device until it reconnects.'):'Campaign saved in this browser.';};
+$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
 $('tutorialDismiss').onclick=()=>{tutorialQueue.shift();displayTutorial();};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if($('statusDialog')?.open)return;if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(scene.dialogue&&scene.index<scene.dialogue.length-1&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeArc&&!state.activeSideQuest){e.preventDefault();act('chatNext');}else if(state.mandatoryEventState?.active?.phase==='lines'){e.preventDefault();act('mandatoryNext');}else if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
