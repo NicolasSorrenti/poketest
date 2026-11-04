@@ -9,9 +9,9 @@
 @media(max-width:1050px){.scene{min-height:600px;height:650px}}
 @media(max-width:700px){.time-advance{font-size:11px;padding:10px 5px}.scene{height:580px;min-height:580px}.dialogue{bottom:10px;left:8px;right:8px;padding:12px;max-height:55%}.dialogue p{font-size:13px}.dialogue-title #speaker{font-size:20px}footer span{display:none}}
 @keyframes receiptEnter{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:700px){}
-@media(prefers-reduced-motion:reduce){}
-@media(max-width:700px){}
+
+
+
 
 /* Optional rivalry route */
 .arc-episode{background:linear-gradient(110deg,#5e3038,#242844);border-color:#f0a887;box-shadow:inset 3px 0 0 #f3bd91}
@@ -580,4 +580,4 @@ dialog.cg-lightbox{position:fixed;inset:0;width:100vw;max-width:none;height:100d
  .character-menu-description{font-size:11px}
  .character-actions.choice-menu .character-action-btn{min-height:39px;padding:8px 9px;font-size:12px}
 }
-@media(max-width:700px){}
+
