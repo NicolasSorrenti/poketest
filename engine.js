@@ -2290,7 +2290,7 @@ class Engine{
    return true;
   }
  }
-if(a.name==='Water Gun'&&/Does 10 damage plus 10 more damage for each Water Energy/i.test(t)){const paid=(a.cost||[]).filter(e=>e==='Water').length;dmg=10+Math.min(20,Math.max(0,this.energies(u).filter(e=>e==='Water').length-paid)*10)}
+if(a.name==='Water Gun'&&/Does 10 damage plus 10 more damage for each (?:Water )?Energy attached/i.test(t)){const typed=/for each Water Energy attached/i.test(t);const paid=typed?(a.cost||[]).filter(e=>e==='Water').length:(a.cost||[]).length;const attached=typed?this.energies(u).filter(e=>e==='Water').length:this.energies(u).length;dmg=10+Math.min(20,Math.max(0,attached-paid)*10)}
  if(a.name==='Hydro Pump'&&/Does 40 damage plus 10 more damage for each Water Energy/i.test(t)){dmg=40+Math.min(20,Math.max(0,this.energies(u).filter(e=>e==='Water').length-3)*10)}
  if(a.name==='Stretch Kick'&&/opponent.{0,10}Benched Pokémon/i.test(t)){
   let slot=benchTarget;

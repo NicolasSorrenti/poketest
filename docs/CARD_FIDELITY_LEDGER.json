@@ -4263,13 +4263,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Sharp Sickle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Sharp Sickle: printed FF 30, no secondary effect; ordinary damage route inspected; cost, Weakness/Resistance and KO reducer cases pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Absorb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Absorb: FFFF 40, heals half of actual damage after Weakness/Resistance rounded to nearest ten; classic_attack_extensions drain and headless healFromDamage route inspected; shield/zero damage and heal cap need execution."
+          ]
         }
       ]
     },
@@ -4282,13 +4288,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Water Gun: W 10+ with +10 per extra Energy (not restricted to Water), maximum +20; legacy engine previously recognized only 'Water Energy' template and failed to award Lapras bonus. Fixed legacy computation; dynamic DCE and cap pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Confuse Ray",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Confuse Ray: WW 10, heads Confusion; coin-status and status suppression source inspected, both outcomes and defender protection pending."
+          ]
         }
       ]
     },
@@ -4301,13 +4313,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Sonicboom",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Sonicboom: LC 20 ignores Weakness and Resistance, but post-W/R effects still apply; legacy ignoreWR route inspected; shield/defender effects pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Selfdestruct",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Selfdestruct: LLLL 100 Active, 20 all Bench, 100 self; self-KO, bench immunity, simultaneous prizes and W/R on Active require reducer validation."
+          ]
         }
       ]
     },
@@ -4320,13 +4338,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Wildfire",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Wildfire: F, may discard any number of attached Fire Energy to mill that many opponent deck cards; headless choice and index validation inspected, zero payment, short deck and legacy payment pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dive Bomb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Dive Bomb: FFFF 80 on heads, no damage on tails; coin-failure source inspected, prevention/KO and both outcomes pending."
+          ]
         }
       ]
     },
@@ -4339,13 +4363,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Sludge",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Sludge: GGG 30 and heads Poison; coin-status and status-block paths inspected; both outcomes and immunity pending."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Toxic Gas",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Toxic Gas: all other Pokémon Powers ignored while Muk is not Asleep, Confused or Paralyzed; classic_power_core and legacy continuousPower guards inspected; multiple Muk, status transitions and Powers triggered mid-attack pending."
+          ]
         }
       ]
     },
