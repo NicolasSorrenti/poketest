@@ -87,7 +87,7 @@
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=bridge-ready-fix-20261104"
+ "/rpg.js?v=state-deck-validation-20261104"
 ];
   function registry(packs){
     // Normalize the authenticated/API roster too (not just the generated file).
