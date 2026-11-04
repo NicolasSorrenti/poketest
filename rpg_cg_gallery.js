@@ -1070,6 +1070,21 @@
  const DAISY_ROUTES=[['daisy_route_1','The Trouble With First Impressions','Complete Daisy’s first card-shop event.'],['daisy_route_2','Layers','Complete Daisy’s fabric-sketch café event.'],['daisy_route_3','The Girl Behind the Glasses','Complete Daisy’s arcade event.'],['daisy_route_4','A Flower That Kept Growing','Complete Daisy’s park conversation.']];
  for(const [id,title,hint] of DAISY_ROUTES){const path='/rpg-assets/events/cg/season01/'+id+'.png';catalog.push({character:'daisy',id,category:'social',trigger:'story_milestone',sceneId:id,place:null,minAffection:0,startDay:1,slot:null,title,hint,scene:'Approved Daisy route illustration for '+title+'.',composition:'Approved landscape CG with full-frame composition.',outfit:'Use Daisy’s approved outfit from this scene.',expression:'Authored route expression.',environment:'Neo Harbor',mood:'story',fanservice:0,path,thumb:path,dialogueSafe:'full-frame composition'});}
 
+ // First contact is an ordinary Talk, not the Day 8 route event.
+ // Reuse the approved first-route illustration without unlocking that story.
+ catalog.push({
+  character:'lyla',id:'lyla_first_meeting',category:'profile',trigger:'meet',
+  place:null,minAffection:0,startDay:1,slot:null,title:'A Familiar Face at the Card Shop',
+  hint:'Meet Lyla for the first time while exploring town.',
+  scene:'Lyla compares rare cards at the shop counter, carrying a garment bag and her deck case.',
+  composition:'Approved first-route illustration reused for the introductory conversation.',
+  outfit:'Lyla\'s established casual card-shop outfit.',expression:'Quietly observant.',
+  environment:'Card shop',mood:'everyday',fanservice:0,
+  path:'/rpg-assets/characters/lyla/events/lyla_route_1.png',
+  thumb:'/rpg-assets/characters/lyla/events/lyla_route_1.png',
+  dialogueSafe:'full-frame composition'
+ });
+
  // Lyla Route 7 uses two already-approved images: the opening frame for
  // the first dialogue beat, then the existing final frame on her personal line.
  // Resolve the route and its final CG from the authorized character pack.
@@ -1242,7 +1257,8 @@
     (e.id==='akari_barb_swimsuit_fitting'&&e.path===FIT.cgs[0].path);
    // Authored character-pack slice and story CGs can use their original PNGs.
    const packEventPNG=['slice','story_milestone'].includes(e.trigger)&&e.path==='/rpg-assets/characters/'+e.character+'/events/'+e.id+'.png';
-   if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png'))&&!approvedAlias&&!packEventPNG)errors.push('Invalid asset path '+e.id);
+   const lylaIntroReuse=e.id==='lyla_first_meeting'&&e.path==='/rpg-assets/characters/lyla/events/lyla_route_1.png';
+   if(!e.path.endsWith(e.id+'.webp')&&!(e.randomForced&&e.path.endsWith(e.id+'.png'))&&!approvedAlias&&!packEventPNG&&!lylaIntroReuse)errors.push('Invalid asset path '+e.id);
   }
   return errors;
  }
