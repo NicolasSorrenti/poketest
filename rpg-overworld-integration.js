@@ -247,6 +247,9 @@
       #neoOverworldEvents .neo-ow-quest-journal .calendar-entry{margin:8px 0;font-size:12px;line-height:1.5;color:#eee}
       #neoOverworldBottom .neo-ow-guide-history{margin:8px 0;padding:11px;background:#251d38;border:1px solid #866c96;border-radius:10px}
       #neoOverworldBottom .neo-ow-guide-history>summary{cursor:pointer;font:700 13px system-ui;color:#f0cee9}
+      #neoOverworldBottom .neo-ow-guide-receipt{margin:12px 0;padding:11px;border:1px solid #a88ab5;border-radius:10px;background:#382846}
+      #neoOverworldBottom .neo-ow-guide-receipt p{margin:7px 0;font-size:12px;line-height:1.45}
+      #neoOverworldBottom .neo-ow-guide-receipt button{padding:7px 10px;border:1px solid #ac8dbc;border-radius:8px;background:#493354;color:#fff}
       #neoOverworldBottom .neo-ow-guide-history h4{margin:12px 0 5px;font:700 12px system-ui}
       #neoOverworldBottom .neo-ow-guide-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
       #neoOverworldBottom .neo-ow-guide-stat{display:flex;justify-content:space-between;gap:8px;margin:0;padding:8px;background:#382b47;border-radius:8px;font-size:11px}
