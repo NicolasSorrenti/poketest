@@ -669,3 +669,17 @@ No open card-fidelity PR found at start; earlier #440 already merged. Exactly fi
 | [Ditto Fossil #3](https://limitlesstcg.com/cards/FO/3) (`base3-3`) | Transform Active-only, copies Defending Pokémon except evolution and own Power, flexible attached Energy. `effectiveCard` and payment handling inspected; test dynamic HP/KO, status suppression, mirrored Ditto and energy costs. | **partial** |
 
 **Validation:** source inspection only, not reducer execution. Historical rulings not independently exhausted. No card promoted to fully verified. Continue with next unreviewed printings or revisit these partials with actual scenarios.
+
+## 2026-11-04 — Fossil #4–8 (five printings; source/print review, one legacy fix)
+
+At start, PR #440 was previously merged; no open card-fidelity audit PR was found. Compared printed Fossil English text recorded in `cards/base3.json` and reference [Fossil listings](https://limitlesstcg.com/cards/FO) with `classic_power_core.js`, `headless_duel.js`, and `engine.js`. This is a source/text review, **not full reducer or browser validation**. All five remain partial.
+
+| Printing | Effects and findings | Status |
+| --- | --- | --- |
+| [Dragonite #4](https://limitlesstcg.com/cards/FO/4) `base3-4` | Step In once during own turn from Bench; Slam four Colorless, two 40× coin flips. Core once-use and Bench switch paths inspected; legacy Step In once-use and attack flips not executed. | **partial** |
+| [Gengar #5](https://limitlesstcg.com/cards/FO/5) `base3-5` | Curse can move one opposing damage counter to another **even if KO**; core correctly permits KO. **Confirmed legacy mismatch**: `engine.js` disallowed lethal destination in `curse()` and UI, and omitted KO processing. Corrected all three. Dark Mind 30 Active + 10 chosen opponent Bench. | **partial** pending runtime confirmation |
+| [Haunter #6](https://limitlesstcg.com/cards/FO/6) `base3-6` | Transparency prevents all effects on heads and ceases only while Asleep; headless shield and Nightmare 10 + Sleep inspected. Test effect-only attacks and full prevention, plus status/KO. | **partial** |
+| [Hitmonlee #7](https://limitlesstcg.com/cards/FO/7) `base3-7` | Stretch Kick FF, 20 chosen opposing Bench; High Jump Kick FFF, 50 Active. Legacy Bench target/no-Bench checks inspected; actual reducer and shields pending. | **partial** |
+| [Hypno #8](https://limitlesstcg.com/cards/FO/8) `base3-8` | Prophecy P, reorder up to three top cards of either deck; Dark Mind PPP, 30 Active + 10 chosen Bench. Headless choice validation inspected; reorder legality, short decks and visibility untested. | **partial** |
+
+No new tests, suites or CI configuration. Full historical ruling survey, deterministic real reducer scenarios, browser behavior and check results are required before any verified designation. Prior source-level partials remain outstanding.
