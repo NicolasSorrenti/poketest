@@ -803,3 +803,18 @@ The previous audit PR [#492](https://github.com/NicolasSorrenti/poketest/pull/49
 | `base3-43` Slowbro | Psyshock PP: 20, heads Paralysis. Strange Behavior is activated in `classic_power_core.js`: select damaged friendly source and transfer one counter to Slowbro without KO. Need repeat use, status suppression, legal source, bench, 50/60 damage threshold, and timing checks. | partial |
 
 No gameplay fix confirmed. No test files, suites, or CI changed. A full ledger recount after this update yields **317 partial**, **805 unreviewed**, **1 verified**, **1122 not fully verified**, total 1123. The single verified printing predates this batch and has not been revalidated here.
+
+
+## 2026-11-04 — Current-engine Fossil #44–48 (five distinct printings)
+
+At start [PR #440](https://github.com/NicolasSorrenti/poketest/pull/440) and [PR #496](https://github.com/NicolasSorrenti/poketest/pull/496) were merged; no open fidelity PR was returned. The current authority is `classic_local_service.js` → `headless_duel.js`, reached from the live match and RPG bridge. Source evidence: `cards/base3.json`, `attack_effects_core.js`, `classic_attack_extensions.js`, and `headless_duel.js`. **This pass did not execute reducer/browser scenarios or independently confirm historical rulings, so none is fully verified.**
+
+| Printing | Active-engine source findings and gaps | Status |
+| --- | --- | --- |
+| `base3-44` Tentacruel | Supersonic W, zero damage + heads Confusion; Jellyfish Sting WW, 10 + automatic Poison. `coin-status` and `status` compiler families. Need both coin outcomes, status interactions, W/R, legality. | partial |
+| `base3-45` Weezing | Smog GG, 20 + heads Poison; Selfdestruct GGC, 60 Active, 10 each Bench, 60 self. `bench-both-recoil` family. Need simultaneous KOs, Bench shields, prizes and payment. | partial |
+| `base3-46` Ekans | Spit Poison G, zero + heads Poison; Wrap CG, 20 + heads Paralysis. Both `coin-status`; need heads/tails, W/R and status replacement. | partial |
+| `base3-47` Geodude | Stone Barrage FC, 10 per heads until first tails. Dedicated `coins-until-tails` compiler and resolver with 1000-head safety limit. Need deterministic sequences and cost/defense cases. | partial |
+| `base3-48` Grimer | Nasty Goo C, 10 + heads Paralysis; Minimize G, 20 less incoming damage after W/R on opponent's next turn. `coin-status` and `damage-shield` compiler families; `headless_duel.js` subtracts `shield.reduce` after W/R. Need 0/10/20/30 damage, switch, expiry, non-damage effects, stacking. | partial |
+
+No current-engine defect confirmed, no gameplay or tests/CI changed. Ledger recount: **322 partial, 800 unreviewed, 1 verified**, **1122 not fully verified** of 1123. The single previously verified printing was not revalidated here.
