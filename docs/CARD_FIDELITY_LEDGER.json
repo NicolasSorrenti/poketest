@@ -4017,13 +4017,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Stun Spore",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed Jungle #63 Stun Spore G 10 + heads Paralysis and Leech Life GC 10 healing equal to final damage checked against Serebii/Bulbapedia.",
+            "Classic compiler coin-status and drain match; headless healFromDamage uses final dmg; legacy drainDamage uses final dmg. No actual reducer execution, WotC interaction or protection tests."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Leech Life",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed Jungle #63 Stun Spore G 10 + heads Paralysis and Leech Life GC 10 healing equal to final damage checked against Serebii/Bulbapedia.",
+            "Classic compiler coin-status and drain match; headless healFromDamage uses final dmg; legacy drainDamage uses final dmg. No actual reducer execution, WotC interaction or protection tests."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
@@ -4034,7 +4044,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Jungle #64 Poké Ball: heads permits search for any Pokémon card, reveal, hand, shuffle; tails no search. Catalogue restricts to Basic/Evolution, equivalent to Pokémon-card types.",
+            "classic_trainer_core.js coin search and selection inspectable, including optional selection and deck shuffle. Flip persistence, failed search, empty deck, visibility and UI not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
@@ -4047,13 +4062,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Wing Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #1 Aerodactyl Wing Attack CCC 30; Prehistoric Power forbids playing Evolutions while active unless asleep/confused/paralyzed.",
+            "headless evolve checks powerInPlay and legacy evolve checks continuousPower. Evolution into play via alternate effects, fossil evolution status and power suppression not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Prehistoric Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #1 Aerodactyl Wing Attack CCC 30; Prehistoric Power forbids playing Evolutions while active unless asleep/confused/paralyzed.",
+            "headless evolve checks powerInPlay and legacy evolve checks continuousPower. Evolution into play via alternate effects, fossil evolution status and power suppression not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
@@ -4066,13 +4091,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Freeze Dry",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #2 Articuno Freeze Dry WWW 30 + heads Paralysis; Blizzard WWWW 50 and heads opponent/tails own Bench 10, no W/R.",
+            "attack_effects_core.js bench-splash-coin resolves heads/opponent vs tails/self; headless hitBench dispatch and legacy coinBenchSpread inspected. Simultaneous KO, protection, full/empty Bench and real flip not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Blizzard",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #2 Articuno Freeze Dry WWW 30 + heads Paralysis; Blizzard WWWW 50 and heads opponent/tails own Bench 10, no W/R.",
+            "attack_effects_core.js bench-splash-coin resolves heads/opponent vs tails/self; headless hitBench dispatch and legacy coinBenchSpread inspected. Simultaneous KO, protection, full/empty Bench and real flip not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
@@ -4085,7 +4120,12 @@
           "kind": "power",
           "index": 0,
           "name": "Transform",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #3 Ditto Transform copies Defending Pokémon only while Active, including stats, attacks and flexible attached Energy; disabled while statused; cannot evolve.",
+            "headless effectiveCard and attack payment special handling inspected; classic_power_core passive registration. Transformation identity, HP/KO recalculation, energy payment, opponent Ditto and status interactions not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
