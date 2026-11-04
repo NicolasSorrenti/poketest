@@ -21,79 +21,31 @@
 <link rel="stylesheet" href="/rpg_status.css?v=3">
 <link rel="stylesheet" href="/rpg_cg_viewer.css?v=1">
 
-<style>
-/* The overworld owns the screen. Hide only the internal controller chrome,
-   not modal dialogs (starter selection, decks, gallery, cloud sign-in, etc.). */
-body > #app > .topbar,
-body > #app > .utilitybar,
-body > #app > .layout,
-body > #app > .duel-receipt,
-body > #app > footer { visibility: hidden !important; }
-</style>
+
 </head>
 <body>
 <div id="rpgCloudBoot" role="status" aria-live="polite"><span class="rpg-cloud-boot-spinner" aria-hidden="true"></span><strong>Loading cloud campaign…</strong><span>Checking your saved progress before entering Neo Harbor.</span></div>
-<div id="app">
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-top">NEO <em>HARBOR</em></div>
-      <div class="brand-sub">THE POKÉMON TCG SEASON · A STORY IN 90 DAYS</div>
-    </div>
-    <section class="season-widget" aria-label="Campaign progress">
-      <div class="season-line"><span id="chapterLabel">CHAPTER I · NEW FACES</span><span id="weekdayLabel">MON · WEEK 1</span></div>
-      <div class="season-progress"><span id="campaignFill"></span></div>
-      <small>YOUR 90-DAY CHAMPIONSHIP SEASON</small>
-    </section>
-    <section class="clock" aria-label="Game date and time">
-      <div class="date-line"><b id="day">DAY 01 / 90</b><span id="period">MORNING</span></div>
-      <div class="time-track" id="timeTrack"></div>
-      <small id="timeHint">Next: Afternoon · ⏳</small>
-    </section>
-    <div class="rpg-topbar-actions"><button id="cloudSaveButton" class="toolbar-btn cloud-save-button" type="button" title="Cloud save account">☁ SIGN IN</button><button id="save" class="save-btn" type="button" title="Save your campaign">▣ SAVE</button></div>
-  </header>
-
-  <div class="utilitybar">
-    <div class="utility-left"><span class="live-dot"></span><span>NEO HARBOR · TOWN EXPLORATION</span><span class="utility-sep">/</span><span id="notice" aria-live="polite">Travel & talk are free · ⏳ actions advance time</span></div>
-    <div class="utility-actions">
-      <button id="statusBtn" class="toolbar-btn status-launch" type="button" aria-haspopup="dialog" aria-controls="statusDialog">♥ STATUS</button>
-      <button id="deckStudioBtn" class="toolbar-btn" type="button">▣ DECK STUDIO</button>
-      <button id="calendarBtn" class="toolbar-btn" type="button">▦ CALENDAR</button>
-      <details class="rpg-more-menu" id="rpgMoreMenu">
-        <summary class="toolbar-btn" aria-label="More RPG tools">⋯ MORE</summary>
-        <div class="rpg-more-content" aria-label="More RPG tools">
-          <button id="galleryBtn" class="toolbar-btn" type="button">▧ ART GALLERY</button>
-          <a href="/rpg_card_library.html?from=rpg" class="toolbar-btn">▤ CARD LIBRARY</a>
-          <a href="/mat_generator.html" target="_blank" rel="noopener" class="toolbar-btn">▧ PLAYMAT STUDIO</a>
-          <details class="rpg-audio-settings">
-        <summary id="rpgSoundLabel" aria-label="Sound settings">♫ SOUND</summary>
-        <div class="rpg-audio-menu" aria-label="Audio preferences">
-          <button id="rpgSoundToggle" type="button" aria-pressed="true">SFX ON</button>
-          <label for="rpgSoundVolume">VOLUME
-            <input id="rpgSoundVolume" type="range" min="0" max="100" step="5" value="35" aria-label="Sound effects volume">
-          </label>
-          <label class="rpg-audio-ambience" for="rpgAmbienceToggle">
-            <input id="rpgAmbienceToggle" type="checkbox"> AMBIENCE
-          </label>
-          <small>Audio starts when you interact. Ambience is optional.</small>
-        </div>
-      </details>
-        </div>
-      </details>
-      <button id="rpgDiscreetToggle" class="toolbar-btn" type="button" aria-pressed="false" title="Hide character and event illustrations">◇ DISCREET OFF</button>
-      <button id="quickHome" class="toolbar-btn" type="button">⌂ GO HOME</button>
-      <button id="quickNext" class="time-advance" type="button">▶ NEXT PERIOD · ⏳</button>
-    </div>
-  </div>
-
-  <section class="duel-receipt" id="duelReceipt" role="status" aria-live="polite" hidden>
-    <span class="receipt-icon" aria-hidden="true">★</span>
-    <div class="receipt-copy"><strong id="receiptTitle"></strong><p id="receiptDetails"></p></div>
-    <button id="dismissReceipt" type="button">Continue exploring →</button>
-  </section>
-
-  <!-- State-only input retained for saved deck compatibility; no hidden
-       map, sidebar or retired RPG navigation DOM is rendered. -->
-  <div id="neoRpgDeckState" hidden><select id="deckPicker" aria-label="Saved RPG deck"></select></div>
+<!-- Retained controller services. These elements are not a second RPG UI:
+     visible navigation, VN dialogue and the map belong to the overworld. -->
+<div id="neoRpgRuntimeControls" hidden aria-hidden="true">
+ <button id="cloudSaveButton" type="button">☁ SIGN IN</button>
+ <button id="save" type="button">SAVE</button>
+ <span id="notice" role="status" aria-live="polite"></span>
+ <button id="statusBtn" type="button">STATUS</button>
+ <button id="deckStudioBtn" type="button">DECK STUDIO</button>
+ <button id="calendarBtn" type="button">CALENDAR</button>
+ <button id="galleryBtn" type="button">ART GALLERY</button>
+ <span id="rpgSoundLabel">♫ SOUND</span>
+ <button id="rpgSoundToggle" type="button">SFX ON</button>
+ <input id="rpgSoundVolume" type="range" min="0" max="100" step="5" value="35">
+ <input id="rpgAmbienceToggle" type="checkbox">
+ <button id="rpgDiscreetToggle" type="button" aria-pressed="false">DISCREET OFF</button>
+ <section id="duelReceipt" hidden>
+  <strong id="receiptTitle"></strong>
+  <p id="receiptDetails"></p>
+  <button id="dismissReceipt" type="button">Continue exploring</button>
+ </section>
+ <select id="deckPicker" aria-label="Saved 60-card RPG deck"></select>
 </div>
 
 <!-- The overworld instantiates this dedicated story stage before the RPG controller loads. -->
