@@ -12,7 +12,7 @@
    $('duelLoadingSpinner').hidden=true;
    $('duelLoadingRetry').hidden=false;
    $('duelLoadingBack').hidden=false;
-   $('duelLoadingBack').href=rpgMode?'/rpg.html':cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):cubeSoloMode?'/cube.html':'/play.html';
+   $('duelLoadingBack').href=rpgMode?'/rpg-overworld.html':cubeRoomCode?'/cube_room.html?room='+encodeURIComponent(cubeRoomCode):cubeSoloMode?'/cube.html':'/play.html';
    return;
   }
   loading.hidden=true;

@@ -8,6 +8,8 @@
     if(!mapToggle)return;
     const open=document.createElement('button');open.type='button';open.id='neoOverworldLaunch';open.className='toolbar-btn';open.textContent='◈ OVERWORLD';open.title='Explore your current location on the overworld map';
     mapToggle.insertAdjacentElement('afterend',open);
+    // Programmatic startup trigger only: never expose a second RPG presentation.
+    open.hidden=true;open.tabIndex=-1;open.setAttribute('aria-hidden','true');
     const overlay=document.createElement('section');
     overlay.id='neoOverworldOverlay';overlay.hidden=true;overlay.setAttribute('aria-label','Explore Neo Harbor overworld');
     Object.assign(overlay.style,{position:'fixed',inset:'0',zIndex:'9998',background:'#101021',display:'none',flexDirection:'column',color:'#fff',fontFamily:'system-ui,sans-serif'});
@@ -248,7 +250,6 @@
       ['✧ Save Game',()=>document.getElementById('save')?.click()],
       ['◇ Discreet / Chibi Mode',()=>{toggleChibiPreference();refresh();}],
       ['⌾ Travel',()=>openSheet('travel')],
-      ['← Original RPG',()=>dismiss()],
       ['↻ Reset Campaign',()=>{const reset=bridge()?.resetCampaign;if(typeof reset==='function')void reset();else showNotice('Campaign reset is not available. Reload the page and try again.');}]
     ];
     for(const [label,action] of menuItems){
@@ -262,7 +263,6 @@
     // Every existing event listener and rendered state stays attached to the same nodes.
     const stage=document.querySelector('.stage-panel');
     const stageHome=stage?.parentNode;
-    const stageNext=stage?.nextSibling||null;
     // Overworld-only presentation: scene portraits and CGs above the map;
     // original dialogue and choice DOM stays live, without its old room backdrop.
     const visualStyle=document.createElement('style');
@@ -1276,8 +1276,7 @@
     }
     function hideStory(){
       if(!stageHome||!stage)return;
-      // Never reparent stage back to the classic layout between conversations.
-      // Only explicit dismiss() restores it after hiding the overworld overlay.
+      // Keep the controller's story stage mounted in the overworld across conversations.
       if(storyDock)storyDock.hidden=true;
       lockMapForStory(false);
       portraitWindow?.reset();lastPortraitSignature='';
@@ -1443,20 +1442,6 @@
       }else syncNpcIndicators();
       note.hidden=true;
     }
-    function dismiss(){
-      interactionFocus=null;
-      restoreChoicePanels();
-      closeSheet();hideMenu();hideEvents();hideDeck();suspendedForDuel=false;hideStory();
-      // Only an explicit return to the classic interface restores its stage.
-      if(stage&&stageHome&&stage.parentNode===storyDock){
-        if(stageNext&&stageNext.parentNode===stageHome)stageHome.insertBefore(stage,stageNext);
-        else stageHome.append(stage);
-        stage.removeAttribute('style');
-      }
-      overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());
-      overlay.classList.remove('neo-ow-activity-open');
-      overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
-    }
     open.addEventListener('click',()=>{attachChoicePanels();refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();syncPoseTriggerQueue();syncDuel();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{syncChibiButton();syncChibiMode();});
     function performTravel(target){
@@ -1486,7 +1471,7 @@
         if(poseTrigger){void playPoseTrigger(poseTrigger,message.src);return}
         // Capture the explicitly tapped NPC before the native engine renders.
         interactionFocus=message.id;
-        if(!showStory())dismiss();
+        if(!showStory()){showNotice('The story view is unavailable; reload to retry without losing progress.');return;}
         if(!bridge()?.interact(message.id)){
           interactionFocus=null;hideStory();showNotice('Character interaction is not currently available.');
         }else queueStorySync();
@@ -1522,7 +1507,7 @@
         backdrop.onclick=closeActivities;
         for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{
           closeActivities();
-          if(!showStory())dismiss();
+          if(!showStory()){showNotice('The story view is unavailable; reload to retry without losing progress.');return;}
           if(!bridge()?.activity(a.id)){hideStory();showNotice('Activity no longer available.');}
           else queueStorySync();
         };panel.append(button);}
@@ -1534,7 +1519,7 @@
       if(overlay.classList.contains('neo-ow-has-choices')&&!overlay.classList.contains('neo-ow-choices-collapsed')&&!overlay.classList.contains('neo-ow-paging')){
         event.preventDefault();setChoicesCollapsed(true);syncChoicePresentation(false);return;
       }
-      if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
+      if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}event.preventDefault();});
     // Battles run in the original full-screen duel layer. Resume the map as soon as
     // its battle layer closes, without restarting the campaign or changing saves.
     const duel=document.getElementById('duel');
