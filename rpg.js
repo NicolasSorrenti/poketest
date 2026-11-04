@@ -2131,21 +2131,22 @@ function controlsLocked({allowStarterIntro=false}={}){
 }
 function showStarterChoice(){
  if(controlsLocked({allowStarterIntro:true}))return;
- const root=$('starterChoices');root.replaceChildren();
- for(const starter of COLLECT.starters){
-  const button=document.createElement('button');button.className='starter-choice';
-  const heading=document.createElement('strong');heading.textContent=starter.name+' · '+starter.types.join(' / ');
-  const detail=document.createElement('small');detail.textContent=starter.description+' · 60 cards · 20 Pokémon / 16 Trainers / 24 Energy';
-  button.append(heading,detail);
-  button.onclick=()=>{
-   if(controlsLocked({allowStarterIntro:true}))return;
-   try{COLLECT.choose(state,starter.id);log('Chose '+starter.name+' as your first deck.');persist();
-    if($('starterDialog').open)$('starterDialog').close();
-    say('Narrator','Your '+starter.name+' deck is ready. The Lucky Draw has two free welcome mini packs waiting for you—choose from three different types. Later packs unlock as you explore; old ones are still worth opening.');
-   }catch(e){$('notice').textContent=e.message;}
-  };
-  root.append(button);
- }
+ const starters=COLLECT.starters.map(starter=>({
+  id:starter.id,
+  label:starter.name+' · '+starter.types.join(' / '),
+  description:starter.description+' · 60 cards · 20 Pokémon / 16 Trainers / 24 Energy'
+ }));
+ if(!window.NeoRpgOverworldCollection?.renderStarters?.($('starterChoices'),starters,id=>{
+  if(controlsLocked({allowStarterIntro:true}))return;
+  const starter=COLLECT.starters.find(item=>item.id===id);
+  if(!starter)return;
+  try{
+   COLLECT.choose(state,starter.id);
+   log('Chose '+starter.name+' as your first deck.');persist();
+   if($('starterDialog').open)$('starterDialog').close();
+   say('Narrator','Your '+starter.name+' deck is ready. The Lucky Draw has two free welcome mini packs waiting for you—choose from three different types. Later packs unlock as you explore; old ones are still worth opening.');
+  }catch(error){$('notice').textContent=error.message;}
+ }))throw Error('The overworld starter deck presenter did not load.');
  if(!$('starterDialog').open)$('starterDialog').showModal();
 }
 function openBoosterShop(){
