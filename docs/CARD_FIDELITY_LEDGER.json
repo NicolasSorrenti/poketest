@@ -5199,13 +5199,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Supersonic's Water cost and heads-only Confusion compile as coin-status (0 damage); Jellyfish Sting's WW cost, 10 damage and guaranteed Poison compile as status. Need reducer outcomes, status replacement, prevention, Weakness/Resistance, Energy legality.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Jellyfish Sting",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Supersonic's Water cost and heads-only Confusion compile as coin-status (0 damage); Jellyfish Sting's WW cost, 10 damage and guaranteed Poison compile as status. Need reducer outcomes, status replacement, prevention, Weakness/Resistance, Energy legality.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
@@ -5218,13 +5228,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Smog",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Smog GG 20 and heads Poison uses coin-status; Selfdestruct GGC 60, 10 damage each Bench and 60 self uses bench-both-recoil. Need simultaneous KOs, Bench shields, prize sequence, self-damage and typed cost.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Selfdestruct",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Smog GG 20 and heads Poison uses coin-status; Selfdestruct GGC 60, 10 damage each Bench and 60 self uses bench-both-recoil. Need simultaneous KOs, Bench shields, prize sequence, self-damage and typed cost.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
@@ -5237,13 +5257,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Spit Poison",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Spit Poison G is zero-damage heads Poison; Wrap CG is 20 plus heads Paralysis; both map to coin-status. Need heads/tails, statuses, W/R and mixed Energy payment.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Wrap",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Spit Poison G is zero-damage heads Poison; Wrap CG is 20 plus heads Paralysis; both map to coin-status. Need heads/tails, statuses, W/R and mixed Energy payment.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
@@ -5256,7 +5286,12 @@
           "kind": "attack",
           "index": 0,
           "name": "Stone Barrage",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Stone Barrage FC is 10 per consecutive heads until first tails, compiled by classic_attack_extensions.js coins-until-tails; resolver loops until tails with 1000-head safety bound. Need deterministic 0/1/multiple heads, bounded RNG, W/R, Energy payment.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
@@ -5269,13 +5304,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Nasty Goo",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Nasty Goo C is 10 plus heads Paralysis (coin-status); Minimize G is 20 damage reduction after W/R for next opposing turn, via classic_attack_extensions.js damage-shield. Need 0/10/20/30 damage, attack effects through reduction, turn expiry, switch, stacking, status and legality.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Minimize",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Nasty Goo C is 10 plus heads Paralysis (coin-status); Minimize G is 20 damage reduction after W/R for next opposing turn, via classic_attack_extensions.js damage-shield. Need 0/10/20/30 damage, attack effects through reduction, turn expiry, switch, stacking, status and legality.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
