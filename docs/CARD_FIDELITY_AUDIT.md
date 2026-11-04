@@ -697,3 +697,19 @@ At start, PR #440 was already merged and prior Fossil PR #455 was open. Eight ex
 | [Muk Fossil #13](https://limitlesstcg.com/cards/FO/13) `base3-13` | Sludge GGG 30 and heads Poison; Toxic Gas suppresses other Powers while Muk unaffected by Asleep/Confused/Paralyzed. Validate status transitions, multi-Muk and simultaneous Powers. | **partial** |
 
 No new test files, suites or CI changes. Existing GitHub Actions checks on the new batch are required before merging. Neither code inspection nor CI success by itself promotes any printing to verified.
+
+## 2026-11-04 — Fossil #14–18 (five distinct printings; source/text audit)
+
+At start, prior audit PR [#456](https://github.com/NicolasSorrenti/poketest/pull/456) was open. Its head `22ee12bd1bf5484652bc331df266b3b08f3647a8` had eight completed, successful existing GitHub Actions workflows and the branch was three commits ahead of main without divergence; squash-merged safely as [`54474840`](https://github.com/NicolasSorrenti/poketest/commit/54474840b7184c51a9420c26e000ee05f9be3776). PR #440 and #455 were already merged. The independent Apex PR #457 was left untouched.
+
+This batch compares the printed text stored in `cards/base3.json` against the relevant `attack_effects_core.js`, `classic_attack_extensions.js`, `classic_power_core.js`, `headless_duel.js` and `engine.js` paths. Source inspection only: **no deterministic reducer execution, complete historical rulings review or full game interaction validation**, so all five are **partial** and none is verified.
+
+| Printing | Inspected behavior and remaining validation | Status |
+| --- | --- | --- |
+| [Raichu #14](https://limitlesstcg.com/cards/FO/14) `base3-14` | Gigashock LLLL 30 Active plus 10 each to up to three distinct opposing Bench targets; legacy `benchSpreadChoose` and headless Bench choice path inspected. Verify selection with 0–5 Bench, protections, and KO ordering. | **partial** |
+| [Zapdos #15](https://limitlesstcg.com/cards/FO/15) `base3-15` | Thunderstorm LLLL 40 Active, one coin per opponent Bench, 20 each heads, 10 self per tails; classic extension resolver inspected. Verify independent flips, empty Bench, self-KO, and prevention. | **partial** |
+| [Aerodactyl #16](https://limitlesstcg.com/cards/FO/16) `base3-16` | Wing Attack CCC 30; Prehistoric Power blocks playing Evolution cards while unaffected by special conditions. Headless evolution guard and passive power registration inspected. Verify all evolution routes and suppression. | **partial** |
+| [Articuno #17](https://limitlesstcg.com/cards/FO/17) `base3-17` | Freeze Dry WWW 30 + heads Paralysis; Blizzard WWWW 50 + heads opposing/tails own Bench 10. Coin-status and bench-splash compiler inspected. Verify both flips, damage shields and simultaneous KOs. | **partial** |
+| [Ditto #18](https://limitlesstcg.com/cards/FO/18) `base3-18` | Transform Active-only dynamic copy and flexible attached Energy, except retains Power and cannot evolve; headless `effectiveCard` and legacy dynamic copy inspected. Verify HP change, status suppression, mirrored Ditto, evolution and payment. | **partial** |
+
+No confirmed engine defect in this batch, and no new tests, suites or CI changes. Ledger and notes committed directly to main. After this batch, **292 / 1,123 printings have at least partial evidence, 831 have no review evidence, and 0 are fully certified; 1,123 remain not fully verified**. Future executions should prioritize completing prior partial records with deterministic runtime evidence rather than repeatedly treating source inspection as certification.
