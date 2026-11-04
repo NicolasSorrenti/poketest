@@ -68,7 +68,6 @@
  "/rpg_audio.js",
  "/rpg_time_transitions.js?v=rpg-scene-wipe-20261031-1",
  "/rpg_render_perf.js",
- "/rpg_ui_motion.js",
  "/rpg_character_motion.js",
  "/rpg_scene_cast.js?v=two-voice-window-20261029",
  "/rpg_event_invites.js?v=1",
