@@ -1322,9 +1322,32 @@ function runOverworldGuideAction(kind,id){
  }
  return false;
 }
+// Direct commands for the overworld menu; no invisible legacy button proxies.
+function openStatusPanel(){
+ window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar,disableTutorials);
+ $('statusTutorialHelp').hidden=true;
+ if(!state.gameplayTutorials?.disabled)tutorialEvent('status','statusTutorialHelp');
+}
+async function saveCampaign(){
+ persist();
+ const cloud=window.NeoRpgCloudSave?.isSignedIn?.();
+ let ok=false;
+ try{ok=!!(await window.NeoRpgCloudSave?.syncNow?.());}
+ catch(error){console.warn('Explicit RPG cloud save failed',error);}
+ const message=cloud?
+  (ok?'Cloud campaign synced.':'Cloud sync pending. Progress is cached on this device until it reconnects.'):
+  'Campaign saved in this browser.';
+ $('notice').textContent=message;
+ window.dispatchEvent(new CustomEvent('neo-rpg-save-status',{detail:{message,ok:!cloud||ok}}));
+ return !cloud||ok;
+}
 // Public command/query boundary between RPG state and its overworld presenter.
 window.NeoRpgOverworldBridge=Object.freeze({
  resetCampaign,
+ openStatus:openStatusPanel,
+ openGallery,
+ openCalendar,
+ saveCampaign,
  guide:overworldGuide,
  guideAction:runOverworldGuideAction,
  opportunities:overworldOpportunities,
@@ -3422,14 +3445,7 @@ function render(){
  notifyOverworldRendering();
 }
 
-$('deckStudioBtn').onclick=()=>{if(!controlsLocked()&&state.deckJourney?.starter){persist();location.assign('/rpg_deck_studio.html');}};
-$('statusBtn').onclick=()=>{
- window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar,disableTutorials);
- $('statusTutorialHelp').hidden=true;
- if(!state.gameplayTutorials?.disabled)tutorialEvent('status','statusTutorialHelp');
-};
 $('statusClose').onclick=()=>window.NeoRpgStatus.close();
-$('galleryBtn').onclick=openGallery;
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryBack').onclick=()=>{galleryCharacterPage='';$('galleryCharacter').value='';$('galleryCategory').value='cg';renderGallery();};
 $('galleryCharacter').onchange=()=>{galleryCharacterPage=$('galleryCharacter').value;renderGallery();};$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
@@ -3438,8 +3454,7 @@ $('preDuelNext').onclick=advancePreparedDuel;
 $('preDuelStart').onclick=launchPreparedDuel;
 $('preDuelSkip').onclick=launchPreparedDuel;
 $('preDuelDialog').addEventListener('cancel',e=>{e.preventDefault();cancelPreparedDuel();});
-$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
-$('save').onclick=async()=>{persist();const cloud=window.NeoRpgCloudSave?.isSignedIn?.();const ok=await window.NeoRpgCloudSave?.syncNow();$('notice').textContent=cloud?(ok?'Cloud campaign synced.':'Cloud sync pending. Progress is cached on this device until it reconnects.'):'Campaign saved in this browser.';};
+$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
 $('tutorialDismiss').onclick=()=>{tutorialQueue.shift();displayTutorial();};
 $('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if($('statusDialog')?.open)return;if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(scene.dialogue&&scene.index<scene.dialogue.length-1&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeArc&&!state.activeSideQuest){e.preventDefault();act('chatNext');}else if(state.mandatoryEventState?.active?.phase==='lines'){e.preventDefault();act('mandatoryNext');}else if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
