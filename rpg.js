@@ -2555,7 +2555,7 @@ function rpgV2Expression(id,emotion='neutral'){
  const name=[...RPG_V2_MOODS,...RPG_V2_BATTLE].includes(key)?key:(RPG_V2_MOOD_ALIASES[key]||'neutral');
  return '/rpg-assets/characters/'+id+'/expressionsv2/'+name+'.png';
 }
-const ART_TYPES=[{id:'cg',label:'CGs'},{id:'expressions',label:'Expressions'},{id:'battle',label:'Battle art'},{id:'outfits',label:'Outfits'}];
+const ART_TYPES=[{id:'cg',label:'CGs'},{id:'expressions',label:'Expressions'},{id:'battle',label:'Battle art'},{id:'outfits',label:'Outfits'},{id:'photoshoot',label:'Photoshoots'}];
 const artEntries=new Map();
 const artSeen=state.artSeen&&typeof state.artSeen==='object'&&!Array.isArray(state.artSeen)?state.artSeen:(state.artSeen={});
 const artViewed=state.artViewed&&typeof state.artViewed==='object'&&!Array.isArray(state.artViewed)?state.artViewed:(state.artViewed={});
@@ -2569,7 +2569,7 @@ function buildArtEntries(){
   if(/\/(?:expression-portraits|expression-faces|vn-expressions|expressions)\//.test(path))return;
   const key=artKey(path);
   if(artEntries.has(key))return;
-  artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artViewed[key]});
+  artEntries.set(key,{id,type,label,path:key,unlocked:type==='photoshoot'||!!artSeen[key],title:label,viewed:!!artViewed[key]});
  };
  for(const item of window.NeoRpgArtManifest||[])if(cast[item.id])register(item.id,item.type,item.title,item.path);
  for(const id of RPG_V2_IDS)if(cast[id]){
@@ -2618,7 +2618,7 @@ $('battle')?.addEventListener('load',()=>{
 });
 buildArtEntries();
 function showOtherArt(entry){
- if(!artSeen[entry.path])return;
+ if(!entry.unlocked)return;
  if(!galleryViewer){galleryOpenViewer({...entry,unlocked:true,character:entry.id,thumb:entry.path});return;}
  const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
  if(entry.id)window.NeoRpgDiscreetAvatars?.set?.(stage,entry.id,'neutral',entry.id);
