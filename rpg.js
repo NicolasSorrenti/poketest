@@ -2023,76 +2023,58 @@ function showPackReveal(){
  if(!pack||pack.opened||modal.open)return;
  const isVictory=pack.source==='win';
  const giver=pack.giver&&cast[pack.giver]?pack.giver:null;
- const setName=COLLECT.THEMED_PACKS?.find(x=>x.id===pack.theme)?.name||COLLECT.SETS[pack.set]?.name||'Base Set';
- $('packEyebrow').textContent=isVictory?'✦ DUEL REWARD · YOUR CARDS':'✦ NEO HARBOR · CARD REWARDS';
- $('packTitle').textContent=isVictory?(pack.cards.length===10?(pack.kind==='championship'?'CHAMPION BOOSTER':'VICTORY BOOSTER'):'VICTORY MINI BOOSTER'):'NEW BOOSTER';
- $('packDescription').textContent=setName+' · '+pack.cards.length+' cards. Tap to flip individual cards, or reveal them all.';
- const portrait=$('packGiver');portrait.replaceChildren();
- if(giver)window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);
- const request=++packArtSerial; // An earlier booster image must never overwrite this giver.
- const fromShop=!isVictory&&!giver&&state.location==='shop';
- $('packContinue').textContent=$('boosterShopDialog').open?'Back to booster shop →':'Continue adventure →';
- if(fromShop){
-  // Ordinary shop purchases have no named giver. Show the clerk's dedicated CG instead of an empty frame.
-  const shopArt=new Image();
-  shopArt.className='pack-giver-art';
-  shopArt.alt='The Lucky Draw shopkeeper handing you a booster pack';
-  shopArt.onerror=()=>{if(request===packArtSerial){portrait.replaceChildren(makeAvatar('hana'));}};
-  shopArt.src='/rpg-assets/shop/shopkeeper-booster.webp';
-  portrait.append(shopArt);
- }
- if(giver){
-  // Show a known portrait immediately while optional artwork loads.
-  const showPortrait=()=>{if(request===packArtSerial){portrait.replaceChildren(makeAvatar(giver));window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);}};
-  showPortrait();
-  const outfit=OUTFITS?.select?.(cast[giver]?.art?.outfits,{location:state.location,slot:state.slot,day:state.day})?.key;
-  const candidates=PRE.boosterArtCandidates(giver);
-  if(outfit){
-   const outfitArt=PRE.boosterArtCandidates(giver,outfit)[0];
-   if(outfitArt)candidates.unshift(outfitArt);
-  }
-  const art=new Image();
-  art.alt=cast[giver].name+' presenting a booster';
-  art.className='pack-giver-art';
-  let attempt=0;
-  const tryNext=()=>{
-   if(request!==packArtSerial)return;
-   if(attempt<candidates.length)art.src=candidates[attempt++];
-   else showPortrait();
-  };
-  art.onload=()=>{if(request===packArtSerial){portrait.replaceChildren(art);window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);}};
-  art.onerror=tryNext;
-  tryNext();
- }
- const packCards=pack.cards.map(id=>({
+ const setName=COLLECT.THEMED_PACKS?.find(offer=>offer.id===pack.theme)?.name||
+  COLLECT.SETS[pack.set]?.name||'Base Set';
+ const request=++packArtSerial;
+ const outfit=giver?OUTFITS?.select?.(cast[giver]?.art?.outfits,{
+  location:state.location,slot:state.slot,day:state.day
+ })?.key:null;
+ const artworks=giver?[
+  ...(outfit?PRE.boosterArtCandidates(giver,outfit).slice(0,1):[]),
+  ...PRE.boosterArtCandidates(giver)
+ ]:[];
+ const cards=pack.cards.map(id=>({
   id,label:labelCard(id),name:cardNames.get(id)||id,image:cardImages.get(id)||null
  }));
- const packView=window.NeoRpgOverworldCollection?.renderPackCards?.(
-  $('packCards'),packCards,()=>window.NeoRpgAudio?.play?.('flip')
- );
- if(!packView)throw Error('The overworld booster reveal presenter did not load.');
- $('packRevealAll').onclick=()=>{
-  packView.revealAll();window.NeoRpgAudio?.play?.('flip');
- };
- $('packContinue').type='button';
- $('packRevealAll').type='button';
- $('packContinue').onclick=()=>{
-  pack.opened=true;
-  const queued=state.deckJourney?.pendingPacks?.shift()||null;
-  if(queued)state.deckJourney.lastPack=queued;
-  persist();modal.close();
-  if(queued)showPackReveal();
-  else{
-   if($('boosterShopDialog').open){
-    const shop=$('boosterShopDialog'),scroll=shop.scrollTop;
-    renderBoosterShop('Booster added to your collection. Pick another or close the shop.');
-    shop.scrollTop=scroll;
+ const view=window.NeoRpgOverworldPack;
+ if(!view?.render?.(document,{
+  eyebrow:isVictory?'✦ DUEL REWARD · YOUR CARDS':'✦ NEO HARBOR · CARD REWARDS',
+  title:isVictory?(pack.cards.length===10?
+   (pack.kind==='championship'?'CHAMPION BOOSTER':'VICTORY BOOSTER'):
+   'VICTORY MINI BOOSTER'):'NEW BOOSTER',
+  description:setName+' · '+pack.cards.length+
+   ' cards. Tap to flip individual cards, or reveal them all.',
+  continueLabel:$('boosterShopDialog').open?'Back to booster shop →':'Continue adventure →',
+  giver,giverName:giver?cast[giver].name:null,
+  fromShop:!isVictory&&!giver&&state.location==='shop',
+  artworks,cards
+ },{
+  isCurrent:()=>request===packArtSerial&&
+   state.deckJourney?.lastPack===pack&&!pack.opened,
+  avatar:id=>makeAvatar(id),
+  discreet:(target,id)=>window.NeoRpgDiscreetAvatars?.set?.(
+   target,id,'happy',cast[id]?.name||id
+  ),
+  renderCards:(target,list,onFlip)=>
+   window.NeoRpgOverworldCollection?.renderPackCards?.(target,list,onFlip),
+  onFlip:()=>window.NeoRpgAudio?.play?.('flip'),
+  onContinue:()=>{
+   if(pack.opened)return;
+   pack.opened=true;++packArtSerial;
+   const queued=state.deckJourney?.pendingPacks?.shift()||null;
+   if(queued)state.deckJourney.lastPack=queued;
+   persist();modal.close();
+   if(queued)showPackReveal();
+   else{
+    if($('boosterShopDialog').open){
+     const shop=$('boosterShopDialog'),scroll=shop.scrollTop;
+     renderBoosterShop('Booster added to your collection. Pick another or close the shop.');
+     shop.scrollTop=scroll;
+    }
+    finishDuelRewardPresentation();
    }
-   finishDuelRewardPresentation();
   }
- };
- modal.oncancel=e=>e.preventDefault(); // One handler, even after opening dozens of packs.
- modal.showModal();
+ }))throw Error('The overworld booster reward presenter did not load.');
  window.NeoRpgAudio?.play?.('booster');
 }
 
