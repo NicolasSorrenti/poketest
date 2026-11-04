@@ -88,7 +88,7 @@ window.NeoOverworldEyeLevel = (() => {
     // transitional mirrored SVG panoramas. Never modify the top-down art.
     const productionBackgrounds = {
       arcade:'arcade-eye-level.png',
-      cafe:'cafe-eye-level.png',
+      cafe:'cafe-eye-level-v2.webp',
       park:'park-eye-level.png',
       home:'apartment-eye-level.png',
       center:'tournament-eye-level.png',
@@ -102,7 +102,8 @@ window.NeoOverworldEyeLevel = (() => {
     // from that same artwork in the browser, without changing the source image.
     const sources = map.id === 'shop'
       ? [classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
-      : [productionUrl, panoramaUrl, classicUrl, map.image].filter(Boolean);
+      : [productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' : null,
+         panoramaUrl, classicUrl, map.image].filter(Boolean);
     let sourceIndex = 0;
     const sourceImage = new Image();
     const showNextSource = () => {
@@ -218,13 +219,14 @@ window.NeoOverworldEyeLevel = (() => {
         ? backdrop.naturalWidth / backdrop.naturalHeight : 3200 / 1080;
       // Portrait PNGs have to read as people in a room, not full-screen posters.
       // A smaller, consistent scale makes characters and furniture feel proportional.
-      const spriteHeight = Math.round(clamp(height * (useChibi ? .35 : .54),
-        useChibi ? 105 : 180, useChibi ? 245 : 510));
+      const spriteHeight = Math.round(clamp(
+        height * (useChibi ? .35 : (width >= 900 ? .66 : .54)),
+        useChibi ? 105 : 180, useChibi ? 245 : 590));
       const sceneStaging = {
         shop:    {slots:[.23,.44,.66,.83],ground:.085,scale:1.00,cropTop:0},
         arcade:  {slots:[.16,.32,.50,.68,.84],ground:.09,scale:.98,cropTop:.18},
         park:    {slots:[.15,.32,.50,.68,.85],ground:.085,scale:1.00,cropTop:.14},
-        cafe:    {slots:[.19,.39,.61,.81],ground:.095,scale:.96,cropTop:.23},
+        cafe:    {slots:[.19,.39,.61,.81],ground:.095,scale:.96,cropTop:.08},
         home:    {slots:[.23,.48,.75],ground:.09,scale:.94,cropTop:.18},
         center:  {slots:[.15,.32,.50,.68,.85],ground:.09,scale:1.00,cropTop:.18},
         library: {slots:[.19,.39,.61,.81],ground:.09,scale:.96,cropTop:.18}
