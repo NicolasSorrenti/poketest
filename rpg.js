@@ -65,7 +65,8 @@ function liveEventArt(id){
  if(LIVE_NEW.byId(id))return LIVE_NEW.artAt(id,state.mandatoryEventState?.active?.id===id?Number(state.mandatoryEventState.active.index)||0:0);
  return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];
 }
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]).map(event=>
+ event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -818,7 +819,7 @@ if(state.day>beforeDay){
  phoneMessages?.onDayAdvance(beforeDay);
 }
 const expiredCups=TOURNAMENTS.expire(state);if(expiredCups.length)log('A tournament registration window has closed.');
-const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
+STORY.recordExpiry(state); // Character story chapters are never lost to calendar expiry.
 const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-quest opportunity passed while you were away.');
 const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
@@ -954,7 +955,7 @@ function overworldOpportunities(){
   const chapter=BOND_PLAN.byEvent[e.id];
   return {kind:'story',id:e.id,label:'✦ '+e.title+' · ⏳ 1 period',
    description:cast[e.npc].name+(chapter?' · Bond chapter '+chapter.chapter+' / 4':'')+
-    (e.evergreen?' · available until season end':' · limited-time encounter'),disabled:locked};
+    ' · Available whenever your bond is ready',disabled:locked};
  });
  for(const episode of ARC.available(state,present)){
   story.push({kind:'arc',id:episode.id,label:'♜ '+episode.title+' · ⏳ 1 period',
@@ -1292,7 +1293,11 @@ function overworldControlsLocked(){
 // The bridge is not ready until all lexical campaign state and startup
 // listeners have initialized. Dispatching here used to mount the overworld
 // from inside this module, before arrivalGate existed (TDZ crash).
-function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state),...(SLICE?.scheduleOverrides?.(state)||[])];}
+function publicAppointments(place){return [...APPOINTMENTS.overrides(state),
+ // Story overrides must pin the character at the authored location TODAY,
+ // regardless of the obsolete day range still present in the story metadata.
+ ...STORY.available(state,place).map(e=>({...e,start:state.day,end:state.day})),
+ ...SIDE.appointments(state),...(SLICE?.scheduleOverrides?.(state)||[])];}
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
