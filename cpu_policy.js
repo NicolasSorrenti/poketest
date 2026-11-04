@@ -1048,7 +1048,13 @@ function benchMatchupValue(pokemonId,o){
  const candidate={id:pokemonId,energies:[],damage:0,status:null};
  const enemy=o.opponent.active;
  if(!enemy)return 0;
- const incoming=strongestAffordableAttack(enemy,candidate,o.opponent.bench.length);
+ // Permanently spent Gym attacks cannot threaten a future Bench replacement.
+ // Temporary locks may expire before promotion and are not filtered here.
+ const enemyMoves=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
+ const enemyPool=energyPool(enemy);
+ const incoming=enemyMoves.reduce((best,attack,index)=>
+  enemy.gymAttackOnce?.includes(index)||!canPayEnergy(attack.cost||[],enemyPool)?best:
+   Math.max(best,estimatedDamage(attack,enemy,candidate,o.opponent.bench.length)),0);
  const hp=hpRemaining(candidate);
  const canBeKnockedOut=incoming>0&&incoming>=hp;
  // A newly benched Pokémon can use only an Energy attachment that is
