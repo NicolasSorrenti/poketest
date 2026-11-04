@@ -3761,7 +3761,13 @@
           "kind": "attack",
           "index": 0,
           "name": "Horn Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #53: Water cost, flat 10 damage, no additional effect. Compiles to flat(10) and isolated resolve produces 10 for both injected coin values.",
+          "evidence": [
+            "Printed Jungle listing: https://pokemondungeon.com/jungle-set/; compared with cards/base2.json, printing base2-53.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
@@ -3774,13 +3780,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Lullaby",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #54: single Colorless Energy causes Asleep without coin/damage. Compiles to status Asleep; isolated resolve gives zero damage + Asleep independent of coin.",
+          "evidence": [
+            "Printed Jungle listing: https://pokemondungeon.com/jungle-set/; compared with cards/base2.json, printing base2-54.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Pound",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #54: two Colorless Energies, 20 plain damage. Compiles to flat(20); isolated resolve gives 20.",
+          "evidence": [
+            "Printed Jungle listing: https://pokemondungeon.com/jungle-set/; compared with cards/base2.json, printing base2-54.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
@@ -3793,13 +3811,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #55: single Colorless Energy, plain 10 damage. Compiles to flat(10); isolated resolve gives 10.",
+          "evidence": [
+            "Printed Jungle listing: https://arcatcg.com/cards/base2-55; compared with cards/base2.json, printing base2-55.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Peek",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #55: activated once per turn before attacking; look at top of either deck, random opposing hand card, or either Prize; disabled when this Mankey is Asleep, Confused or Paralyzed. classic_power_core.js registers Peek in ACTIVATED and ONCE, its enabled() gates status, and the choice handler keeps revealed card in the controlling player's privateLog. Only source inspected; actual choices, visibility and concurrent power usage not runtime tested.",
+          "evidence": [
+            "Printed Jungle listing: https://arcatcg.com/cards/base2-55; compared with cards/base2.json, printing base2-55.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
@@ -3812,7 +3842,13 @@
           "kind": "attack",
           "index": 0,
           "name": "Pay Day",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #56: two Colorless Energies, 10 damage plus one flip; heads draw 1, tails draw 0. Classic coin-draw program isolated outputs 10/1 on heads and 10/0 on tails; headless draw() path found, runtime draw/KO timing untested.",
+          "evidence": [
+            "Printed Jungle listing: https://bulbapedia.bulbagarden.net/wiki/Meowth_(Jungle_56); compared with cards/base2.json, printing base2-56.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
@@ -3825,13 +3861,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Fury Swipes",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #57: one Grass Energy, three flips times 10 per heads. Generic coin-times(3,10); isolated simulated all heads gives 30, all tails gives 0.",
+          "evidence": [
+            "Printed Jungle listing: https://limitlesstcg.com/cards/JU/57; compared with cards/base2.json, printing base2-57.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Call for Family",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #57: two Grass Energy, search deck for Basic Nidoran♂ or Nidoran♀, Bench it, shuffle, cannot use with full Bench. Exact printed wording uses sex symbols whereas TCGdex catalogue spells them Nidoran M/F; compiler generates restriction Nidoran M or Nidoran F, and familyCandidates recognizes both symbol names. Decision, fail-to-find, Bench capacity and shuffle source paths inspected, not full gameplay tested.",
+          "evidence": [
+            "Printed Jungle listing: https://limitlesstcg.com/cards/JU/57; compared with cards/base2.json, printing base2-57.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
