@@ -5,7 +5,12 @@
  const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',
   Core=window.NeoRpgCollection,Builder=window.CubeDeckBuilder,Plan=window.NeoRpgStrategy;
  let state,builder,notice='',catalog=[],allCards=[],index=new Map(),scouts={},requestId=0;
- const persist=()=>{localStorage.setItem(KEY,JSON.stringify(state));window.NeoRpgCloudSave?.onLocalSave();};
+ const persist=()=>{
+  localStorage.setItem(KEY,JSON.stringify(state));
+  // Notify the live RPG parent before its next action can overwrite this deck.
+  if(window.parent!==window)window.parent.postMessage({type:'neo-rpg-deck-studio-updated'},location.origin);
+  window.NeoRpgCloudSave?.onLocalSave();
+ };
  const owned=()=>state.deckJourney.owned,draft=()=>Core.draft(state);
  const dirty=()=>draft().join('|')!==state.deckJourney.deck.join('|');
  const cardName=id=>index.get(id)?.name||id;

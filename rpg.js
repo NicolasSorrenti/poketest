@@ -450,6 +450,23 @@ if(typeof state.activeStory==='string')state.activeStory=null;
 STORY.recordExpiry(state);
 if(MANDATORY)MANDATORY.hydrate(state,MANDATORY_EVENTS);
 const persist=()=>{localStorage.setItem(KEY,JSON.stringify(state));window.NeoRpgCloudSave?.onLocalSave();};
+// Deck Studio is embedded in an iframe in the new overworld. Its localStorage
+// writes do not update this page's in-memory campaign object automatically.
+function syncDeckStudioSave(){
+ if(!state.deckJourney?.starter||state.pendingDuel)return false;
+ let saved;
+ try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{return false;}
+ if(saved?.deckJourney?.starter!==state.deckJourney.starter||
+    saved.day!==state.day||saved.slot!==state.slot||
+    (saved.pendingDuel?.id||null)!==(state.pendingDuel?.id||null))return false;
+ const edited=saved.deckJourney;
+ if(!COLLECT.check(edited.deck,edited.owned).valid)return false;
+ state.deckJourney=edited;
+ if(saved.deckStrategy)state.deckStrategy=saved.deckStrategy;
+ if(saved.gameplayTutorials)state.gameplayTutorials=saved.gameplayTutorials;
+ return true;
+}
+window.NeoRpgSyncDeckStudio=syncDeckStudioSave;
 const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
 window.NeoRpgErrorReport?.setContextProvider(()=>{
  const active=[['mandatory',state.mandatoryEventState?.active],['slice',state.activeSliceOfLife],['situation',state.activeSituation],['story',state.activeStory],['encounter',state.activeEncounter],['arc',state.activeArc],['sideQuest',state.activeSideQuest]].find(([,value])=>!!value);
@@ -2209,6 +2226,7 @@ function launchPreparedDuel(){
 }
 
 function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false,competition=null){
+ syncDeckStudioSave(); // A new duel always snapshots the latest saved 60-card deck.
  if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
  if(state.deckJourney?.starter&&!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
  if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!competition&&!currentPeople().includes(id)))return;
@@ -2235,6 +2253,11 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  showPreparedDuel();
 }
 window.addEventListener('message',ev=>{
+ if(ev.data?.type==='neo-rpg-deck-studio-updated'){
+  const frame=document.querySelector('#neoOverworldDeckPanel iframe');
+  if(ev.origin===location.origin&&ev.source===frame?.contentWindow)syncDeckStudioSave();
+  return;
+ }
  const duel=state.pendingDuel;
  if((ev.data?.type==='neo-rpg-duel-ready'||ev.data?.type==='neo-rpg-duel-error')&&ev.origin===location.origin&&ev.source===$('battle').contentWindow&&ev.data.duelId===duel?.id){
   clearTimeout(battleRecoveryTimer);

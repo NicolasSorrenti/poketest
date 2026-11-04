@@ -232,7 +232,11 @@
     const deckFrame=document.createElement('iframe');deckFrame.title='Neo Campus Deck Studio';deckFrame.style.cssText='width:100%;border:0;flex:1;min-height:0';
     deckPanel.append(deckBar,deckFrame);overlay.append(deckPanel);
     const showDeck=()=>{closeSheet();hideMenu();deckPanel.hidden=false;deckPanel.style.display='flex';deckFrame.src='/rpg_deck_studio.html';};
-    const hideDeck=()=>{deckPanel.hidden=true;deckPanel.style.display='none';deckFrame.src='about:blank';};
+    const hideDeck=()=>{
+      // Commit the iframe's saved-deck state to the still-running campaign.
+      if(!deckPanel.hidden)window.NeoRpgSyncDeckStudio?.();
+      deckPanel.hidden=true;deckPanel.style.display='none';deckFrame.src='about:blank';
+    };
     deckClose.onclick=hideDeck;
     function hideMenu(){menu.hidden=true;menuButton.setAttribute('aria-expanded','false');}
     menuButton.onclick=()=>{closeSheet();menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));};
