@@ -1414,18 +1414,29 @@
       storySyncQueued=true;
       queueMicrotask(()=>{storySyncQueued=false;syncStory();});
     }
-    window.addEventListener('neo-rpg-focus-opportunities',event=>{
-      if(overlay.hidden||bridge()?.snapshot()?.locked)return;
-      const kind=String(event.detail?.kind||'');
-      if(kind==='activity'||kind==='tournament'||kind==='event'||kind==='Official event'){
+    // The calendar/planner may request navigation while a travel wipe is active.
+    // Queue the focus and open the current panel only after the new scene settles.
+    let pendingOpportunityKind=null;
+    function presentPendingOpportunity(){
+      if(!pendingOpportunityKind||overlay.hidden||suspendedForDuel)return;
+      const data=bridge()?.snapshot();
+      if(!data||data.locked||data.arriving||data.storyActive)return;
+      const kind=pendingOpportunityKind;
+      pendingOpportunityKind=null;
+      if(['activity','tournament','event','Official event'].includes(kind)){
         showActivities(bridge()?.activities()||[]);
       }else showEvents();
+    }
+    window.addEventListener('neo-rpg-focus-opportunities',event=>{
+      pendingOpportunityKind=String(event.detail?.kind||'story');
+      queueMicrotask(presentPendingOpportunity);
     });
     window.addEventListener('neo-rpg-overworld-render',()=>{
       if(overlay.hidden||suspendedForDuel)return;
       refresh();
       queueStorySync();
       syncPoseTriggerQueue();
+      presentPendingOpportunity();
     });
     for(const id of ['line','choices','characterActions','rpgSceneCG','speaker']){
       const el=document.getElementById(id);
