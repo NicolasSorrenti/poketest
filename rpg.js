@@ -1280,40 +1280,19 @@ async function glanceAt(id){
  const currentName=portrait.split('/').pop().split('?')[0];
  let focus=null;
  try{
-  const [activeResponse,topResponse,overworldResponse]=await Promise.all([
+  const [activeResponse,overworldResponse]=await Promise.all([
    fetch('/rpg-assets/outfit-chime-focus.json?v=20261030-glance-overworld-1'),
-   fetch('/rpg-assets/outfit-chime-focus-top.json?v=20261030-glance-overworld-1'),
    fetch('/rpg-assets/outfit-chime-overworld-candidates.json?v=20261030-glance-overworld-1')
   ]);
   const active=activeResponse.ok?await activeResponse.json():null;
-  const top=topResponse.ok?await topResponse.json():null;
   const overworld=overworldResponse.ok?await overworldResponse.json():null;
   const activeEntry=active?.characters?.[id]?.variants?.[currentName]||null;
-  const isSpecial=/special-day-\d+\.|\/overworld-variants\//i.test(portrait);
   const overworldVariants=Object.values(overworld?.characters?.[id]?.variants||{});
   const exact=overworldVariants.find(entry=>String(entry?.image||'').replace(/[?].*$/,'')===String(portrait).replace(/[?].*$/,''));
   if(clickedPose){
    // Crop metadata may shape the initial view but cannot replace this image.
    focus=exact||activeEntry||{top:0,bottom:1,left:0,right:1};
   }else if(activeEntry){focus=activeEntry;}
-  // Normal glances use the exact exported source path and crop preset.
-  // Special looks stay on the active stage image and active special crop.
-  if(!clickedPose&&!isSpecial&&!document.getElementById('neoOverworldOverlay')){
-   // Only the old interface can choose a catalog default. In the overworld,
-   // missing pose information must not quietly show a different sprite.
-   const exportedOverworld=exact||overworldVariants[0]||null;
-   if(exportedOverworld?.image){
-    // The deliberate glance always presents the prepared overworld crop.
-    // If the current stage portrait is not itself an overworld pose, use the
-    // first prepared pose for that character as the preview source.
-    portrait=exportedOverworld.image;focus=exportedOverworld;
-   }else{
-    const variants=top?.characters?.[id]?.variants||{};
-    const primaryName=Object.keys(variants).find(name=>/^primary\\.(?:png|webp|jpe?g)$/i.test(name));
-    const exported=primaryName?variants[primaryName]:null;
-    if(exported?.image){portrait=exported.image;focus=exported;}
-   }
-  }
  }catch(_error){}
  const fallback={top:.06,bottom:.53,left:0,right:1};
  if(window.NeoOutfitChime?.glance)await window.NeoOutfitChime.glance(portrait,focus||fallback);
@@ -2409,19 +2388,6 @@ function openPlannerSuggestion(id){
  }
  // Never auto-start a duel or a story: highlight the actual action instead.
  window.dispatchEvent(new CustomEvent('neo-rpg-focus-opportunities',{detail:{kind:pick.kind,focusId:pick.focusId}}));
- const section=$(pick.focusId);
- // Planner navigation should never open the Info drawer. Keep the main game view visible.
- const buttons=[...(section?.querySelectorAll?.('button')||[])].filter(x=>!x.disabled);
- const action=buttons.find(b=>b.dataset?.plannerKey===pick.key)||
-  buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
- // Info is intentionally closed for What's Next shortcuts. Avoid scrolling
- // or focusing controls inside its hidden drawer after travelling.
- const info=$('rpgInfoPanel');
- const actionHiddenInInfo=!!(info&&action&&info.contains(action)&&info.getAttribute('aria-hidden')==='true');
- if(!actionHiddenInInfo){
-  (action||section)?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
-  action?.focus?.({preventScroll:true});
- }
  $('notice').textContent='You are in the right place. Pick the highlighted opportunity when you are ready; no time was spent getting here.';
 }
 function renderPlanner(locked){
@@ -3358,8 +3324,7 @@ function render(){
  lastRenderedLocation=state.location;
  if(previousLocation&&previousLocation!==state.location){
   window.NeoRpgAudio?.play?.('travel');
-  window.NeoRpgInterface?.onLocationChange?.();
-  const destination=state.location;
+   const destination=state.location;
   pendingOverworldArrival=destination;
   // Stop the RPG render/event pipeline until the travel wipe and chimes finish.
   if(!timeSequence.blocked&&!state.mandatoryEventState?.active){
@@ -3385,7 +3350,6 @@ function render(){
   }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
- window.NeoRpgInterface?.init?.();
  if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
  renderJourney();
  renderCollection();
