@@ -4623,7 +4623,8 @@
           "name": "Sharp Sickle",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/24 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FF 30 Active; requires attack-cost and W/R runtime cases. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/24 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FF 30 Active; requires attack-cost and W/R runtime cases. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer code path: classic_local_service.js -> headless_duel.js -> attack_effects_core.js; Sharp Sickle FF 30 and Absorb FFFF 40 heal half actual damage rounded up to 10. Not runtime certified. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "FF 30 Active; requires attack-cost and W/R runtime cases."
         },
@@ -4633,7 +4634,8 @@
           "name": "Absorb",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/24 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FFFF 40, heal half actual damage rounded to 10; shields and KO timing unresolved. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/24 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FFFF 40, heal half actual damage rounded to 10; shields and KO timing unresolved. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer code path: classic_local_service.js -> headless_duel.js -> attack_effects_core.js; Sharp Sickle FF 30 and Absorb FFFF 40 heal half actual damage rounded up to 10. Not runtime certified. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "FFFF 40, heal half actual damage rounded to 10; shields and KO timing unresolved."
         }
@@ -4650,7 +4652,8 @@
           "name": "Water Gun",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/25 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; Printed Fossil FO/25 and TCGdex say extra WATER Energy, +10 each up to +20; earlier audit says any Energy, conflicting with printed reference. Legacy code now uses any Energy. Historical errata ruling must be established before changing engine. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/25 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; Printed Fossil FO/25 and TCGdex say extra WATER Energy, +10 each up to +20; earlier audit says any Energy, conflicting with printed reference. Legacy code now uses any Energy. Historical errata ruling must be established before changing engine. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer uses attack_effects_core.js before generic Classic extensions. Lapras Water Gun must use water-extra, W 10+ with +10 per additional Water Energy, max +20; non-Water excluded. Confuse Ray WW 10, heads Confused. Source-level fix awaiting gameplay validation. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "Printed Fossil FO/25 and TCGdex say extra WATER Energy, +10 each up to +20; earlier audit says any Energy, conflicting with printed reference. Legacy code now uses any Energy. Historical errata ruling must be established before changing engine."
         },
@@ -4660,7 +4663,8 @@
           "name": "Confuse Ray",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/25 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; WW 10, heads Confusion; prevention/status and both flips untested. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/25 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; WW 10, heads Confusion; prevention/status and both flips untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer uses attack_effects_core.js before generic Classic extensions. Lapras Water Gun must use water-extra, W 10+ with +10 per additional Water Energy, max +20; non-Water excluded. Confuse Ray WW 10, heads Confused. Source-level fix awaiting gameplay validation. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "WW 10, heads Confusion; prevention/status and both flips untested."
         }
@@ -4677,7 +4681,8 @@
           "name": "Sonicboom",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/26 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; LC 20 ignores Weakness and Resistance; other protection effects remain; runtime untested. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/26 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; LC 20 ignores Weakness and Resistance; other protection effects remain; runtime untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer attack_effects_core.js: Sonicboom LC 20 ignores W/R; Selfdestruct LLLL 100 Active, 20 both Benches, 100 self. KO sequencing untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "LC 20 ignores Weakness and Resistance; other protection effects remain; runtime untested."
         },
@@ -4687,7 +4692,8 @@
           "name": "Selfdestruct",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/26 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; LLLL 100 Active, 20 both Benches, 100 self; simultaneous KO and protection untested. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/26 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; LLLL 100 Active, 20 both Benches, 100 self; simultaneous KO and protection untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer attack_effects_core.js: Sonicboom LC 20 ignores W/R; Selfdestruct LLLL 100 Active, 20 both Benches, 100 self. KO sequencing untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "LLLL 100 Active, 20 both Benches, 100 self; simultaneous KO and protection untested."
         }
@@ -4704,7 +4710,8 @@
           "name": "Wildfire",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/27 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; F optional Fire Energy discard and matching opponent deck mill; headless explicit payment choice; short deck and 0 choice untested. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/27 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; F optional Fire Energy discard and matching opponent deck mill; headless explicit payment choice; short deck and 0 choice untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer headless_duel.js Wildfire offers optional Fire Energy selection (min 0), validates selected indices; Dive Bomb FFFF 80, tails nothing. Deck depletion and random outcomes untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "F optional Fire Energy discard and matching opponent deck mill; headless explicit payment choice; short deck and 0 choice untested."
         },
@@ -4714,7 +4721,8 @@
           "name": "Dive Bomb",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/27 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FFFF 80, tails no damage; two coin outcomes and prevention untested. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/27 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FFFF 80, tails no damage; two coin outcomes and prevention untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer headless_duel.js Wildfire offers optional Fire Energy selection (min 0), validates selected indices; Dive Bomb FFFF 80, tails nothing. Deck depletion and random outcomes untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "FFFF 80, tails no damage; two coin outcomes and prevention untested."
         }
@@ -4731,7 +4739,8 @@
           "name": "Sludge",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/28 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; GGG 30, heads Poison; status immunity and both coin outcomes untested. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/28 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; GGG 30, heads Poison; status immunity and both coin outcomes untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer classic_power_core.js live/has/blocked implements Toxic Gas and status lock; Sludge GGG 30 heads Poison. Multiple Muk and transitions untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "GGG 30, heads Poison; status immunity and both coin outcomes untested."
         },
@@ -4741,7 +4750,8 @@
           "name": "Toxic Gas",
           "status": "partial",
           "evidence": [
-            "2026-11-04: compared cards/base3.json with Fossil FO/28 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; Suppress all other Pokémon Powers unless Muk asleep/confused/paralyzed; multiple Muk and status transitions untested. No runtime reducer execution or complete historical ruling review."
+            "2026-11-04: compared cards/base3.json with Fossil FO/28 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; Suppress all other Pokémon Powers unless Muk asleep/confused/paralyzed; multiple Muk and status transitions untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer classic_power_core.js live/has/blocked implements Toxic Gas and status lock; Sludge GGG 30 heads Poison. Multiple Muk and transitions untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
           ],
           "scope": "Suppress all other Pokémon Powers unless Muk asleep/confused/paralyzed; multiple Muk and status transitions untested."
         }
