@@ -4621,13 +4621,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Sharp Sickle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/24 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FF 30 Active; requires attack-cost and W/R runtime cases. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "FF 30 Active; requires attack-cost and W/R runtime cases."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Absorb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/24 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FFFF 40, heal half actual damage rounded to 10; shields and KO timing unresolved. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "FFFF 40, heal half actual damage rounded to 10; shields and KO timing unresolved."
         }
       ]
     },
@@ -4640,13 +4648,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/25 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; Printed Fossil FO/25 and TCGdex say extra WATER Energy, +10 each up to +20; earlier audit says any Energy, conflicting with printed reference. Legacy code now uses any Energy. Historical errata ruling must be established before changing engine. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "Printed Fossil FO/25 and TCGdex say extra WATER Energy, +10 each up to +20; earlier audit says any Energy, conflicting with printed reference. Legacy code now uses any Energy. Historical errata ruling must be established before changing engine."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Confuse Ray",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/25 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; WW 10, heads Confusion; prevention/status and both flips untested. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "WW 10, heads Confusion; prevention/status and both flips untested."
         }
       ]
     },
@@ -4659,13 +4675,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Sonicboom",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/26 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; LC 20 ignores Weakness and Resistance; other protection effects remain; runtime untested. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "LC 20 ignores Weakness and Resistance; other protection effects remain; runtime untested."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Selfdestruct",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/26 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; LLLL 100 Active, 20 both Benches, 100 self; simultaneous KO and protection untested. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "LLLL 100 Active, 20 both Benches, 100 self; simultaneous KO and protection untested."
         }
       ]
     },
@@ -4678,13 +4702,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Wildfire",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/27 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; F optional Fire Energy discard and matching opponent deck mill; headless explicit payment choice; short deck and 0 choice untested. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "F optional Fire Energy discard and matching opponent deck mill; headless explicit payment choice; short deck and 0 choice untested."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dive Bomb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/27 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FFFF 80, tails no damage; two coin outcomes and prevention untested. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "FFFF 80, tails no damage; two coin outcomes and prevention untested."
         }
       ]
     },
@@ -4697,13 +4729,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Sludge",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/28 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; GGG 30, heads Poison; status immunity and both coin outcomes untested. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "GGG 30, heads Poison; status immunity and both coin outcomes untested."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Toxic Gas",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/28 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; Suppress all other Pokémon Powers unless Muk asleep/confused/paralyzed; multiple Muk and status transitions untested. No runtime reducer execution or complete historical ruling review."
+          ],
+          "scope": "Suppress all other Pokémon Powers unless Muk asleep/confused/paralyzed; multiple Muk and status transitions untested."
         }
       ]
     },
