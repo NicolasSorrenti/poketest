@@ -3892,13 +3892,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Stun Spore",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/58",
+            "Stun Spore: Limitless JU/58 confirms G, 10, heads Paralysis; source ATTACK coin-status; heads/tails, shields and timing not run."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Sprout",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/58",
+            "Sprout: Limitless JU/58 confirms GG, named Oddish Basic, Bench-full restriction and shuffle; classic_attack_extensions.js call-family restriction, headless_duel.js deck-search and full-Bench guard inspected; deck mutation not executed."
+          ]
         }
       ]
     },
@@ -3911,13 +3919,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/59",
+            "Scratch: printed CC, 20; flat attack compiler source inspected, no end-to-end reducer validation."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Spore",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/59",
+            "Spore: printed GG, unconditional Sleep; status compiler inspected, status immunity and sleep recovery not run."
+          ]
         }
       ]
     },
@@ -3930,7 +3946,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Spark",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/60",
+            "Spark: Limitless JU/60 confirms LL, 20 Active and selected opposing Bench 10 without Weakness/Resistance; attack_effects_core.js bench-target and headless_duel.js target choice inspected; no executed KO or Bench shielding validation."
+          ]
         }
       ]
     },
@@ -3943,13 +3963,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Leer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/61",
+            "Leer: printed C, heads lock targeting Rhyhorn until next opponent turn, broken by Benching; classic_attack_extensions.js coin-attack-lock and headless_duel.js state inspected, no switch/replacement execution."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Horn Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/61",
+            "Horn Attack: printed FCC, 30; flat damage source inspected, no real reducer cost and modifiers run."
+          ]
         }
       ]
     },
@@ -3962,13 +3990,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Peck",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/62",
+            "Peck: Limitless JU/62 confirms C, 10; flat compiler source inspected, no reducer run."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Mirror Move",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/62",
+            "Mirror Move: Limitless JU/62 confirms CCC and copy final result of previous attack; headless_duel.js lastAttackImpact tracking and mirror-move path inspected. Potential uncovered edge: previous attack doing zero damage and no status may not be recorded; needs targeted reducer proof before fix."
+          ]
         }
       ]
     },
