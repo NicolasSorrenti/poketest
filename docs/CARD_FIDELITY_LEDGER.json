@@ -3450,13 +3450,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Fury Swipes",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Three independent coin flips at 20 per heads: multi regex and common damage pipeline inspected; no deterministic runtime cases.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-43) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/43.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Tantrum",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "50 damage and tails-only self Confusion after damage: coinSelfConfuse path inspected; post-KO timing and status edge cases untested.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-43) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/43.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         }
       ]
     },
@@ -3469,13 +3481,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Stomp",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "20 or 30 based on coin: coinDamageChoice parses printed 20+10 and 20 tails.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-44) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/44.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Agility",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "30 damage; heads-only protection against attack damage and effects next opponent turn: agilityShield path inspected; switches/expiry untested.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-44) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/44.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         }
       ]
     },
@@ -3488,13 +3512,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Horn Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "30 damage; Fighting plus two Colorless requirements; normal damage path inspected.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-45) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/45.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Ram",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "50 damage, 20 self recoil and opponent-choice forced switch, even if Rhydon KOs itself: recoilForceSwitch path applies recoil and switches first Bench slot by default. **Confirmed choice-owner discrepancy** when opponent has multiple Bench options; KO order requires runtime verification.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-45) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/45.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         }
       ]
     },
@@ -3507,13 +3543,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Horn Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "10 damage for Water requirement; plain damage path inspected.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-46) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/46.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Waterfall",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "30 damage for Water+Colorless requirement; plain damage path inspected.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-46) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/46.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         }
       ]
     },
@@ -3526,13 +3574,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Stomp",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "20 or 30 on coin: coinDamageChoice branch inspected.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-47) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/47.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rampage",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "20 + 10 per own damage counter and tails-only self Confusion after damage: selfDamageBonusConfuse branches inspected; interaction with KO/Weakness/Resistance not executed.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-47) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/47.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         }
       ]
     },
