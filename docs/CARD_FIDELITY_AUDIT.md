@@ -728,3 +728,18 @@ At start, PR #440 was already merged and no open card-fidelity PR was present (A
 | [Hypno #23](https://limitlesstcg.com/cards/FO/23) `base3-23` | Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. | **partial** |
 
 Potential legacy discrepancy to reproduce: Transparency is gated by `if(dmg)` in `engine.js`, so an attack that has only a non-damage effect may not trigger the required coin flip. Do not treat this as a confirmed regression until a targeted runtime scenario is executed. No new tests or CI changes.
+
+
+## 2026-11-04 — Fossil #24–28 (five non-holo printings; source/print review)
+
+At start no open card-fidelity audit PR was found; #440 and previous audit PRs are closed. Apex #459 and unrelated RPG PRs untouched. Five previously unreviewed non-holo Fossil printings compared with [Fossil printed card list](https://pokemondungeon.com/fossil-set/), [Fossil set index](https://www.serebii.net/card/fossil/), [Kabutops FO/24](https://limitlesstcg.com/cards/FO/24), local `cards/base3.json`, `engine.js`, `headless_duel.js`, and existing earlier holo reviews. **All five remain partial**, because deterministic gameplay and comprehensive historical rulings have not been completed.
+
+| Printing | Finding and required validation | Status |
+| --- | --- | --- |
+| `base3-24` Kabutops | Sharp Sickle FF 30; Absorb FFFF 40 heals half post-W/R damage rounded to ten. Check shields, resistance, damage counters and KO order. | partial |
+| `base3-25` Lapras | Water Gun W 10+ with capped +20 bonus; Confuse Ray WW 10 + heads Confusion. **Conflicting source:** printed Fossil FO/25 sources specify extra *Water Energy*, whereas prior #10 audit interpreted *any Energy* and modified legacy engine. [TCG ONE](https://tcg.one/cards/lapras-fo-25) transcribes any Energy. Do not revert without authoritative historical errata/ruling; runtime both interpretations and Energy payment still untested. | partial |
+| `base3-26` Magneton | Sonicboom LC 20 ignores W/R; Selfdestruct LLLL 100, 20 each Bench, 100 self. Simultaneous KO, shields, prizes untested. | partial |
+| `base3-27` Moltres | Wildfire F optional discard Fire Energy and mill equal cards; Dive Bomb FFFF 80 on heads only. Optional 0, short decks and coin cases untested. | partial |
+| `base3-28` Muk | Sludge GGG 30 + heads Poison; Toxic Gas suppresses other Powers unless Muk status-locked. Multi-Muk and status transitions untested. | partial |
+
+No engine change, new tests, suites or CI changes. **Potential Lapras interpretation mismatch is unresolved**, not certified as a defect. Source review only, no new verified cards. Review evidence on 302/1,123 printings; remaining not fully verified 1,123.
