@@ -84,10 +84,10 @@ window.NeoOverworldEyeLevel = (() => {
     const slot = Number(params.get('slot') || 0);
     const oldName = map.id === 'shop' && slot === 2 ? 'card-shop-evening.png' : classicBackgrounds[map.id];
     const classicUrl = '/rpg-assets/' + (oldName || 'park.jpg');
-    // Dedicated, character-free 3200x1080 PNGs take priority over the
+    // Dedicated, character-free 3200x1080 plates take priority over the
     // transitional mirrored SVG panoramas. Never modify the top-down art.
     const productionBackgrounds = {
-      arcade:'arcade-eye-level.png',
+      arcade:'arcade-eye-level-v2.webp',
       cafe:'cafe-eye-level-v2.webp',
       park:'park-eye-level.png',
       home:'apartment-eye-level.png',
@@ -102,7 +102,8 @@ window.NeoOverworldEyeLevel = (() => {
     // from that same artwork in the browser, without changing the source image.
     const sources = map.id === 'shop'
       ? [classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
-      : [productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' : null,
+      : [productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' :
+         map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level.png' : null,
          panoramaUrl, classicUrl, map.image].filter(Boolean);
     let sourceIndex = 0;
     const sourceImage = new Image();
@@ -224,7 +225,7 @@ window.NeoOverworldEyeLevel = (() => {
         useChibi ? 105 : 180, useChibi ? 245 : 590));
       const sceneStaging = {
         shop:    {slots:[.23,.44,.66,.83],ground:.085,scale:1.00,cropTop:0},
-        arcade:  {slots:[.16,.32,.50,.68,.84],ground:.09,scale:.98,cropTop:.18},
+        arcade:  {slots:[.16,.32,.50,.68,.84],ground:.09,scale:.98,cropTop:.05},
         park:    {slots:[.15,.32,.50,.68,.85],ground:.085,scale:1.00,cropTop:.14},
         cafe:    {slots:[.19,.39,.61,.81],ground:.095,scale:.96,cropTop:.08},
         home:    {slots:[.23,.48,.75],ground:.09,scale:.94,cropTop:.18},
