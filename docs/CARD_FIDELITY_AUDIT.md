@@ -683,3 +683,17 @@ At start, PR #440 was previously merged; no open card-fidelity audit PR was foun
 | [Hypno #8](https://limitlesstcg.com/cards/FO/8) `base3-8` | Prophecy P, reorder up to three top cards of either deck; Dark Mind PPP, 30 Active + 10 chosen Bench. Headless choice validation inspected; reorder legality, short decks and visibility untested. | **partial** |
 
 No new tests, suites or CI configuration. Full historical ruling survey, deterministic real reducer scenarios, browser behavior and check results are required before any verified designation. Prior source-level partials remain outstanding.
+
+## 2026-11-04 — Fossil #9–13 (five distinct printings)
+
+At start, PR #440 was already merged and prior Fossil PR #455 was open. Eight existing GitHub Actions workflows on #455's head all concluded success, and GitHub reported mergeable; #455 was safely squash-merged as `c9464cd61bcffe57c80e0aa10996bb0a723ae5e9` before this separate batch. This batch compared catalogue printed effect text against legacy `engine.js`, headless `headless_duel.js`, and classic attack/power handlers. Historical rulings and deterministic runtime scenarios remain outstanding; **all five are partial**, not verified.
+
+| Printing | Findings and validation outstanding | Status |
+| --- | --- | --- |
+| [Kabutops Fossil #9](https://limitlesstcg.com/cards/FO/9) `base3-9` | Sharp Sickle FF 30; Absorb FFFF 40 heals half actual post-W/R damage, rounded up to ten. Headless drain path inspected; validate healing against Resistance, shield, KO, max HP. | **partial** |
+| [Lapras Fossil #10](https://limitlesstcg.com/cards/FO/10) `base3-10` | Water Gun W 10+, bonus per extra **any Energy**, cap +20; Confuse Ray WW 10 and heads Confusion. **Fixed legacy Water Gun**: old code matched only 'Water Energy' and silently left Lapras at 10; now counts all attached Energy units beyond payment. Validate cap, special Energy, heads/tails and status immunity. | **partial** |
+| [Magneton Fossil #11](https://limitlesstcg.com/cards/FO/11) `base3-11` | Sonicboom LC 20 ignores W/R; Selfdestruct LLLL 100, 20 each Bench, 100 self. Check after-W/R shields, simultaneous KO and prizes, Bench protections. | **partial** |
+| [Moltres Fossil #12](https://limitlesstcg.com/cards/FO/12) `base3-12` | Wildfire F, optional Fire Energy discard/mill; Dive Bomb FFFF 80 only on heads. Headless selection validation inspected; verify zero payment, short deck, special Energy and tails. | **partial** |
+| [Muk Fossil #13](https://limitlesstcg.com/cards/FO/13) `base3-13` | Sludge GGG 30 and heads Poison; Toxic Gas suppresses other Powers while Muk unaffected by Asleep/Confused/Paralyzed. Validate status transitions, multi-Muk and simultaneous Powers. | **partial** |
+
+No new test files, suites or CI changes. Existing GitHub Actions checks on the new batch are required before merging. Neither code inspection nor CI success by itself promotes any printing to verified.
