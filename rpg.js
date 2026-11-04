@@ -1161,9 +1161,111 @@ function runOverworldOpportunity(kind,id){
  else return false;
  return true;
 }
+// Read-only model of the visible RPG guide. No planner or progress DOM is
+// created by the campaign controller; the overworld owns the presentation.
+function overworldGuide(){
+ const locked=overworldControlsLocked(),ended=state.day>90;
+ const suggestions=!ended&&!locked?PLANNER.recommend(state,plannerDependencies()):[];
+ const plannerMessage=ended?'Your 90-day season is complete. See your report and gallery.':
+  locked?'Finish your current scene or duel to explore more opportunities.':
+  suggestions.length?'':'Nothing urgent right now. Explore, practice, or take a well-earned break.';
+ const priority=INTENTIONS.status(state);
+ const goal=ended?{message:'The season is complete. '+priority.completedCount+' daily priorities fulfilled.'}:
+  !priority.chosen?{
+   message:'Choose one focus for today. It is optional, and any result counts for duels.',
+   options:INTENTIONS.goals.map(item=>({id:item.id,title:item.title,detail:item.detail,reward:item.rewardLabel})),
+   countLabel:priority.completedCount+' priorities completed this season · resets tomorrow'
+  }:{
+   chosen:priority.selected?{title:priority.selected.title,detail:priority.selected.detail,
+     reward:priority.selected.rewardLabel}:null,
+   completed:!!priority.completed,
+   countLabel:priority.completedCount+' priorities completed this season · resets tomorrow'
+  };
+ const appointments=APPOINTMENTS.active(state).map(plan=>{
+  const ready=plan.day===state.day&&plan.slot===state.slot;
+  const samePlace=plan.place===state.location;
+  const activity=plan.activityId?SOCIAL.activities.find(item=>item.id===plan.activityId):null;
+  const description=activity?(plan.socialTone==='romantic'?'♥ DATE':
+   plan.socialTone==='rivalry'?'⚔ CHALLENGE':'● FRIENDS')+
+   ' · '+activity.title+' · '+activity.focus+' focus'+
+   (activity.credits?' + '+activity.credits+' credits':'')+' when we meet':'';
+  let actions;
+  if(ready&&samePlace){
+   const reason=DATES.canAttend(state,plan,currentPeople(),{
+    appointments:APPOINTMENTS,social:SOCIAL,cast
+   });
+   actions=[{kind:'attend',label:plan.socialTone==='romantic'?'Go on date · ⏳':
+    plan.activityId?'Enjoy outing · ⏳':'Meet now · ⏳',disabled:!!reason,reason:reason||''}];
+  }else if(ready){
+   actions=[{kind:'travelPlan',label:'Go there · free'}];
+  }else actions=[{kind:'cancelPlan',label:'Cancel · free'}];
+  return {id:plan.id,name:cast[plan.npc]?.name||plan.npc,
+   when:'DAY '+plan.day+' · '+periods[plan.slot]+' · '+(places[plan.place]?.[0]||plan.place),
+   description,actions};
+ });
+ const journey=JOURNEY.currentRun(state,CG);
+ return {
+  locked,day:state.day,
+  planner:{message:plannerMessage,items:suggestions.map(item=>({
+   id:item.id,title:item.title,detail:item.detail,upcoming:item.timing==='upcoming',
+   meta:item.timing==='upcoming'?'COMING UP · DAY '+item.day+' · '+periods[item.slot]:
+    (item.place===state.location?'HERE NOW':'FREE TRAVEL')+' · '+(item.timeCost?'⏳ 1 PERIOD':'FREE'),
+   actionLabel:item.timing==='now'&&item.action!=='none'?
+    (item.action==='travel'?'Go to '+(places[item.place]?.[0]||item.place)+' · free':'Show me where · free'):''
+  }))},
+  priority:goal,appointments,
+  journey:{
+   overview:'Season '+journey.run+' · Day '+journey.day+' / 90 · '+
+    journey.gallery.unlocked+'/'+journey.gallery.total+' memories across runs',
+   percent:journey.gallery.percent,
+   unlocked:journey.gallery.unlocked,total:journey.gallery.total,
+   milestones:JOURNEY.milestones(state,CG).map(item=>({title:item.title,detail:item.detail}))
+  }
+ };
+}
+// Every guide action is checked against fresh campaign state before dispatch,
+// so old sheet buttons cannot bypass the time, location or eligibility rules.
+function runOverworldGuideAction(kind,id){
+ if(overworldControlsLocked())return false;
+ if(kind==='gallery'){openGallery();return true;}
+ if(state.day>90)return false;
+ if(kind==='planner'){
+  const item=PLANNER.recommend(state,plannerDependencies()).find(item=>
+   String(item.id)===String(id)&&item.timing==='now'&&item.action!=='none');
+  if(!item)return false;
+  openPlannerSuggestion(item.id);return true;
+ }
+ if(kind==='priority'){
+  if(INTENTIONS.status(state).chosen||!INTENTIONS.goals.some(goal=>String(goal.id)===String(id)))return false;
+  act('intention:'+id);return true;
+ }
+ const plan=APPOINTMENTS.active(state).find(item=>String(item.id)===String(id));
+ if(!plan)return false;
+ const ready=plan.day===state.day&&plan.slot===state.slot;
+ if(kind==='cancelPlan'){
+  if(ready)return false;
+  act('cancelPlan:'+plan.id);return true;
+ }
+ if(kind==='travelPlan'){
+  if(!ready||plan.place===state.location)return false;
+  const moved=travelTo(plan.place,{intro:false});
+  if(moved&&currentPeople().includes(plan.npc))selectPerson(plan.npc);
+  return !!moved;
+ }
+ if(kind==='attend'){
+  if(!ready||plan.place!==state.location||
+     DATES.canAttend(state,plan,currentPeople(),{
+      appointments:APPOINTMENTS,social:SOCIAL,cast
+     }))return false;
+  act('attend:'+plan.id);return true;
+ }
+ return false;
+}
 // Public command/query boundary between RPG state and its overworld presenter.
 window.NeoRpgOverworldBridge=Object.freeze({
  resetCampaign,
+ guide:overworldGuide,
+ guideAction:runOverworldGuideAction,
  opportunities:overworldOpportunities,
  runOpportunity:runOverworldOpportunity,
  setVisiblePose(id,src){
@@ -2362,46 +2464,6 @@ window.addEventListener('message',ev=>{
  if(shown)window.NeoRpgDiscreetAvatars?.set?.($('victoryPortrait'),duel.npc,receipt.outcome==='Victory'?'happy':'vulnerable',cast[duel.npc].name);
  if(!shown)continueAfterResult();
 });
-function renderAppointments(locked){
- const root=$('appointments');root.replaceChildren();
- const plans=APPOINTMENTS.active(state);
- if(!plans.length){const note=document.createElement('p');note.className='empty-note';note.textContent='No plans yet. Talk to someone in town to arrange a future meet-up.';root.append(note);return;}
- for(const meeting of plans){
-  const entry=document.createElement('div');entry.className='meeting-card';
-  const name=document.createElement('strong');name.textContent=cast[meeting.npc]?.name||meeting.npc;
-  const detail=document.createElement('small');detail.textContent='DAY '+meeting.day+' · '+periods[meeting.slot]+' · '+places[meeting.place]?.[0];
-  entry.append(name,detail);
-  if(meeting.activityId){
-   const a=SOCIAL.activities.find(x=>x.id===meeting.activityId);
-   if(a){
-    const note=document.createElement('small');note.className='meeting-plan';
-    note.textContent=(meeting.socialTone==='romantic'?'♥ DATE':meeting.socialTone==='rivalry'?'⚔ CHALLENGE':'● FRIENDS')+
-      ' · '+a.title+' · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')+' when we meet';
-    entry.append(note);
-   }
-  }
-  const ready=meeting.day===state.day&&meeting.slot===state.slot;
-  const controls=document.createElement('div');controls.className='meeting-actions';
-  if(ready){
-   if(meeting.place===state.location){
-    const attend=document.createElement('button');attend.className='meeting-attend';attend.dataset.plannerKey=String(meeting.id);
-    attend.textContent=meeting.socialTone==='romantic'?'Go on date · ⏳':meeting.activityId?'Enjoy outing · ⏳':'Meet now · ⏳';
-    const reason=DATES.canAttend(state,meeting,currentPeople(),{appointments:APPOINTMENTS,social:SOCIAL,cast});
-    attend.disabled=locked||!!reason;if(reason)attend.title=reason;
-    attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
-   }else{
-    const travel=document.createElement('button');travel.className='meeting-attend';travel.textContent='Go there · free';travel.disabled=locked;travel.onclick=()=>{
-     travelTo(meeting.place,{intro:false});
-     if(currentPeople().includes(meeting.npc))selectPerson(meeting.npc);};controls.append(travel);
-   }
-  }else{
-   const cancel=document.createElement('button');cancel.className='meeting-cancel';cancel.textContent='Cancel · free';cancel.disabled=locked;cancel.onclick=()=>act('cancelPlan:'+meeting.id);controls.append(cancel);
-  }
-  entry.append(controls);root.append(entry);
- }
-}
-
-
 function plannerDependencies(){return {schedules:SCHEDULES,appointments:APPOINTMENTS,story:STORY,side:SIDE,world:WORLD,
  tournaments:TOURNAMENTS,intentions:INTENTIONS,arc:ARC,social:SOCIAL,situations:SITUATIONS,cast,places,eventCards};}
 function openPlannerSuggestion(id){
@@ -2438,63 +2500,6 @@ function openPlannerSuggestion(id){
  window.dispatchEvent(new CustomEvent('neo-rpg-focus-opportunities',{detail:{kind:pick.kind,focusId:pick.focusId}}));
  $('notice').textContent='You are in the right place. Pick the highlighted opportunity when you are ready; no time was spent getting here.';
 }
-function renderPlanner(locked){
- const root=$('dailyPlanner');root.replaceChildren();
- if(state.day>90){
-  const p=document.createElement('p');p.className='planner-empty';p.textContent='Your 90-day season is complete. See your report and gallery.';root.append(p);return;
- }
- if(locked){
-  const p=document.createElement('p');p.className='planner-empty';p.textContent='Finish your current scene or duel to explore more opportunities.';root.append(p);return;
- }
- const suggestions=PLANNER.recommend(state,plannerDependencies());
- if(!suggestions.length){
-  const p=document.createElement('p');p.className='planner-empty';p.textContent='Nothing urgent right now. Explore, practice, or take a well-earned break.';root.append(p);return;
- }
- for(const item of suggestions){
-  const card=document.createElement('div');card.className='planner-card'+(item.timing==='upcoming'?' planner-soon':'');
-  const meta=document.createElement('small');meta.className='planner-meta';
-  meta.textContent=item.timing==='upcoming'?'COMING UP · DAY '+item.day+' · '+periods[item.slot]:
-    (item.place===state.location?'HERE NOW':'FREE TRAVEL')+' · '+(item.timeCost?'⏳ 1 PERIOD':'FREE');
-  const heading=document.createElement('strong');heading.textContent=item.title;
-  const desc=document.createElement('p');desc.textContent=item.detail;
-  card.append(meta,heading,desc);
-  if(item.action!=='none'){
-   const b=document.createElement('button');b.className='planner-action';b.textContent=item.action==='travel'?'Go to '+places[item.place][0]+' · free':'Show me where · free';
-   b.onclick=()=>openPlannerSuggestion(item.id);card.append(b);
-  }
-  root.append(card);
- }
-}
-function renderDailyIntention(locked){
- const root=$('dailyIntention');root.replaceChildren();
- const progress=INTENTIONS.status(state);
- const summary=document.createElement('p');summary.className='intention-summary';
- if(state.day>90){
-  summary.textContent='The season is complete. '+progress.completedCount+' daily priorities fulfilled.';
-  root.append(summary);return;
- }
- if(!progress.chosen){
-  summary.textContent='Choose one focus for today. It is optional, and any result counts for duels.';
-  root.append(summary);
-  for(const goal of INTENTIONS.goals){
-   const button=document.createElement('button');button.className='intention-choice';button.disabled=locked;
-   const title=document.createElement('strong');title.textContent=goal.title;
-   const detail=document.createElement('small');detail.textContent=goal.detail;
-   const reward=document.createElement('span');reward.className='intention-reward';reward.textContent=goal.rewardLabel;
-   button.append(title,detail,reward);button.onclick=()=>act('intention:'+goal.id);root.append(button);
-  }
- }else{
-  const goal=progress.selected;
-  const card=document.createElement('div');card.className='intention-active'+(progress.completed?' complete':'');
-  const title=document.createElement('strong');title.textContent=(progress.completed?'✓ COMPLETED · ':'◷ TODAY · ')+goal.title;
-  const detail=document.createElement('p');detail.textContent=progress.completed?'You made progress on your own terms. Tomorrow brings a new choice.':goal.detail;
-  const reward=document.createElement('small');reward.textContent='REWARD · '+goal.rewardLabel;
-  card.append(title,detail,reward);root.append(card);
- }
- const count=document.createElement('small');count.className='intention-count';count.textContent=progress.completedCount+' priorities completed this season · resets tomorrow';
- root.append(count);
-}
-
 // Reuse existing character artwork until a scene-specific CG is installed.
 function loadCGArt(image,entry,thumbnail,onSuccess,onMissing){
  const candidates=CG.artCandidates(entry,thumbnail);
@@ -2974,25 +2979,6 @@ function makeAvatar(id,size=''){
  return img;
 }
 
-function renderJourney(){
- const root=$('journeyProgress');root.replaceChildren();
- const stats=JOURNEY.currentRun(state,CG);
- const overview=document.createElement('p');overview.className='journey-overview';
- overview.textContent='Season '+stats.run+' · Day '+stats.day+' / 90 · '+stats.gallery.unlocked+'/'+stats.gallery.total+' memories across runs';
- root.append(overview);
- const progress=document.createElement('div');progress.className='journey-track';
- const fill=document.createElement('div');fill.className='journey-fill';fill.style.width=Math.max(0,Math.min(100,stats.gallery.percent))+'%';
- progress.append(fill);root.append(progress);
- for(const item of JOURNEY.milestones(state,CG)){
-  const p=document.createElement('p');p.className='journey-goal';
-  const title=document.createElement('strong');title.textContent=item.title;
-  const body=document.createElement('span');body.textContent=item.detail;
-  p.append(title,body);root.append(p);
- }
- const open=document.createElement('button');open.className='journey-gallery';
- open.textContent='Open memory album · '+stats.gallery.unlocked+'/'+stats.gallery.total;
- open.onclick=openGallery;root.append(open);
-}
 function mandatoryClosureDue(){
  return !!MANDATORY&&MANDATORY_EVENTS.some(e=>e.kind==='season'&&!state.mandatoryEventState?.seen?.[e.id]&&state.day>=e.earliestDay);
 }
@@ -3392,11 +3378,8 @@ function render(){
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
- renderJourney();
  renderCollection();
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
- renderPlanner(locked);
- renderDailyIntention(locked);
  const receipt=state.lastDuelReceipt;
  $('duelReceipt').hidden=!receipt;
  if(receipt){
@@ -3656,7 +3639,6 @@ function render(){
  }
  renderBracketProgress();
  renderCompetitiveCircuit(locked);
- renderAppointments(locked);
  renderSeasonReport();
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
