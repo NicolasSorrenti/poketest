@@ -90,7 +90,7 @@ window.NeoOverworldEyeLevel = (() => {
       arcade:'arcade-eye-level-v2.webp',
       cafe:'cafe-eye-level-v2.webp',
       park:'park-eye-level-v2.webp',
-      home:'apartment-eye-level.png',
+      home:'apartment-eye-level-v2.webp',
       center:'tournament-eye-level-v2.webp',
       library:'library-eye-level.png'
     };
@@ -105,7 +105,8 @@ window.NeoOverworldEyeLevel = (() => {
       : [productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' :
          map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level.png' :
          map.id === 'park' ? '/rpg-assets/eye-level/park-eye-level.png' :
-          map.id === 'center' ? '/rpg-assets/eye-level/tournament-eye-level.png' : null,
+          map.id === 'center' ? '/rpg-assets/eye-level/tournament-eye-level.png' :
+         map.id === 'home' ? '/rpg-assets/eye-level/apartment-eye-level.png' : null,
          panoramaUrl, classicUrl, map.image].filter(Boolean);
     let sourceIndex = 0;
     const sourceImage = new Image();
@@ -230,7 +231,7 @@ window.NeoOverworldEyeLevel = (() => {
         arcade:  {slots:[.16,.32,.50,.68,.84],ground:.09,scale:.98,cropTop:.05},
         park:    {slots:[.15,.32,.50,.68,.85],ground:.085,scale:1.00,cropTop:0},
         cafe:    {slots:[.19,.39,.61,.81],ground:.095,scale:.96,cropTop:.08},
-        home:    {slots:[.23,.48,.75],ground:.09,scale:.94,cropTop:.18},
+        home:    {slots:[.23,.48,.75],ground:.09,scale:.94,cropTop:.04},
         center:  {slots:[.15,.32,.50,.68,.85],ground:.09,scale:1.00,cropTop:.04},
         library: {slots:[.19,.39,.61,.81],ground:.09,scale:.96,cropTop:.18}
       };
