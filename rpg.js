@@ -1129,8 +1129,44 @@ function overworldOpportunities(){
   story.push({kind:'arc',id:episode.id,label:'♜ '+episode.title+' · ⏳ 1 period',
    description:cast.reina.name+' · an optional rivalry chapter',disabled:locked});
  }
+ const circuit=[
+  {kind:'community',id:'board',label:'▦ Community Board · standings, rivalries & club news',disabled:locked}
+ ];
+ const consequence=CONSEQ.opportunities(state)[0];
+ if(consequence)circuit.push({kind:'consequence',id:String(consequence.id),
+  label:(state.location==='center'?'↗ Reflect on your match with ':'↗ Visit the Center to reflect on ')+
+   (cast[consequence.npc]?.name||'a rival')+' · free',disabled:locked});
+ for(const cup of TOURNAMENTS.available(state)){
+  const progress=TOURNAMENTS.status(state,cup.id);
+  circuit.push({kind:'cup',id:cup.id,
+   label:'🏆 '+cup.title+' · Round '+(progress.round+1)+'/3 · ⏳ 1 period',
+   description:'vs '+(cast[progress.opponent]?.name||'Tournament opponent'),disabled:locked});
+ }
+ const exhibition=scheduleEvent();
+ if(exhibition&&!TOURNAMENTS.cups.some(cup=>cup.day===exhibition.day))
+  circuit.push({kind:'exhibition',id:String(exhibition.day),
+   label:'⚔ '+exhibition.title+' · ⏳ 1 period · +'+exhibition.reward+' pts if you win',disabled:locked});
+ for(const entry of COMPETE.available(state))circuit.push({
+  kind:'competitive',id:entry.id,label:'⚔ '+entry.title,
+  description:(cast[entry.npc]?.name||'Circuit trainer')+' · '+entry.description,disabled:locked
+ });
+ const c=COMPETE.hydrate(state),local=COMPETE.localProgress(state);
+ if(state.location!=='center'&&state.day>=2&&state.day<=90&&!c.daily[state.day])
+  circuit.push({kind:'visitCircuit',id:'center',label:'↗ Train at the Community Center · free',disabled:locked});
+ if(state.location!=='shop'&&state.day<=90&&COMPETE.localDay(state.day)&&
+    local.status==='open'&&(local.round>0||state.slot<=1))
+  circuit.push({kind:'visitCircuit',id:'shop',label:'↗ Visit today’s Saturday Local at The Lucky Draw · free',disabled:locked});
+ const nextLocal=COMPETE.upcoming(state);
+ const circuitNote=(state.day<=90&&COMPETE.localDay(state.day)&&local.status==='champion'?'You won this week’s local!':
+  state.day<=90&&COMPETE.localDay(state.day)&&local.status==='eliminated'?'This week’s local is over for you.':
+  nextLocal?'Next Saturday Local: Day '+nextLocal+' at The Lucky Draw. Two rounds, one day.':'The competitive season has ended.')+
+  ' Daily challenges run at the Community Center and refresh each new day.';
+ const brackets=TOURNAMENTS.cups.map(cup=>
+  window.NeoRpgTournamentPresentation?.bracketModel?.(
+   cup,TOURNAMENTS.status(state,cup.id),state.day,cast
+  )).filter(Boolean);
  return {
-  story,
+  story,circuit,circuitNote,brackets,
   situation:SITUATIONS.available(state,present).map(event=>({
    kind:'situation',id:event.id,label:'✧ '+event.title+' · ⏳ 1 period',
    description:cast[event.npc].name+' · optional surprise · '+event.focusCost+' focus',
@@ -1158,6 +1194,12 @@ function runOverworldOpportunity(kind,id){
  else if(kind==='situation')act('situation:'+found.id);
  else if(kind==='sidequest')act('sideQuest:'+found.id);
  else if(kind==='encounter')act('encounter:'+found.id);
+ else if(kind==='cup')act('cup:'+found.id);
+ else if(kind==='competitive')act('competitive:'+found.id);
+ else if(kind==='exhibition')act('event');
+ else if(kind==='community')openCommunityBoard();
+ else if(kind==='consequence')act('consequence');
+ else if(kind==='visitCircuit')return travelTo(String(found.id),{intro:false});
  else return false;
  return true;
 }
@@ -1324,8 +1366,28 @@ window.NeoRpgOverworldBridge=Object.freeze({
   return intro?.id===id&&intro.location===state.location?intro.src:null;
  },
  interact(id){if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id))return false;selectPerson(id);return true;},
- activities(){const items=WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:overworldControlsLocked()||!!a.disabledReason}));if(state.location==='shop'&&state.deckJourney?.starter)items.unshift({id:'boosterShop',title:'Browse booster packs · The Lucky Draw',disabled:overworldControlsLocked()||state.day>90});return items;},
- activity(id){if(id==='boosterShop'){if(overworldControlsLocked()||state.day>90||state.location!=='shop'||!state.deckJourney?.starter)return false;openBoosterShop();return true;}if(overworldControlsLocked()||!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;performActivity(id);return true;},
+ activities(){
+  const locked=overworldControlsLocked(),ended=state.day>90;
+  const items=WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:locked||ended||!!a.disabledReason}));
+  if(state.location==='shop'&&state.deckJourney?.starter)
+   items.unshift({id:'boosterShop',title:'Browse booster packs · The Lucky Draw',disabled:locked||ended});
+  items.push({id:'rest',title:state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period',disabled:locked||ended});
+  if(state.location==='home')
+   items.push({id:'sleep',title:'Sleep until morning · ⏳ '+(3-state.slot)+' period(s)',disabled:locked||ended});
+  return items;
+ },
+ activity(id){
+  if(overworldControlsLocked()||state.day>90)return false;
+  if(id==='boosterShop'){
+   if(state.location!=='shop'||!state.deckJourney?.starter)return false;
+   openBoosterShop();return true;
+  }
+  if(id==='rest'||id==='sleep'&&state.location==='home'){
+   safeAct(id);return true;
+  }
+  if(!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;
+  performActivity(id);return true;
+ },
 });
 function overworldStoryActive(){
  return !!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||
@@ -2795,83 +2857,6 @@ function openCommunityBoard(){
  }
  $('communityDialog').showModal();
 }
-function renderCompetitiveCircuit(locked){
- const root=$('competitiveEvents');if(!root)return;
- root.replaceChildren();
- const board=document.createElement('button');board.type='button';board.className='activity';
- board.textContent='▦ Community Board · NPC standings, rivalries & club news';
- board.disabled=locked;board.onclick=openCommunityBoard;root.append(board);
- const turning=CONSEQ.opportunities(state)[0];
- if(turning){
-  const reflect=document.createElement('button');reflect.type='button';reflect.className='activity';
-  reflect.disabled=locked;
-  reflect.textContent=(state.location==='center'?'↗ Reflect on your match with ':'↗ Visit the Center to reflect on ')+
-   (cast[turning.npc]?.name||'a rival')+' · free';
-  reflect.onclick=()=>act('consequence');
-  root.append(reflect);
- }
- const entries=COMPETE.available(state);
- for(const entry of entries){
-  const button=document.createElement('button');button.type='button';button.className='activity';button.disabled=locked;
-  const title=document.createElement('strong');title.textContent='⚔ '+entry.title;
-  const detail=document.createElement('small');detail.textContent=(cast[entry.npc]?.name||'Circuit trainer')+' · '+entry.description;
-  button.append(title,detail);button.onclick=()=>act('competitive:'+entry.id);root.append(button);
- }
- const c=COMPETE.hydrate(state),local=COMPETE.localProgress(state);
- if(state.location!=='center'&&state.day>=2&&state.day<=90&&!c.daily[state.day]){
-  const button=document.createElement('button');button.className='activity';button.disabled=locked;
-  button.textContent='Train at the Community Center';
-  button.onclick=()=>{state.location='center';state.selected=null;persist();say('Narrator','The practice tables are set up for today’s rotating challenge.');};
-  root.append(button);
- }
- if(state.location!=='shop'&&state.day<=90&&COMPETE.localDay(state.day)&&local.status==='open'&&(local.round>0||state.slot<=1)){
-  const button=document.createElement('button');button.className='activity';button.disabled=locked;
-  button.textContent='Visit today’s Saturday Local at The Lucky Draw';
-  button.onclick=()=>{state.location='shop';state.selected=null;persist();say('Narrator','The local circuit has gathered for its weekly matches.');};
-  root.append(button);
- }
- const hint=document.createElement('p');hint.className='empty-note';
- const next=COMPETE.upcoming(state);
- hint.textContent=(state.day<=90&&COMPETE.localDay(state.day)&&local.status==='champion'?'You won this week’s local!':
-  state.day<=90&&COMPETE.localDay(state.day)&&local.status==='eliminated'?'This week’s local is over for you.':
-  next?'Next Saturday Local: Day '+next+' at The Lucky Draw. Two rounds, one day.':'The competitive season has ended.')+
-  ' Daily challenges run at the Community Center and refresh each new day.';
- root.append(hint);
-}
-function renderBracketProgress(){
- const root=$('bracketProgress');if(!root)return;
- // Keep bracket DOM stable across ordinary dialogue renders; only game progress updates it.
- const stamp=JSON.stringify([state.day,...TOURNAMENTS.cups.map(cup=>{
-  const current=TOURNAMENTS.status(state,cup.id);
-  return [cup.id,current.state,current.round,current.results?.length||0];
- })]);
- if(root.dataset.tournamentStamp===stamp)return;
- root.dataset.tournamentStamp=stamp;root.replaceChildren();
- for(const cup of TOURNAMENTS.cups){
-  const progress=TOURNAMENTS.status(state,cup.id);
-  const model=window.NeoRpgTournamentPresentation?.bracketModel?.(cup,progress,state.day,cast);
-  if(!model)continue;
-  const card=document.createElement('section');
-  card.className='bracket-card neo-circuit-card'+(model.state==='champion'?' bracket-champion':'')+
-   (model.state==='eliminated'?' bracket-eliminated':'');
-  card.setAttribute('aria-label',model.title+' · '+model.headline);
-  const title=document.createElement('strong');title.className='neo-bracket-title';title.textContent=model.title;
-  const label=document.createElement('span');label.className='neo-bracket-status';label.textContent=model.headline;
-  const rounds=document.createElement('div');rounds.className='neo-bracket-rounds';
-  for(const item of model.rows){
-   const row=document.createElement('div');
-   row.className='neo-bracket-round'+(item.label==='CLEARED'?' is-cleared':'')+
-    (item.current?' is-current':'')+(item.label==='ELIMINATED'?' is-eliminated':'');
-   row.setAttribute('aria-label','Round '+item.round+': '+item.opponent+' · '+item.label);
-   const number=document.createElement('span');number.className='neo-bracket-round__num';number.textContent=String(item.round).padStart(2,'0');
-   const name=document.createElement('span');name.className='neo-bracket-round__name';name.textContent=item.opponent;
-   const result=document.createElement('span');result.className='neo-bracket-round__state';result.textContent=item.label;
-   row.append(number,name,result);rounds.append(row);
-  }
-  card.append(title,label,rounds);root.append(card);
- }
-}
-
 // One spoiler-safe timeline for appointments, known stories and official fixtures.
 function openCalendar(){
  const root=$('calendarEntries');root.replaceChildren();
@@ -3247,7 +3232,7 @@ function cleanRpgLabel(value){
 }
 function simplifyRpgLabels(){
  if(typeof document.querySelector!=='function')return;
- for(const id of ['choices','activities']){
+ for(const id of ['choices']){
   const root=$(id);if(!root)continue;
   for(const button of root.querySelectorAll('button')){
    const walk=document.createTreeWalker(button,NodeFilter.SHOW_TEXT);
@@ -3628,17 +3613,6 @@ function render(){
   row.textContent=(info.status==='complete'?'✓ ':info.status==='missed'?'– ':'◆ ')+info.title+' · '+(info.status==='active'?info.summary.replace(/shop|cafe|park|center|arcade|library/g,m=>places[m][0]):info.summary);
   $('sideQuestJournal').append(row);
  }
- $('activities').replaceChildren();const e=scheduleEvent();
- const cups=TOURNAMENTS.available(state);
- const items=[...cups.map(c=>{const progress=TOURNAMENTS.status(state,c.id);return [c.title+' · Round '+(progress.round+1)+'/3 vs '+cast[progress.opponent].name+' · ⏳ 1 period','cup:'+c.id]}),...(e&&!TOURNAMENTS.cups.some(c=>c.day===e.day)?[[e.title+' · ⏳ 1 period · +'+e.reward+' pts if you win','event']]:[]),
- [state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period','rest'],
- ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
- ['Calendar · free','calendar'],['New campaign','new']];
- for(const [label,action] of items){
-  const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>safeAct(action);$('activities').append(b);
- }
- renderBracketProgress();
- renderCompetitiveCircuit(locked);
  renderSeasonReport();
  $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
  for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
