@@ -1428,8 +1428,8 @@ function projectedAttackValue(active,defender,turnSerial=0,benchCount=null){
   // Confused attack as a guaranteed KO (or guaranteed damage). The status
   // can be removed by a projected Full Heal Energy or evolution beforehand.
   const confusionChance=active.status==='Confused'?.5:1;
-  const impact=(Math.min(dmg,hp)*1.05+ko*115)*confusionChance+
-   (/Poison|Paraly|Sleep|Confus/i.test(attack.text||'')?10:0);
+  const impact=(Math.min(dmg,hp)*1.05+ko*115+
+   (/Poison|Paraly|Sleep|Confus/i.test(attack.text||'')?10:0))*confusionChance;
   best=Math.max(best,impact);
  }
  return best;
