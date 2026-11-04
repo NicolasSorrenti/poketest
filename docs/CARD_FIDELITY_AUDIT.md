@@ -582,3 +582,17 @@ Other source-inspected effects: Wigglytuff Lullaby/Do the Wave; Clefable Metrono
 
 A user-requested immediate run of the scheduled card audit reviewed `base2-28` Vaporeon, `base2-29` Venomoth, `base2-30` Victreebel, `base2-31` Vileplume, `base2-32` Wigglytuff, `base2-33` Butterfree, `base2-34` Dodrio, `base2-35` Exeggutor, `base2-36` Fearow and `base2-37` Gloom. The printed attacks and Powers were compared to the compiler and reducer paths, including attack payment and outcomes, status/choice ownership, Retreat Aid, and the previously fixed Heal and Shift effects. Ledger status: **partial source review** for all 10 (20 attack/Power entries); no card was claimed end-to-end verified. No new discrepancy was confirmed, so no gameplay change was justified. No new tests, test files or CI changes. Further runtime scenarios and complete errata/rulings coverage remain to certify these cards.
 
+
+## 2026-11-04 — Jungle five-printing source audit (38–42)
+
+Scope: exact five unreviewed Jungle printings; catalogue effect text/costs compared with Limitless printed listings and inspected against engine.js shared attack dispatch. **All five remain partial**: this batch did not run real reducer/browser scenarios or independently resolve all WotC-era edge rulings. No new tests were added.
+
+| Card | Checked attacks / current status | Finding |
+| --- | --- | --- |
+| [Lickitung JU #38](https://limitlesstcg.com/cards/JU/38) (`base2-38`) | Tongue Wrap / Supersonic — partial | Source routes 10 + coin Paralysis and heads-only Confusion through `coinStatus`; runtime coin outcomes untested. |
+| [Marowak JU #39](https://limitlesstcg.com/cards/JU/39) (`base2-39`) | Bonemerang / Call for Friend — partial | `multi` and `searchBasicToBench` handlers reflect printed two-flip damage, Fighting-only Basic search, full Bench restriction and shuffle; choice paths not exercised. |
+| [Nidorina JU #40](https://limitlesstcg.com/cards/JU/40) (`base2-40`) | Supersonic / Double Kick — partial | Source maps coin Confusion and two-flip 30× heads; energy-cost edge cases untested. |
+| [Parasect JU #41](https://limitlesstcg.com/cards/JU/41) (`base2-41`) | Spore / Slash — partial | Source maps automatic Sleep and plain 30 damage; interactions untested. |
+| [Persian JU #42](https://limitlesstcg.com/cards/JU/42) (`base2-42`) | Scratch / Pounce — partial | **Fixed** `defendReduce` returning before Pounce's printed 30 damage; now the +10 protection logic returns early only for attacks with zero printed damage. Specific-Defending-Pokémon requirement, switching termination and runtime checks remain open. |
+
+Code change: `engine.js` keeps the existing early return for non-damaging reduction attacks (such as Minimize), while damaging protection attacks fall through to the ordinary damage, weakness/resistance, and KO pipeline. Targeted static reasoning only; no execution or CI validation claimed here.
