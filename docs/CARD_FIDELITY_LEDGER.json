@@ -4486,13 +4486,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Slam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Step In",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4."
         }
       ]
     },
@@ -4505,13 +4513,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Dark Mind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Curse",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5."
         }
       ]
     },
@@ -4524,13 +4540,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Nightmare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Transparency",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6."
         }
       ]
     },
@@ -4543,13 +4567,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Stretch Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7. Check empty Bench, multiple targets, shields and KO/prizes in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "High Jump Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7. Check empty Bench, multiple targets, shields and KO/prizes in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7."
         }
       ]
     },
@@ -4562,13 +4594,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Prophecy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dark Mind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8."
         }
       ]
     },
