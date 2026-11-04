@@ -2256,50 +2256,38 @@ function showPreparedDuel(){
  if(!PRE.isReady(pending))return;
  const preview=describePreparedDuel();
  if(!preview)return;
- const modal=$('preDuelDialog'),art=$('preDuelArt');art.replaceChildren();
  const artRequest=++preDuelArtSerial;
- const matchStyle=window.NeoRpgTournamentPresentation?.matchModel?.(pending,{cast,cups:TOURNAMENTS.cups});
- modal.dataset.circuit=matchStyle?.kind||'friendly';
- $('preDuelContext').textContent=preview.stake;
- $('preDuelOpponent').textContent=preview.name;
+ const matchStyle=window.NeoRpgTournamentPresentation?.matchModel?.(
+  pending,{cast,cups:TOURNAMENTS.cups}
+ );
  const accelerated=pending.npcDeckTier>(pending.day<=30?1:pending.day<=60?2:3);
- $('preDuelDeck').textContent=preview.deckLabel+(pending.customOpponentDeck?' · YOUR COLLABORATIVE BUILD':pending.npcDeckTier===3?' · EXPERT DECK'+(accelerated?' · PERSONAL MILESTONE':''):pending.npcDeckTier===2?' · REFINED DECK'+(accelerated?' · PERSONAL MILESTONE':''):'')+' · '+preview.place;
- const line=preview.lines[pending.preview.index];
- $('preDuelSpeaker').textContent=line.speaker;
- $('preDuelLine').textContent=line.text;
- $('preDuelNext').hidden=pending.preview.index>=preview.lines.length-1;
- $('preDuelStart').hidden=pending.preview.index<preview.lines.length-1;
- const placeholder=document.createElement('span');placeholder.className='preduel-placeholder';
- placeholder.textContent='✦ '+preview.name+' · '+preview.place;
- art.append(placeholder);
- // Show the portrait immediately, then prefer the eligible story CG.
- // If it is missing (or none is eligible), reuse the booster / battle chime-in art.
- const face=makeAvatar(preview.npc);face.className+=' preduel-portrait';art.append(face);
- window.NeoRpgDiscreetAvatars?.set?.(art,preview.npc,'determined',preview.name);
- const artworkCandidates=[
-  ...(preview.artwork?.path?[{path:preview.artwork.path,kind:'event',alt:preview.artwork.title}]:[]),
-  ...PRE.boosterArtCandidates(preview.npc).map(path=>({path,kind:'booster',alt:preview.name+' before the duel'}))
+ const deck=preview.deckLabel+(pending.customOpponentDeck?
+  ' · YOUR COLLABORATIVE BUILD':
+  pending.npcDeckTier===3?' · EXPERT DECK'+(accelerated?' · PERSONAL MILESTONE':''):
+  pending.npcDeckTier===2?' · REFINED DECK'+(accelerated?' · PERSONAL MILESTONE':''):'')+
+  ' · '+preview.place;
+ const dialogue=preview.lines[pending.preview.index];
+ const artwork=[
+  ...(preview.artwork?.path?[{
+   path:preview.artwork.path,kind:'event',alt:preview.artwork.title
+  }]:[]),
+  ...PRE.boosterArtCandidates(preview.npc).map(path=>({
+   path,kind:'booster',alt:preview.name+' before the duel'
+  }))
  ];
- const tryArtwork=index=>{
-  if(index>=artworkCandidates.length||artRequest!==preDuelArtSerial)return;
-  const choice=artworkCandidates[index],photo=new Image();
-  photo.className='preduel-cg'+(choice.kind==='booster'?' preduel-booster-art':'');
-  photo.alt=choice.alt;
-  photo.decoding='async';
-  photo.onload=async()=>{
-   // Keep the original portrait until the higher-resolution artwork decodes.
-   if(typeof photo.decode==='function'){
-    try{await photo.decode();}catch{if(!photo.naturalWidth){tryArtwork(index+1);return;}}
-   }
-   if(artRequest!==preDuelArtSerial||!PRE.isReady(state.pendingDuel)||state.pendingDuel.id!==preview.id)return;
-   art.replaceChildren(photo);
-   window.NeoRpgDiscreetAvatars?.set?.(art,preview.npc,'determined',preview.name);
-  };
-  photo.onerror=()=>{if(artRequest===preDuelArtSerial)tryArtwork(index+1);};
-  photo.src=choice.path;
- };
- tryArtwork(0);
- if(!modal.open)modal.showModal();
+ const view=window.NeoRpgOverworldPreDuel;
+ if(!view?.render?.(document,{
+  circuit:matchStyle?.kind||'friendly',
+  stake:preview.stake,name:preview.name,npc:preview.npc,place:preview.place,
+  deck,speaker:dialogue.speaker,line:dialogue.text,
+  canContinue:pending.preview.index<preview.lines.length-1,artwork
+ },{
+  avatar:id=>makeAvatar(id),
+  discreet:(target,id,name)=>
+   window.NeoRpgDiscreetAvatars?.set?.(target,id,'determined',name),
+  isCurrent:()=>artRequest===preDuelArtSerial&&
+   PRE.isReady(state.pendingDuel)&&state.pendingDuel.id===preview.id
+ }))throw Error('The overworld pre-duel presenter did not load.');
 }
 function advancePreparedDuel(){
  if(!PRE.advance(state.pendingDuel))return;
