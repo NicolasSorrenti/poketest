@@ -3222,13 +3222,6 @@ function simplifyRpgLabels(){
   }
  }
 }
-function renderRpgActions(locked,shown){
- // Only dialogue visibility remains here; the overworld owns navigation and actions.
- const dialogue=$('dialogue');
- if(!dialogue)return;
- const hasDialogue=locked||Boolean(shown?.choices?.length)||Boolean(shown?.line);
- dialogue.hidden=shown?.presentation==='character-menu'||!hasDialogue;
-}
 // Day 91 year-end blooper reel; state lives in the campaign save for local/cloud persistence.
 function maybeShowYearEndFallReel(){
  if(state.day!==91||state.yearEndFallReelCompleted||state.yearEndFallReelActive||
@@ -3427,54 +3420,34 @@ function render(){
  $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingMandatory?renderMandatory():showingSlice?renderSliceOfLife():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
  overworldRenderedDialogue=String(shown?.line||'');
- // Narration is visually distinguished by italics, without an unnecessary speaker label.
- const isNarration=shown?.speaker==='Narrator';
- $('speaker').textContent=isNarration?'':(shown?.speaker||'');
- $('speaker').hidden=isNarration;
- $('line').textContent=shown?.line||'The town is waiting.';
- $('dialogue').classList.toggle('is-narration',isNarration);
- $('choices').replaceChildren();
- const responseActions=new Set(['mandatoryChoice','storyChoice','sliceChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book','socialPlan','dateInvite','flirt','eventInvite','eventChat']);
- const isPlayerPrompt=!!shown?.choices?.some(([,action])=>responseActions.has(action.split(':')[0]));
- const promptRoot=$('playerChoicePrompt'),promptPanel=$('playerChoicePanel'),choiceList=$('choices');
- const newPlayerPrompt=!!(promptRoot?.hidden&&isPlayerPrompt);
- if(promptRoot&&promptPanel){
-  promptRoot.hidden=!isPlayerPrompt;
-  const desiredParent=isPlayerPrompt?promptPanel:$('dialogue');
-  if(choiceList.parentElement!==desiredParent)desiredParent.append(choiceList);
-  choiceList.classList.toggle('centered',isPlayerPrompt);
- }
- for(const [label,action] of shown.choices||[]){
-  const b=document.createElement('button');b.className='choice'+(action==='storyFinish'?' finish':'');b.textContent=label;
+ // Gameplay decides which actions are legal; the overworld view owns DOM
+ // construction, dialogue focus, response layout, and character menus.
+ const choiceItems=(shown?.choices||[]).map(([label,action])=>{
+  const item={label,action,finish:action==='storyFinish'};
   if(action.startsWith('storyChoice:')){
-   const event=STORY.byId(state.activeStory.id),chosen=event.choices[Number(action.split(':')[1])],bond=state.relationships[event.npc];
-   b.disabled=chosen.kind==='commit'&&!VN.commitmentReady(state,event.npc);
-   if(b.disabled)b.title='You need a stronger bond for this step.';
+   const event=state.activeStory&&STORY.byId(state.activeStory.id);
+   const chosen=event?.choices[Number(action.split(':')[1])];
+   item.disabled=!!chosen&&chosen.kind==='commit'&&!VN.commitmentReady(state,event.npc);
+   if(item.disabled)item.reason='You need a stronger bond for this step.';
   }
   if(action.startsWith('socialDo:')){
    const [,npc,activityId]=action.split(':');
-   const selection=SOCIAL.options(state,npc,currentPeople(),cast).find(x=>x.id===activityId);
-   b.disabled=!selection||!!selection.disabledReason;
-   if(b.disabled)b.title=selection?.disabledReason||'This activity is not available.';
+   const selection=SOCIAL.options(state,npc,currentPeople(),cast).find(option=>option.id===activityId);
+   item.disabled=!selection||!!selection.disabledReason;
+   if(item.disabled)item.reason=selection?.disabledReason||'This activity is not available.';
   }
   if(action.startsWith('dateBook:')){
    const [,npc,index,activityId,tone]=action.split(':');
    const target=APPOINTMENTS.proposed(state,npc,SCHEDULES)[Number(index)];
-   const option=target?DATES.choices(state,npc,target.place,activityId,SOCIAL,cast).find(t=>t.id===tone):null;
-   b.disabled=!option||!!option.disabledReason;
-   if(b.disabled)b.title=option?.disabledReason||'That meeting time is no longer available.';
+   const option=target?DATES.choices(state,npc,target.place,activityId,SOCIAL,cast).find(value=>value.id===tone):null;
+   item.disabled=!option||!!option.disabledReason;
+   if(item.disabled)item.reason=option?.disabledReason||'That meeting time is no longer available.';
   }
-  b.onclick=()=>safeAct(action);$('choices').append(b);
- }
- if(newPlayerPrompt){
-  const first=[...choiceList.children].find(b=>!b.disabled);
-  if(typeof first?.focus==='function')first.focus({preventScroll:true});
- }
- // The final line remains dismissible even though the calendar wipe locks travel.
- if((!locked||timeSequence.blocked&&!timeSequence.running)&&shown?.line&&!shown?.choices?.length){
-  const b=document.createElement('button');b.className='choice finish';b.textContent='Continue ›';
-  b.onclick=()=>closeSceneDialogue();$('choices').append(b);
- }
+  return item;
+ });
+ // A finished narration may be acknowledged even while its time wipe has locked travel.
+ if((!locked||timeSequence.blocked&&!timeSequence.running)&&shown?.line&&!shown?.choices?.length)
+  choiceItems.push({label:'Continue ›',continue:true,finish:true});
  // Stable keyed list updates: preserve existing avatar image nodes and focus.
  // Full replaceChildren here used to retrigger image loading during every dialogue.
  const elsewhere=[];
@@ -3552,63 +3525,55 @@ function render(){
   active:!!(showingMandatory||showingSlice||showingSituation||showingStory||showingEncounter||showingArc||sideQuest),
   script:sceneScript,remote:remoteScene,sceneId:activeOutfitSceneId,cgOnly:liveCgOnly
  });
- const characterActions=$('characterActions');
- if(characterActions){
-  const menuMode=shown?.presentation==='character-menu';
-  document.body.classList.toggle('rpg-character-choice-menu',menuMode);
-  const menuId=menuMode?shown.menuCharacter:null;
-  const selected=menuMode?(menuId&&people.includes(menuId)?menuId:null):(state.selected&&people.includes(state.selected)&&!locked?state.selected:null);
-  characterActions.classList.toggle('choice-menu',menuMode);
-  characterActions.hidden=!selected;
-  characterActions.replaceChildren();
-  if(menuMode&&selected){
-   const eyebrow=document.createElement('span');eyebrow.className='character-menu-eyebrow';eyebrow.textContent=shown.menuHeading||'CHOOSE AN OPTION';
-   const heading=document.createElement('strong');heading.className='character-menu-title';heading.textContent=cast[selected].name;
-   const description=document.createElement('p');description.className='character-menu-description';description.textContent=shown.menuDescription||'Choose an option.';
-   const list=document.createElement('div');list.className='character-menu-options';
-   characterActions.append(eyebrow,heading,description,list);
-   for(const [label,action] of shown.choices||[]){
-    const button=document.createElement('button');button.type='button';button.className='character-action-btn';button.textContent=label;button.onclick=()=>safeAct(action);
-    if(action.startsWith('socialDo:')){
-     const [,npc,activityId]=action.split(':');
-     const choice=SOCIAL.options(state,npc,currentPeople(),cast).find(x=>x.id===activityId);
-     button.disabled=!choice||!!choice.disabledReason;if(button.disabled)button.title=choice?.disabledReason||'This activity is not available.';
-    }
-    if(action.startsWith('dateBook:')){
-     const [,npc,index,activityId,tone]=action.split(':');
-     const target=APPOINTMENTS.proposed(state,npc,SCHEDULES)[Number(index)];
-     const choice=target?DATES.choices(state,npc,target.place,activityId,SOCIAL,cast).find(x=>x.id===tone):null;
-     button.disabled=!choice||!!choice.disabledReason;if(button.disabled)button.title=choice?.disabledReason||'That meeting option is no longer available.';
-    }
-    list.append(button);
-   }
-  }else if(selected){
-   const display=cast[selected].name.split(' ')[0],buttons=[
-    ['◉ Glance at',()=>glanceAt(selected),'View '+cast[selected].name+' up close'],
-    ['☏ Talk',()=>selectPerson(selected),'Talk to '+cast[selected].name],
-    ['⚔ Duel',()=>startDuel(selected),'Challenge '+cast[selected].name+' to a duel']
+ const menuMode=shown?.presentation==='character-menu';
+ const menuId=menuMode?shown.menuCharacter:null;
+ const selectedCharacter=menuMode?(menuId&&people.includes(menuId)?menuId:null):
+  (state.selected&&people.includes(state.selected)&&!locked?state.selected:null);
+ const stageMenu={mode:menuMode,characterId:selectedCharacter};
+ if(selectedCharacter){
+  stageMenu.name=cast[selectedCharacter].name;
+  if(menuMode){
+   stageMenu.heading=shown.menuHeading||'CHOOSE AN OPTION';
+   stageMenu.description=shown.menuDescription||'Choose an option.';
+   stageMenu.choices=choiceItems;
+  }else{
+   const display=cast[selectedCharacter].name.split(' ')[0];
+   stageMenu.actions=[
+    {id:'glance',label:'◉ Glance at',title:'View '+stageMenu.name+' up close'},
+    {id:'talk',label:'☏ Talk',title:'Talk to '+stageMenu.name},
+    {id:'duel',label:'⚔ Duel',title:'Challenge '+stageMenu.name+' to a duel'}
    ];
-   if(!state.hungOut?.[state.day+':'+selected]&&SOCIAL.options(state,selected,people,cast).some(a=>!a.disabledReason))
-    buttons.push(['✧ Spend time',()=>planSharedActivity(selected),'Suggest an activity together']);
-   if(APPOINTMENTS.proposed(state,selected,SCHEDULES).length)
-    buttons.push(['◷ Make plans',()=>act('dateInvite:'+selected),'Invite '+display+' to meet on another day']);
+   if(!state.hungOut?.[state.day+':'+selectedCharacter]&&
+      SOCIAL.options(state,selectedCharacter,people,cast).some(option=>!option.disabledReason))
+    stageMenu.actions.push({id:'spend',label:'✧ Spend time',title:'Suggest an activity together'});
+   if(APPOINTMENTS.proposed(state,selectedCharacter,SCHEDULES).length)
+    stageMenu.actions.push({id:'plan',label:'◷ Make plans',title:'Invite '+display+' to meet on another day'});
    if(state.deckJourney?.starter){
-    buttons.push(['⌕ Scout',()=>{
-     persist();location.assign('/rpg_deck_studio.html?scout='+encodeURIComponent(selected));
-    },'Review '+cast[selected].name+'’s usual theme deck and plan your upgrades']);
+    stageMenu.actions.push({id:'scout',label:'⌕ Scout',title:'Review '+stageMenu.name+'\u2019s usual theme deck and plan your upgrades'});
    }
-   if(PARTNER.unlocked(state,selected)&&state.deckJourney?.starter)
-    buttons.push(['▤ Deck',()=>act('partnerDeck:'+selected),'Edit '+display+'’s deck']);
-   for(const [label,action,title] of buttons){
-    const button=document.createElement('button');
-    button.type='button';button.className='character-action-btn';
-    button.textContent=label;button.title=title;button.onclick=action;
-    // Stable action ID lets the mobile layout hide Scout without changing PC.
-    button.dataset.characterAction=label.includes('Scout')?'scout':label.includes('Glance at')?'glance':label.includes('Deck')?'deck':'other';
-    characterActions.append(button);
-   }
+   if(PARTNER.unlocked(state,selectedCharacter)&&state.deckJourney?.starter)
+    stageMenu.actions.push({id:'deck',label:'▤ Deck',title:'Edit '+display+'\u2019s deck'});
   }
  }
+ const stageView=window.NeoRpgOverworldStageView;
+ if(!stageView?.render)throw Error('The overworld dialogue presenter did not load.');
+ stageView.render({
+  document,
+  model:{speech:shown,choices:choiceItems,menu:stageMenu,locked},
+  onAction:action=>safeAct(action),
+  onContinue:closeSceneDialogue,
+  onCommand:(command,id)=>{
+   if(!cast[id]||!currentPeople().includes(id))return;
+   if(command==='glance')void glanceAt(id);
+   else if(command==='talk')selectPerson(id);
+   else if(command==='duel')startDuel(id);
+   else if(command==='spend')planSharedActivity(id);
+   else if(command==='plan')act('dateInvite:'+id);
+   else if(command==='scout'&&state.deckJourney?.starter){
+    persist();location.assign('/rpg_deck_studio.html?scout='+encodeURIComponent(id));
+   }else if(command==='deck')act('partnerDeck:'+id);
+  }
+ });
  portraitRoot.hidden=state.location!=='home'&&(people.length>0||!!portraitId);
  $('storyEvents').replaceChildren();const stories=eligibleStories();
  for(const e of stories){
@@ -3715,7 +3680,6 @@ function render(){
  for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
  $('notice').textContent=conversationInProgress()?'Finish the conversation before traveling or starting another activity.':state.mandatoryEventState?.active?'Incoming story — finish this moment to continue.':state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  simplifyRpgLabels();
- renderRpgActions(locked,shown);
  window.NeoRpgCharacterMotion?.update?.({
   location:state.location,speaker:shown?.speaker||'',line:shown?.line||'',
   dialogue:$('dialogue'),speakerElement:$('speaker'),lineElement:$('line')
