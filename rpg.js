@@ -1115,9 +1115,57 @@ function liveOverworldPose(id){
  if(source&&window.NeoRpgOverworldBridge?.setVisiblePose(id,source))return visibleOverworldPose(id);
  return null;
 }
+// Event eligibility is evaluated from campaign state, not from hidden HTML
+// buttons. The overworld renders this view model and sends typed actions back.
+function overworldOpportunities(){
+ const locked=overworldControlsLocked(),present=currentPeople();
+ const story=eligibleStories().map(e=>{
+  const chapter=BOND_PLAN.byEvent[e.id];
+  return {kind:'story',id:e.id,label:'✦ '+e.title+' · ⏳ 1 period',
+   description:cast[e.npc].name+(chapter?' · Bond chapter '+chapter.chapter+' / 4':'')+
+    (e.evergreen?' · available until season end':' · limited-time encounter'),disabled:locked};
+ });
+ for(const episode of ARC.available(state,present)){
+  story.push({kind:'arc',id:episode.id,label:'♜ '+episode.title+' · ⏳ 1 period',
+   description:cast.reina.name+' · an optional rivalry chapter',disabled:locked});
+ }
+ return {
+  story,
+  situation:SITUATIONS.available(state,present).map(event=>({
+   kind:'situation',id:event.id,label:'✧ '+event.title+' · ⏳ 1 period',
+   description:cast[event.npc].name+' · optional surprise · '+event.focusCost+' focus',
+   disabled:locked
+  })),
+  sidequest:SIDE.available(state,present).map(entry=>({
+   kind:'sidequest',id:entry.quest.id,label:'◆ '+entry.stage.title+' · ⏳ 1 period',
+   description:cast[entry.stage.npc].name+' · '+entry.quest.title,disabled:locked
+  })),
+  encounter:WORLD.availableEncounters(state,present).map(entry=>({
+   kind:'encounter',id:entry.id,label:'✧ '+entry.title+' · ⏳ 1 period',
+   description:(entry.npc?cast[entry.npc].name:'The neighborhood')+
+    ' · limited-time opportunity',disabled:locked
+  }))
+ };
+}
+function runOverworldOpportunity(kind,id){
+ if(overworldControlsLocked())return false;
+ const groups=overworldOpportunities();
+ const found=Object.values(groups).flat().find(item=>
+  item.kind===kind&&String(item.id)===String(id)&&!item.disabled);
+ if(!found)return false;
+ if(kind==='story')startStory(found.id);
+ else if(kind==='arc')act('arc:'+found.id);
+ else if(kind==='situation')act('situation:'+found.id);
+ else if(kind==='sidequest')act('sideQuest:'+found.id);
+ else if(kind==='encounter')act('encounter:'+found.id);
+ else return false;
+ return true;
+}
 // Public command/query boundary between RPG state and its overworld presenter.
 window.NeoRpgOverworldBridge=Object.freeze({
  resetCampaign,
+ opportunities:overworldOpportunities,
+ runOpportunity:runOverworldOpportunity,
  setVisiblePose(id,src){
   if(!cast[id]||!currentPeople().includes(id)||typeof src!=='string')return false;
   let url;try{url=new URL(src,location.href)}catch{return false}
@@ -3575,40 +3623,6 @@ function render(){
   }
  });
  portraitRoot.hidden=state.location!=='home'&&(people.length>0||!!portraitId);
- $('storyEvents').replaceChildren();const stories=eligibleStories();
- for(const e of stories){
-  const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.dataset.plannerKey=e.id;b.textContent='✦  '+e.title+' · ⏳ 1 period';
-  const chapter=BOND_PLAN.byEvent[e.id];
-  const small=document.createElement('small');
-  small.textContent=cast[e.npc].name+(chapter?' · Bond chapter '+chapter.chapter+' / 4':'')+(e.evergreen?' · available until season end':' · limited-time encounter');
-  b.append(small);b.onclick=()=>startStory(e.id);$('storyEvents').append(b);
- }
- const personalEpisodes=ARC.available(state,currentPeople());
- for(const episode of personalEpisodes){
-  const b=document.createElement('button');b.className='event-btn arc-episode';b.disabled=locked;b.dataset.plannerKey=episode.id;
-  const title=document.createElement('strong');title.textContent='♜  '+episode.title+' · ⏳ 1 period';
-  const hint=document.createElement('small');hint.textContent=cast.reina.name+' · an optional rivalry chapter';
-  b.append(title,hint);b.onclick=()=>act('arc:'+episode.id);
-  $('storyEvents').append(b);
- }
- if(!stories.length&&!personalEpisodes.length){const x=document.createElement('p');x.className='empty-note';x.textContent='No special story encounter right now.';$('storyEvents').append(x);}
-
- $('situationEvents').replaceChildren();
- const moments=SITUATIONS.available(state,currentPeople());
- for(const event of moments){
-  const b=document.createElement('button');b.className='event-btn situation-event';b.dataset.plannerKey=event.id;
-  b.disabled=locked;
-  const label=document.createElement('strong');label.textContent='✧ '+event.title+' · ⏳ 1 period';
-  const hint=document.createElement('small');
-  hint.textContent=cast[event.npc].name+' · optional surprise · '+event.focusCost+' focus';
-  b.append(label,hint);b.onclick=()=>act('situation:'+event.id);
-  $('situationEvents').append(b);
- }
- if(!moments.length){
-  const note=document.createElement('p');note.className='empty-note';
-  note.textContent='No unusual moment here right now. A stronger bond and the right time may reveal one.';
-  $('situationEvents').append(note);
- }
  $('lifeStats').replaceChildren();
  const lifeGauges=[['FOCUS',state.focus,100,'Energy for town activities and outings'],['INSIGHT',state.insight,99,'6 Insight: -3 credits on themed boosters; 15 Insight: -5 credits; 10 unlocks masterclasses'],['REPUTATION',state.reputation,100,'6 Reputation unlocks paid clinics; 15 unlocks weekly sponsored boosters'],['DUEL PREP',state.preparation,3,'Each point awards 14 credits on a win or 8 on a draw/loss after a duel']];
  for(const [label,value,max,title] of lifeGauges){
@@ -3636,32 +3650,12 @@ function render(){
   b.append(title,description);b.title=entry.text;b.onclick=()=>act('townActivity:'+entry.id);
   $('townActivities').append(b);
  }
- $('sideQuestEvents').replaceChildren();
- for(const x of SIDE.available(state,currentPeople())){
-  const b=document.createElement('button');b.className='event-btn';b.dataset.plannerKey=x.quest.id;b.disabled=locked;
-  const h=document.createElement('strong');h.textContent='◆ '+x.stage.title+' · ⏳ 1 period';
-  const hint=document.createElement('small');hint.textContent=cast[x.stage.npc].name+' · '+x.quest.title;
-  b.append(h,hint);b.onclick=()=>act('sideQuest:'+x.quest.id);$('sideQuestEvents').append(b);
- }
- if(!$('sideQuestEvents').children.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No side quest encounter here right now.';$('sideQuestEvents').append(p);}
  $('sideQuestJournal').replaceChildren();
  for(const info of SIDE.journal(state)){
   const row=document.createElement('div');row.className='calendar-entry';
   row.textContent=(info.status==='complete'?'✓ ':info.status==='missed'?'– ':'◆ ')+info.title+' · '+(info.status==='active'?info.summary.replace(/shop|cafe|park|center|arcade|library/g,m=>places[m][0]):info.summary);
   $('sideQuestJournal').append(row);
  }
- $('townEncounters').replaceChildren();
- const encounters=WORLD.availableEncounters(state,currentPeople());
- for(const entry of encounters){
-  const b=document.createElement('button');b.className='encounter-btn';b.dataset.plannerKey=entry.id;b.disabled=locked;
-  const title=document.createElement('strong');title.textContent='✧ '+entry.title+' · ⏳ 1 period';
-  const hint=document.createElement('small');hint.textContent=(entry.npc?cast[entry.npc].name:'The neighborhood')+' · limited-time opportunity';
-  b.append(title,hint);b.onclick=()=>act('encounter:'+entry.id);$('townEncounters').append(b);
- }
- if(!encounters.length){
-  const note=document.createElement('p');note.className='empty-note';note.textContent='No special encounters here at this time.';$('townEncounters').append(note);
- }
-
  $('activities').replaceChildren();const e=scheduleEvent();
  const cups=TOURNAMENTS.available(state);
  const items=[...cups.map(c=>{const progress=TOURNAMENTS.status(state,c.id);return [c.title+' · Round '+(progress.round+1)+'/3 vs '+cast[progress.opponent].name+' · ⏳ 1 period','cup:'+c.id]}),...(e&&!TOURNAMENTS.cups.some(c=>c.day===e.day)?[[e.title+' · ⏳ 1 period · +'+e.reward+' pts if you win','event']]:[]),
