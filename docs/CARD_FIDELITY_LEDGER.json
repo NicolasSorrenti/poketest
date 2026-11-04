@@ -3295,13 +3295,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Tongue Wrap",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed 10 damage plus heads-only Paralysis; exact-one Colorless cost and coinStatus dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-38 text/cost checked against https://limitlesstcg.com/cards/JU/38.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Heads-only Confusion with zero damage and printed Energy requirement; coinStatus dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-38 text/cost checked against https://limitlesstcg.com/cards/JU/38.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
@@ -3314,13 +3326,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Bonemerang",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Exactly two flips at 30 damage per heads, Fighting-Fighting cost; multi dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-39 text/cost checked against https://limitlesstcg.com/cards/JU/39.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Call for Friend",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Fighting Basic-only deck search to Bench, five-Pokémon Bench cap and shuffle; searchBasicToBench dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-39 text/cost checked against https://limitlesstcg.com/cards/JU/39.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
@@ -3333,13 +3357,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Heads-only Confusion with zero damage and printed Energy requirement; coinStatus dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-40 text/cost checked against https://limitlesstcg.com/cards/JU/40.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Double Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Two flips at 30 damage per heads, Grass/Colorless/Colorless cost; multi dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-40 text/cost checked against https://limitlesstcg.com/cards/JU/40.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
@@ -3352,13 +3388,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Spore",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Automatic Sleep with double-Grass cost and no damage; status dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-41 text/cost checked against https://limitlesstcg.com/cards/JU/41.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Slash",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Plain 30 damage with three Colorless Energy requirements.",
+          "evidence": [
+            "Jungle base2-41 text/cost checked against https://limitlesstcg.com/cards/JU/41.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
@@ -3371,13 +3419,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Plain 20 damage with two Colorless Energy requirements.",
+          "evidence": [
+            "Jungle base2-42 text/cost checked against https://limitlesstcg.com/cards/JU/42.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Pounce",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed 30 damage plus 10 reduction next rival turn. Fixed premature return in defendReduce handler; damage now proceeds into normal calculation. Source-target restriction and real runtime interactions still unverified.",
+          "evidence": [
+            "Jungle base2-42 text/cost checked against https://limitlesstcg.com/cards/JU/42.",
+            "engine.js: defendReduce now continues into normal damage resolution when printed damage is nonzero.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
