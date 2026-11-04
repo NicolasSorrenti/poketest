@@ -92,6 +92,12 @@
      JSON.stringify(attack.cost)===JSON.stringify(['Water'])&&
      /^Does 10 damage plus 10 more damage for each Energy attached to Lapras but not used to pay for this attack's Energy cost\./.test(String(attack.text||'')))
    return Object.freeze({kind:'water-extra',damage:10,factor:10,subject:'Lapras',cap:20});
+  // Fossil Omanyte #52: printed Water Gun specifies extra Water Energy,
+  // although the imported catalogue omits the Water qualifier.
+  if(attack.name==='Water Gun'&&attack.damage==='10+'&&
+     JSON.stringify(attack.cost)===JSON.stringify(['Water'])&&
+     /^Does 10 damage plus 10 more damage for each Energy attached to Omanyte but not used to pay for this attack's Energy cost\./.test(String(attack.text||'')))
+    return Object.freeze({kind:'water-extra',damage:10,factor:10,subject:'Omanyte',cap:20});
   if(CLASSIC){const specific=CLASSIC.compile(attack);if(specific)return specific;}
   const text=String(attack.text||'').trim(),damage=String(attack.damage||'');
   // Neo Revelation Entei #6: the printed two-card discard is an attack
