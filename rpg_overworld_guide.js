@@ -105,6 +105,15 @@
    const heading=element('summary',null,
     '◈ Town progress · '+progressSummary.points+' circuit points · '+progressSummary.credits+' credits');
    details.append(heading);
+   if(progressSummary.lastDuel){
+    const receipt=element('article','neo-ow-guide-receipt');
+    receipt.append(
+     element('strong',null,progressSummary.lastDuel.title),
+     element('p',null,progressSummary.lastDuel.description),
+     button('Dismiss result','dismissReceipt','',data.locked,'planner-action')
+    );
+    details.append(receipt);
+   }
    const stats=element('div','neo-ow-guide-stats');
    for(const item of progressSummary.stats||[]){
     const line=element('p','neo-ow-guide-stat');
