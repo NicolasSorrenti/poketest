@@ -1354,6 +1354,10 @@ async function saveCampaign(){
  window.dispatchEvent(new CustomEvent('neo-rpg-save-status',{detail:{message,ok:!cloud||ok}}));
  return !cloud||ok;
 }
+// Arrival state must exist before publishing the RPG bridge to consumers.
+let pendingEntrySurprise=false;
+let pendingOverworldArrival=null;
+let arrivalGate=false;
 // Public command/query boundary between RPG state and its overworld presenter.
 window.NeoRpgOverworldBridge=Object.freeze({
  resetCampaign,
@@ -1454,7 +1458,9 @@ function notifyOverworldRendering(){
 function overworldControlsLocked(){
  return controlsLocked()||arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active;
 }
-window.dispatchEvent(new Event('neo-rpg-overworld-bridge-ready'));
+// The bridge is not ready until all lexical campaign state and startup
+// listeners have initialized. Dispatching here used to mount the overworld
+// from inside this module, before arrivalGate existed (TDZ crash).
 function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state),...(SLICE?.scheduleOverrides?.(state)||[])];}
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
@@ -3162,9 +3168,6 @@ function maybeShowYearEndFallReel(){
  controls.append(prev,label,next,close);panel.append(title,img,controls);document.body.append(panel);
  document.addEventListener('keydown',onKey,true);show();close.focus();
 }
-let pendingEntrySurprise=false;
-let pendingOverworldArrival=null;
-let arrivalGate=false;
 const phoneMessages=window.NeoRpgPhoneMessages?.create({
  state,cast,manifest:window.NeoOverworld,relationships:REL,persist,render,
  people:currentPeople,
@@ -3421,7 +3424,10 @@ persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deck
   hadLocalSave:hadCampaignSave,
   showButton:true
  });
-
+ // Publish readiness only after all declarations, save startup, game UI and
+ // duel recovery wiring have been initialized. The overworld listener
+ // synchronously mounts and reads snapshot(), so earlier dispatch is unsafe.
+ window.dispatchEvent(new Event('neo-rpg-overworld-bridge-ready'));
 })();
 
 
