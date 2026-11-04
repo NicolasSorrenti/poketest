@@ -1186,8 +1186,9 @@ function overworldOpportunities(){
 function runOverworldOpportunity(kind,id){
  if(overworldControlsLocked())return false;
  const groups=overworldOpportunities();
- const found=Object.values(groups).flat().find(item=>
-  item.kind===kind&&String(item.id)===String(id)&&!item.disabled);
+ const found=['story','situation','sidequest','encounter','circuit']
+  .flatMap(section=>groups[section]||[]).find(item=>
+   item.kind===kind&&String(item.id)===String(id)&&!item.disabled);
  if(!found)return false;
  if(kind==='story')startStory(found.id);
  else if(kind==='arc')act('arc:'+found.id);
