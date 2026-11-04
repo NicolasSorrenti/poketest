@@ -10,6 +10,14 @@ The November 4 PC arcade screenshot is the reference for the preferred **large c
 
 The existing top-down mode, its location maps, placement data and all campaign/duel state are strictly out of scope. Never include characters, visible UIs, logos, readable brand lettering, speech bubbles, baked-in NPC shadows or character outlines in the background image.
 
+## Explicit clean-room arcade revision (Nov 4)
+
+Generated attempts that resemble Pokémon merchandise, franchise creatures, red-white capture-ball icons, official logos, or baked-in game UI **must be rejected and must not be committed**. The approved theme for Pixel Palace is a **completely fictional neon retro-futurist arcade**: abstract game displays with geometric vector landscapes, non-animal pixel patterns, luminous grids and maze motifs; only generic arcade cabinets, empty seats, plants, pendant lights, booth seating, polished violet flooring, and teal/magenta ceiling tubes. Avoid even a red-and-white ball icon: the visual language does not need it.
+
+**Background-only generation prompt:** Original character-free ultra-wide panoramic environment for an independent 2D side-view JRPG, an inviting retro-futurist neon arcade at human eye level, approximately 3200x1080 landscape. Multiple arcade cabinets line the rear walls with deliberately abstract screens showing geometric patterns, maze lines, simple gradients, stars and nonfigurative shapes. Violet and cyan light bars, warm hanging lamps, believable vanishing points, subtle plants, small side seating and a richly textured continuous floor with an unobstructed walking band in front. Compose to receive four large full-body NPC sprites placed separately at left, mid-left, mid-right and right. No visible characters, no humans, no animals, no fictional mascots, no recognizable game assets, no Poké Balls, no Pokémon, no text, no names, no emblems, no banners, no signage, no interface, no navigation buttons, no speech bubbles, no scene controls, no giant empty top region. High-quality hand-painted anime background plate, harmonious perspective and clean staging.
+
+**Artwork acceptance:** Before any GitHub asset write, inspect the entire image and reject it if the model has baked in characters, UI controls or trademark-like symbols. Keep the current working arcade plate until a genuinely compliant replacement is ready.
+
 ## Technical deliverable
 
 - One **character-free 3200 × 1080 px** horizontal, seamless-feeling panoramic plate per location, exported as optimized sRGB PNG. No black margins, no transparent bands, no stretching, no mirrored repeats.
