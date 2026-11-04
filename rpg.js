@@ -3360,8 +3360,6 @@ function render(){
  });
  syncSceneCG();
  queueMicrotask(maybeShowYearEndFallReel);
- $('deckPicker').disabled=locked||ended||!!state.deckJourney;
- if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
  // If another transition or mandatory scene owned the screen, resume the arrival
  // chime once it settles instead of silently losing this place entry.
  if(pendingOverworldArrival&&!arrivalGate&&!window.NeoRpgTimeTransitions?.active){
@@ -3385,26 +3383,23 @@ $('preDuelDialog').addEventListener('cancel',e=>{e.preventDefault();cancelPrepar
 $('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
 $('tutorialDismiss').onclick=()=>{tutorialQueue.shift();displayTutorial();};
 document.addEventListener('keydown',e=>{if($('statusDialog')?.open)return;if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(scene.dialogue&&scene.index<scene.dialogue.length-1&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeArc&&!state.activeSideQuest){e.preventDefault();act('chatNext');}else if(state.mandatoryEventState?.active?.phase==='lines'){e.preventDefault();act('mandatoryNext');}else if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
-async function initDecks(){
+// Old pre-collection saves may still refer to a deck by ID. Validate that
+// stored ID without creating a hidden selector or second deck-building UI.
+async function verifyLegacyDeckId(){
+ if(state.deckJourney!==null)return;
  try{
-  const select=$('deckPicker');select.replaceChildren();
-  if(state.deckJourney!==null){
-   const opt=document.createElement('option');opt.value='custom';opt.textContent=state.deckJourney.starter?COLLECT.byId(state.deckJourney.starter).name+' · Your collection':'Choose your starter above';
-   select.append(opt);select.value='custom';select.disabled=true;
-   select.onchange=()=>{select.value='custom';};
-  }else{
-   const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');
-   const data=await res.json();for(const d of data.decks.filter(x=>x.id!=='custom')){
-    const opt=document.createElement('option');opt.value=d.id;opt.textContent=d.name;select.append(opt);
-   }
-   if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;
-   else{select.value='blackout';state.playerDeck='blackout';}
-   select.onchange=()=>{if(controlsLocked()){select.value=state.playerDeck;return;}state.playerDeck=select.value;persist();};
+  const response=await fetch('/api/classic/decks');
+  if(!response.ok)throw Error('Could not load decks');
+  const data=await response.json();
+  const eligible=Array.isArray(data.decks)?data.decks.filter(deck=>deck?.id&&deck.id!=='custom'):[];
+  if(!eligible.some(deck=>deck.id===state.playerDeck)){
+   state.playerDeck='blackout';
+   persist();
   }
- }catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}
+ }catch(error){$('notice').textContent='Deck list unavailable: '+error.message;}
 }
 window.NeoRpgAudio?.init?.();
-persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deckJourney.starter&&!state.ended&&!state.pendingDuel)showStarterChoice();if(state.deckJourney?.lastPack&&!state.deckJourney.lastPack.opened&&!state.pendingDuel)showPackReveal();if(state.pendingDuel){
+persist();render();void verifyLegacyDeckId();loadCardNames();if(state.deckJourney&&!state.deckJourney.starter&&!state.ended&&!state.pendingDuel)showStarterChoice();if(state.deckJourney?.lastPack&&!state.deckJourney.lastPack.opened&&!state.pendingDuel)showPackReveal();if(state.pendingDuel){
  if(state.pendingDuel.deckCards)sessionStorage.setItem('neoRpgDeck:'+state.pendingDuel.id,JSON.stringify(state.pendingDuel.deckCards));
  if(state.pendingDuel.customOpponentDeck)sessionStorage.setItem('neoRpgNpcDeck:'+state.pendingDuel.id,JSON.stringify(state.pendingDuel.customOpponentDeck));
  if(PRE.isReady(state.pendingDuel)){
