@@ -713,3 +713,18 @@ This batch compares the printed text stored in `cards/base3.json` against the re
 | [Ditto #18](https://limitlesstcg.com/cards/FO/18) `base3-18` | Transform Active-only dynamic copy and flexible attached Energy, except retains Power and cannot evolve; headless `effectiveCard` and legacy dynamic copy inspected. Verify HP change, status suppression, mirrored Ditto, evolution and payment. | **partial** |
 
 No confirmed engine defect in this batch, and no new tests, suites or CI changes. Ledger and notes committed directly to main. After this batch, **292 / 1,123 printings have at least partial evidence, 831 have no review evidence, and 0 are fully certified; 1,123 remain not fully verified**. Future executions should prioritize completing prior partial records with deterministic runtime evidence rather than repeatedly treating source inspection as certification.
+
+
+## 2026-11-04 — Fossil #19–23 (five distinct non-holo reprints)
+
+At start, PR #440 was already merged and no open card-fidelity PR was present (Apex and RPG PRs were left untouched). These five non-holo printings reproduce the corresponding holo Fossil #4–8 text in the local catalogue. Compared the imported card text and engine handlers in `engine.js`, `headless_duel.js`, `classic_power_core.js`; the printed-card references below provide independent text cross-checks, but full historical rulings and deterministic gameplay scenarios are still pending. All remain **partial**, not verified. No engine code or tests were changed.
+
+| Printing | Findings and remaining validation | Status |
+| --- | --- | --- |
+| [Dragonite #19](https://limitlesstcg.com/cards/FO/19) `base3-19` | Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. | **partial** |
+| [Gengar #20](https://limitlesstcg.com/cards/FO/20) `base3-20` | Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. | **partial** |
+| [Haunter #21](https://limitlesstcg.com/cards/FO/21) `base3-21` | Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. | **partial** |
+| [Hitmonlee #22](https://limitlesstcg.com/cards/FO/22) `base3-22` | Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7. Check empty Bench, multiple targets, shields and KO/prizes in runtime. | **partial** |
+| [Hypno #23](https://limitlesstcg.com/cards/FO/23) `base3-23` | Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. | **partial** |
+
+Potential legacy discrepancy to reproduce: Transparency is gated by `if(dmg)` in `engine.js`, so an attack that has only a non-damage effect may not trigger the required coin flip. Do not treat this as a confirmed regression until a targeted runtime scenario is executed. No new tests or CI changes.
