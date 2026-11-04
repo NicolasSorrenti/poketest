@@ -100,9 +100,13 @@ window.NeoOverworldEyeLevel = (() => {
     const panoramaUrl = '/rpg-assets/eye-level/' + map.id + '-panorama.svg';
     // Fallback: the original shop illustration is a narrower eye-level plate.
     // Build a wider legacy variant only if the new original panorama cannot load.
+    // Evening uses a distinct dusk grade of the approved cafe scene; the
+    // daytime plate remains the fallback and is unchanged for other slots.
+    const eveningPlateUrl = map.id === 'cafe' && slot === 2
+      ? '/rpg-assets/eye-level/cafe-eye-level-evening-v2.webp' : null;
     const sources = map.id === 'shop'
       ? [productionUrl, classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
-      : [productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' :
+      : [eveningPlateUrl, productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' :
          map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level.png' :
          map.id === 'park' ? '/rpg-assets/eye-level/park-eye-level.png' :
           map.id === 'center' ? '/rpg-assets/eye-level/tournament-eye-level.png' :
@@ -239,7 +243,8 @@ window.NeoOverworldEyeLevel = (() => {
       const zone = sceneStaging[map.id] || sceneStaging.shop;
       // Only trim the dedicated 3200x1080 scene artwork. Legacy panoramas
       // and fallback location images retain their original full framing.
-      const cropTop = productionUrl && sourceIndex === 0 ? zone.cropTop : 0;
+      const usingAuthoredPlate = sourceIndex === 0 || (eveningPlateUrl && sourceIndex === 1);
+      const cropTop = productionUrl && usingAuthoredPlate ? zone.cropTop : 0;
       stageWidth = Math.ceil(Math.max(width * 1.35, height * ratio / (1 - cropTop)));
 
       const count = sprites.length;
