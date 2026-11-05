@@ -864,6 +864,12 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
  if(!unit||!defender)return 0;
  const immediate=projectedAttackValue(unit,defender,turnSerial,benchCount);
  if(remaining===0)return immediate;
+ // Poison resolves at our end-of-turn checkup, before the next Energy
+ // attachment forecast. A lethally poisoned Active cannot benefit from
+ // next-turn Energy in hand, even if that Energy would cure Poison then.
+ // Keep today's payable attack value; never project a post-KO attacker.
+ if(unit.poison&&hpRemaining(unit)>0&&
+    (unit.poisonDamage||10)>=hpRemaining(unit))return immediate;
  // Paralysis expires at the end of the affected turn; unlike Sleep, recovery
  // is guaranteed by our next turn. Do not treat it as a permanent attack lock.
  // Miracle Energy expires at the end of its owner's turn, so do not
