@@ -566,7 +566,12 @@ function prompt(g,plan,helpers){
  if(name==="The Boss's Way"&&!chosen(d,'find'))return single('find',side,deck(c=>pokemon(c)&&c.name.startsWith('Dark ')),'Choose Dark Evolution',false);
  if(name==='Poké Ball'&&!chosen(d,'find')&&helpers.flip(g)){const available=deck(pokemon);if(available.length)return single('find',side,available,'Search for a Pokémon',true);d.find=[];}
  if(name==='Pokédex'&&!chosen(d,'arrange')){const k=Math.min(5,p.deck.length);if(!k)d.arrange=[];else return multi('arrange',side,options(p.deck.slice(-k).reverse().map((id,i)=>({i,label:get(id).name})),'top'),k,k,'Reorder top cards (top to bottom)');}
- if(name==='Recycle'&&!chosen(d,'recover')&&helpers.flip(g))return single('recover',side,disc(p),'Put a card from discard on your deck',true);
+ if(name==='Recycle'&&!chosen(d,'recover')&&helpers.flip(g)){
+  const available=disc(p);
+  // Heads with an empty discard pile still resolves without a choice.
+  if(available.length)return single('recover',side,available,'Put a card from discard on your deck',true);
+  d.recover=[];
+ }
  if(name==='Gust of Wind'&&cannotSwitch(g,1-side))d.target=[];
  if(name==='Switch'&&cannotSwitch(g,side))d.target=[];
  if(name==='Gust of Wind'&&!chosen(d,'target')){
