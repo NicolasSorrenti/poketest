@@ -1,6 +1,6 @@
 /* Full-screen VN tournament hall: intentionally separate from the overworld map. */
 .neo-cup-story[hidden]{display:none!important}
-.neo-cup-story{position:fixed;inset:0;z-index:1200;isolation:isolate;display:grid;place-items:center;
+.neo-cup-story{position:fixed;inset:0;z-index:9999;isolation:isolate;display:grid;place-items:center;
  overflow:hidden;color:#fff5fa;background:#080e1c;font-family:Inter,system-ui,sans-serif}
 .neo-cup-story__backdrop{position:absolute;inset:0;background:
  radial-gradient(ellipse 46% 52% at 50% 22%,#556ca17d,transparent 90%),
