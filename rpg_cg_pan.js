@@ -25,6 +25,13 @@
    if(!w||!h||!img.naturalWidth||!img.naturalHeight)return;
    // Preserve image proportions, and never crop its horizontal edges.
    const imageHeight=w*img.naturalHeight/img.naturalWidth;
+   if(imageHeight<=h){
+    img.style.transform='';
+    img.style.position=originalPosition;
+    img.style.width=previous.width;img.style.height=previous.height;
+    img.style.maxWidth=previous.maxWidth;img.style.maxHeight=previous.maxHeight;
+    return;
+   }
    const visibleFraction=cfg.visibleHeightPercent/100;
    // The desired half-image viewport is only possible when the frame aspect
    // ratio matches. If it doesn't, use the available frame without distortion.
