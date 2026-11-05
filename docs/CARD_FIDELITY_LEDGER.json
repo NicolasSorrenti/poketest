@@ -5589,7 +5589,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Energy Search's empty Basic Energy deck crash fixed in merged PR #505; search adds selected Basic Energy to hand and shuffles. Full active-reducer execution, hidden search, legality and no-target scenarios still pending.",
+          "evidence": [
+            "2026-11-05: compared cards/base3.json or cards/base4.json printed-text import with live classic_trainer_core.js/classic_power_core.js; source inspection only, not a deterministic reducer run or independent historical-ruling certification."
+          ]
         }
       ]
     },
@@ -5600,7 +5604,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Gambler shuffles remaining hand into deck, then flips and draws 8 heads or 1 tails in current classic_trainer_core.js. Both outcomes, deck exhaustion, Trainer discard order and RNG require active-reducer scenarios.",
+          "evidence": [
+            "2026-11-05: compared cards/base3.json or cards/base4.json printed-text import with live classic_trainer_core.js/classic_power_core.js; source inspection only, not a deterministic reducer run or independent historical-ruling certification."
+          ]
         }
       ]
     },
@@ -5611,7 +5619,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Recycle heads with empty discard pile crash fixed in merged PR #506; current source places chosen discard card on top of deck. Heads/tails, no-target and discard selection need reducer execution.",
+          "evidence": [
+            "2026-11-05: compared cards/base3.json or cards/base4.json printed-text import with live classic_trainer_core.js/classic_power_core.js; source inspection only, not a deterministic reducer run or independent historical-ruling certification."
+          ]
         }
       ]
     },
@@ -5630,7 +5642,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Confuse Ray",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Confuse Ray costs three Psychic Energy, deals 30, and Confuses on heads in imported print; runtime attack compiler and coin outcomes not executed. Existing Damage Swap reducer evidence remains independent.",
+          "evidence": [
+            "2026-11-05: compared cards/base3.json or cards/base4.json printed-text import with live classic_trainer_core.js/classic_power_core.js; source inspection only, not a deterministic reducer run or independent historical-ruling certification."
+          ]
         },
         {
           "kind": "power",
