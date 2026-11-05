@@ -9049,13 +9049,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Mega Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Fling rejects empty opposing Bench; shuffles opposing Active with attachments; follow-up promotion, immunity, ownership and turn sequencing not executed."
+          ],
+          "scope": "Source-only: Fling rejects empty opposing Bench; shuffles opposing Active with attachments; follow-up promotion, immunity, ownership and turn sequencing not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Fling",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Fling rejects empty opposing Bench; shuffles opposing Active with attachments; follow-up promotion, immunity, ownership and turn sequencing not executed."
+          ],
+          "scope": "Source-only: Fling rejects empty opposing Bench; shuffles opposing Active with attachments; follow-up promotion, immunity, ownership and turn sequencing not executed."
         }
       ]
     },
@@ -9093,13 +9101,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Fickle Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Reel In on-play selector offers up to three discarded Pokémon; verify Basic/Evolution eligibility, disabled Power, selection, hand transfer and evolution trigger."
+          ],
+          "scope": "Source-only: Reel In on-play selector offers up to three discarded Pokémon; verify Basic/Evolution eligibility, disabled Power, selection, hand transfer and evolution trigger."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Reel In",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Reel In on-play selector offers up to three discarded Pokémon; verify Basic/Evolution eligibility, disabled Power, selection, hand transfer and evolution trigger."
+          ],
+          "scope": "Source-only: Reel In on-play selector offers up to three discarded Pokémon; verify Basic/Evolution eligibility, disabled Power, selection, hand transfer and evolution trigger."
         }
       ]
     },
@@ -9112,13 +9128,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Petal Whirlwind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Hay Fever blocks Trainer play via powerInPlay; Petal Whirlwind three flips and self-Confusion need live resolution and status-lock checks."
+          ],
+          "scope": "Source-only: Hay Fever blocks Trainer play via powerInPlay; Petal Whirlwind three flips and self-Confusion need live resolution and status-lock checks."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Hay Fever",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Hay Fever blocks Trainer play via powerInPlay; Petal Whirlwind three flips and self-Confusion need live resolution and status-lock checks."
+          ],
+          "scope": "Source-only: Hay Fever blocks Trainer play via powerInPlay; Petal Whirlwind three flips and self-Confusion need live resolution and status-lock checks."
         }
       ]
     },
@@ -9131,13 +9155,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Mass Explosion",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Mass Explosion printed both-side Koffing/Weezing spread; Stun Gas heads Poison/tails Paralysis. Simultaneous KO, damage prevention, Prize ordering unexecuted."
+          ],
+          "scope": "Source-only: Mass Explosion printed both-side Koffing/Weezing spread; Stun Gas heads Poison/tails Paralysis. Simultaneous KO, damage prevention, Prize ordering unexecuted."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Stun Gas",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Mass Explosion printed both-side Koffing/Weezing spread; Stun Gas heads Poison/tails Paralysis. Simultaneous KO, damage prevention, Prize ordering unexecuted."
+          ],
+          "scope": "Source-only: Mass Explosion printed both-side Koffing/Weezing spread; Stun Gas heads Poison/tails Paralysis. Simultaneous KO, damage prevention, Prize ordering unexecuted."
         }
       ]
     },
@@ -9200,13 +9232,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Rolling Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Energy Bomb interactive per-Energy Bench destination; no-Bench branch discards all attached Energy. Verify attack damage order, KO, multiple decisions and ownership."
+          ],
+          "scope": "Source-only: Energy Bomb interactive per-Energy Bench destination; no-Bench branch discards all attached Energy. Verify attack damage order, KO, multiple decisions and ownership."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Energy Bomb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Energy Bomb interactive per-Energy Bench destination; no-Bench branch discards all attached Energy. Verify attack damage order, KO, multiple decisions and ownership."
+          ],
+          "scope": "Source-only: Energy Bomb interactive per-Energy Bench destination; no-Bench branch discards all attached Energy. Verify attack damage order, KO, multiple decisions and ownership."
         }
       ]
     },
