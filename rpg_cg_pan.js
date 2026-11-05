@@ -89,10 +89,14 @@
    input.setAttribute('aria-label',title+' in seconds');
    inputs[key]=input;label.append(input);fields.append(label);
    input.addEventListener('change',()=>{
+    // Read the user's edit BEFORE changing Auto mode. Previously stopAuto()
+    // redrew every input first, silently restoring the previous value.
+    const raw=input.value.trim();
+    const n=raw===''?NaN:Number(raw);
+    const next=Number.isFinite(n)?Math.max(0,Math.min(10000,n*1000)):values[key];
     stopAuto();
-    const n=Number(input.value);
-    values[key]=Number.isFinite(n)?Math.max(0,Math.min(10000,n*1000)):base[key];
-    input.value=(values[key]/1000).toFixed(2);
+    values[key]=next;
+    input.value=(next/1000).toFixed(2);
     changed();
    });
   }
@@ -114,12 +118,18 @@
   container.append(panel);
   function changed(){onChange({...values});}
   function draw(){
-   for(const [key] of keys)inputs[key].value=(values[key]/1000).toFixed(2);
+   for(const [key] of keys){
+    // Never replace text in a focused number input during a status update.
+    if(document.activeElement!==inputs[key])inputs[key].value=(values[key]/1000).toFixed(2);
+   }
+   drawStatus();
+  }
+  function drawStatus(){
    autoCheck.checked=auto;
    status.textContent=auto?['Stage 1 · Original speed','Stage 2 · 25% faster','Stage 3 · Another 25% faster (held)'][stage]:'Manual timing';
   }
   function clearTimers(){for(const t of timers)clearTimeout(t);timers=[];}
-  function stopAuto(){clearTimers();auto=false;stage=0;draw();}
+  function stopAuto(){clearTimers();auto=false;stage=0;drawStatus();}
   autoCheck.addEventListener('change',()=>{
    clearTimers();auto=autoCheck.checked;stage=0;
    if(auto){
