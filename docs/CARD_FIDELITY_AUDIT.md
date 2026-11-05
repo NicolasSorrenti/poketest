@@ -835,3 +835,18 @@ Checked [#440](https://github.com/NicolasSorrenti/poketest/pull/440) (merged) an
 **Fix:** `attack_effects_core.js` now narrowly overrides Fossil Omanyte Water Gun before generic classic compilation, matching the printed Water-specific bonus. This is distinct from the user-confirmed Fossil Lapras ruling, which remains unchanged. No new tests, test suites or CI changes. No browser/reducer scenario was executed, so do not certify these cards as verified.
 
 Ledger recount after this batch: **327 partial, 795 unreviewed, 1 verified**, total 1123; **1122 not fully verified**. The single earlier verified printing was not retested.
+
+
+## 2026-11-05 — Fossil 54–58 (active-engine source-only pass)
+
+Scope: exactly five distinct printings `base3-54` Shellder, `base3-55` Slowpoke, `base3-56` Tentacool, `base3-57` Zubat, `base3-58` Mr. Fuji. Checked imported printed text in `cards/base3.json` and relevant active-engine source. Live authority is `classic_local_service.js` requiring `headless_duel.js`; `rpg_duel_bridge.js` is UI integration. Attack, Power and Trainer execution lives in `headless_duel.js`, `classic_power_core.js` and `classic_trainer_core.js`. Legacy `engine.js` excluded. PR #440 already merged; no competing fidelity PR found before branch creation.
+
+| Printing | Source evidence and remaining verification | Status |
+| --- | --- | --- |
+| `base3-54` Shellder | Supersonic heads-only Confusion and Hide in Shell heads-only damage prevention (not other effects) compared to imported printed text. Execute coin outcomes, prevention duration, switch, damage/status distinctions and Energy legality. | partial |
+| `base3-55` Slowpoke | Spacing Out heals one counter on heads and cannot attack undamaged; Scavenge requires attached Energy discard and discarded Trainer retrieval. `headless_duel.js` explicitly sequences Scavenge cost and Trainer selection; existing partial prevention evidence retained. Execute successful recovery, heads/tails, no-counter legality and cost/choice edge cases. | partial |
+| `base3-56` Tentacool | Acid W:10; Cowardice forbids turn played, returns Tentacool to hand and discards attachments in `classic_power_core.js`. Execute active replacement, no-Bench outcome, special card ownership, status disablement and turn restrictions. | partial |
+| `base3-57` Zubat | Supersonic heads-only Confusion; Leech Life heals by actual damage after Weakness/Resistance. Execute coin, damage prevention, counter conversion, heal cap, costs and W/R. | partial |
+| `base3-58` Mr. Fuji | `classic_trainer_core.js` selects a Benched Pokémon and shuffles Pokémon plus attachments, with special Clefairy Doll ownership handling. Execute ownership, target legality, shuffle and attachments. | partial |
+
+No independent historical ruling adjudication or deterministic live-reducer/browser scenario was completed in this pass. **No verified statuses or confirmed active-engine defects**; no gameplay code, tests, CI or Apex modifications. Source inspection is not proof of correct gameplay. Ledger recount: **331 partial, 791 unreviewed, 1 verified; 1122 not fully verified**. The single verified printing was not retested.

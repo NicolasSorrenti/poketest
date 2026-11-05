@@ -5467,13 +5467,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed heads-only Confusion; inspect current attack compilation and reducer; coin outcomes, status immunity, attack costs and W/R interactions not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hide in Shell",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed heads-only prevention of damage during opponent next turn, while other attack effects still apply; prevention expiry, switching, status effects and coin outcomes not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         }
       ]
     },
@@ -5486,16 +5494,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Spacing Out",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed coin-heads heal one damage counter, illegal with no counters; no-damage legality, tails, heads and prevention interactions not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Scavenge",
           "status": "partial",
-          "scope": "Under Sand-attack tails, verifies Scavenge's two-Psychic attack cost remains payable before its attached-Energy discard, discard commits before prevention, identical Energy names auto-select, distinct Energy cards remain the attacker's choice, and no Trainer-recovery choice/effect occurs when prevented. Successful Trainer recovery and other interactions remain unreviewed.",
+          "scope": "Under Sand-attack tails, verifies Scavenge's two-Psychic attack cost remains payable before its attached-Energy discard, discard commits before prevention, identical Energy names auto-select, distinct Energy cards remain the attacker's choice, and no Trainer-recovery choice/effect occurs when prevented. Successful Trainer recovery and other interactions remain unreviewed. Previously partial for discard-before-prevention ordering; current headless_duel.js explicitly chooses attached Energy cost and discarded Trainer recovery; successful choice and all edge cases remain unexecuted.",
           "evidence": [
-            "test_card_fidelity_sandshrew.js: Scavenge's discard-before-prevention ordering, equivalent and distinct Energy choice paths, and skipped Trainer recovery when prevention stops the attack across Classic, Neo-theme and online-preview 60/40; partial interaction only."
+            "test_card_fidelity_sandshrew.js: Scavenge's discard-before-prevention ordering, equivalent and distinct Energy choice paths, and skipped Trainer recovery when prevention stops the attack across Classic, Neo-theme and online-preview 60/40; partial interaction only.",
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
           ]
         }
       ]
@@ -5509,13 +5522,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Acid",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed W:10 fixed damage; current reducer damage and Energy legality, weakness/resistance, status and prevention not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Cowardice",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Current classic_power_core.js checks playedTurn >= round and returns Tentacool to hand while discarding attachments; active replacement, ownership, disabled status and turn legality not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         }
       ]
     },
@@ -5528,13 +5549,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed heads-only Confusion at CC; current reducer coin, status and attack-cost paths not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Leech Life",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed 10 damage and heal by damage dealt after Weakness/Resistance; actual damage-to-counter conversion, prevention, cap and zero-damage scenarios not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         }
       ]
     },
@@ -5545,7 +5574,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Current classic_trainer_core.js targets Bench and shuffles target plus attachments into deck, with special ownership handling for Clefairy Doll; active target, ownership, shuffling and legality not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         }
       ]
     },
