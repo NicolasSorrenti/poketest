@@ -8409,13 +8409,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Teleport Blast",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Source-only current reducer: Teleport Blast damage-before-optional-switch and Mind Shock W/R bypass require runtime execution; inspect attack effect ordering, KO before switching and prevention."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Mind Shock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Source-only current reducer: Teleport Blast damage-before-optional-switch and Mind Shock W/R bypass require runtime execution; inspect attack effect ordering, KO before switching and prevention."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         }
       ]
     },
@@ -8428,13 +8436,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Stare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Source-only current reducer: Stare target selection accepts Active (-1) or Bench index and directly increments damage/suppression in FINAL_KINDS; potential bypass of attack prevention/Bench damage hooks needs confirmation. Poison Vapor poison and spread require runtime review."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Poison Vapor",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Source-only current reducer: Stare target selection accepts Active (-1) or Bench index and directly increments damage/suppression in FINAL_KINDS; potential bypass of attack prevention/Bench damage hooks needs confirmation. Poison Vapor poison and spread require runtime review."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         }
       ]
     },
@@ -8612,13 +8628,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Mega Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Source-only current reducer: Fling rejects no opposing Bench at attack declaration and resolution; opponent Active shuffle, attachments/under cards, promotion, prize and turn ownership still require execution."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Fling",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Source-only current reducer: Fling rejects no opposing Bench at attack declaration and resolution; opponent Active shuffle, attachments/under cards, promotion, prize and turn ownership still require execution."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         }
       ]
     },
@@ -8754,13 +8778,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Teleport Blast",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Same attacks as base5-1; reprint current reducer source-only review, runtime and historical rulings pending."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Mind Shock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Same attacks as base5-1; reprint current reducer source-only review, runtime and historical rulings pending."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         }
       ]
     },
@@ -8773,13 +8805,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Stare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Same attacks as base5-2; Stare direct damage/suppression path merits prevention and KO audit; runtime pending."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Poison Vapor",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only: Same attacks as base5-2; Stare direct damage/suppression path merits prevention and KO audit; runtime pending."
+          ],
+          "scope": "Not runtime verified; printed card text in cards/base5.json compared; historical rulings not independently adjudicated."
         }
       ]
     },
