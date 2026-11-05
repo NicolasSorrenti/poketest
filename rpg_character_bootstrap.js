@@ -73,7 +73,7 @@
  "/rpg_overworld_opportunities.js?v=owned-stage-20261104",
  "/rpg_overworld_guide.js?v=recovery-view-20261104",
  "/rpg_overworld_modals.js?v=modal-split-20261104",
- "/rpg_overworld_gallery.js?v=animated-real-lightbox-20261105",
+ "/rpg_overworld_gallery.js?v=lyla-photoshoot-complete-20261105",
  "/rpg_overworld_collection_view.js?v=collection-split-20261104",
  "/rpg_overworld_preduel_view.js?v=preduel-split-20261104",
  "/rpg_overworld_pack_view.js?v=pack-split-20261104",
@@ -88,7 +88,7 @@
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=state-deck-validation-20261104"
+ "/rpg.js?v=lyla-photoshoot-complete-20261105"
 ];
   function registry(packs){
     // Normalize the authenticated/API roster too (not just the generated file).
@@ -316,7 +316,7 @@
   // Artwork inventory is optional: a stale Render deploy or missing static file
   // must never prevent the campaign from starting.
   window.NeoRpgArtManifest=[];
-  await loadScript('/rpg_art_manifest.js?v=20261029-outfit-catalog-2',true).catch(error=>{
+  await loadScript('/rpg_art_manifest.js?v=lyla-photoshoot-complete-20261105',true).catch(error=>{
     console.warn('Optional RPG art inventory unavailable; continuing without additional gallery entries',error);
   });
   await loadScript(scripts.at(-1));

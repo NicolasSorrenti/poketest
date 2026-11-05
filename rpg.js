@@ -2472,7 +2472,8 @@ function artKey(path){return String(path||'').split('?')[0];}
 function buildArtEntries(){
  artEntries.clear();
  const register=(id,type,label,path)=>{
-  if(typeof path!=='string'||!/^\/rpg-assets\/[\w./-]+\.(?:png|webp|jpg|jpeg)$/i.test(path)||path.includes('..'))return;
+  if(typeof path!=='string'||!/^\/rpg-assets\/[\w./ -]+\.(?:png|webp|jpg|jpeg)$/i.test(path)||path.includes('..'))return;
+  if(type==='photoshoot'&&(id!=='lyla'||!path.startsWith('/rpg-assets/characters/lyla/photoshoot/')))return;
   // Retire the old expressions from the gallery, including previously seen paths.
   if(type==='expressions'&&!/\/expressionsv2\//.test(path))return;
   if(/\/(?:expression-portraits|expression-faces|vn-expressions|expressions)\//.test(path))return;
@@ -2567,6 +2568,9 @@ function populateGalleryCharacters(){
 function galleryViewModel(){
  buildArtEntries();
  const select=$('galleryCharacter'),category=$('galleryCategory');
+ // Photoshoots belong exclusively to Lyla, not to the shared category bar.
+ const categories=ART_TYPES.filter(item=>item.id!=='photoshoot'||galleryCharacterPage==='lyla');
+ if(!categories.some(item=>item.id===category.value))category.value='cg';
  if(!galleryCharacterPage){
   const ids=[...select.options].map(option=>option.value).filter(Boolean);
   const all=[...CG.gallery(state),...artEntries.values()].map(entry=>({
@@ -2589,7 +2593,7 @@ function galleryViewModel(){
   all.filter(entry=>entry.unlocked&&!entry.viewed):all;
  return {
   page:galleryCharacterPage,title:cast[galleryCharacterPage]?.name||galleryCharacterPage,
-  type:category.value,categories:ART_TYPES,all,visible
+  type:category.value,categories,all,visible
  };
 }
 function renderGallery(){
@@ -2603,7 +2607,7 @@ function renderGallery(){
    renderGallery();
   },
   chooseCategory:id=>{
-   if(!ART_TYPES.some(type=>type.id===id))return;
+   if(!ART_TYPES.some(type=>type.id===id)||id==='photoshoot'&&galleryCharacterPage!=='lyla')return;
    $('galleryCategory').value=id;renderGallery();
   },
   discreetAvatar:(target,id)=>

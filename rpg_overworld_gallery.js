@@ -54,6 +54,15 @@
   select.value=model.page;
   const title=get('galleryCharacterTitle');
   if(title)title.textContent=model.title||model.page;
+  const categorySelect=get('galleryCategory');
+  if(categorySelect){
+   const options=(model.categories||[]).map(cat=>{
+    const option=element(doc,'option',null,cat.label);
+    option.value=cat.id;return option;
+   });
+   categorySelect.replaceChildren(...options);
+   categorySelect.value=model.type||'cg';
+  }
   const all=model.all||[],visible=model.visible||[];
   const earned=all.filter(x=>x.unlocked).length;
   galleryCount.textContent=earned+' / '+all.length+' unlocked · '+visible.length+' shown';
@@ -76,9 +85,11 @@
    if(entry.character)handlers?.discreetAvatar?.(thumb,entry.character);
    if(entry.unlocked){
     const img=element(doc,'img');
-    img.alt='';img.hidden=true;thumb.append(img);
+    img.alt='';img.hidden=true;img.loading='lazy';img.decoding='async';thumb.append(img);
     if(entry.type){
-     img.onload=()=>{img.hidden=false;};
+     const pending=element(doc,'small','cg-thumb-loading','Loading artwork…');
+     thumb.append(pending);
+     img.onload=()=>{img.hidden=false;pending.remove();};
      img.onerror=()=>{img.hidden=true;thumb.textContent='Artwork unavailable';};
      img.src=entry.path;
     }else handlers?.loadCG?.(img,entry,kind=>{
@@ -129,10 +140,10 @@
   if(entry.character)handlers?.discreetAvatar?.(stage,entry.character);
   const img=doc.createElement('img');img.alt=entry.title||'Artwork';img.hidden=true;
   const pending=element(doc,'p','cg-pending','Artwork not installed yet.');
-  pending.hidden=true;stage.append(img,pending);
+  pending.textContent='Loading artwork…';stage.append(img,pending);
   if(!lightbox.open)lightbox.showModal();
   const current=()=>lightboxSequence===request&&lightbox.open;
-  const missing=()=>{if(current()){img.hidden=true;pending.hidden=false;}};
+  const missing=()=>{if(current()){img.hidden=true;pending.textContent='Artwork unavailable.';pending.hidden=false;}};
   const success=()=>{
    if(!current())return;
    img.hidden=false;pending.hidden=true;
