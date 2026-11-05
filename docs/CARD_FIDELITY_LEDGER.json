@@ -8623,13 +8623,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Psypunch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Bench Manipulation",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         }
       ]
     },
@@ -8669,13 +8675,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Sonicboom",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Magnetic Lines",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         }
       ]
     },
@@ -8740,13 +8752,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Mass Explosion",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Stun Gas",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         }
       ]
     },
@@ -9006,13 +9024,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Psypunch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Bench Manipulation",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         }
       ]
     },
@@ -9044,13 +9068,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Sonicboom",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Magnetic Lines",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source-only review: imported printed text and cost compared against headless_duel.js -> attack_effects_core.js, with interactive Magnetic Lines handling in headless_duel.js. No reducer execution or complete historical ruling adjudication; coin, damage, Energy and KO sequences pending."
+          ]
         }
       ]
     },
