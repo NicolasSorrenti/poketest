@@ -85,13 +85,13 @@
  });
  $('cgViewerClose').onclick=()=>viewer.close();
  $('cgViewerPan').onclick=()=>{if(pan){reset();return;}startPan();};
- $('cgViewerPrev').onclick=()=>show(index-1);$('cgViewerNext').onclick=()=>show(index+1);
+ $('cgViewerPrev').onclick=()=>show(index-1,galleryAnimated());$('cgViewerNext').onclick=()=>show(index+1,galleryAnimated());
  $('cgViewerZoomIn').onclick=()=>zoom(scale+.5);$('cgViewerZoomOut').onclick=()=>zoom(scale-.5);$('cgViewerReset').onclick=reset;
- viewer.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();show(index-1);}if(e.key==='ArrowRight'){e.preventDefault();show(index+1);}if(e.key==='+'||e.key==='=')zoom(scale+.5);if(e.key==='-')zoom(scale-.5);});
+ viewer.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();show(index-1,galleryAnimated());}if(e.key==='ArrowRight'){e.preventDefault();show(index+1,galleryAnimated());}if(e.key==='+'||e.key==='=')zoom(scale+.5);if(e.key==='-')zoom(scale-.5);});
  canvas.addEventListener('wheel',e=>{e.preventDefault();zoom(scale+(e.deltaY<0?.25:-.25));},{passive:false});
  canvas.addEventListener('pointerdown',e=>{if(pan)stopPan();canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,tx,ty};});
  canvas.addEventListener('pointermove',e=>{if(!drag||scale===1)return;tx=drag.tx+e.clientX-drag.x;ty=drag.ty+e.clientY-drag.y;apply();});
- canvas.addEventListener('pointerup',e=>{if(!drag)return;const dx=e.clientX-drag.x;if(scale===1&&Math.abs(dx)>70)show(index+(dx<0?1:-1));drag=null;});
+ canvas.addEventListener('pointerup',e=>{if(!drag)return;const dx=e.clientX-drag.x;if(scale===1&&Math.abs(dx)>70)show(index+(dx<0?1:-1),galleryAnimated());drag=null;});
  canvas.addEventListener('pointercancel',()=>drag=null);
  canvas.addEventListener('touchstart',e=>{if(e.touches.length===2)pinch={distance:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),scale};},{passive:true});
  canvas.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){e.preventDefault();const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom(pinch.scale*d/pinch.distance);}},{passive:false});
