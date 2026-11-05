@@ -998,7 +998,19 @@ function strandedActiveEnergy(o,energyId,cfg){
   hpRemaining(after)>0&&(active.poisonDamage||10)>=hpRemaining(after);
  if(!opponentThreat&&!poisonThreat)return false;
  if(potionRescue&&!likelyOpponentKnockout(o,after,cfg.level===8)&&!poisonThreat)return false;
- if(projectedAttackValue(after,enemy,o.turnSerial,o.self.bench.length)>
+ // If Poison will knock out the Active at the end of this turn, a small
+ // attack upgrade cannot preserve this Energy investment. Only exempt it
+ // when the newly funded attack can secure a near-certain Prize before the
+ // Poison checkup; otherwise a productive Bench attachment is preferable.
+ const lethalPoisonCheckup=poisonThreat&&hpRemaining(after)>0;
+ const immediatePrize=lethalPoisonCheckup&&
+  (after.effectiveAttacks||card(after.id)?.attacks||[]).some((attack,index)=>
+   eligibleAttack(o,after,attack,index)&&
+   knockoutChance(attack,after,enemy,o.self.bench.length,
+    cfg.level===8?livePlusPowerBonus(o):0)*
+    (after.status==='Confused'?.5:1)>=.75);
+ if((!lethalPoisonCheckup||immediatePrize)&&
+    projectedAttackValue(after,enemy,o.turnSerial,o.self.bench.length)>
     projectedAttackValue(active,enemy,o.turnSerial,o.self.bench.length))return false;
  const retreat=card(active.id)?.retreatCost||[];
  if(!o.self.retreated&&!['Asleep','Paralyzed'].includes(active.status)&&
