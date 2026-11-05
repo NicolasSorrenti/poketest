@@ -888,3 +888,14 @@ Exactly five printings: `base1-8` Machamp, `base2-6` Mr. Mime, `base2-22` Mr. Mi
 - `base2-15` and `base2-31`: compared Jungle Heal printed text (once per turn, heads, heal one counter, status lock) and Petal Dance to current Power/attack handling. Source shows coin before target prompt and once-per-turn registration; repeat attempts, no-damage heads, attack confusion and KO ordering need execution.
 
 No independent historical-ruling review or current-reducer execution in this GitHub-only pass. No tests, scripts, CI or Apex changes. No new PR. Ledger remains **334 partial / 789 unreviewed / 0 fully verified, 1,123 remaining** under strict all-effects runtime criterion.
+
+
+## 2026-11-05 — Fossil Aerodactyl, Dragonite and Gengar Powers (source-only)
+
+Exactly five distinct printings: `base3-1` Aerodactyl, `base3-4` Dragonite, `base3-19` Dragonite, `base3-5` Gengar, `base3-20` Gengar. All remain **partial**; no complete reducer gameplay execution or independent historical ruling adjudication. Live path: current UI/Classic match service `classic_local_service.js` → `headless_duel.js` → `classic_power_core.js`; RPG integrates via `rpg_duel_bridge.js`. No legacy engine findings counted. PRs #440 and #507 already merged; no new PR opened.
+
+- `base3-1` Aerodactyl: Prehistoric Power prevents both players from playing Evolution cards while enabled; active reducer's evolve action checks `powerInPlay`. Still need status suppression, unusual evolution effects, attack cost and complete gameplay execution.
+- `base3-4`, `base3-19` Dragonite: Step In uses Bench→Active switch, clears the outgoing Active's status and records once-per-turn usage; Slam is a two-flip 40× attack. Still need real decision, repeat-use, attack-after-switch, and coin/cost execution.
+- `base3-5`, `base3-20` Gengar: Curse moves one damage counter between different opposing Pokémon and may Knock Out the recipient. **Confirmed current-engine bug**: its `knockOuts(g,'direct')` continuation led `finishPromotions` to call `advanceTurn` after a Curse KO that required Prize/promotion, incorrectly ending the Power user's turn. Changed to `knockOuts(g,'trainer')` so the Prize and promotion sequence returns to the same turn. Pushed directly to main in [1f5afa8](https://github.com/NicolasSorrenti/poketest/commit/1f5afa879f5ef73d9270b9530e2d5641b5f0f202). Dark Mind Bench damage and complete Power sequences still require execution.
+
+Validation: printed card text from `cards/base3.json` compared with current source, including power limits and KO permission. No executable repo checkout was available via the direct GitHub connector, so **source-only evidence is partial**; no runtime or historical ruling verification claimed. No tests, test scripts, CI, legacy or Apex changes. Ledger remains **334 partial / 789 unreviewed / 0 fully verified; 1,123 not fully verified**.
