@@ -1190,7 +1190,24 @@ function score(a,o,cfg,used){
     damage:Math.max(0,(unit.damage||0)+counterChange),
     energies:[...(unit.energies||[]),attachmentId]},q.active,p.bench.length):
    damageAfterAttachment(unit,attachmentId,q.active,p.bench.length);
-  const improvement=Math.max(0,after-before);
+  // For the Active, only attacks that can actually be declared this turn
+  // contribute to Apex's immediate damage upgrade. An Amnesia-locked move
+  // or a sleeping attacker must not make an attachment look productive.
+  // Full Heal Energy is evaluated after its immediate status cure.
+  const apexImmediateDamage=active=>{
+   if(!active||!q.active)return 0;
+   return (active.effectiveAttacks||card(active.id)?.attacks||[])
+    .reduce((best,attack,index)=>eligibleAttack(o,active,attack,index)?
+     Math.max(best,estimatedDamage(attack,active,q.active,p.bench.length)*
+      (active.status==='Confused'?.5:1)):best,0);
+  };
+  const apexAfterUnit={...unit,energies:[...(unit.energies||[]),attachmentId],
+   ...(counterChange?{damage:Math.max(0,(unit.damage||0)+counterChange)}:{}),
+   ...(attachmentName==='Full Heal Energy'?{status:null,poison:false}:{})};
+  const immediateImprovement=cfg.level===8&&v.slot===-1?
+   Math.max(0,apexImmediateDamage(apexAfterUnit)-apexImmediateDamage(unit)):
+   Math.max(0,after-before);
+  const improvement=immediateImprovement;
   // A Benched Pokémon cannot attack this turn. Its Energy readiness is
   // valuable, but a hypothetical KO against today's Active is not an
   // immediate Prize. Apex reserves the tactical KO bonus for the Active;
