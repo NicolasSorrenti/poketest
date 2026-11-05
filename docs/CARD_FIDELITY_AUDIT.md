@@ -945,3 +945,14 @@ Exactly five printings: `base5-1`, `base5-18` Dark Alakazam; `base5-2`, `base5-1
 - **Dark Machamp**: Fling requires opponent Bench and shuffles opposing Active and attachments into deck. Current reducer rejects no-Bench declaration and resolution; verify underlying evolution cards, special attachments, opponent promotion, no-Prize shuffle and correct end-turn behavior.
 
 Printed imported text reviewed from `cards/base5.json`; independent official errata/historical ruling adjudication remains outstanding. No executable repository checkout through direct GitHub connector, so **no reducer scenarios executed**. No gameplay fix confirmed or pushed in this batch; only ledger and notes changed. No tests, CI, PRs, legacy-engine or Apex files touched. Ledger: **349 partial, 773 unreviewed, 1 verified; 1,122 not fully verified**.
+
+
+## 2026-11-05 — Team Rocket complex attacks and Evolutionary Light (source-only)
+
+Exactly five printings: `base5-3` Dark Blastoise, `base5-20` Dark Blastoise, `base5-4` Dark Charizard, `base5-21` Dark Charizard, `base5-33` Dark Dragonair. Active authority traced: `classic_local_service.js` imports `headless_duel.js`; `rpg_duel_bridge.js` is integration; `classic_power_core.js` handles Evolutionary Light. Legacy engine excluded. #440 and #507 already merged.
+
+- **Dark Blastoise both**: printed Hydrocannon pays WW, gains +20 per additional Water Energy capped +40; Rocket Tackle self-10 and heads damage shield during opponent's next turn, but other attack effects remain. Pending actual Energy, prevention, self-KO and turn-sequence execution.
+- **Dark Charizard both**: printed Continuous Fireball flips once per attached Fire Energy card and discards one Fire Energy per heads; active reducer pre-roll counts Fire attachments and validates exact Fire discards; Nail Flick is 10. Pending live coin/choice/KO verification.
+- **Dark Dragonair**: Evolutionary Light searches an Evolution card once per own turn, with status lock and shuffle; active Power module selects Stage 1 or Stage 2. Tail Strike heads 40/tails 20. Pending empty-deck, disabled-Power, repeated-use, and decision-continuation execution.
+
+No confirmed new defect; no gameplay changes. Direct GitHub connector does not furnish executable Node checkout, so **zero reducer scenarios executed**. Independent official errata and historical rulings not fully adjudicated. No tests, CI, PR, legacy engine or Apex files changed. Ledger recount: **1 verified, 352 partial, 770 unreviewed; 1122 not fully verified**.
