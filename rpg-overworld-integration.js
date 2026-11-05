@@ -368,7 +368,7 @@
         img.style.cssText='position:absolute;left:0;top:0;width:100%;height:auto;max-width:none;max-height:none;display:block;pointer-events:none';
         viewport.append(img);
         const footer=document.createElement('p');
-        footer.textContent='1.0s bottom · 0.4s up · 0.2s top · 0.4s down · continuous loop';
+        footer.textContent='0.2s bottom · 0.4s up · 0.2s top · 0.4s down · continuous loop';
         footer.style.cssText='font:12px system-ui;color:#d3c6e4;text-align:center;margin:0;padding:12px';
         dialog.append(top,viewport,footer);
         document.body.append(dialog);
@@ -385,7 +385,7 @@
         const width=Math.max(1,Math.min(maxWidth,maxHeight*2*img.naturalWidth/img.naturalHeight));
         viewport.style.width=width+'px';
         viewport.style.height=(width*img.naturalHeight/img.naturalWidth/2)+'px';
-        dialog._cgPan=window.NeoRpgCGPan.attach(viewport,img,{visibleHeightPercent:50,bottomHold:1000,moveUp:400,topHold:200,moveDown:400});
+        dialog._cgPan=window.NeoRpgCGPan.attach(viewport,img,{visibleHeightPercent:50,bottomHold:200,moveUp:400,topHold:200,moveDown:400});
       };
       img.onerror=()=>{dialog.querySelector('p').textContent='Could not load Live event artwork. Check the asset path.';};
       dialog.querySelector('p').textContent='1.0s bottom · 0.4s up · 0.2s top · 0.4s down · continuous loop';
