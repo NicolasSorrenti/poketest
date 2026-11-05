@@ -8775,7 +8775,10 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only current-engine review: Printed global face-up Prize rule compared with imported TCGdex text; classic_trainer_core.js sets g.prizesFaceUp=true. Prize selection, public view, replacement Prizes and persistence require reducer execution. No Node reducer execution; independent historical rulings pending."
+          ]
         }
       ]
     },
@@ -8786,7 +8789,10 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only current-engine review: Printed opponent-hand Trainer selection and shuffle compared with imported TCGdex text; classic_trainer_core.js prompts oppHand and shuffles selected Trainer into opponent deck. No-Trainer hand, hidden information and decision completion unexecuted. No Node reducer execution; independent historical rulings pending."
+          ]
         }
       ]
     },
@@ -8797,7 +8803,10 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only current-engine review: Printed one-unit all-basic-type Rainbow Energy and 10 self-damage compared with imported TCGdex text; headless_duel.js attackPool adds Any and attach handler applies 10 damage then direct KO. Prize/promotion/turn ownership and prevention unexecuted. No Node reducer execution; independent historical rulings pending."
+          ]
         }
       ]
     },
@@ -9182,7 +9191,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Tail Slap",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only current-engine review: Printed Tail Slap 20 and Fireball 70 heads/discard versus tails/no damage compared with imported TCGdex text. Existing Fireball evidence is historical removed test references; current reducer decision/coin/discard and Tail Slap not executed. No Node reducer execution; independent historical rulings pending."
+          ]
         },
         {
           "kind": "attack",
@@ -9191,7 +9203,8 @@
           "status": "partial",
           "evidence": [
             "test_typed_energy_missing_icons.js: tails/heads behavior, automatic equivalent discard, Rainbow-vs-Basic Fire choice, rejection of ineligible Grass and discard notification.",
-            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js",
+            "2026-11-05 source-only current-engine review: Printed Tail Slap 20 and Fireball 70 heads/discard versus tails/no damage compared with imported TCGdex text. Existing Fireball evidence is historical removed test references; current reducer decision/coin/discard and Tail Slap not executed. No Node reducer execution; independent historical rulings pending."
           ]
         }
       ]
@@ -9259,7 +9272,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Rage",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only current-engine review: Printed Rage 10+10 per own counter and Playing with Fire 30 or 50 with heads Fire discard compared with imported TCGdex text. Existing historical test references do not establish current-runtime validation; damage/coin/typed discard unexecuted. No Node reducer execution; independent historical rulings pending."
+          ]
         },
         {
           "kind": "attack",
@@ -9268,7 +9284,8 @@
           "status": "partial",
           "evidence": [
             "test_typed_energy_missing_icons.js: seeded coin outcomes, damage, automatic equivalent Fire discard and discard notification.",
-            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
+            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js",
+            "2026-11-05 source-only current-engine review: Printed Rage 10+10 per own counter and Playing with Fire 30 or 50 with heads Fire discard compared with imported TCGdex text. Existing historical test references do not establish current-runtime validation; damage/coin/typed discard unexecuted. No Node reducer execution; independent historical rulings pending."
           ]
         }
       ]
