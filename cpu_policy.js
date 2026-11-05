@@ -1070,12 +1070,15 @@ function benchMatchupValue(pokemonId,o){
  // Permanently spent Gym attacks cannot threaten a future Bench replacement.
  // Temporary locks may expire before promotion and are not filtered here.
  const enemyMoves=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
- const enemyPool=energyPool(enemy);
- const incoming=enemyMoves.reduce((best,attack,index)=>
-  enemy.gymAttackOnce?.includes(index)||!canPayEnergy(attack.cost||[],enemyPool)?best:
-   Math.max(best,estimatedDamage(attack,enemy,candidate,o.opponent.bench.length)),0);
- const hp=hpRemaining(candidate);
- const canBeKnockedOut=incoming>0&&incoming>=hp;
+ const fromEnemy={...o,self:o.opponent,opponent:o.self};
+ // A prospective backup is not automatically doomed by a coin-dependent
+ // printed damage ceiling. Use publicly legal attacks and their actual KO
+ // probabilities, consistent with Apex's defensive retreat threshold.
+ const confusionChance=enemy.status==='Confused'?.5:1;
+ const canBeKnockedOut=!['Asleep','Paralyzed'].includes(enemy.status)&&
+  enemyMoves.some((attack,index)=>eligibleAttack(fromEnemy,enemy,attack,index)&&
+   knockoutChance(attack,enemy,candidate,o.opponent.bench.length,
+    livePlusPowerBonus(o,'opponent'))*confusionChance>=.75);
  // A newly benched Pokémon can use only an Energy attachment that is
  // still available this turn and legal for that specific Pokémon.
  // Miracle Energy on a non-Light Pokémon must not inflate Bench readiness.
