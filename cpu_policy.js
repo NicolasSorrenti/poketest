@@ -820,7 +820,8 @@ function opponentResponseBonus(action,o,cfg){
  const currentKO=(attacker.effectiveAttacks||card(attacker.id)?.attacks||[])
   .some((a,i)=>(cfg.level===8?eligibleAttack(o,attacker,a,i):
    canPayEnergy(a.cost||[],energyPool(attacker)))&&
-   knockoutChance(a,attacker,q.active,p.bench.length)*
+   knockoutChance(a,attacker,q.active,p.bench.length,
+    cfg.level===8?livePlusPowerBonus(o):0)*
     (cfg.level===8&&attacker.status==='Confused'?.5:1)>=.75);
  if(currentKO)return 0;
  const replacement=cfg.level===8?projectedAttackValue(next,q.active,o.turnSerial,p.bench.length):
