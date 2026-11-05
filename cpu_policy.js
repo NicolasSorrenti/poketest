@@ -1631,6 +1631,15 @@ function energyPreparationActions(o,cfg,actions){
    (target.effectiveAttacks||card(target.id)?.attacks||[]).some((attack,index)=>
     eligibleAttack(o,target,attack,index)&&
     estimatedDamage(attack,target,o.opponent.active,o.self.bench.length)>0);
+  // Full Heal Energy also cures Sleep and Paralysis immediately. Without
+  // preparing it first, a funded but disabled attacker can miss its turn.
+  const disabledAttackCure=a.payload.slot===-1&&target&&
+   ['Asleep','Paralyzed'].includes(target.status)&&
+   card(energyId)?.name==='Full Heal Energy'&&
+   (target.effectiveAttacks||card(target.id)?.attacks||[]).some((attack,index)=>
+    eligibleAttack(o,{...target,status:null,
+     energies:[...(target.energies||[]),energyId]},attack,index)&&
+    estimatedDamage(attack,target,o.opponent.active,o.self.bench.length)>0);
   // A poisoned Active at lethal checkup damage needs the cure before
   // attacking; otherwise attacking ends the turn and the Active is KO'd.
   const lethalPoisonCure=a.payload.slot===-1&&
@@ -1671,14 +1680,14 @@ function energyPreparationActions(o,cfg,actions){
      livePlusPowerBonus(o))*(unit.status==='Confused'?.5:1)>=.999);
   const rainbowKoUpgrade=!!rainbowAfter&&defenderHp>0&&
    !guaranteedKo(target)&&guaranteedKo(rainbowAfter);
-  if(!confusionCure&&!lethalPoisonCure&&!potionPoisonSave&&!potionDarknessSave&&
+  if(!confusionCure&&!disabledAttackCure&&!lethalPoisonCure&&!potionPoisonSave&&!potionDarknessSave&&
    !potionOpponentSave&&!rainbowKoUpgrade&&energyValue(target,energyId)<=12)return false;
   // Do not suppress an already-legal attack just to spend the only Energy on
   // an Active that will be KO'd before that Energy helps. A legal Bench
   // attachment or immediate attack upgrade still gets prepared first.
   // The cure improves this turn's attack reliability even if the Active
   // would be knocked out next turn; do not treat it as stranded Energy.
-  return confusionCure||lethalPoisonCure||potionPoisonSave||potionDarknessSave||
+  return confusionCure||disabledAttackCure||lethalPoisonCure||potionPoisonSave||potionDarknessSave||
    potionOpponentSave||rainbowKoUpgrade||
    !(canAttackNow&&a.payload.slot===-1&&strandedActiveEnergy(o,energyId,cfg));
  });
