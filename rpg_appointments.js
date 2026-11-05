@@ -74,7 +74,12 @@
   const e=state.appointments.find(x=>x.id===id&&x.status==='booked');
   if(!e||e.day!==state.day||e.slot!==state.slot||e.place!==state.location)throw Error('Meet-up is not available here and now');
   if(!availablePeople.includes(e.npc))throw Error('Your guest is not here');
-  if(options.grantRewards!==false)REL.apply(state,e.npc,{affection:2,trust:1});
+  if(options.grantRewards!==false){
+   REL.apply(state,e.npc,{affection:2,trust:1});
+   // A legacy plain meet-up also counts; activity-based dates already count.
+   state.relationshipQualityTime=state.relationshipQualityTime||{};
+   state.relationshipQualityTime[e.npc]=(Number(state.relationshipQualityTime[e.npc])||0)+1;
+  }
   e.status='attended';e.completedDay=state.day;
   return {entry:e,affection:options.grantRewards===false?0:2,trust:options.grantRewards===false?0:1};
  }
