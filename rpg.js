@@ -127,7 +127,7 @@ function chooseStory(raw){
  const index=Number(raw),e=STORY.byId(a.id),choice=e.choices[index];
  if(!choice||!Number.isInteger(index))return;
  if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc)){
-  $('notice').textContent=state.partner&&state.partner!==e.npc?'You have already committed to another relationship.':'You need a stronger bond before taking this step.';return;
+  $('notice').textContent='You need a stronger bond before taking this step.';return;
  }
  a.phase='response';a.choice=index;persist();render();
 }
@@ -136,19 +136,15 @@ function finishStory(){
  const e=STORY.byId(a.id);
  try{STORY.resolve(state,a.id,a.choice);}
  catch(err){window.NeoRpgErrorReport?.capture(err,{source:'story-completion',action:'storyFinish'});console.error('RPG story completion failed',err);$('notice').textContent='Could not finish scene: '+err.message;return;}
- // Commit the resolved scene before any nonessential rewards or artwork.
+ // The chapter itself is the reward: no cards, credits, stat points,
+ // daily-priority bonuses or other payouts for completing story dialogue.
  state.activeStory=null;persist();
- const id=e.npc;let chapterReward=null;
- try{chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);}
- catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-reward',action:'storyReward'});console.error('RPG chapter reward failed',err);}
+ const id=e.npc;
  try{
   log('Finished '+e.title+' with '+cast[id].name+'.');
   recordCG('story_milestone',id,{eventId:e.id});
-  recordIntention('story');
-  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
  }catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-story-effects',action:'storyFinish'});console.error('RPG optional story effects failed',err);}
  advance();state.selected=id;persist();closeSceneDialogue();
- if(chapterReward)$('notice').textContent='★ Chapter reward: '+chapterReward.label;
 }
 
 function beginSideQuest(id){
@@ -849,6 +845,16 @@ function advanceConversation(){
  scene.speaker=next.speaker==='Protagonist'?'You':cast[next.speaker]?.name||next.speaker;
  scene.line=next.text;
  scene.choices=scene.index===scene.dialogue.length-1?scene.afterChoices:[['Continue ›','chatNext']];
+ // Completing a real conversation adds a small amount of affection once per
+ // character each day. A story invitation alone grants nothing.
+ if(scene.index===scene.dialogue.length-1&&!scene.invitation&&state.selected&&cast[state.selected]){
+  state.relationshipTalkCredit=state.relationshipTalkCredit||{};
+  const key=state.day+':'+state.selected;
+  if(!state.relationshipTalkCredit[key]){
+   REL.apply(state,state.selected,{affection:1});
+   state.relationshipTalkCredit[key]=true;
+  }
+ }
  // Do not consume an acknowledgement until the player actually reads its final line.
  if(scene.index===scene.dialogue.length-1&&scene.reactionId)REACT.mark(state,scene.reactionId);
  if(scene.index===scene.dialogue.length-1&&scene.memoryId)MEM?.mark(state,scene.memoryId);
@@ -1860,7 +1866,7 @@ function act(action){
   persist();
   return sayConversation(lines,[]);
  }
- if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));if(!confirmTimeAdvance())return;state.hungOut[state.day+':'+id]=true;REL.apply(state,id,{affection:2,trust:1});log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
+ if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));if(!confirmTimeAdvance())return;state.hungOut[state.day+':'+id]=true;REL.apply(state,id,{affection:2,trust:1});state.relationshipQualityTime=state.relationshipQualityTime||{};state.relationshipQualityTime[id]=(Number(state.relationshipQualityTime[id])||0)+1;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
 
 const cardNames=new Map(),cardImages=new Map();
