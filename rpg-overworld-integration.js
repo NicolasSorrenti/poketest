@@ -1382,6 +1382,46 @@
       }
     `;
     document.head.append(mobileSubmenuGrid);
+
+    // Remove the retired outer frame without changing the idle character menu
+    // or the dedicated CG viewer. The portrait remains centered and flush with
+    // the translucent VN dialogue panel, without clipped outer corners.
+    const dialogueFramePolish=document.createElement('style');
+    dialogueFramePolish.id='neoOverworldDialogueFramePolish';
+    dialogueFramePolish.textContent=`
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock{
+        border:0!important;border-radius:0!important;
+        background:transparent!important;box-shadow:none!important;
+        overflow:visible!important;
+      }
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock > .stage-panel{
+        padding:0!important;margin:0!important;gap:0!important;
+        background:transparent!important;border:0!important;
+        box-shadow:none!important;overflow:visible!important;
+      }
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #scene{
+        border:0!important;border-radius:0!important;
+        background:transparent!important;box-shadow:none!important;
+        margin:0!important;padding:0!important;
+        display:flex!important;align-items:flex-end!important;
+        justify-content:center!important;
+      }
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){
+        margin:0 auto!important;padding:0!important;
+        justify-content:center!important;align-items:flex-end!important;
+      }
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #dialogue{
+        margin:0!important;
+        background:linear-gradient(110deg,rgba(16,18,36,.84),rgba(27,22,46,.86))!important;
+        border:1px solid rgba(196,151,207,.8)!important;
+        border-radius:13px!important;
+        box-shadow:0 12px 30px #0007!important;
+        backdrop-filter:blur(7px);
+        -webkit-backdrop-filter:blur(7px);
+      }
+    `;
+    document.head.append(dialogueFramePolish);
+
     attachChoicePanels();
     let storyDock=null;
     let lastSceneKey='';
@@ -1393,16 +1433,11 @@
         storyDock=document.createElement('section');
         storyDock.id='neoOverworldStoryDock';
         storyDock.setAttribute('aria-label','RPG conversation and story');
-        Object.assign(storyDock.style,{position:'absolute',zIndex:'4',bottom:'12px',left:'max(8px,env(safe-area-inset-left))',right:'max(8px,env(safe-area-inset-right))',maxHeight:'min(72vh,680px)',overflow:'auto',border:'2px solid #b58cc7',borderRadius:'14px',background:'#181329',boxShadow:'0 10px 45px #000c'});
-        const back=document.createElement('button');back.type='button';back.textContent='← Back to map';back.style.cssText='position:sticky;top:0;z-index:5;display:block;width:100%;padding:11px;border:0;background:#352548;color:white;font:700 14px system-ui;cursor:pointer';
-        back.id='neoOverworldStoryMapBack';
-        back.onclick=()=>{
-          if(bridge()?.snapshot()?.locked){showNotice('Finish the current conversation or event first.');return;}
-          interactionFocus=null;bridge()?.clearInteraction?.();hideStory();queueStorySync();
-        };storyDock.append(back);
+        Object.assign(storyDock.style,{position:'absolute',zIndex:'4',bottom:'12px',left:'max(8px,env(safe-area-inset-left))',right:'max(8px,env(safe-area-inset-right))',maxHeight:'min(86dvh,800px)',overflow:'visible',border:'0',borderRadius:'0',background:'transparent',boxShadow:'none'});
+
       }
       overlay.append(storyDock);storyDock.append(stage);
-      stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:8px';
+      stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:0;background:transparent';
       storyDock.hidden=false;
       actionTray.classList.remove('expanded');actionToggle.textContent='✦ Actions';
       actionToggle.setAttribute('aria-expanded','false');lockMapForStory(true);return true;
