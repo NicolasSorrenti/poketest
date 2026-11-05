@@ -71,5 +71,72 @@
    img.style.position=originalPosition;
   }};
  }
- return Object.freeze({defaults,normalize,attach});
+ function createControls(container,onChange){
+  const keys=[['bottomHold','Bottom hold'],['moveUp','Move up'],['topHold','Top hold'],['moveDown','Move down']];
+  const base={...defaults}, values={...base};
+  let auto=false,stage=0,timers=[];
+  const panel=document.createElement('div');
+  panel.className='cg-pan-settings';
+  const fields=document.createElement('div');
+  fields.className='cg-pan-fields';
+  const inputs={};
+  for(const [key,title] of keys){
+   const label=document.createElement('label');
+   label.textContent=title+' (s)';
+   const input=document.createElement('input');
+   input.type='number';input.min='0';input.max='10';input.step='0.05';
+   input.value=(values[key]/1000).toFixed(2);
+   input.setAttribute('aria-label',title+' in seconds');
+   inputs[key]=input;label.append(input);fields.append(label);
+   input.addEventListener('change',()=>{
+    stopAuto();
+    const n=Number(input.value);
+    values[key]=Number.isFinite(n)?Math.max(0,Math.min(10000,n*1000)):base[key];
+    input.value=(values[key]/1000).toFixed(2);
+    changed();
+   });
+  }
+  const extra=document.createElement('div');
+  extra.className='cg-pan-auto-row';
+  const autoLabel=document.createElement('label');
+  const autoCheck=document.createElement('input');
+  autoCheck.type='checkbox';autoCheck.setAttribute('aria-label','Auto speed progression');
+  autoLabel.append(autoCheck,document.createTextNode(' Auto mode'));
+  const status=document.createElement('span');
+  status.setAttribute('role','status');
+  const reset=document.createElement('button');
+  reset.type='button';reset.textContent='Reset timings';
+  reset.onclick=()=>{
+   stopAuto();Object.assign(values,base);draw();changed();
+  };
+  extra.append(autoLabel,status,reset);
+  panel.append(fields,extra);
+  container.append(panel);
+  function changed(){onChange({...values});}
+  function draw(){
+   for(const [key] of keys)inputs[key].value=(values[key]/1000).toFixed(2);
+   autoCheck.checked=auto;
+   status.textContent=auto?['Stage 1 · Original speed','Stage 2 · Half speed','Stage 3 · Quarter speed (held)'][stage]:'Manual timing';
+  }
+  function clearTimers(){for(const t of timers)clearTimeout(t);timers=[];}
+  function stopAuto(){clearTimers();auto=false;stage=0;draw();}
+  autoCheck.addEventListener('change',()=>{
+   clearTimers();auto=autoCheck.checked;stage=0;
+   if(auto){
+    Object.assign(values,base);draw();changed();
+    // Advance at absolute 3 and 6 seconds. Stage three stays indefinitely.
+    for(const n of [1,2]){
+     timers.push(setTimeout(()=>{
+      if(!auto)return;
+      stage=n;
+      for(const [key] of keys)values[key]=base[key]/(2**stage);
+      draw();changed();
+     },3000*n));
+    }
+   }else draw();
+  });
+  draw();
+  return {getConfig:()=>({...values}),dispose(){clearTimers();panel.remove();},element:panel};
+ }
+ return Object.freeze({defaults,normalize,attach,createControls});
 });
