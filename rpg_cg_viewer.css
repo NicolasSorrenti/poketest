@@ -35,3 +35,14 @@
 .cg-gallery-animated-toggle input{width:19px;height:19px;accent-color:#95c5ff;cursor:pointer}
 .cg-gallery-animated-toggle small{flex-basis:100%;font:12px system-ui;text-align:center;color:#d5c6e9}
 .cg-gallery-animated-toggle:has(input:checked){background:#28435e;border-color:#99cfff}
+
+/* The active RPG gallery lightbox, not the legacy gallery preview, owns animated playback. */
+.cg-lightbox.cg-lightbox-animated .cg-lightbox-stage{height:calc(100dvh - 56px - 116px);min-height:100px}
+.cg-lightbox-pan-controls[hidden]{display:none!important}
+.cg-lightbox-pan-controls:not([hidden]){height:116px;display:flex;align-items:center;justify-content:center;overflow-y:auto;background:#192339}
+.cg-lightbox-pan-viewport{max-width:100%;isolation:isolate}
+.cg-lightbox-pan-viewport>img{position:absolute;left:0;top:0;width:100%;height:auto;max-width:none;max-height:none;display:block;pointer-events:none}
+@media(max-width:650px){
+ .cg-lightbox.cg-lightbox-animated .cg-lightbox-stage{height:calc(100dvh - 56px - 158px)}
+ .cg-lightbox-pan-controls:not([hidden]){height:158px}
+}
