@@ -1,0 +1,77 @@
+/* Full-screen VN tournament hall: intentionally separate from the overworld map. */
+.neo-cup-story[hidden]{display:none!important}
+.neo-cup-story{position:fixed;inset:0;z-index:1200;isolation:isolate;display:grid;place-items:center;
+ overflow:hidden;color:#fff5fa;background:#080e1c;font-family:Inter,system-ui,sans-serif}
+.neo-cup-story__backdrop{position:absolute;inset:0;background:
+ radial-gradient(ellipse 46% 52% at 50% 22%,#556ca17d,transparent 90%),
+ linear-gradient(170deg,#241a3d 0%,#171d38 53%,#080d1c 100%)}
+.neo-cup-story[data-cup="regional"] .neo-cup-story__backdrop{background:
+ radial-gradient(ellipse 48% 55% at 50% 20%,#278bba78,transparent 90%),
+ linear-gradient(160deg,#132938,#151935 64%,#08111b)}
+.neo-cup-story[data-cup="championship"] .neo-cup-story__backdrop{background:
+ radial-gradient(ellipse 48% 54% at 48% 20%,#b465526e,transparent 90%),
+ linear-gradient(160deg,#34233a,#25172d 66%,#100a1c)}
+.neo-cup-story__venue{position:relative;width:100%;height:100%;max-height:100dvh;display:flex;
+ flex-direction:column;justify-content:space-between;align-items:center;overflow:hidden}
+.neo-cup-story__spotlights{position:absolute;inset:-12% 0 11%;pointer-events:none;
+ background:linear-gradient(103deg,transparent 9%,#ffffff0c 14%,transparent 34%),
+ linear-gradient(260deg,transparent 11%,#ffffff11 19%,transparent 39%),
+ radial-gradient(ellipse at 50% 0%,#c0c2e36a,transparent 70%);opacity:.84}
+.neo-cup-story__crowd{position:absolute;bottom:0;left:0;right:0;height:41%;opacity:.46;
+ background:radial-gradient(ellipse at 6% 100%,#020411 0 18%,transparent 19%),
+ radial-gradient(ellipse at 24% 100%,#030614 0 27%,transparent 28%),
+ radial-gradient(ellipse at 44% 100%,#050718 0 21%,transparent 22%),
+ radial-gradient(ellipse at 68% 100%,#020411 0 24%,transparent 25%),
+ radial-gradient(ellipse at 92% 100%,#030611 0 20%,transparent 21%)}
+.neo-cup-story__headline{position:relative;z-index:3;display:grid;justify-items:center;
+ gap:8px;width:min(95vw,1100px);padding:clamp(16px,4vh,37px) 10px 8px;
+ text-align:center;text-shadow:0 3px 12px #000a}
+.neo-cup-story__eyebrow{font:800 clamp(11px,1.4vw,15px) Inter,system-ui,sans-serif;
+ color:#f8d2a6;letter-spacing:.16em;text-transform:uppercase}
+.neo-cup-story__title{margin:0;font:900 clamp(30px,5.4vw,74px)/.98 'Barlow Condensed',Impact,sans-serif;
+ text-transform:uppercase;letter-spacing:.03em}
+.neo-cup-story__actors{position:relative;z-index:2;flex:1;min-height:0;display:flex;
+ align-items:flex-end;justify-content:center;gap:min(2vw,28px);width:min(95vw,1050px);
+ overflow:hidden;padding:3px 2vw 0}
+.neo-cup-story__actor{position:relative;display:flex;flex:1 1 0;flex-direction:column;
+ justify-content:flex-end;align-items:center;margin:0;max-width:340px;height:100%;min-width:0;
+ opacity:.65;filter:brightness(.73) saturate(.8);transition:filter .22s ease,opacity .22s ease;
+ animation:neo-cup-entrance .44s cubic-bezier(.19,.82,.35,1) both}
+.neo-cup-story__actor:nth-child(2){animation-delay:.06s}
+.neo-cup-story__actor:nth-child(3){animation-delay:.11s}
+.neo-cup-story__actor.is-speaking{opacity:1;filter:brightness(1.08) saturate(1.05)}
+.neo-cup-story__portrait{height:calc(100% - 31px);width:100%;display:flex;align-items:center;
+ justify-content:center;font:900 90px 'Barlow Condensed',sans-serif;
+ color:#ffefda88;text-shadow:0 5px 30px #000}
+.neo-cup-story__portrait img{display:block;width:100%;height:100%;
+ object-fit:contain;object-position:center bottom;filter:drop-shadow(0 8px 24px #0008)}
+.neo-cup-story__actor-name{width:100%;text-align:center;padding:5px 8px;border-radius:8px 8px 0 0;
+ background:#101124dd;color:#f9e2eb;font:800 clamp(10px,1.2vw,14px) Inter,system-ui,sans-serif;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.neo-cup-story__dialogue{position:relative;z-index:4;flex:none;width:min(1040px,calc(100vw - 20px));
+ min-height:170px;margin:0 auto max(11px,env(safe-area-inset-bottom));
+ padding:18px clamp(16px,3vw,30px);border:1px solid #e3bbd7a6;border-radius:17px;
+ background:linear-gradient(120deg,#15172de9,#28203be8);backdrop-filter:blur(15px);
+ box-shadow:0 16px 55px #000a;display:flex;flex-direction:column;gap:8px}
+.neo-cup-story__speaker{font:900 clamp(15px,2vw,21px) 'Barlow Condensed',sans-serif;
+ letter-spacing:.055em;color:#ffc5d9}
+.neo-cup-story__line{margin:0;max-width:900px;font:500 clamp(14px,1.7vw,19px)/1.45 Inter,system-ui,sans-serif;
+ color:#fff7f9;min-height:54px}
+.neo-cup-story__actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:9px;margin-top:6px}
+.neo-cup-story__button{padding:10px 19px;min-height:45px;border-radius:10px;
+ border:1px solid #d7b7d2;color:#fff;background:#3f3555;font:750 clamp(12px,1.5vw,15px) Inter,system-ui,sans-serif;cursor:pointer}
+.neo-cup-story__button.is-primary{background:#b6577b;border-color:#ffc1d6}
+.neo-cup-story__button:focus-visible{outline:3px solid #ffdb89;outline-offset:3px}
+.neo-cup-story__button:hover{filter:brightness(1.17)}
+@keyframes neo-cup-entrance{from{transform:translateY(44px);opacity:0}to{transform:translateY(0);opacity:1}}
+@media(max-width:600px){
+ .neo-cup-story__headline{padding-top:max(16px,env(safe-area-inset-top));gap:3px}
+ .neo-cup-story__title{font-size:clamp(27px,9vw,47px)}
+ .neo-cup-story__actors{width:100%;gap:0;padding:0 3px}
+ .neo-cup-story__actor-name{font-size:10px}
+ .neo-cup-story__dialogue{min-height:210px;padding:15px 13px;margin-bottom:max(6px,env(safe-area-inset-bottom))}
+ .neo-cup-story__line{font-size:15px;min-height:82px}
+ .neo-cup-story__actions{justify-content:stretch}
+ .neo-cup-story__button{flex:1 1 auto;padding:11px 8px;font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){.neo-cup-story__actor{animation:none!important;transition:none!important}}

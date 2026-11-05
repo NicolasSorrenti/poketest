@@ -2,6 +2,7 @@
 (()=>{
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
+const TOURNAMENT_STORY=window.NeoRpgTournamentStory||null;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
 const LIVE_NEW=window.NeoRpgLiveEverydayEvents||{events:[],art:{},followups:{},artAt:()=>null,finalArt:()=>null,fallback:()=>null,byId:()=>null};
@@ -1625,7 +1626,9 @@ function act(action,confirmedInvitationHandoff=false){
  if(cupToday&&!activeScene&&!['cup','tournamentDeck','tournamentEnd','close','dismissDialogue','activityContinue'].includes(type)&&!type.startsWith('mandatory'))return;
  if(type==='tournamentDeck'){if(cupToday&&!state.pendingDuel)openDeckWorkshop();return;}
  if(type==='tournamentEnd'){
-  if(!cupToday||state.pendingDuel||conversationInProgress()||TOURNAMENTS.status(state,cupToday.id).state==='open')return;
+  if(!cupToday||state.pendingDuel||conversationInProgress()||TOURNAMENTS.status(state,cupToday.id).state==='open'||
+   !state.tournamentNarrative?.[cupToday.id]?.seen?.includes('closing'))return;
+  TOURNAMENT_STORY?.hide();
   scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;
   advance(3-state.slot,'tournament');render();return;
  }
@@ -2351,7 +2354,8 @@ window.addEventListener('message',ev=>{
  const cupProgress=duel.tournamentId?TOURNAMENTS.status(state,duel.tournamentId):null;
  // Draws replay without spending a period; late legacy saves can catch up.
  const keepCupSlot=!!cupOutcome&&!!tournamentDayCup()&&(
-  cupOutcome.draw||(cupOutcome.state==='open'&&cupProgress.cup.rounds.length-cupProgress.round>=3-state.slot));
+  cupOutcome.draw||cupOutcome.state!=='open'||
+  (cupProgress.cup.rounds.length-cupProgress.round>=3-state.slot));
  if(!keepCupSlot)advance(1,'duel',true);
  else persist();
  $('duel').hidden=true;$('battle').src='about:blank';
@@ -3102,6 +3106,72 @@ async function finishOverworldArrival(destination){
  finally{arrivalGate=false;}
  if(state.location===destination)render();
 }
+// Compulsory tournaments are VN scenes in a full-screen hall, never map encounters.
+// Save both cameo selection and the current line so a reload resumes in place.
+function tournamentNarrativeView(){
+ const cup=tournamentDayCup();
+ if(!cup||!TOURNAMENT_STORY){TOURNAMENT_STORY?.hide();return;}
+ if(state.pendingDuel||state.mandatoryEventState?.active||state.activeSliceOfLife||
+  state.activeStory||state.activeSituation||state.activeEncounter||state.activeArc||
+  state.activeSideQuest||$('starterDialog')?.open){
+  TOURNAMENT_STORY.hide();return;
+ }
+ const progress=TOURNAMENTS.status(state,cup.id);
+ // Post-duel dialogue uses the same full-screen VN instead of falling through
+ // to the ordinary overworld stage. The save already owns this dialogue.
+ if(scene?.line){
+  if(scene.choices?.length){TOURNAMENT_STORY.hide();return;}
+  const actor=Object.keys(cast).find(id=>cast[id]?.name===scene.speaker);
+  TOURNAMENT_STORY.show({cup,mode:'result',
+   script:[{speaker:actor||scene.speaker||'Narrator',text:scene.line}],
+   index:0,cast,progress,
+   portraits:(id,expression)=>stagePortraitPaths(id,expression),
+   onNext:closeSceneDialogue});
+  return;
+ }
+ state.tournamentNarrative=state.tournamentNarrative||{};
+ let record=state.tournamentNarrative[cup.id];
+ if(!record||typeof record!=='object'||Array.isArray(record)){
+  record={seen:[],active:null,guests:null};
+  state.tournamentNarrative[cup.id]=record;
+ }
+ if(!Array.isArray(record.seen))record.seen=[];
+ if(!Array.isArray(record.guests)){
+  record.guests=TOURNAMENT_STORY.supporters(state,cast,cup,REL);
+  persist();
+ }
+ if(record.active&&!['arrival','round-0','round-1','round-2','closing'].includes(record.active.key))
+  record.active=null;
+ if(!record.active){
+  const key=!record.seen.includes('arrival')?'arrival':
+   progress.state==='open'&&!record.seen.includes('round-'+progress.round)?'round-'+progress.round:
+   progress.state!=='open'&&!record.seen.includes('closing')?'closing':null;
+  if(key){record.active={key,index:0};persist();}
+ }
+ if(record.active){
+  const active=record.active;
+  const script=TOURNAMENT_STORY.lines(cup,active.key,progress,record.guests,cast,REL,state);
+  if(!script.length){record.seen.push(active.key);record.active=null;persist();return;}
+  const index=Math.min(script.length-1,Math.max(0,active.index||0));
+  TOURNAMENT_STORY.show({cup,mode:'scene',script,index,progress,cast,
+   portraits:(id,expression)=>stagePortraitPaths(id,expression),
+   onNext:()=>{
+    if(state.tournamentNarrative?.[cup.id]?.active!==active)return;
+    if(active.index<script.length-1)active.index++;
+    else{
+     if(!record.seen.includes(active.key))record.seen.push(active.key);
+     record.active=null;
+    }
+    persist();render();
+   }});
+ }else{
+  TOURNAMENT_STORY.show({cup,mode:'lobby',progress,cast,
+   portraits:(id,expression)=>stagePortraitPaths(id,expression),
+   onDeck:()=>safeAct('tournamentDeck'),
+   onPlay:()=>safeAct('cup:'+cup.id),
+   onEnd:()=>safeAct('tournamentEnd')});
+ }
+}
 function render(){
  // Keep the outgoing DOM intact until the calendar wipe fully covers it; then swap
  // the scene behind the overlay so the new day is revealed only as the wipe exits.
@@ -3267,6 +3337,7 @@ function render(){
   dialogue:$('dialogue'),speakerElement:$('speaker'),lineElement:$('line')
  });
  syncSceneCG();
+ tournamentNarrativeView();
  queueMicrotask(maybeShowYearEndFallReel);
  // If another transition or mandatory scene owned the screen, resume the arrival
  // chime once it settles instead of silently losing this place entry.
