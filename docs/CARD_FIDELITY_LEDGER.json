@@ -4085,7 +4085,8 @@
           "status": "partial",
           "evidence": [
             "Fossil #1 Aerodactyl Wing Attack CCC 30; Prehistoric Power forbids playing Evolutions while active unless asleep/confused/paralyzed.",
-            "headless evolve checks powerInPlay and legacy evolve checks continuousPower. Evolution into play via alternate effects, fossil evolution status and power suppression not executed."
+            "headless evolve checks powerInPlay and legacy evolve checks continuousPower. Evolution into play via alternate effects, fossil evolution status and power suppression not executed.",
+            "2026-11-05 current-engine source-only review of attack dispatch; no reducer execution or independent historical rulings; coin outcomes, Energy costs, Bench damage and turn ownership still need runtime validation."
           ],
           "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         },
@@ -4096,7 +4097,8 @@
           "status": "partial",
           "evidence": [
             "Fossil #1 Aerodactyl Wing Attack CCC 30; Prehistoric Power forbids playing Evolutions while active unless asleep/confused/paralyzed.",
-            "headless evolve checks powerInPlay and legacy evolve checks continuousPower. Evolution into play via alternate effects, fossil evolution status and power suppression not executed."
+            "headless evolve checks powerInPlay and legacy evolve checks continuousPower. Evolution into play via alternate effects, fossil evolution status and power suppression not executed.",
+            "2026-11-05 current-engine source review: headless_duel.js evolution gate calls powerInPlay('Prehistoric Power'). Need execute suppression by status, both players' evolution and unusual evolution effects."
           ],
           "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
@@ -4160,7 +4162,8 @@
           "name": "Slam",
           "status": "partial",
           "evidence": [
-            "Slam: four Colorless Energy and two independent 40-damage coin flips; compiler/roll path inspected; 0/1/2 heads and Resistance require reducer execution."
+            "Slam: four Colorless Energy and two independent 40-damage coin flips; compiler/roll path inspected; 0/1/2 heads and Resistance require reducer execution.",
+            "2026-11-05 current-engine source-only review of attack dispatch; no reducer execution or independent historical rulings; coin outcomes, Energy costs, Bench damage and turn ownership still need runtime validation."
           ]
         },
         {
@@ -4169,7 +4172,8 @@
           "name": "Step In",
           "status": "partial",
           "evidence": [
-            "Step In: printed once during own turn from Bench; classic_power_core.js ONCE/Step In Bench selection and swap inspected; legacy stepIn checks Bench and Power but repeated-use, status and switching interaction require reducer validation."
+            "Step In: printed once during own turn from Bench; classic_power_core.js ONCE/Step In Bench selection and swap inspected; legacy stepIn checks Bench and Power but repeated-use, status and switching interaction require reducer validation.",
+            "2026-11-05 current-engine source review: Benched Dragonite swaps with Active, clears outgoing Active conditions; once-per-turn registry. Need execute status/KO/promotion/attack continuity and historical rulings."
           ]
         }
       ]
@@ -4185,7 +4189,8 @@
           "name": "Dark Mind",
           "status": "partial",
           "evidence": [
-            "Dark Mind: PPP, 30 Active plus 10 selected opposing Bench without Weakness/Resistance; target and no-Bench behavior require reducer validation."
+            "Dark Mind: PPP, 30 Active plus 10 selected opposing Bench without Weakness/Resistance; target and no-Bench behavior require reducer validation.",
+            "2026-11-05 current-engine source-only review of attack dispatch; no reducer execution or independent historical rulings; coin outcomes, Energy costs, Bench damage and turn ownership still need runtime validation."
           ]
         },
         {
@@ -4194,7 +4199,8 @@
           "name": "Curse",
           "status": "partial",
           "evidence": [
-            "Curse: printed once per turn, move one opponent damage counter to another even if KO; classic_power_core.js allows KO and resolves prizes. Legacy engine.js incorrectly forbade lethal destination and did not resolve KO; corrected in audit branch; pending validation."
+            "Curse: printed once per turn, move one opponent damage counter to another even if KO; classic_power_core.js allows KO and resolves prizes. Legacy engine.js incorrectly forbade lethal destination and did not resolve KO; corrected in audit branch; pending validation.",
+            "2026-11-05 active headless_duel.js + classic_power_core.js source review: Curse's KO flow incorrectly passed 'direct', which advances turn after opponent Prize/promotion. Fixed to 'trainer' in commit 1f5afa8. Runtime and independent historical rulings not verified."
           ]
         }
       ]
@@ -4508,7 +4514,8 @@
           "name": "Slam",
           "status": "partial",
           "evidence": [
-            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. No deterministic runtime validation or comprehensive historical ruling review; not verified.",
+            "2026-11-05 current-engine source-only review of attack dispatch; no reducer execution or independent historical rulings; coin outcomes, Energy costs, Bench damage and turn ownership still need runtime validation."
           ],
           "scope": "Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4."
         },
@@ -4518,7 +4525,8 @@
           "name": "Step In",
           "status": "partial",
           "evidence": [
-            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. No deterministic runtime validation or comprehensive historical ruling review; not verified.",
+            "2026-11-05 current-engine source review: Benched Dragonite swaps with Active, clears outgoing Active conditions; once-per-turn registry. Need execute status/KO/promotion/attack continuity and historical rulings."
           ],
           "scope": "Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4."
         }
@@ -4535,7 +4543,8 @@
           "name": "Dark Mind",
           "status": "partial",
           "evidence": [
-            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified.",
+            "2026-11-05 current-engine source-only review of attack dispatch; no reducer execution or independent historical rulings; coin outcomes, Energy costs, Bench damage and turn ownership still need runtime validation."
           ],
           "scope": "Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5."
         },
@@ -4545,7 +4554,8 @@
           "name": "Curse",
           "status": "partial",
           "evidence": [
-            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified.",
+            "2026-11-05 active headless_duel.js + classic_power_core.js source review: Curse's KO flow incorrectly passed 'direct', which advances turn after opponent Prize/promotion. Fixed to 'trainer' in commit 1f5afa8. Runtime and independent historical rulings not verified."
           ],
           "scope": "Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5."
         }
