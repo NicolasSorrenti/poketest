@@ -370,13 +370,25 @@
         const footer=document.createElement('p');
         footer.textContent='0.2s bottom · 0.4s up · 0.2s top · 0.4s down · continuous loop';
         footer.style.cssText='font:12px system-ui;color:#d3c6e4;text-align:center;margin:0;padding:12px';
-        dialog.append(top,viewport,footer);
+        const controlsHost=document.createElement('div');
+        controlsHost.className='neo-live-cg-controls';
+        dialog.append(top,viewport,controlsHost,footer);
         document.body.append(dialog);
-        dialog.addEventListener('close',()=>{dialog._cgPan?.dispose();dialog._cgPan=null;img.removeAttribute('src');});
+        dialog.addEventListener('close',()=>{
+          dialog._cgControls?.dispose();dialog._cgControls=null;
+          dialog._cgPan?.dispose();dialog._cgPan=null;img.removeAttribute('src');
+        });
       }
       const viewport=dialog.querySelector('.neo-cg-test-viewport');
       const img=viewport.querySelector('img');
+      dialog._cgControls?.dispose();dialog._cgControls=null;
       dialog._cgPan?.dispose();dialog._cgPan=null;
+      const controlsHost=dialog.querySelector('.neo-live-cg-controls');
+      dialog._cgControls=window.NeoRpgCGPan.createControls(controlsHost,config=>{
+        if(!dialog.open||!img.naturalWidth)return;
+        dialog._cgPan?.dispose();
+        dialog._cgPan=window.NeoRpgCGPan.attach(viewport,img,config);
+      });
       img.onload=()=>{
         if(!dialog.open||!img.naturalWidth||!img.naturalHeight)return;
         // Use the actual image aspect ratio: precisely half its height is visible.
@@ -385,10 +397,10 @@
         const width=Math.max(1,Math.min(maxWidth,maxHeight*2*img.naturalWidth/img.naturalHeight));
         viewport.style.width=width+'px';
         viewport.style.height=(width*img.naturalHeight/img.naturalWidth/2)+'px';
-        dialog._cgPan=window.NeoRpgCGPan.attach(viewport,img,{visibleHeightPercent:50,bottomHold:200,moveUp:400,topHold:200,moveDown:400});
+        dialog._cgPan=window.NeoRpgCGPan.attach(viewport,img,dialog._cgControls.getConfig());
       };
       img.onerror=()=>{dialog.querySelector('p').textContent='Could not load Live event artwork. Check the asset path.';};
-      dialog.querySelector('p').textContent='1.0s bottom · 0.4s up · 0.2s top · 0.4s down · continuous loop';
+      dialog.querySelector('p').textContent='Adjust the timings manually or enable Auto mode: 3 seconds per stage.';
       dialog.showModal();
       img.src='/rpg-assets/characters/live/events/2live_confy_scene2.jpg';
     }
