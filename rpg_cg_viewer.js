@@ -9,12 +9,17 @@
  viewer.id='cgFullscreenViewer';viewer.className='cg-fullscreen-viewer';
  viewer.setAttribute('aria-label','Full screen CG memory');
  viewer.innerHTML='<div class="cg-viewer-bar"><strong id="cgViewerTitle"></strong><span id="cgViewerPosition"></span><button type="button" id="cgViewerClose" aria-label="Close full screen">✕</button></div><div class="cg-viewer-stage"><button type="button" id="cgViewerPrev" aria-label="Previous memory">‹</button><div id="cgViewerCanvas"><img id="cgViewerImage" alt="" draggable="false"></div><button type="button" id="cgViewerNext" aria-label="Next memory">›</button></div><div class="cg-viewer-footer"><button type="button" id="cgViewerZoomOut" aria-label="Zoom out">−</button><button type="button" id="cgViewerReset">Fit</button><button type="button" id="cgViewerPan" aria-pressed="false" title="Toggle automatic vertical pan">▶ Pan</button><button type="button" id="cgViewerZoomIn" aria-label="Zoom in">＋</button><span>Swipe or use ← → to browse · Pinch or scroll to zoom</span></div>';
+ const controlsHost=document.createElement('div');
+ controlsHost.id='cgViewerTimingControls';controlsHost.hidden=true;
+ viewer.querySelector('.cg-viewer-footer').before(controlsHost);
  document.body.append(viewer);
  const $=id=>document.getElementById(id),img=$('cgViewerImage'),canvas=$('cgViewerCanvas');
- let index=0,scale=1,tx=0,ty=0,drag=null,pinch=null,pan=null,panFrame=null,panResize=null,pendingAutoPan=false;
+ let index=0,scale=1,tx=0,ty=0,drag=null,pinch=null,pan=null,panFrame=null,panResize=null,pendingAutoPan=false,panControls=null;
  const items=()=>[...grid.querySelectorAll('.cg-tile.unlocked')];
  function stopPan(){
-  pendingAutoPan=false;pan?.dispose();pan=null;panResize?.disconnect();panResize=null;
+  pendingAutoPan=false;panControls?.dispose();panControls=null;
+  controlsHost.hidden=true;viewer.classList.remove('cg-pan-controls-visible');
+  pan?.dispose();pan=null;panResize?.disconnect();panResize=null;
   if(panFrame){canvas.append(img);panFrame.remove();panFrame=null;}
   $('cgViewerPan').setAttribute('aria-pressed','false');$('cgViewerPan').textContent='▶ Pan';
  }
@@ -33,7 +38,13 @@
    pan?.refresh();
   };
   resize();
-  pan=window.NeoRpgCGPan.attach(panFrame,img,true);
+  panControls=window.NeoRpgCGPan.createControls(controlsHost,config=>{
+   if(!panFrame)return;
+   pan?.dispose();
+   pan=window.NeoRpgCGPan.attach(panFrame,img,config);
+  });
+  controlsHost.hidden=false;viewer.classList.add('cg-pan-controls-visible');
+  pan=window.NeoRpgCGPan.attach(panFrame,img,panControls.getConfig());
   if(typeof ResizeObserver==='function'){panResize=new ResizeObserver(resize);panResize.observe(canvas);}
   $('cgViewerPan').setAttribute('aria-pressed','true');$('cgViewerPan').textContent='■ Stop pan';
  }
