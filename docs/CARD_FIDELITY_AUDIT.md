@@ -877,3 +877,14 @@ Audited exactly `base1-21` Electrode, `base4-25` Electrode, `base1-15` Venusaur,
 - Machamp Base: Strikes Back source checked against printed 'whenever opponent's attack damages Machamp' text. **Confirmed current-engine defect**: attacks `gym:last-magic-darts` and `gym:last-flame-jet` directly damaging a Benched Machamp did not trigger retaliation because only Active damage branch checked Strikes Back. Fixed direct targeted Bench branch in [commit 7eb60a2](https://github.com/NicolasSorrenti/poketest/commit/7eb60a2043e22587502f8be130df591a3b725582), preserving 10 unmodified retaliation damage to attacker. Other Bench-spread damage paths remain to audit.
 
 No test infrastructure added or executed. Earlier audit documentation PR #507 merged as [eabcb5a](https://github.com/NicolasSorrenti/poketest/commit/eabcb5a41ebbf8e8df66e8548acd015fa0fdeb08). Ledger statuses after this run: **334 partial, 789 unreviewed, 0 fully verified; 1123 not fully verified**.
+
+
+## 2026-11-05 — Five Power printings: Machamp, Jungle Mr. Mime and Vileplume (current engine)
+
+Exactly five printings: `base1-8` Machamp, `base2-6` Mr. Mime, `base2-22` Mr. Mime, `base2-15` Vileplume, `base2-31` Vileplume. All remain **partial**. `classic_local_service.js` calls the current `headless_duel.js` reducer, which imports `classic_power_core.js`; `rpg_duel_bridge.js` integrates RPG duels. No legacy engine findings counted. Audit PRs #440 and #507 already merged.
+
+- `base1-8`: compared Strikes Back imported text with active damage handling. **Confirmed additional bug**: shared `hitBench` helper omitted retaliation when an opposing attack damaged Benched Machamp. Added +10 direct retaliation only for positive, unprevented opposing attack damage in main commit [2be0416](https://github.com/NicolasSorrenti/poketest/commit/2be0416e1ed3513bf108d057ec3961003b568be6). Existing targeted Gym branch fix remains. Other direct Bench writes remain for future review.
+- `base2-6` and `base2-22`: compared Jungle Invisible Wall printed text (30+ after Weakness/Resistance, status lock, other effects still apply) and Meditate to current attack handling. Source includes active damage gate; own-attack, Bench, effect and damage modifiers still need executable confirmation.
+- `base2-15` and `base2-31`: compared Jungle Heal printed text (once per turn, heads, heal one counter, status lock) and Petal Dance to current Power/attack handling. Source shows coin before target prompt and once-per-turn registration; repeat attempts, no-damage heads, attack confusion and KO ordering need execution.
+
+No independent historical-ruling review or current-reducer execution in this GitHub-only pass. No tests, scripts, CI or Apex changes. No new PR. Ledger remains **334 partial / 789 unreviewed / 0 fully verified, 1,123 remaining** under strict all-effects runtime criterion.
