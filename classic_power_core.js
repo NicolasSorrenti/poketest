@@ -445,7 +445,9 @@ function doPower(g,plan,h){
   case 'Damage Swap':case 'Strange Behavior':case 'Curse':{
    const who=name==='Curse'?f:p,source=pokemon(who,s('source')),target=name==='Strange Behavior'?u:pokemon(who,s('target'));
    if(target.damage+10>=Number(card(target.id).hp)&&name!=='Curse')throw Error('Damage movement would knock out Pokémon');
-   source.damage-=10;target.damage+=10;if(name==='Curse')h.knockOuts(g,'direct');break;
+   // Curse is used before the attack: Prize selection and a replacement
+   // Active Pokémon must not advance the current player's turn.
+   source.damage-=10;target.damage+=10;if(name==='Curse')h.knockOuts(g,'trainer');break;
   }
   case 'Heal':
    if(d.healHeads&&have(plan,'target')){
