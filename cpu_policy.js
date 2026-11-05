@@ -1378,7 +1378,12 @@ function score(a,o,cfg,used){
    strongestAffordableAttack(q.active,to,q.bench.length);
   const threatened=cfg.level===8?likelyOpponentKnockout(o,before,true):
    counter>=hpRemaining(before)&&counter>0;
-  const alternativeSurvives=counterTo<hpRemaining(to);
+  // Apex uses KO probability for both sides of a defensive retreat.
+  // Expected damage can hide a coin-flip KO (or exaggerate a low-probability
+  // high roll); the rescue decision must use the same 75% risk threshold
+  // as the threatened-Active check. Preserve lower-tier scoring.
+  const alternativeSurvives=cfg.level===8?
+   !likelyOpponentKnockout(o,to,true):counterTo<hpRemaining(to);
   // A defensive swap is useful only when it *actually* shelters the Active
   // from a visible affordable knockout. Avoid abandoning a ready attacker for
   // a Bench Pokémon that is equally easy to knock out.
