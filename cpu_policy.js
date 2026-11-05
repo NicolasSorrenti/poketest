@@ -1616,11 +1616,16 @@ function energyPreparationActions(o,cfg,actions){
    {...target,damage:(target.damage||0)+10,
     energies:[...(target.energies||[]),energyId]}:null;
   const defenderHp=hpRemaining(o.opponent.active);
-  const rainbowKoUpgrade=rainbowAfter&&defenderHp>0&&
-   strongestAffordableAttack(target,o.opponent.active,o.self.bench.length)<defenderHp&&
-   strongestAffordableAttack(rainbowAfter,o.opponent.active,o.self.bench.length)>=defenderHp&&
-   projectedAttackValue(rainbowAfter,o.opponent.active,o.turnSerial,o.self.bench.length)>
-    projectedAttackValue(target,o.opponent.active,o.turnSerial,o.self.bench.length);
+  // A printed Rage/Flail damage estimate is not a guaranteed Prize: an
+  // Amnesia/Gym-blocked move or coin-dependent KO must not force Rainbow
+  // attachment ahead of a currently legal attack. Check actual legality and
+  // KO probability before treating the recoil counter as urgent preparation.
+  const guaranteedKo=unit=>(unit.effectiveAttacks||card(unit.id)?.attacks||[])
+   .some((attack,index)=>eligibleAttack(o,unit,attack,index)&&
+    knockoutChance(attack,unit,o.opponent.active,o.self.bench.length,
+     livePlusPowerBonus(o))*(unit.status==='Confused'?.5:1)>=.999);
+  const rainbowKoUpgrade=!!rainbowAfter&&defenderHp>0&&
+   !guaranteedKo(target)&&guaranteedKo(rainbowAfter);
   if(!confusionCure&&!lethalPoisonCure&&!potionPoisonSave&&!potionDarknessSave&&
    !potionOpponentSave&&!rainbowKoUpgrade&&energyValue(target,energyId)<=12)return false;
   // Do not suppress an already-legal attack just to spend the only Energy on
