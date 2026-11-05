@@ -205,7 +205,8 @@
           "status": "partial",
           "evidence": [
             "test_card_fidelity_machamp.js",
-            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified.",
+            "2026-11-05 current reducer source: shared hitBench spread damage omitted Strikes Back for opposing attacks on Benched Machamp; fixed main 2be0416. No new runtime execution or independent historical ruling verification."
           ],
           "scope": "Typed attack cost rejection; attacks resolve in tested Machamp scenarios."
         },
@@ -216,7 +217,8 @@
           "status": "partial",
           "evidence": [
             "test_card_fidelity_machamp.js",
-            "2026-11-05 active headless_duel.js source audit: targeted Bench damage from gym:last-magic-darts / gym:last-flame-jet failed to trigger Strikes Back; fixed on main commit 7eb60a2. Broader Bench spread damage and reducer execution remain unverified."
+            "2026-11-05 active headless_duel.js source audit: targeted Bench damage from gym:last-magic-darts / gym:last-flame-jet failed to trigger Strikes Back; fixed on main commit 7eb60a2. Broader Bench spread damage and reducer execution remain unverified.",
+            "2026-11-05 current reducer source: shared hitBench spread damage omitted Strikes Back for opposing attacks on Benched Machamp; fixed main 2be0416. No new runtime execution or independent historical ruling verification."
           ],
           "scope": "Retaliation when Machamp takes damage even if Knocked Out; suppressed by Asleep, Confused and Paralyzed; surviving Machamp retaliation. Classic reducer; print and historical ruling review pending."
         }
@@ -2439,7 +2441,8 @@
           "status": "partial",
           "scope": "Meditate adds 10 per defending damage counter; Invisible Wall power prevents incoming attack damage >=30 after weakness/resistance while retaining other effects. Source inspected; indirect damage and copied attacks remain unchecked. No new tests or CI additions.",
           "evidence": [
-            "2026-11-03 Jungle batch: base2-6 Mr. Mime attack: Meditate; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+            "2026-11-03 Jungle batch: base2-6 Mr. Mime attack: Meditate; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review.",
+            "2026-11-05 current headless_duel.js/classic_power_core.js source review against imported Jungle printing: checked Power dispatch, conditions and attack flow; no new reducer execution or independent historical rulings. Remains partial."
           ]
         },
         {
@@ -2449,7 +2452,8 @@
           "status": "partial",
           "scope": "Meditate adds 10 per defending damage counter; Invisible Wall power prevents incoming attack damage >=30 after weakness/resistance while retaining other effects. Source inspected; indirect damage and copied attacks remain unchecked. No new tests or CI additions.",
           "evidence": [
-            "2026-11-03 Jungle batch: base2-6 Mr. Mime power: Invisible Wall; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review."
+            "2026-11-03 Jungle batch: base2-6 Mr. Mime power: Invisible Wall; printed text in cards/base2.json, attack_effects_core.js/classic_attack_extensions.js, classic_power_core.js, headless_duel.js source review.",
+            "2026-11-05 current headless_duel.js/classic_power_core.js source review against imported Jungle printing: checked Power dispatch, conditions and attack flow; no new reducer execution or independent historical rulings. Remains partial."
           ]
         }
       ]
@@ -2689,7 +2693,8 @@
           "scope": "Petal Dance 3 coins at 40/head and subsequent self Confusion inspected via classic_attack_extensions.js; Heal once-per-turn flip-before-target timing corrected in classic_power_core.js commit 6ed4ac03, including tails with no prompt, heads with eligible damaged targets, no-target heads, and once-per-turn use. Source inspection only; runtime checks outstanding. No new tests added.",
           "evidence": [
             "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification).",
-            "Vileplume Heal fixed directly in main: https://github.com/NicolasSorrenti/poketest/commit/6ed4ac03db539ef250f5219503a84bf4f4f1ff4a"
+            "Vileplume Heal fixed directly in main: https://github.com/NicolasSorrenti/poketest/commit/6ed4ac03db539ef250f5219503a84bf4f4f1ff4a",
+            "2026-11-05 current headless_duel.js/classic_power_core.js source review against imported Jungle printing: checked Power dispatch, conditions and attack flow; no new reducer execution or independent historical rulings. Remains partial."
           ]
         },
         {
@@ -2700,7 +2705,8 @@
           "scope": "Petal Dance 3 coins at 40/head and subsequent self Confusion inspected via classic_attack_extensions.js; Heal once-per-turn flip-before-target timing corrected in classic_power_core.js commit 6ed4ac03, including tails with no prompt, heads with eligible damaged targets, no-target heads, and once-per-turn use. Source inspection only; runtime checks outstanding. No new tests added.",
           "evidence": [
             "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification).",
-            "Vileplume Heal fixed directly in main: https://github.com/NicolasSorrenti/poketest/commit/6ed4ac03db539ef250f5219503a84bf4f4f1ff4a"
+            "Vileplume Heal fixed directly in main: https://github.com/NicolasSorrenti/poketest/commit/6ed4ac03db539ef250f5219503a84bf4f4f1ff4a",
+            "2026-11-05 current headless_duel.js/classic_power_core.js source review against imported Jungle printing: checked Power dispatch, conditions and attack flow; no new reducer execution or independent historical rulings. Remains partial."
           ]
         }
       ]
@@ -2874,7 +2880,8 @@
           "status": "partial",
           "scope": "Meditate scales with defending damage counters; Invisible Wall prevents 30+ damage after Weakness/Resistance but not other effects when Power enabled. Source review; indirect effects and suppression edge cases not verified. No new tests added.",
           "evidence": [
-            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification).",
+            "2026-11-05 current headless_duel.js/classic_power_core.js source review against imported Jungle printing: checked Power dispatch, conditions and attack flow; no new reducer execution or independent historical rulings. Remains partial."
           ]
         },
         {
@@ -2884,7 +2891,8 @@
           "status": "partial",
           "scope": "Meditate scales with defending damage counters; Invisible Wall prevents 30+ damage after Weakness/Resistance but not other effects when Power enabled. Source review; indirect effects and suppression edge cases not verified. No new tests added.",
           "evidence": [
-            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification)."
+            "2026-11-03 Jungle printings: cards/base2.json, classic_attack_extensions.js, attack_effects_core.js, classic_power_core.js, headless_duel.js (source inspection; not end-to-end verification).",
+            "2026-11-05 current headless_duel.js/classic_power_core.js source review against imported Jungle printing: checked Power dispatch, conditions and attack flow; no new reducer execution or independent historical rulings. Remains partial."
           ]
         }
       ]
@@ -3119,7 +3127,8 @@
           "status": "partial",
           "scope": "Petal Dance 3 coins x40 and self Confused; Heal flips before targeting from 6ed4ac0 fix, once-use ledger source inspected; no focused gameplay reproduction. Source inspection only; not fully verified.",
           "evidence": [
-            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes.",
+            "2026-11-05 current headless_duel.js/classic_power_core.js source review against imported Jungle printing: checked Power dispatch, conditions and attack flow; no new reducer execution or independent historical rulings. Remains partial."
           ]
         },
         {
@@ -3129,7 +3138,8 @@
           "status": "partial",
           "scope": "Petal Dance 3 coins x40 and self Confused; Heal flips before targeting from 6ed4ac0 fix, once-use ledger source inspected; no focused gameplay reproduction. Source inspection only; not fully verified.",
           "evidence": [
-            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes."
+            "2026-11-03 resumed hourly audit: compared cards/base2.json printing to attack_effects_core.js, classic_attack_extensions.js, classic_power_core.js and headless_duel.js relevant paths; no new tests or CI changes.",
+            "2026-11-05 current headless_duel.js/classic_power_core.js source review against imported Jungle printing: checked Power dispatch, conditions and attack flow; no new reducer execution or independent historical rulings. Remains partial."
           ]
         }
       ]
