@@ -2650,7 +2650,7 @@ function finishRetreat(g,side,slot,picks){
  const balloon=u.attachedTrainers.findIndex(t=>card(g,t.id).name==='Balloon Berry');
  if(balloon>=0)p.discard.push(u.attachedTrainers.splice(balloon,1)[0].id);
  p.active=p.bench.splice(slot,1,u)[0];STATUS.clearConditions(u);clearBenchEffects(u);if(isClassicRules(g))CLASSIC_POWERS.movedToBench(g,side,u,p.active,classicHelpers());p.retreated=true;log(g,`${p.name} retreated.`);
- if(isClassicRules(g)&&g.players[1-side].bench.some(x=>CLASSIC_POWERS.enabled(g,x,'Sinkhole'))&&next(g,2)===0){u.damage+=20;knockOuts(g,'direct');}
+ if(isClassicRules(g)&&[g.players[1-side].active,...g.players[1-side].bench].some(x=>x&&CLASSIC_POWERS.enabled(g,x,'Sinkhole'))&&next(g,2)===0){u.damage+=20;knockOuts(g,'direct');}
 }
 function calculateDamage(attacker,target,base,defendingUnit=null,{ignoreWeakness=false,ignoreResistance=false,resistancePenalty=30}={}){
  let amount=base;
