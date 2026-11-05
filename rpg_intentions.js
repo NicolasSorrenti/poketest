@@ -7,12 +7,12 @@
  if(root)root.NeoRpgIntentions=api;
 })(typeof window!=='undefined'?window:null,function(){
  const goals=Object.freeze([
-  Object.freeze({id:'social',title:'Make time for someone',detail:'Spend time together, keep a meet-up, or finish a personal story or side-quest conversation.',rewardLabel:'+5 focus · +1 insight'}),
+  Object.freeze({id:'social',title:'Make time for someone',detail:'Spend time together, keep a meet-up, or help with a personal side-quest.',rewardLabel:'+5 focus · +1 insight'}),
   Object.freeze({id:'duel',title:'Play a meaningful match',detail:'Finish one real NPC duel. Wins, draws and losses all count.',rewardLabel:'+10 credits · +1 duel preparation'}),
   Object.freeze({id:'town',title:'Be part of the neighborhood',detail:'Finish a town-life activity or a local encounter.',rewardLabel:'+8 credits · +2 reputation'})
  ]);
  const accepted=Object.freeze({
-  social:['hangout','appointment','story','sideQuest','arc'],
+  social:['hangout','appointment','sideQuest','arc'],
   duel:['duel'],
   town:['activity','encounter']
  });
