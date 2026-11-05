@@ -309,6 +309,9 @@
   }
   return state;
  }
+ // Meaningful time together is separate from authored story completion.
+ function qualityTime(state,npc){return Math.max(0,Number(state.relationshipQualityTime?.[npc])||0);}
+ function isRouteChapter(e){return /_(?:route_(?:\d+|bridge_\d+|early_\d+)|guest_\d+|bond_\d+)$/.test(e.id);}
  function qualifies(e,state,place=state.location){
   const s=normalize(state),b=s.relationships[e.npc],previous=e.prerequisite;
   const minBondScore=Number(e.minBondScore)||0;
@@ -319,8 +322,12 @@
   // After meeting someone, story chapters depend on bond and prerequisites,
   // not an arbitrary day in the 90-day campaign.
   const met=!!s['met_'+e.npc]||(e.npc==='reina'&&!!s.metReina);
+  // A fresh hangout or attended date after the previous story chapter is required.
+  const previousChapter=previous&&ID.get(previous);
+  const spentTime=!previousChapter||!isRouteChapter(e)||previousChapter.npc!==e.npc||
+   qualityTime(s,e.npc)>(Number(s.storyDone[previous]?.qualityTime)||0);
   return s.day>=1&&s.day<=90&&met&&s.slot===e.slot&&place===e.place&&
-   !s.storyDone[e.id]&&(!previous||!!s.storyDone[previous])&&bondReady;
+   !s.storyDone[e.id]&&(!previous||!!s.storyDone[previous])&&bondReady&&spentTime;
  }
  function linesFor(state,id){const e=ID.get(id);if(!e)return [];const flag=state?.storyFlags?.[e.prerequisite];const opening=e.openingByFlag?.[flag];return opening?[{...e.lines[0],text:opening},...e.lines.slice(1)]:e.lines;}
  function available(state,place=state.location){return E.filter(e=>qualifies(e,state,place));}
@@ -335,7 +342,8 @@
   if(!qualifies(e,state))throw Error('Story event is no longer available');
   const choice=e.choices[choiceIndex];if(!choice)throw Error('Invalid story choice');
   if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc))throw Error('A deeper bond is required');
-  REL.apply(state,e.npc,choice.delta);
+  // Authored chapters reward the player with scenes, choices and outcomes,
+  // not relationship points that instantly pay for the next chapter.
   if(choice.kind==='commit'){
    if(VN.commitmentReady(state,e.npc)){
     state.partners=Array.isArray(state.partners)?state.partners:[];
@@ -352,7 +360,7 @@
   }
   if(choice.kind==='friend'||choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
   if(choice.flag&&choice.flag!=='romance'&&choice.flag!=='friendship')state.storyFlags[e.id]=choice.flag;
-  state.storyDone[e.id]={choice:choiceIndex,day:state.day};
+  state.storyDone[e.id]={choice:choiceIndex,day:state.day,qualityTime:qualityTime(state,e.npc)};
   return {event:e,choice,partner:state.partner};
  }
  function validate(){
