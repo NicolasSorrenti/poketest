@@ -9329,14 +9329,18 @@
           "status": "partial",
           "scope": "Under Sand-attack tails, verifies the Psychic attack cost is payable before its attached-Energy discard, discard commits before prevention, identical Energy names auto-select, distinct Energy cards remain the attacker's choice, and no draw occurs when prevented. Successful draw-count choice and other interactions remain unreviewed.",
           "evidence": [
-            "test_card_fidelity_sandshrew.js: Third Eye discard-before-prevention ordering, same-name auto-selection and distinct Energy choice ownership; a prevented attack opens no draw choice and draws no cards across Classic, Neo-theme and online-preview 60/40; partial interaction only."
+            "test_card_fidelity_sandshrew.js: Third Eye discard-before-prevention ordering, same-name auto-selection and distinct Energy choice ownership; a prevented attack opens no draw choice and draws no cards across Classic, Neo-theme and online-preview 60/40; partial interaction only.",
+            "2026-11-05 current-engine source-only audit: Current headless_duel attackPlan handles Third Eye attached-Energy discard as attack cost before prevention/Confusion, offers attacker a 0–3 draw choice, then final attack resolution draws. Source-only reinspection; prior Sand-attack evidence preserved. Pending execution of 0/1/2/3 draw, short deck, KO/turn ownership. No reducer execution or independent historical-ruling adjudication."
           ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Super Psy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: Super Psy imported as 50 damage for Psychic/Psychic/Colorless; active attack reducer's ordinary damage/cost path inspected. Pending actual cost, Weakness/Resistance, and KO execution. No reducer execution or independent historical-ruling adjudication."
+          ]
         }
       ]
     },
@@ -9540,13 +9544,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Doubleslap",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: Doubleslap printed 2 coins × 10 per heads; active attack compiler coin-times path inspected. Pending all coin sequences and KO execution. No reducer execution or independent historical-ruling adjudication."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Mirror Shell",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: Mirror Shell is compiled in current Classic final attacks; reducer sets mirrorShell expiry and reflects damage through calculateDamage before KO window. Pending attack prevention, bench switching, 0-damage attacks, retaliation KO/Prizes, and whether retaliation applies to actual damage only. No reducer execution or independent historical-ruling adjudication."
+          ]
         }
       ]
     },
@@ -9559,13 +9569,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Flop",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: Flop printed 10 for one Colorless; generic current attack damage path inspected. Pending execution. No reducer execution or independent historical-ruling adjudication."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rapid Evolution",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: Rapid Evolution compiled in classic_attack_extensions; active reducer restricts deck choice to Gyarados/Dark Gyarados, evolves active Magikarp with under-card, clears conditions and shuffles. Pending empty deck search, evolution on first turn, KO/turn progression and status interactions. No reducer execution or independent historical-ruling adjudication."
+          ]
         }
       ]
     },
@@ -9605,13 +9621,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Vanish",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: Vanish compiled as vanishSelf; current reducer discards attached cards, shuffles Abra into deck, then handles own Active promotion or no-Pokemon loss and finishes attack turn. Pending actual multiple promotion choices, attached cards, and no-Bench endgame execution. No reducer execution or independent historical-ruling adjudication."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Psyshock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: Psyshock imported 10 and heads Paralyzed; coin-status attack path inspected. Pending both flips and protection execution. No reducer execution or independent historical-ruling adjudication."
+          ]
         }
       ]
     },
@@ -9694,13 +9716,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Nightmare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: Nightmare imported 10 plus guaranteed Asleep; current status attack path inspected. Pending protection, damage, and between-turn sleep checks. No reducer execution or independent historical-ruling adjudication."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Long Distance Hypnosis",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: Nightmare imported 10 plus guaranteed Asleep; current status attack path inspected. Pending protection, damage, and between-turn sleep checks. No reducer execution or independent historical-ruling adjudication."
+          ]
         }
       ]
     },
