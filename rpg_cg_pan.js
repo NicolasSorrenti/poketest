@@ -42,7 +42,7 @@
    img.style.width='100%';img.style.height='auto';
    img.style.maxWidth='none';img.style.maxHeight='none';
    img.style.objectFit='fill';img.style.transformOrigin='top left';
-   if(overflow<1||typeof img.animate!=='function'||(root.matchMedia&&root.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+   if(overflow<1||typeof img.animate!=='function'||(typeof window!=='undefined'&&window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)){
     img.style.transform='translateY('+Math.min(0,(h-imageHeight)/2)+'px)';
     return;
    }
