@@ -136,15 +136,19 @@ function finishStory(){
  const e=STORY.byId(a.id);
  try{STORY.resolve(state,a.id,a.choice);}
  catch(err){window.NeoRpgErrorReport?.capture(err,{source:'story-completion',action:'storyFinish'});console.error('RPG story completion failed',err);$('notice').textContent='Could not finish scene: '+err.message;return;}
- // The chapter itself is the reward: no cards, credits, stat points,
- // daily-priority bonuses or other payouts for completing story dialogue.
+ // Story dialogue remains its own relationship reward: no affection, trust,
+ // respect or attraction increases. Collection gifts and credits are restored.
  state.activeStory=null;persist();
- const id=e.npc;
+ const id=e.npc;let chapterReward=null;
+ try{chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);}
+ catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-reward',action:'storyReward'});console.error('RPG chapter reward failed',err);}
  try{
   log('Finished '+e.title+' with '+cast[id].name+'.');
   recordCG('story_milestone',id,{eventId:e.id});
+  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' gift from '+cast[id].name+': '+chapterReward.label+'.');
  }catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-story-effects',action:'storyFinish'});console.error('RPG optional story effects failed',err);}
  advance();state.selected=id;persist();closeSceneDialogue();
+ if(chapterReward)$('notice').textContent='★ Chapter gift: '+chapterReward.label;
 }
 
 function beginSideQuest(id){
@@ -296,6 +300,18 @@ function syncDeckStudioSave(){
 }
 window.NeoRpgSyncDeckStudio=syncDeckStudioSave;
 const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
+// Recover chapter gifts earned during the reward-free build, without paying
+// any milestone twice or altering a single relationship statistic.
+try{
+ const recovered=BONDS.catchUp(state,BOND_PLAN,COLLECT);
+ if(recovered.length){
+  log('Restored '+recovered.length+' unclaimed character chapter gift'+(recovered.length===1?'':'s')+'.');
+  persist();
+ }
+}catch(error){
+ console.warn('Could not restore some previous relationship gifts',error);
+ window.NeoRpgErrorReport?.capture?.(error,{source:'bond-reward-recovery',action:'catchUp'});
+}
 window.NeoRpgErrorReport?.setContextProvider(()=>{
  const active=[['mandatory',state.mandatoryEventState?.active],['slice',state.activeSliceOfLife],['situation',state.activeSituation],['story',state.activeStory],['encounter',state.activeEncounter],['arc',state.activeArc],['sideQuest',state.activeSideQuest]].find(([,value])=>!!value);
  return {day:state.day,period:['Morning','Afternoon','Evening'][state.slot]||null,
