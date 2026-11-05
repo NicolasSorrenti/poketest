@@ -8,15 +8,15 @@
  const viewer=document.createElement('dialog');
  viewer.id='cgFullscreenViewer';viewer.className='cg-fullscreen-viewer';
  viewer.setAttribute('aria-label','Full screen CG memory');
- viewer.innerHTML='<div class="cg-viewer-bar"><strong id="cgViewerTitle"></strong><span id="cgViewerPosition"></span><button type="button" id="cgViewerClose" aria-label="Close full screen">✕</button></div><div class="cg-viewer-stage"><button type="button" id="cgViewerPrev" aria-label="Previous memory">‹</button><div id="cgViewerCanvas"><img id="cgViewerImage" alt="" draggable="false"></div><button type="button" id="cgViewerNext" aria-label="Next memory">›</button></div><div class="cg-viewer-footer"><button type="button" id="cgViewerZoomOut" aria-label="Zoom out">−</button><button type="button" id="cgViewerReset">Fit</button><button type="button" id="cgViewerZoomIn" aria-label="Zoom in">＋</button><span>Swipe or use ← → to browse · Pinch or scroll to zoom</span></div>';
+ viewer.innerHTML='<div class="cg-viewer-bar"><strong id="cgViewerTitle"></strong><span id="cgViewerPosition"></span><button type="button" id="cgViewerClose" aria-label="Close full screen">✕</button></div><div class="cg-viewer-stage"><button type="button" id="cgViewerPrev" aria-label="Previous memory">‹</button><div id="cgViewerCanvas"><img id="cgViewerImage" alt="" draggable="false"></div><button type="button" id="cgViewerNext" aria-label="Next memory">›</button></div><div class="cg-viewer-footer"><button type="button" id="cgViewerZoomOut" aria-label="Zoom out">−</button><button type="button" id="cgViewerReset">Fit</button><button type="button" id="cgViewerPan" aria-pressed="false" title="Toggle automatic vertical pan">▶ Pan</button><button type="button" id="cgViewerZoomIn" aria-label="Zoom in">＋</button><span>Swipe or use ← → to browse · Pinch or scroll to zoom</span></div>';
  document.body.append(viewer);
  const $=id=>document.getElementById(id),img=$('cgViewerImage'),canvas=$('cgViewerCanvas');
- let index=0,scale=1,tx=0,ty=0,drag=null,pinch=null;
+ let index=0,scale=1,tx=0,ty=0,drag=null,pinch=null,pan=null;
  const items=()=>[...grid.querySelectorAll('.cg-tile.unlocked')];
- function reset(){scale=1;tx=0;ty=0;apply();}
+ function stopPan(){pan?.dispose();pan=null;$('cgViewerPan').setAttribute('aria-pressed','false');$('cgViewerPan').textContent='▶ Pan';}\n function reset(){stopPan();scale=1;tx=0;ty=0;apply();}
  function apply(){img.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')';}
- function zoom(next){scale=Math.max(1,Math.min(5,next));if(scale===1){tx=0;ty=0;}apply();}
- function show(i){
+ function zoom(next){stopPan();scale=Math.max(1,Math.min(5,next));if(scale===1){tx=0;ty=0;}apply();}
+ function show(i){\n  stopPan();
   const tiles=items();if(!tiles.length)return;
   index=(i+tiles.length)%tiles.length;
   const tile=tiles[index];tile.click();
@@ -42,17 +42,17 @@
   const found=tiles.findIndex(tile=>tile.querySelector('strong')?.textContent===title);
   open(Math.max(0,found));
  });
- $('cgViewerClose').onclick=()=>viewer.close();
+ $('cgViewerClose').onclick=()=>viewer.close();\n $('cgViewerPan').onclick=()=>{\n  if(pan){stopPan();return;}\n  if(!window.NeoRpgCGPan||!img.complete||!img.naturalWidth)return;\n  reset();pan=window.NeoRpgCGPan.attach(canvas,img,true);\n  $('cgViewerPan').setAttribute('aria-pressed','true');$('cgViewerPan').textContent='■ Stop pan';\n };
  $('cgViewerPrev').onclick=()=>show(index-1);$('cgViewerNext').onclick=()=>show(index+1);
  $('cgViewerZoomIn').onclick=()=>zoom(scale+.5);$('cgViewerZoomOut').onclick=()=>zoom(scale-.5);$('cgViewerReset').onclick=reset;
  viewer.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();show(index-1);}if(e.key==='ArrowRight'){e.preventDefault();show(index+1);}if(e.key==='+'||e.key==='=')zoom(scale+.5);if(e.key==='-')zoom(scale-.5);});
  canvas.addEventListener('wheel',e=>{e.preventDefault();zoom(scale+(e.deltaY<0?.25:-.25));},{passive:false});
- canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,tx,ty};});
+ canvas.addEventListener('pointerdown',e=>{if(pan)stopPan();canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,tx,ty};});
  canvas.addEventListener('pointermove',e=>{if(!drag||scale===1)return;tx=drag.tx+e.clientX-drag.x;ty=drag.ty+e.clientY-drag.y;apply();});
  canvas.addEventListener('pointerup',e=>{if(!drag)return;const dx=e.clientX-drag.x;if(scale===1&&Math.abs(dx)>70)show(index+(dx<0?1:-1));drag=null;});
  canvas.addEventListener('pointercancel',()=>drag=null);
  canvas.addEventListener('touchstart',e=>{if(e.touches.length===2)pinch={distance:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),scale};},{passive:true});
  canvas.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){e.preventDefault();const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom(pinch.scale*d/pinch.distance);}},{passive:false});
  canvas.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null;});
- viewer.addEventListener('close',()=>{img.removeAttribute('src');reset();});
+ viewer.addEventListener('close',()=>{stopPan();img.removeAttribute('src');reset();});
 })();
