@@ -326,8 +326,15 @@
   const previousChapter=previous&&ID.get(previous);
   const spentTime=!previousChapter||!isRouteChapter(e)||previousChapter.npc!==e.npc||
    qualityTime(s,e.npc)>(Number(s.storyDone[previous]?.qualityTime)||0);
+  // One major relationship chapter per character per in-game day. The next
+  // day can unlock a new chapter once bond, quality time and story order allow.
+  // This also covers parallel chapter branches, not just direct prerequisites.
+  const chapterCooldownReady=!isRouteChapter(e)||!Object.entries(s.storyDone).some(([id,done])=>{
+   const chapter=ID.get(id);
+   return done?.day===s.day&&chapter?.npc===e.npc&&isRouteChapter(chapter);
+  });
   return s.day>=1&&s.day<=90&&met&&s.slot===e.slot&&place===e.place&&
-   !s.storyDone[e.id]&&(!previous||!!s.storyDone[previous])&&bondReady&&spentTime;
+   !s.storyDone[e.id]&&(!previous||!!s.storyDone[previous])&&bondReady&&spentTime&&chapterCooldownReady;
  }
  function linesFor(state,id){const e=ID.get(id);if(!e)return [];const flag=state?.storyFlags?.[e.prerequisite];const opening=e.openingByFlag?.[flag];return opening?[{...e.lines[0],text:opening},...e.lines.slice(1)]:e.lines;}
  function available(state,place=state.location){return E.filter(e=>qualifies(e,state,place));}
