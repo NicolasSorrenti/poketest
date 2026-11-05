@@ -154,7 +154,16 @@
     let token=cached?.access_token||'';
     // Refresh stale sessions through the same Supabase identity provider as cloud saves.
     if(cached?.refresh_token && (!token||!Number.isFinite(Number(cached.expires_at))||Number(cached.expires_at)<=Date.now()+60000)){
-      token=await refreshSession(cached);
+      try{token=await refreshSession(cached);}
+      catch(error){
+        // Temporary connectivity problems do not justify erasing a login or
+        // blocking the offline/public game. An explicitly expired/rejected
+        // login remains a user-visible sign-in error.
+        if(!/timed out|Failed to fetch|NetworkError|fetch failed/i.test(String(error)))throw error;
+        console.warn('Cloud session refresh unreachable; using filtered public roster only',error);
+        token='';
+        sessionStorage.setItem('neoRpgRosterDegraded','1');
+      }
     }
     const headers=token?{Authorization:'Bearer '+token}:{};
     // Prefer server-verified entitlements when an API backend exists.
@@ -184,12 +193,24 @@
         throw Error('Character roster request failed (HTTP '+response.status+')');
       }
     }catch(error){
-      if(token||!(/Failed to fetch|NetworkError|fetch failed/i.test(String(error))))throw error;
-      console.warn('Character roster API unreachable; checking filtered static roster',error);
+      // Never substitute private character content when authentication cannot be
+      // verified. A network failure can, however, use the pre-filtered PUBLIC
+      // roster without touching the saved session or campaign.
+      if(!/timed out|Failed to fetch|NetworkError|fetch failed/i.test(String(error)))throw error;
+      console.warn('Character roster API unreachable; using filtered public roster',error);
+      sessionStorage.setItem('neoRpgRosterDegraded','1');
+      data=null;
     }
     if(token&&!data&&sessionStorage.getItem('neoRpgRosterDegraded')!=='1')throw Error('Cloud character access is temporarily unavailable. Please retry.');
     if(!data){
-      const response=await timedFetch('/rpg-character-packs.public.json',{cache:'no-store'});
+      // Static filtered roster is safe even if the identity provider is down.
+      // Retry transient download failures once before showing recovery UI.
+      let response;
+      try{response=await timedFetch('/rpg-character-packs.public.json',{cache:'no-store'});}
+      catch(error){
+        if(!/timed out|Failed to fetch|NetworkError|fetch failed/i.test(String(error)))throw error;
+        response=await timedFetch('/rpg-character-packs.public.json',{cache:'no-store'});
+      }
       if(!response.ok||!response.headers.get('content-type')?.includes('application/json'))throw Error('Character roster unavailable (public file HTTP '+response.status+')');
       data=await response.json();
     }
