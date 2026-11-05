@@ -44,7 +44,8 @@
  }
 
  function create(stage,image,doc){
-  let requestedId=null,visibleId=null,serial=0,pan=null;\n  const stopPan=()=>{pan?.dispose();pan=null;};
+  let requestedId=null,visibleId=null,serial=0,pan=null;
+  const stopPan=()=>{pan?.dispose();pan=null;};
   if(image?.style)image.style.transition='opacity 220ms ease';
   const seen=new Set();
   function clear(){
@@ -82,7 +83,10 @@
      image.hidden=false;
      stage.classList.add('has-story-cg');
      if(image?.style)image.style.opacity='1';
-     visibleId=entry.id;\n     if(entry.cgPan&&typeof window!=='undefined'&&window.NeoRpgCGPan&&!window.NeoRpgDiscreet?.enabled){\n      pan=window.NeoRpgCGPan.attach(stage,image,entry.cgPan);\n     }
+     visibleId=entry.id;
+     if(entry.cgPan&&typeof window!=='undefined'&&window.NeoRpgCGPan&&!window.NeoRpgDiscreet?.enabled){
+      pan=window.NeoRpgCGPan.attach(stage,image,entry.cgPan);
+     }
      if(entry.character&&typeof window!=='undefined')window.NeoRpgDiscreetAvatars?.set?.(stage,entry.character,'neutral',entry.character);
      else{
       // CG-only scenes (notably Live's) must not inherit an earlier
