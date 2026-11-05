@@ -1200,7 +1200,12 @@ function score(a,o,cfg,used){
     knockoutChance(attack,active,q.active,p.bench.length,livePlusPowerBonus(o))*
      (active.status==='Confused'?.5:1)>=.75);
   const afterUnit={...unit,energies:[...(unit.energies||[]),attachmentId],
-   ...(counterChange?{damage:Math.max(0,(unit.damage||0)+counterChange)}:{})};
+   ...(counterChange?{damage:Math.max(0,(unit.damage||0)+counterChange)}:{}),
+   // Full Heal Energy cures status before the newly funded attack is declared.
+   // Otherwise Apex misses a legal KO unlocked by curing Sleep or Paralysis,
+   // or over-discounts a Confused attack that is now reliable.
+   ...(cfg.level===8&&attachmentName==='Full Heal Energy'?
+    {status:null,poison:false}:{})};
   const ko=cfg.level===8?
    v.slot===-1&&!likelyAttackKo(unit)&&likelyAttackKo(afterUnit):
    after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
