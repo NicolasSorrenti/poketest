@@ -8516,13 +8516,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Knock Down",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Sinkhole now recognizes Active and Benched Dark Dugtrio (commit 1bcfe256), opponent retreat coin tails applies 20 to former Active; Knock Down opponent coin branch examined. Runtime execution and independent historical rulings not completed."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Sinkhole",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Sinkhole now recognizes Active and Benched Dark Dugtrio (commit 1bcfe256), opponent retreat coin tails applies 20 to former Active; Knock Down opponent coin branch examined. Runtime execution and independent historical rulings not completed."
+          ]
         }
       ]
     },
@@ -8562,13 +8568,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Ice Beam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Final Beam pre-KO attack-context check, Water Energy count, weakness/resistance and Ice Beam coin/status examined. Runtime execution and independent historical rulings not completed."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Final Beam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Final Beam pre-KO attack-context check, Water Energy count, weakness/resistance and Ice Beam coin/status examined. Runtime execution and independent historical rulings not completed."
+          ]
         }
       ]
     },
@@ -8665,13 +8677,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Petal Whirlwind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Hay Fever Trainer lock and status suppression, Petal Whirlwind three-coin damage/confusion examined. Runtime execution and independent historical rulings not completed."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Hay Fever",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Hay Fever Trainer lock and status suppression, Petal Whirlwind three-coin damage/confusion examined. Runtime execution and independent historical rulings not completed."
+          ]
         }
       ]
     },
@@ -8843,13 +8861,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Knock Down",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Sinkhole now recognizes Active and Benched Dark Dugtrio (commit 1bcfe256), opponent retreat coin tails applies 20 to former Active; Knock Down opponent coin branch examined. Runtime execution and independent historical rulings not completed."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Sinkhole",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Sinkhole now recognizes Active and Benched Dark Dugtrio (commit 1bcfe256), opponent retreat coin tails applies 20 to former Active; Knock Down opponent coin branch examined. Runtime execution and independent historical rulings not completed."
+          ]
         }
       ]
     },
@@ -8889,13 +8913,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Ice Beam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Final Beam pre-KO attack-context check, Water Energy count, weakness/resistance and Ice Beam coin/status examined. Runtime execution and independent historical rulings not completed."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Final Beam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine source inspection: imported Team Rocket printed text compared with headless_duel.js and classic_power_core.js; Final Beam pre-KO attack-context check, Water Energy count, weakness/resistance and Ice Beam coin/status examined. Runtime execution and independent historical rulings not completed."
+          ]
         }
       ]
     },
