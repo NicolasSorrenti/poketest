@@ -4216,7 +4216,8 @@
           "name": "Nightmare",
           "status": "partial",
           "evidence": [
-            "Transparency: printed prevention of all attack effects on heads, only disabled while Asleep; headless defender coin branch clears damage/status but other effect channels and zero-damage attacks require verification."
+            "Transparency: printed prevention of all attack effects on heads, only disabled while Asleep; headless defender coin branch clears damage/status but other effect channels and zero-damage attacks require verification.",
+            "2026-11-05 active reducer source review: Toxic Gas suppresses other Powers globally while healthy; Sludge attack's coin/Poison interaction still needs runtime and historical ruling verification."
           ]
         },
         {
@@ -4225,7 +4226,8 @@
           "name": "Transparency",
           "status": "partial",
           "evidence": [
-            "Transparency: printed prevention of all attack effects on heads, only disabled while Asleep; headless defender coin branch clears damage/status but other effect channels and zero-damage attacks require verification."
+            "Transparency: printed prevention of all attack effects on heads, only disabled while Asleep; headless defender coin branch clears damage/status but other effect channels and zero-damage attacks require verification.",
+            "2026-11-05 active reducer source review: shared hitBench omitted Transparency on opponent Bench damage; fixed in 0ece124e. Runtime coin/Bench effect scenarios and historical rulings still pending."
           ]
         }
       ]
@@ -4266,7 +4268,8 @@
           "name": "Prophecy",
           "status": "partial",
           "evidence": [
-            "Prophecy: P, look at up to 3 top cards of either deck and reorder; headless validates deckOwner/deckOrder presence; legality, permutation, privacy, 0-2 cards and legacy decision paths need execution."
+            "Prophecy: P, look at up to 3 top cards of either deck and reorder; headless validates deckOwner/deckOrder presence; legality, permutation, privacy, 0-2 cards and legacy decision paths need execution.",
+            "2026-11-05 active reducer source review: Prophecy selects deck, orders top up to 3 cards, and commits chosen permutation; Dark Mind Bench damage passes through shared hitBench. Runtime and historical rulings pending."
           ]
         },
         {
@@ -4275,7 +4278,8 @@
           "name": "Dark Mind",
           "status": "partial",
           "evidence": [
-            "Dark Mind: PPP, 30 Active and 10 selected opposing Bench; verify selection, shields and simultaneous KO in reducer."
+            "Dark Mind: PPP, 30 Active and 10 selected opposing Bench; verify selection, shields and simultaneous KO in reducer.",
+            "2026-11-05 active reducer source review: Prophecy selects deck, orders top up to 3 cards, and commits chosen permutation; Dark Mind Bench damage passes through shared hitBench. Runtime and historical rulings pending."
           ]
         }
       ]
@@ -4391,7 +4395,8 @@
           "name": "Sludge",
           "status": "partial",
           "evidence": [
-            "Sludge: GGG 30 and heads Poison; coin-status and status-block paths inspected; both outcomes and immunity pending."
+            "Sludge: GGG 30 and heads Poison; coin-status and status-block paths inspected; both outcomes and immunity pending.",
+            "2026-11-05 active reducer source review: Toxic Gas suppresses other Powers globally while healthy; Sludge attack's coin/Poison interaction still needs runtime and historical ruling verification."
           ]
         },
         {
@@ -4400,7 +4405,8 @@
           "name": "Toxic Gas",
           "status": "partial",
           "evidence": [
-            "Toxic Gas: all other Pokémon Powers ignored while Muk is not Asleep, Confused or Paralyzed; classic_power_core and legacy continuousPower guards inspected; multiple Muk, status transitions and Powers triggered mid-attack pending."
+            "Toxic Gas: all other Pokémon Powers ignored while Muk is not Asleep, Confused or Paralyzed; classic_power_core and legacy continuousPower guards inspected; multiple Muk, status transitions and Powers triggered mid-attack pending.",
+            "2026-11-05 active reducer source review: Toxic Gas suppresses other Powers globally while healthy; Sludge attack's coin/Poison interaction still needs runtime and historical ruling verification."
           ]
         }
       ]
@@ -4572,7 +4578,8 @@
           "name": "Nightmare",
           "status": "partial",
           "evidence": [
-            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. No deterministic runtime validation or comprehensive historical ruling review; not verified.",
+            "2026-11-05 active reducer source review: Toxic Gas suppresses other Powers globally while healthy; Sludge attack's coin/Poison interaction still needs runtime and historical ruling verification."
           ],
           "scope": "Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6."
         },
@@ -4582,7 +4589,8 @@
           "name": "Transparency",
           "status": "partial",
           "evidence": [
-            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. No deterministic runtime validation or comprehensive historical ruling review; not verified.",
+            "2026-11-05 active reducer source review: shared hitBench omitted Transparency on opponent Bench damage; fixed in 0ece124e. Runtime coin/Bench effect scenarios and historical rulings still pending."
           ],
           "scope": "Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6."
         }
@@ -4626,7 +4634,8 @@
           "name": "Prophecy",
           "status": "partial",
           "evidence": [
-            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified.",
+            "2026-11-05 active reducer source review: Prophecy selects deck, orders top up to 3 cards, and commits chosen permutation; Dark Mind Bench damage passes through shared hitBench. Runtime and historical rulings pending."
           ],
           "scope": "Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8."
         },
@@ -4636,7 +4645,8 @@
           "name": "Dark Mind",
           "status": "partial",
           "evidence": [
-            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified.",
+            "2026-11-05 active reducer source review: Prophecy selects deck, orders top up to 3 cards, and commits chosen permutation; Dark Mind Bench damage passes through shared hitBench. Runtime and historical rulings pending."
           ],
           "scope": "Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8."
         }
