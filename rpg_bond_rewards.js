@@ -6,7 +6,8 @@
   hana:'base2-16',reina:'base3-7',shiori:'neo2-1',yuna:'base2-1',
   akari:'neo1-14',camila:'base5-13',marina:'base1-2',kaede:'base5-5',
   jun:'base3-1',teo:'base2-44',iris:'neo1-2',jinx:'base1-14',
-  luna:'base3-10',sol:'base1-36',elena:'base2-16',rina:'base1-15',sierra:'base5-13',elio:'base3-9',alma:'base2-11',nereo:'base3-42',laca:'base1-2'
+  luna:'base3-10',sol:'base1-36',elena:'base2-16',rina:'base1-15',sierra:'base5-13',elio:'base3-9',alma:'base2-11',nereo:'base3-42',laca:'base1-2',
+  barb:'neo2-11',daisy:'neo3-14',jicy:'neo1-1',lyla:'neo2-13'
  });
  const TRIALS=Object.freeze({
   hana:'Teamwork Exhibition',reina:'No-Excuses Rematch',shiori:'Endgame Study',
@@ -14,7 +15,9 @@
   marina:'Patience Trial',kaede:'Disruption Trial',jun:'Fair-Play Clinic',
   teo:'Live Broadcast Duel',iris:'Courier Challenge',jinx:'Lightning Sprint',
   luna:'Tidal Balance',sol:'Hot-and-Cold Match',elena:'Calculated Reserve',rina:'Overgrowth Challenge',sierra:'The Disruption Test',elio:'The Brave First Game',
-  alma:'Quiet-Table Duel',nereo:'Against the Current',laca:'Old Friends, New Tricks'
+  alma:'Quiet-Table Duel',nereo:'Against the Current',laca:'Old Friends, New Tricks',
+  barb:'The Artist’s Showdown',daisy:'Spotlight Reversal',
+  jicy:'A Braver Rematch',lyla:'The Quiet Runway Match'
  });
  const KEY=/_(?:route|guest|bond)_\d+$/;
  function build(events,cast){
@@ -61,7 +64,7 @@
   }
   if(signature&&state.deckJourney?.starter){
    collection.awardSignature(state,signature);
-   out.push('a signature card');
+   out.push('a signature Pokémon card ('+collection.cardName(signature)+')');
   }
   if(number===2){
    if(!state.playmatGifts||typeof state.playmatGifts!=='object'||Array.isArray(state.playmatGifts))state.playmatGifts={};
@@ -69,6 +72,18 @@
   }
   state.milestoneRewards[event.id]={npc,chapter:number,day:state.day};
   return {npc,chapter:number,label:out.join(' · '),credits,set,signature,playmat:number===2?'npc-'+npc:null};
+ }
+ // Older campaigns may have completed chapters while milestone payouts were
+ // disabled. Restore only unclaimed chapters; the saved per-event ledger makes
+ // recovery idempotent, including rewards granted in previous game versions.
+ function catchUp(state,plan,collection){
+  const recovered=[];
+  for(const id of Object.keys(plan.byEvent)){
+   if(!state?.storyDone?.[id]||state?.milestoneRewards?.[id])continue;
+   const granted=reward(state,{id},plan,collection);
+   if(granted)recovered.push(granted);
+  }
+  return recovered;
  }
  function canChallenge(state,npc,plan){
   const p=progress(state,npc,plan);
@@ -84,5 +99,5 @@
   state.bondTrials[npc]={day:state.day,credits,set};
   return {title:TRIALS[npc],credits,set,label:'+'+credits+' credits'+(state.deckJourney?.starter?' · one '+collection.SETS[set].name+' booster voucher':'')};
  }
- return Object.freeze({SIGNATURES,TRIALS,build,validate,progress,reward,canChallenge,settleChallenge});
+ return Object.freeze({SIGNATURES,TRIALS,build,validate,progress,reward,catchUp,canChallenge,settleChallenge});
 });
