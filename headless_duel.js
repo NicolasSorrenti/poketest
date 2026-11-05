@@ -2137,6 +2137,8 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   const reduced=relaxing&&amount>0?Math.ceil(amount/20)*10:amount;
   const defended=isClassicRules(g)&&CLASSIC_POWERS.enabled(g,target,'Shell Armor')?Math.max(0,reduced-10):reduced;
   target.damage+=defended;
+  // Strikes Back also retaliates against opposing attacks hitting Benched Machamp.
+  if(defended>0&&owner===f&&isClassicRules(g)&&CLASSIC_POWERS.enabled(g,target,'Strikes Back'))u.damage+=10;
   if(defended>0&&isClassicRules(g)&&owner.bench.includes(target)&&owner.bench.some(x=>x!==target&&CLASSIC_POWERS.enabled(g,x,'Bench Guard'))){
    (g.benchGuardQueue ||= []).push({owner:victim,targetIndex:owner.bench.indexOf(target),amount:defended});
   }
