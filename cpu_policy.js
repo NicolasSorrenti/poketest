@@ -780,9 +780,21 @@ function prizeRaceBonus(action,o,cfg){
    strongestAffordableAttack(enemy.active,old,enemy.bench.length);
   const incoming=cfg.level===8?strongestUsableOpponentAttack(o,alternate):
    strongestAffordableAttack(enemy.active,alternate,enemy.bench.length);
-  const deadly=outgoing>=hpRemaining(old)&&outgoing>0;
-  const escape=incoming<hpRemaining(alternate);
-  const myKO=strongestAffordableAttack(old,enemy.active,own.bench.length)>=hpRemaining(enemy.active);
+  // Apex evaluates the same public, legal KO probabilities on both sides
+  // of a last-Prize rescue. Expected damage is not a KO probability: a
+  // coin-dependent 60/0 attack against 40 HP has only a 50% KO chance.
+  const deadly=cfg.level===8?likelyOpponentKnockout(o,old,true):
+   outgoing>=hpRemaining(old)&&outgoing>0;
+  const escape=cfg.level===8?!likelyOpponentKnockout(o,alternate,true):
+   incoming<hpRemaining(alternate);
+  // A blocked or confused Active does not possess a guaranteed winning
+  // attack just because its printed damage reaches the defender's HP.
+  const myKO=cfg.level===8?
+   (old.effectiveAttacks||card(old.id)?.attacks||[]).some((attack,index)=>
+    eligibleAttack(o,old,attack,index)&&
+    knockoutChance(attack,old,enemy.active,own.bench.length,
+     livePlusPowerBonus(o))*(old.status==='Confused'?.5:1)>=.75):
+   strongestAffordableAttack(old,enemy.active,own.bench.length)>=hpRemaining(enemy.active);
   // If the next visible enemy attack takes their last Prize, a genuinely
   // safe replacement may be more valuable than taking nonlethal damage.
   return deadly&&escape&&!myKO?125*cfg.style.survival:0;
