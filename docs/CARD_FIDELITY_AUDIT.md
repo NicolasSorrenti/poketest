@@ -866,3 +866,14 @@ Five distinct printings compared with their imported printed text (`cards/base3.
 | `base4-1` Alakazam | Confuse Ray printed 30 for PPP and heads Confusion; active attack/coin outcomes not run. Damage Swap retains earlier 48 reducer scenarios but further historical rulings/interactions remain. | partial |
 
 No new engine change this batch: #505 and #506 were already merged before this pass. No test files, CI, or Apex AI files modified. Ledger effect-level recount after this update: 334 partial, 789 unreviewed; **1,123 printings not fully verified under strict all-effects/runtime criterion**. This is an effect-evidence count; special-rule cards with empty effects remain unreviewed.
+
+
+## 2026-11-05 — Five high-risk Power printings (source-level, current engine)
+
+Audited exactly `base1-21` Electrode, `base4-25` Electrode, `base1-15` Venusaur, `base4-18` Venusaur and `base1-8` Machamp. Active match path: `classic_local_service.js` imports `headless_duel.js`; RPG duel integration uses `rpg_duel_bridge.js`. Powers dispatch via `classic_power_core.js`, attacks and KO flow via `headless_duel.js`. Legacy engine excluded. Reviewed imported printed card text and existing ruling references; independent comprehensive historical rulings and actual reducer execution were unavailable in GitHub-only environment. All five **partial**.
+
+- Electrode Base and Base Set 2: Buzzap energy type/double-energy representation and same-turn Prize/promotion continuation inspected; prior fix #508 retained. Further live KO, promotion and attack-after-Power execution needed.
+- Venusaur Base and Base Set 2: Energy Trans selection, Grass-only movement, status restrictions and repeatability source reviewed; existing prior reducer evidence retained but no new runtime execution.
+- Machamp Base: Strikes Back source checked against printed 'whenever opponent's attack damages Machamp' text. **Confirmed current-engine defect**: attacks `gym:last-magic-darts` and `gym:last-flame-jet` directly damaging a Benched Machamp did not trigger retaliation because only Active damage branch checked Strikes Back. Fixed direct targeted Bench branch in [commit 7eb60a2](https://github.com/NicolasSorrenti/poketest/commit/7eb60a2043e22587502f8be130df591a3b725582), preserving 10 unmodified retaliation damage to attacker. Other Bench-spread damage paths remain to audit.
+
+No test infrastructure added or executed. Earlier audit documentation PR #507 merged as [eabcb5a](https://github.com/NicolasSorrenti/poketest/commit/eabcb5a41ebbf8e8df66e8548acd015fa0fdeb08). Ledger statuses after this run: **334 partial, 789 unreviewed, 0 fully verified; 1123 not fully verified**.
