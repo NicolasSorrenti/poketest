@@ -2136,6 +2136,12 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   amount=protectedByUnown?Math.max(0,damage-30):damage;
   const reduced=relaxing&&amount>0?Math.ceil(amount/20)*10:amount;
   const defended=isClassicRules(g)&&CLASSIC_POWERS.enabled(g,target,'Shell Armor')?Math.max(0,reduced-10):reduced;
+  // Fossil Haunter's Transparency also applies to attacks that hit the Bench.
+  // Only the opponent's attack can trigger it; a successful flip prevents damage.
+  if(owner===f&&defended>0&&isClassicRules(g)&&CLASSIC_POWERS.enabled(g,target,'Transparency')&&next(g,2)===1){
+   log(g,`${card(g,target.id).name}'s Transparency prevented Bench attack damage.`);
+   return;
+  }
   target.damage+=defended;
   // Strikes Back also retaliates against opposing attacks hitting Benched Machamp.
   if(defended>0&&owner===f&&isClassicRules(g)&&CLASSIC_POWERS.enabled(g,target,'Strikes Back'))u.damage+=10;
