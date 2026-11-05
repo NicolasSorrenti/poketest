@@ -1646,7 +1646,9 @@ function energyPreparationActions(o,cfg,actions){
   const confusionCure=a.payload.slot===-1&&target?.status==='Confused'&&
    card(energyId)?.name==='Full Heal Energy'&&
    (target.effectiveAttacks||card(target.id)?.attacks||[]).some((attack,index)=>
-    eligibleAttack(o,target,attack,index)&&
+    // Full Heal can simultaneously cure Confusion and fund an attack.
+    eligibleAttack(o,{...target,status:null,
+     energies:[...(target.energies||[]),energyId]},attack,index)&&
     estimatedDamage(attack,target,o.opponent.active,o.self.bench.length)>0);
   // Full Heal Energy also cures Sleep and Paralysis immediately. Without
   // preparing it first, a funded but disabled attacker can miss its turn.
