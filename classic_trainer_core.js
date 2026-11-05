@@ -557,7 +557,12 @@ function prompt(g,plan,helpers){
  }
  if(name==='Pokémon Trader'&&!chosen(d,'find'))return single('find',side,deck(pokemon),'Choose Pokémon from deck');
  if(name==='Energy Retrieval'&&!chosen(d,'recover')){const a=disc(p,basicEnergy);if(!a.length)throw Error('No Basic Energy in discard');return multi('recover',side,a,1,Math.min(2,a.length),'Recover 1 or 2 Basic Energy');}
- if(name==='Energy Search'&&!chosen(d,'find'))return single('find',side,deck(basicEnergy),'Choose Basic Energy');
+ if(name==='Energy Search'&&!chosen(d,'find')){
+  const available=deck(basicEnergy);
+  // Searching for a specific card type may fail; still resolve and shuffle.
+  if(available.length)return single('find',side,available,'Choose Basic Energy');
+  d.find=[];
+ }
  if(name==="The Boss's Way"&&!chosen(d,'find'))return single('find',side,deck(c=>pokemon(c)&&c.name.startsWith('Dark ')),'Choose Dark Evolution',false);
  if(name==='Poké Ball'&&!chosen(d,'find')&&helpers.flip(g)){const available=deck(pokemon);if(available.length)return single('find',side,available,'Search for a Pokémon',true);d.find=[];}
  if(name==='Pokédex'&&!chosen(d,'arrange')){const k=Math.min(5,p.deck.length);if(!k)d.arrange=[];else return multi('arrange',side,options(p.deck.slice(-k).reverse().map((id,i)=>({i,label:get(id).name})),'top'),k,k,'Reorder top cards (top to bottom)');}
