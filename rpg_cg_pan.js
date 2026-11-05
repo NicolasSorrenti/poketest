@@ -6,7 +6,7 @@
  if(root)root.NeoRpgCGPan=api;
 })(typeof window!=='undefined'?window:null,function(){
  'use strict';
- const defaults=Object.freeze({visibleHeightPercent:50,bottomHold:1000,moveUp:400,topHold:200,moveDown:400,easing:'ease-in-out'});
+ const defaults=Object.freeze({visibleHeightPercent:50,bottomHold:200,moveUp:400,topHold:200,moveDown:400,easing:'ease-in-out'});
  function normalize(config){
   const source=config===true?{}:(config&&typeof config==='object'?config:{});
   const num=(key,min,max)=>Number.isFinite(Number(source[key]))?Math.max(min,Math.min(max,Number(source[key]))):defaults[key];
