@@ -6,14 +6,14 @@
  if(root)root.NeoRpgCGPan=api;
 })(typeof window!=='undefined'?window:null,function(){
  'use strict';
- const defaults=Object.freeze({visibleHeightPercent:50,bottomHold:200,moveUp:400,topHold:200,moveDown:400,easing:'ease-in-out'});
+ const defaults=Object.freeze({visibleHeightPercent:50,bottomHold:200,moveUp:200,topHold:200,moveDown:200,easing:'ease-in-out'});
  function normalize(config){
   const source=config===true?{}:(config&&typeof config==='object'?config:{});
   const num=(key,min,max)=>Number.isFinite(Number(source[key]))?Math.max(min,Math.min(max,Number(source[key]))):defaults[key];
   return {visibleHeightPercent:num('visibleHeightPercent',20,100),bottomHold:num('bottomHold',0,10000),moveUp:num('moveUp',0,10000),topHold:num('topHold',0,10000),moveDown:num('moveDown',0,10000),easing:['linear','ease','ease-in','ease-out','ease-in-out'].includes(source.easing)?source.easing:defaults.easing};
  }
  function attach(frame,img,configuration){
-  const cfg=normalize(configuration);
+  let cfg=normalize(configuration);
   let animation=null,active=true;
   const previous={width:img.style.width,height:img.style.height,maxWidth:img.style.maxWidth,maxHeight:img.style.maxHeight,objectFit:img.style.objectFit,top:img.style.top,left:img.style.left,transform:img.style.transform,transformOrigin:img.style.transformOrigin};
   const originalPosition=img.style.position;
@@ -65,7 +65,7 @@
   observer?.observe(frame);
   img.addEventListener('load',layout);
   layout();
-  return {refresh:layout,dispose(){
+  return {refresh:layout,updateConfig(next){cfg=normalize(next);layout();},dispose(){
    if(!active)return;active=false;stop();observer?.disconnect();img.removeEventListener('load',layout);
    for(const [key,value] of Object.entries(previous))img.style[key]=value;
    img.style.position=originalPosition;
@@ -116,7 +116,7 @@
   function draw(){
    for(const [key] of keys)inputs[key].value=(values[key]/1000).toFixed(2);
    autoCheck.checked=auto;
-   status.textContent=auto?['Stage 1 · Original speed','Stage 2 · Half speed','Stage 3 · Quarter speed (held)'][stage]:'Manual timing';
+   status.textContent=auto?['Stage 1 · Original speed','Stage 2 · 25% faster','Stage 3 · 50% faster (held)'][stage]:'Manual timing';
   }
   function clearTimers(){for(const t of timers)clearTimeout(t);timers=[];}
   function stopAuto(){clearTimers();auto=false;stage=0;draw();}
@@ -129,7 +129,7 @@
      timers.push(setTimeout(()=>{
       if(!auto)return;
       stage=n;
-      for(const [key] of keys)values[key]=base[key]/(2**stage);
+      for(const [key] of keys)values[key]=base[key]*(1-0.25*stage);
       draw();changed();
      },3000*n));
     }
