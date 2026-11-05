@@ -1009,6 +1009,9 @@ function strandedActiveEnergy(o,energyId,cfg){
  const after={...active,
   ...((potionRescue||rainbowRecoil)?{damage:Math.max(0,(active.damage||0)+rainbowRecoil-
    (potionRescue?10:0))}:{}),
+  // Full Heal Energy cures Special Conditions immediately on attachment.
+  // Assess attack readiness on the cured state, not the disabled attacker.
+  ...(cfg.level===8&&energy.name==='Full Heal Energy'?{status:null,poison:false}:{}),
   energies:[...(active.energies||[]),energyId]};
  // Full Heal cures Poison; Potion may heal enough to survive the checkup.
  // Rainbow recoil is applied first. Keep a genuinely useful attack upgrade
