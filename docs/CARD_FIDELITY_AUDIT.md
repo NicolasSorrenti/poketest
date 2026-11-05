@@ -910,3 +910,16 @@ Exactly five printings: `base3-6` Haunter, `base3-21` Haunter, `base3-8` Hypno, 
 - Muk: Toxic Gas globally blocks other Pokémon Powers while Muk is healthy; Sludge's coin/Poison attack inspected against imported text. Remaining: multi-Muk, disabled status, suppression, and coin/Poison execution.
 
 No executable checkout available from direct GitHub connector; **no reducer execution**, independent historical-ruling adjudication or full verification claimed. No tests, test scripts, CI, PR, Apex or legacy modifications. Ledger: **334 partial, 789 unreviewed, 0 fully verified; 1,123 not fully verified**.
+
+
+## 2026-11-05 — Team Rocket Dark Dragonite / Dark Golbat / Dark Slowbro (active-engine source-only)
+
+Exactly five distinct printings: `base5-5` Dark Dragonite, `base5-22` Dark Dragonite, `base5-7` Dark Golbat, `base5-24` Dark Golbat, `base5-12` Dark Slowbro. All five changed from unreviewed to **partial**, including their attacks. Source authority: live `classic_local_service.js` requires `headless_duel.js`, RPG UI uses `rpg_duel_bridge.js`, and live Power effects are in `classic_power_core.js`; never legacy `engine.js`. PRs #440 and #507 are merged.
+
+- Dark Dragonite (both): printed Summon Minions permits up to two Basic Pokémon from deck onto Bench, followed by shuffle. Source uses `ONPLAY`, capped deck selections and bench slots, `take` and `shuffle`. Giant Tail is four Colorless, 70 on heads / no effect on tails. Pending runtime: evolve from hand with 0/1/2 eligible Basics, 4/5 occupied Bench slots, opponent Toxic Gas, and attack coin outcomes.
+- Dark Golbat (both): printed Sneak Attack is optional on-play 10 damage to any opposing Pokémon with Weakness/Resistance. Source `calculateDamage` and `knockOuts` were reviewed. **Confirmed bug:** a KO from Sneak Attack previously passed `direct` continuation, allowing Prize/promotion resolution to advance the turn. Changed to `trainer` continuation in [dc290604](https://github.com/NicolasSorrenti/poketest/commit/dc290604ba0a8c8628f7d79533381debcbf41ddc), preserving the player's turn after Power-induced KO. Flitter: printed 20 damage to any opponent Pokémon without Weakness/Resistance, with after-W/R effects still applicable; needs end-to-end execution.
+- Dark Slowbro: printed Reel In returns up to three Pokémon cards from discard to hand when played. Source filters Pokémon and caps selections at three; Fickle Attack is 40 damage on heads / nothing on tails. Pending runtime: 0–4 discarded Pokémon, selection order, evolution on-play timing, suppression and attack coin outcomes.
+
+Expected decisive gameplay sequence for Golbat: evolve Dark Golbat from hand with opponent Active at 10 HP, optionally choose that Active, apply 10 damage and KO, opponent chooses Prize and replacement Active, then verify **the original player's turn remains active and they can attack**. Also repeat with Benched target and no KO.
+
+This was **source-only**: direct GitHub connector provides no executable Node checkout, so no reducer execution, browser validation, or independent historical-ruling adjudication is claimed. No permanent tests, CI, new PRs, legacy engine or Apex changes. Ledger recount: **339 partial / 784 unreviewed / 0 fully verified; 1,123 not fully verified**.
