@@ -40,8 +40,7 @@
   resize();
   panControls=window.NeoRpgCGPan.createControls(controlsHost,config=>{
    if(!panFrame)return;
-   pan?.dispose();
-   pan=window.NeoRpgCGPan.attach(panFrame,img,config);
+   pan?.updateConfig(config);
   });
   controlsHost.hidden=false;viewer.classList.add('cg-pan-controls-visible');
   pan=window.NeoRpgCGPan.attach(panFrame,img,panControls.getConfig());
@@ -73,19 +72,16 @@
  }
  function open(i,animated=false){show(i,animated);if(!viewer.open)viewer.showModal();if(animated&&img.complete&&img.naturalWidth)startPan();}
  img.addEventListener('load',()=>{if(pendingAutoPan&&viewer.open)startPan();});
- const animatedButton=$('galleryOpenAnimated');
- if(animatedButton)animatedButton.onclick=()=>{
-  const visible=preview.querySelector('.cg-art-frame img:not([hidden])');
-  if(!visible||!visible.getAttribute('src'))return;
-  const tiles=items(),title=preview.querySelector('h3')?.textContent;
-  const found=tiles.findIndex(tile=>tile.querySelector('strong')?.textContent===title);
-  if(found>=0)open(found,true);
- };
+ const animatedToggle=$('galleryOpenAnimated');
+ if(animatedToggle){
+  animatedToggle.addEventListener('change',()=>{animatedToggle.setAttribute('aria-checked',String(animatedToggle.checked));});
+ }
+ function galleryAnimated(){return !!animatedToggle?.checked;}
  preview.addEventListener('click',e=>{
   if(!e.target.closest('.cg-art-frame')||!preview.querySelector('.cg-art-frame img:not([hidden])'))return;
   const tiles=items(),title=preview.querySelector('h3')?.textContent;
   const found=tiles.findIndex(tile=>tile.querySelector('strong')?.textContent===title);
-  open(Math.max(0,found));
+  open(Math.max(0,found),galleryAnimated());
  });
  $('cgViewerClose').onclick=()=>viewer.close();
  $('cgViewerPan').onclick=()=>{if(pan){reset();return;}startPan();};
