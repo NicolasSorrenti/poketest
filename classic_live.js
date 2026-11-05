@@ -166,9 +166,29 @@
   const accessToken=await rpgAccessToken();
   const headers={'Content-Type':'application/json',...(token?{'X-Duel-Token':token}:{}),
     ...(accessToken?{Authorization:'Bearer '+accessToken}:{})};
-  const r=await fetch('/api/classic/'+path,{...opts,headers});const body=await r.json();
-  if(!r.ok){const error=new Error(body.error||'Could not contact Classic engine');error.status=r.status;throw error;}
-  return body;
+  // A timed-out Pages Function can return an HTML error or the site's
+  // HTML fallback, even for an API request. Never parse it as match JSON.
+  // The action endpoint is revision-checked, so repeating the SAME command
+  // once cannot apply a completed turn twice.
+  const attempts=path==='action'||path==='state'?2:1;
+  for(let attempt=0;attempt<attempts;attempt++){
+   const r=await fetch('/api/classic/'+path,{...opts,headers,cache:'no-store'});
+   const raw=await r.text();
+   let body;
+   try{body=JSON.parse(raw);}catch{
+    if(attempt+1<attempts)continue;
+    const responseType=r.headers.get('content-type')||'unknown content type';
+    const error=new Error('Battle server returned a non-JSON response for '+path+
+     ' (HTTP '+r.status+', '+responseType+'). The match may still be saved; reconnect to restore its latest state.');
+    error.status=r.status;error.apiPath=path;throw error;
+   }
+   if(!body||typeof body!=='object'){
+    const error=new Error('Battle server returned invalid game data for '+path+' (HTTP '+r.status+').');
+    error.status=r.status;error.apiPath=path;throw error;
+   }
+   if(!r.ok){const error=new Error(body.error||'Could not contact Classic engine');error.status=r.status;throw error;}
+   return body;
+  }
  }
  function checkCloudCheckpoint(result){
   // Local battles should not display a red error for missing cloud sign-in.
@@ -266,10 +286,18 @@
      if(epoch===playbackEpoch){
       actionQueue.length=0;
       fail(error);
-      // A timed-out request may have committed on the server. Read its state
-      // before allowing another command, so the next revision is authoritative.
-      try{const latest=await api('state');if(epoch===playbackEpoch){current=latest;render();}}
-      catch{ /* Preserve the original action error for the player. */ }
+      // A timed-out request may have committed on the server. Recover the
+      // authoritative state instead of letting a stale revision strand the duel.
+      const previousRevision=current?.revision??-1;
+      try{
+       const latest=await api('state');
+       if(epoch===playbackEpoch){
+        current=latest;render();
+        if(latest.revision>previousRevision){
+         clearError();checkCloudCheckpoint(latest);notifyRpg();
+        }
+       }
+      }catch{ /* Keep the original error visible if reconnection failed. */ }
      }
     }
    }
