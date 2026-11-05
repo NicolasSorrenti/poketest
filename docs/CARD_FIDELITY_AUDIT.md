@@ -1027,3 +1027,18 @@ Exactly five distinct not-fully-verified printings: `base5-37`, `base5-46`, `bas
 Battle-state sequences were specified but **not executed**: direct GitHub connector access supplied source text, not a Node repository checkout. Source-only evidence is PARTIAL. Printed text was inspected from the imported TCGdex `cards/base5.json`; independent printed-image, errata and historical-ruling verification is outstanding. No new gameplay defect confirmed; no source gameplay changes. PRs #440/#507 were already merged in previous reviews; current open PR search surfaced older unrelated RPG/test PRs, not an audit PR. Recent Apex commits were left untouched. No tests, test scripts, CI, new PRs or legacy changes.
 
 Ledger recount: **1 verified / 378 partial / 744 unreviewed = 1,123**, with **1,122 not fully verified**.
+
+
+## 2026-11-05 — five Team Rocket printings (source-only, current engine)
+
+Reviewed exactly **base5-38 Dark Jolteon**, **base5-44 Dark Rapidash**, **base5-45 Dark Vaporeon**, **base5-50 Charmander**, and **base5-57 Grimer**. Each is **PARTIAL**: no Node reducer execution, no independent historical-ruling certification, and no gameplay fix claimed.
+
+Active path: `classic_local_service.js` imports `headless_duel.js` and its `reduce` function; RPG duel UI integration uses `rpg_duel_bridge.js`; the reducer imports `attack_effects_core.js` and `classic_power_core.js`, with final-attack metadata from `classic_final_manifest.json`. Card text and costs inspected in `cards/base5.json`. Legacy engine excluded. Recent Apex CPU commits preserved. No tests or CI files created or restored.
+
+- **base5-38**: Lightning Flash's next-opponent-turn attack-failure coin requires checking persistence, heads/tails, switching, attack ownership and turn expiry. Thunder Attack's heads Paralysis versus tails 10 recoil requires self-KO/Prize and prevention review.
+- **base5-44**: Rear Kick's Colorless cost and 20 damage; Flame Pillar's 30 Active damage plus optional Energy discard and 10 selected Bench damage. The reducer's final-attack choice path in `headless_duel.js` offers optional Energy selection then a Bench target when available, and its resolution has a `flame-pillar` branch. Verify no-Bench behavior, discard timing, Bench protection and KO ordering.
+- **base5-45**: Bite's 30 damage and Whirlpool's 20 damage plus mandatory selection/discard of an Energy attached to the Defending Pokémon if any. Verify attached special Energy, protected Energy, target selection and KO ordering.
+- **base5-50**: Gather Fire's once-per-turn transfer of one Fire Energy from another own Pokémon, blocked by Asleep/Confused/Paralyzed; `classic_power_core.js` contains `Gather Fire` source/energy selection and move and lists it in ONCE/ACTIVATED. Verify source switching, multiple sources, status and timing. Fire Tail is a one-Fire 20-damage attack.
+- **base5-57**: Poison Gas inflicts Sleep; Sticky Hands has heads 30 plus Paralysis, tails 10. Verify exact two-Grass cost, coin outcomes, prevention and special-condition interactions.
+
+These are source-level scenarios to execute when a real reducer runtime becomes available, **not executed scenarios**. Printed card data was read from the imported catalog; independent printed-image, errata and historical-ruling comparison remains outstanding. No confirmed current-engine defect in this pass, no gameplay code changes. The ledger remains **1 fully verified, 383 partial, 739 unreviewed** (1,122 not fully verified). PRs #440 and #507 had been merged in earlier reviews; current open PR search returned unrelated older RPG/test PRs, which were not merged or modified.
