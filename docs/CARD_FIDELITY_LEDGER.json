@@ -8463,13 +8463,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Hydrocannon",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: printed Hydrocannon 30+20 per Water beyond two paid, capped +40; Rocket Tackle 40/self-10 and heads next-turn damage shield. Full reducer resolution, shield expiry, KO and Energy scenarios not executed."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rocket Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: printed Hydrocannon 30+20 per Water beyond two paid, capped +40; Rocket Tackle 40/self-10 and heads next-turn damage shield. Full reducer resolution, shield expiry, KO and Energy scenarios not executed."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         }
       ]
     },
@@ -8482,7 +8490,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Nail Flick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Continuous Fireball pre-roll uses attached Fire card count; reducer requires exact head-count Fire Energy discards and validates distinct picks. Need tails/heads, KO and next-turn execution; Nail Flick 10."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         },
         {
           "kind": "attack",
@@ -8491,8 +8503,10 @@
           "status": "partial",
           "evidence": [
             "test_typed_energy_missing_icons.js: seeded coin outcomes, damage, head-count discard, equivalent Energy auto-resolution and discard notification; knockout/Prize promotion branch covered.",
-            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
-          ]
+            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js",
+            "Source-only: Continuous Fireball pre-roll uses attached Fire card count; reducer requires exact head-count Fire Energy discards and validates distinct picks. Need tails/heads, KO and next-turn execution; Nail Flick 10."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         }
       ]
     },
@@ -8832,13 +8846,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Hydrocannon",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only reprint review: Hydrocannon extra Water and Rocket Tackle self-hit/shield; shares name-driven active attack dispatch. Runtime and historical ruling checks pending."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rocket Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only reprint review: Hydrocannon extra Water and Rocket Tackle self-hit/shield; shares name-driven active attack dispatch. Runtime and historical ruling checks pending."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         }
       ]
     },
@@ -8851,7 +8873,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Nail Flick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only reprint: Continuous Fireball uses shared program, Fire count and discard selection; prior historical test references retained but no new runtime execution. Nail Flick 10."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         },
         {
           "kind": "attack",
@@ -8860,8 +8886,10 @@
           "status": "partial",
           "evidence": [
             "test_typed_energy_missing_icons.js: seeded coin outcomes, damage, head-count discard, equivalent Energy auto-resolution and discard notification; knockout/Prize promotion branch covered.",
-            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
-          ]
+            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js",
+            "Source-only reprint: Continuous Fireball uses shared program, Fire count and discard selection; prior historical test references retained but no new runtime execution. Nail Flick 10."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         }
       ]
     },
@@ -9115,13 +9143,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Tail Strike",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Evolutionary Light is activated Power, searches Stage 1/Stage 2 deck cards and shuffles; status suppression and once-per-turn need full execution. Tail Strike coin 20/40."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Evolutionary Light",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Evolutionary Light is activated Power, searches Stage 1/Stage 2 deck cards and shuffles; status suppression and once-per-turn need full execution. Tail Strike coin 20/40."
+          ],
+          "scope": "2026-11-05 source review only; runtime and independent historical rulings pending"
         }
       ]
     },
