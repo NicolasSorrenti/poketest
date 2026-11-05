@@ -1205,6 +1205,12 @@ function score(a,o,cfg,used){
  if(type==='attack'){
   const attack=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])[v.attackIndex];
   const damage=estimatedDamage(attack,p.active,q.active,p.bench.length),hp=hpRemaining(q.active);
+  // Recover-style attacks that only heal the attacker have no benefit at full HP.
+  // In particular, Corsola must not discard a Water Energy each turn for a
+  // zero-counter heal; passing preserves its Energy for future attacks.
+  if((p.active.damage||0)===0&&damage===0&&
+    /remove all damage counters from (?:this pok[eé]mon|corsola|itself)/i.test(attack?.text||'')&&
+    /discard.*energy/i.test(attack?.text||''))return -400;
   // A live PlusPower can turn an already-payable attack into a secured Prize.
   // Apply its bonus only to positive damage, matching the Classic reducer.
   const plusPower=cfg.level===8?livePlusPowerBonus(o):0;
