@@ -1213,6 +1213,11 @@ function score(a,o,cfg,used){
     attack?.name==='Recover'&&
     /remove all damage counters from/i.test(attack.text||'')&&
     /discard.*energy/i.test(attack.text||''))return -400;
+  // Light Vaporeon's Wash Away discards every Energy on the chosen Bench
+  // target after a heads flip. With no damaged Bench target, it can only
+  // waste an attack (and potentially Energy), never restore HP.
+  if(cfg.level===8&&attack?.name==='Wash Away'&&damage===0&&
+    !p.bench.some(unit=>(unit.damage||0)>0))return -400;
   // A live PlusPower can turn an already-payable attack into a secured Prize.
   // Apply its bonus only to positive damage, matching the Classic reducer.
   const plusPower=cfg.level===8?livePlusPowerBonus(o):0;
