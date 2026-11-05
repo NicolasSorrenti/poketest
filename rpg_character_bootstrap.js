@@ -73,7 +73,7 @@
  "/rpg_overworld_opportunities.js?v=owned-stage-20261104",
  "/rpg_overworld_guide.js?v=recovery-view-20261104",
  "/rpg_overworld_modals.js?v=modal-split-20261104",
- "/rpg_overworld_gallery.js?v=lightbox-split-20261104",
+ "/rpg_overworld_gallery.js?v=animated-real-lightbox-20261105",
  "/rpg_overworld_collection_view.js?v=collection-split-20261104",
  "/rpg_overworld_preduel_view.js?v=preduel-split-20261104",
  "/rpg_overworld_pack_view.js?v=pack-split-20261104",
