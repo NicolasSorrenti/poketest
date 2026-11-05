@@ -3,7 +3,7 @@
    No cards, CPU turns or Classic TCG battle results are calculated here. */
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgRivalArc=api;})(typeof window!=='undefined'?window:null,function(){
  const entries=[
-  {id:'reina_rival_1',start:12,end:30,place:'center',slot:2,minDuels:1,previous:null,title:'After the Last Practice',
+  {id:'reina_rival_1',start:12,end:29,place:'center',slot:2,minDuels:1,previous:null,title:'After the Last Practice',
    lines:[
     ['Reina','The practice tables are empty. I expected you to be gone with everyone else.'],
     ['You','I thought you might want one more look at that match.'],
@@ -35,7 +35,7 @@
     {label:'Accept the challenge · ⏳ 1 period',duel:true},
     {label:'Ask to reschedule · free',decline:true}
    ]},
-  {id:'reina_rival_final',start:77,end:90,place:'park',slot:2,previous:'reina_rival_trial',title:'Beyond the Rivalry',
+  {id:'reina_rival_final',start:77,end:89,place:'park',slot:2,previous:'reina_rival_trial',title:'Beyond the Rivalry',
    lines:[
     ['Reina','It is strange to hear the river instead of a tournament crowd.'],
     ['You','We have spent most of this season trying to outplay each other.'],

@@ -12,7 +12,29 @@
  const REL=typeof module==='object'&&module.exports?require('./rpg_relationships'):window.NeoRpgRelationships;
  const MAX_PENDING=3,MAX_HISTORY=45,MAX_AHEAD_DAYS=6;
  const validStates=new Set(['booked','attended','missed','cancelled']);
+ const reservedDays=new Set([30,60,90]);
  const stamp=(day,slot)=>(day-1)*3+slot;
+ // Move existing meet-ups off compulsory tournament dates without trust loss.
+ function moveTournamentPlans(state){
+  const booked=state.appointments.filter(e=>e.status==='booked');
+  const occupied=new Set(booked.filter(e=>!reservedDays.has(e.day)).map(e=>stamp(e.day,e.slot)));
+  for(const entry of booked){
+   if(!reservedDays.has(entry.day))continue;
+   const original=entry.day;
+   const days=[];
+   for(let day=original+1;day<=90;day++)days.push(day);
+   for(let day=original-1;day>=Math.max(1,state.day||1);day--)days.push(day);
+   const target=days.find(day=>!reservedDays.has(day)&&!occupied.has(stamp(day,entry.slot)));
+   if(target){
+    entry.day=target;entry.tournamentRescheduledFrom=original;
+    occupied.add(stamp(target,entry.slot));
+   }else{
+    entry.status='cancelled';entry.completedDay=state.day;
+    entry.tournamentRescheduledFrom=original;
+   }
+  }
+ }
+
  function hydrate(state){
   if(!state||typeof state!=='object')throw Error('Invalid RPG save');
   if(!Array.isArray(state.appointments))state.appointments=[];
@@ -23,6 +45,7 @@
    Number.isInteger(e.slot)&&e.slot>=0&&e.slot<=2&&
    typeof e.place==='string'&&validStates.has(e.status)
   ).slice(-MAX_HISTORY);
+  moveTournamentPlans(state);
   const latest=state.appointments.reduce((n,e)=>Math.max(n,e.id),0);
   if(!Number.isInteger(state.appointmentSeq)||state.appointmentSeq<latest)state.appointmentSeq=latest;
   if(!state.relationships||typeof state.relationships!=='object')state.relationships={};
@@ -42,6 +65,7 @@
   const used=new Set(active(state).map(e=>stamp(e.day,e.slot)));
   const picks=[];const until=Math.min(90,state.day+MAX_AHEAD_DAYS);
   for(let day=state.day+1;day<=until;day++){
+   if(reservedDays.has(day))continue;
    for(let slot=0;slot<3;slot++){
     const place=schedules.locationFor(npc,day,slot,[]);
     if(!place||place==='home'||!schedules.publicPlaces.includes(place)||used.has(stamp(day,slot)))continue;
@@ -55,6 +79,7 @@
  }
  function book(state,npc,day,slot,place,schedules){
   hydrate(state);
+  if(reservedDays.has(day))throw Error('Tournament days are reserved for official matches');
   if(!Number.isInteger(day)||!Number.isInteger(slot)||typeof place!=='string')throw Error('Invalid appointment request');
   const suggestion=proposed(state,npc,schedules).find(e=>e.day===day&&e.slot===slot&&e.place===place);
   if(!suggestion)throw Error('Meeting time is no longer available');

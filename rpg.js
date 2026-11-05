@@ -236,6 +236,7 @@ function timeFlash(change,onDone=()=>{}){
 }
 
 function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,partners:[],activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,phoneMessages:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
+function tournamentDayCup(){return TOURNAMENTS.cups.find(c=>c.day===state.day)||null;}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
 for(const [k,v] of Object.entries(defaults()))if(state[k]===undefined)state[k]=v;
@@ -277,7 +278,11 @@ COMPETE.hydrate(state);
 REACT.hydrate(state);
 COMMUNITY.hydrate(state);
 CONSEQ.hydrate(state);
-APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);SITUATIONS.hydrate(state);SLICE?.hydrate(state);
+APPOINTMENTS.hydrate(state);APPOINTMENTS.expire(state);
+if(tournamentDayCup()&&!state.pendingDuel&&!state.mandatoryEventState?.active){
+ state.location='center';state.selected=null;state.visitedLocations.center=true;
+}
+INTENTIONS.hydrate(state);CG.hydrate(state);SOCIAL.hydrate(state);DATES.hydrate(state,APPOINTMENTS,SOCIAL);SITUATIONS.hydrate(state);SLICE?.hydrate(state);
 if(typeof state.activeStory==='string')state.activeStory=null;
 STORY.recordExpiry(state);
 if(MANDATORY)MANDATORY.hydrate(state,MANDATORY_EVENTS);
@@ -413,6 +418,8 @@ function mandatoryDestination(event){
  return null;
 }
 function maybeStartMandatory(){
+ // Keep scripted scenes queued until after the compulsory tournament day.
+ if(tournamentDayCup())return;
  if(!MANDATORY)return;
  queueMandatory();
  if(MANDATORY.hydrate(state,MANDATORY_EVENTS).active)return;
@@ -817,10 +824,10 @@ state.selected=null;
 if(state.day>beforeDay){
  // A new calendar day always begins at home, regardless of yesterday's last stop.
  // Only day rollover resets location; advancing between periods never does.
- state.location='home';
+ state.location=tournamentDayCup()?'center':'home';
  state.visitedLocations=state.visitedLocations||{};
- state.visitedLocations.home=true;
- pendingOverworldArrival='home';
+ state.visitedLocations[state.location]=true;
+ pendingOverworldArrival=state.location;
  pendingEntrySurprise=false;
  WORLD.newDay(state,state.day-beforeDay);
  const news=COMMUNITY.sync(state,Math.min(90,state.day-1),{schedules:SCHEDULES,cast});
@@ -1612,6 +1619,16 @@ function safeAct(action){
 }
 function act(action,confirmedInvitationHandoff=false){
  const [type,id,part]=action.split(':');
+ const cupToday=tournamentDayCup();
+ const activeScene=!!(state.activeSliceOfLife||state.activeStory||state.activeSideQuest||
+  state.activeSituation||state.activeEncounter||state.activeArc);
+ if(cupToday&&!activeScene&&!['cup','tournamentDeck','tournamentEnd','close','dismissDialogue','activityContinue'].includes(type)&&!type.startsWith('mandatory'))return;
+ if(type==='tournamentDeck'){if(cupToday&&!state.pendingDuel)openDeckWorkshop();return;}
+ if(type==='tournamentEnd'){
+  if(!cupToday||state.pendingDuel||conversationInProgress()||TOURNAMENTS.status(state,cupToday.id).state==='open')return;
+  scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;
+  advance(3-state.slot,'tournament');render();return;
+ }
  if(mandatoryAction(type,id))return;
  if(conversationInProgress()&&!confirmedInvitationHandoff){
   const currentChoice=(scene.choices||[]).some(([,candidate])=>candidate===action);
@@ -1849,7 +1866,16 @@ function act(action,confirmedInvitationHandoff=false){
   if(BONDS.canChallenge(state,id,BOND_PLAN))return startDuel(id,null,null,null,null,true);
   $('notice').textContent='Complete two bond chapters first.';return;
  }
- if(type==='cup'){if(!confirmTimeAdvance())return;try{const match=TOURNAMENTS.begin(state,id);return startDuel(match.npc,null,null,match);}catch(err){return say('Tournament Desk',err.message);}}
+ if(type==='cup'){
+  if(cupToday?.id!==id)return;
+  if(state.deckJourney?.starter){
+   syncDeckStudioSave();
+   if(!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid)
+    return say('Tournament Desk','Save a valid 60-card deck before entering your match.',[['Continue ›','close']]);
+  }
+  try{const match=TOURNAMENTS.begin(state,id);return startDuel(match.npc,null,null,match);}
+  catch(err){return say('Tournament Desk',err.message);}
+ }
  if(type==='competitive'){
   if(!confirmTimeAdvance())return;
   try{const match=COMPETE.begin(state,id);return startDuel(match.npc,null,null,null,null,false,match);}
@@ -1972,7 +1998,7 @@ function controlsLocked({allowStarterIntro=false}={}){
   (conversationInProgress()&&!initialStarterIntro)||
   !!state.activeSliceOfLife||!!state.mandatoryEventState?.active||
   !!state.pendingDuel||!!state.activeSituation||!!state.activeStory||
-  !!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter;
+  !!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter||!!tournamentDayCup();
 }
 function showStarterChoice(){
  if(controlsLocked({allowStarterIntro:true}))return;
@@ -2077,7 +2103,8 @@ function renderDeckWorkshop(){
   throw Error('The overworld deck editor presenter did not load.');
 }
 function openDeckWorkshop(){
- if(controlsLocked()||!state.deckJourney?.starter)return;
+ if(!state.deckJourney?.starter||state.pendingDuel||state.mandatoryEventState?.active||
+  (controlsLocked()&&(!tournamentDayCup()||conversationInProgress())))return;
  COLLECT.draft(state);renderDeckWorkshop();persist();
  if(!$('deckEditDialog').open)$('deckEditDialog').showModal();
 }
@@ -2230,6 +2257,7 @@ function launchPreparedDuel(){
 }
 
 function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false,competition=null){
+ if(tournamentDayCup()&&tournament?.tournamentId!==tournamentDayCup().id)return;
  syncDeckStudioSave(); // A new duel always snapshots the latest saved 60-card deck.
  if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
  if(state.deckJourney?.starter&&!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
@@ -2320,9 +2348,15 @@ window.addEventListener('message',ev=>{
  sessionStorage.removeItem('neoRpgDeck:'+duel.id);
   sessionStorage.removeItem('neoRpgNpcDeck:'+duel.id);
  const duelBeforeTime={beforeDay:state.day,beforeSlot:state.slot};
- advance(1,'duel',true);$('duel').hidden=true;$('battle').src='about:blank';
+ const cupProgress=duel.tournamentId?TOURNAMENTS.status(state,duel.tournamentId):null;
+ // Draws replay without spending a period; late legacy saves can catch up.
+ const keepCupSlot=!!cupOutcome&&!!tournamentDayCup()&&(
+  cupOutcome.draw||(cupOutcome.state==='open'&&cupProgress.cup.rounds.length-cupProgress.round>=3-state.slot));
+ if(!keepCupSlot)advance(1,'duel',true);
+ else persist();
+ $('duel').hidden=true;$('battle').src='about:blank';
  window.NeoRpgAudio?.setPaused?.(false);
- pendingDuelTimeShift={...duelBeforeTime,afterDay:state.day,afterSlot:state.slot,source:'duel'};
+ pendingDuelTimeShift=keepCupSlot?null:{...duelBeforeTime,afterDay:state.day,afterSlot:state.slot,source:'duel'};
  const c=cast[duel.npc];say(c.name,sideOutcome?.text||personalOutcome||REACT.afterDuel(state,duel,receipt,c)|| (receipt.outcome==='Victory'?c.duelWin:receipt.outcome==='Draw'?'A hard-fought draw. Let us play again.':c.duelLose));
  const continueAfterResult=()=>{
   if(awarded){
@@ -3104,7 +3138,7 @@ function render(){
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
- const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
+ const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel||!!tournamentDayCup();
  // Location artwork is rendered only by the persistent overworld iframe.
  const showingMandatory=state.mandatoryEventState?.active?MANDATORY_EVENTS.find(x=>x.id===state.mandatoryEventState.active.id):null;
  const mandatoryLine=showingMandatory?.lines?.[state.mandatoryEventState.active.index];
@@ -3124,6 +3158,16 @@ function render(){
  const portraitId=liveCgOnly?null:mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected;
  activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
  let shown=showingMandatory?renderMandatory():showingSlice?renderSliceOfLife():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
+ const cup=tournamentDayCup();
+ if(cup&&!state.pendingDuel&&!showingMandatory&&!showingSlice&&!showingSituation&&!showingStory&&
+  !showingEncounter&&!showingArc&&!state.activeSideQuest&&!scene?.line&&!scene?.choices?.length){
+  const progress=TOURNAMENTS.status(state,cup.id),unfinished=progress.state==='open';
+  shown={speaker:'Tournament Desk',
+   line:unfinished?'Day '+state.day+' · '+cup.title+'. Today is dedicated to the tournament. You can edit your deck for free before each match. Round '+(progress.round+1)+' of 3 against '+(cast[progress.opponent]?.name||progress.opponent)+'.':
+    (progress.state==='champion'?'Congratulations, champion!':'Your tournament has ended.')+' Other plans resume tomorrow.',
+   choices:unfinished?[['▤ Edit your 60-card deck · free','tournamentDeck'],['⚔ Begin round '+(progress.round+1)+' / 3','cup:'+cup.id]]:
+    [['Continue to the next day ›','tournamentEnd']]};
+ }
  overworldRenderedDialogue=String(shown?.line||'');
  // Gameplay decides which actions are legal; the overworld view owns DOM
  // construction, dialogue focus, response layout, and character menus.
@@ -3151,7 +3195,7 @@ function render(){
   return item;
  });
  // A finished narration may be acknowledged even while its time wipe has locked travel.
- if((!locked||timeSequence.blocked&&!timeSequence.running)&&shown?.line&&!shown?.choices?.length)
+ if((!locked||!!tournamentDayCup()||timeSequence.blocked&&!timeSequence.running)&&shown?.line&&!shown?.choices?.length)
   choiceItems.push({label:'Continue ›',continue:true,finish:true});
  const people=currentPeople();
  const sceneScript=showingMandatory?.lines||
@@ -3216,7 +3260,7 @@ function render(){
   }
  });
  renderSeasonReport();
- $('notice').textContent=conversationInProgress()?'Finish the conversation before traveling or starting another activity.':state.mandatoryEventState?.active?'Incoming story — finish this moment to continue.':state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
+ $('notice').textContent=tournamentDayCup()&&!state.pendingDuel&&!conversationInProgress()?'Official tournament day · deck setup and matches only.':conversationInProgress()?'Finish the conversation before traveling or starting another activity.':state.mandatoryEventState?.active?'Incoming story — finish this moment to continue.':state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  simplifyRpgLabels();
  window.NeoRpgCharacterMotion?.update?.({
   location:state.location,speaker:shown?.speaker||'',line:shown?.line||'',

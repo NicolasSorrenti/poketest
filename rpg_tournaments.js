@@ -1,9 +1,9 @@
 'use strict';
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.NeoRpgTournaments=api;})(typeof window!=='undefined'?window:null,function(){
  const cups=[
-  {id:'neighborhood',title:'Neighborhood Cup',day:30,end:35,place:'center',rounds:['hana','yuna','reina'],points:[4,8,15],credits:[8,15,30]},
-  {id:'regional',title:'Regional Qualifier',day:60,end:67,place:'center',rounds:['marina','akari','camila'],points:[7,12,22],credits:[12,22,45]},
-  {id:'championship',title:'Championship Bracket',day:88,end:90,place:'center',rounds:['kaede','shiori','reina'],points:[10,20,35],credits:[20,40,75]}
+  {id:'neighborhood',title:'Neighborhood Cup',day:30,end:30,place:'center',rounds:['hana','yuna','reina'],points:[4,8,15],credits:[8,15,30]},
+  {id:'regional',title:'Regional Qualifier',day:60,end:60,place:'center',rounds:['marina','akari','camila'],points:[7,12,22],credits:[12,22,45]},
+  {id:'championship',title:'Championship Bracket',day:90,end:90,place:'center',rounds:['kaede','shiori','reina'],points:[10,20,35],credits:[20,40,75]}
  ];
  const lookup=new Map(cups.map(x=>[x.id,x]));
  function hydrate(s){if(!s.tournaments||typeof s.tournaments!=='object'||Array.isArray(s.tournaments))s.tournaments={};return s;}
