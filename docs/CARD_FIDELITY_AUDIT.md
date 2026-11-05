@@ -993,3 +993,16 @@ Exactly five distinct printings: `base5-36` Dark Gloom, `base5-39` Dark Kadabra,
 - **Dark Raichu**: Surprise Thunder printed 30, first coin heads triggers second coin (heads 20 / tails 10 to each opposing Bench). Pending nested coin execution, Bench prevention, simultaneous KOs, Prizes and promotion.
 
 Source text from imported `cards/base5.json` (TCGdex attribution) compared to active handlers; independent official errata and historical rulings not completed. Direct GitHub connector does not provide an executable Node checkout; **zero reducer sequences executed**. No confirmed gameplay defect and no source fix. No tests, scripts, CI, PR, legacy or Apex changes. Ledger recount: **1 verified, 367 partial, 755 unreviewed; 1122 not fully verified**.
+
+
+## 2026-11-05 — Rocket Trainer, Rainbow Energy and Fire source-only pass
+
+Exactly five printings reviewed: `base5-15` Here Comes Team Rocket!, `base5-16` Rocket's Sneak Attack, `base5-17` Rainbow Energy, `base5-32` Dark Charmeleon, `base5-35` Dark Flareon. All **partial**. Printed text compared with imported TCGdex `cards/base5.json`; independent historical rulings/errata remain pending. Current entrypoint: `classic_local_service.js` imports `headless_duel.js`, RPG integration `rpg_duel_bridge.js`, current Trainer effects `classic_trainer_core.js` and attack effects `attack_effects_core.js`. Legacy excluded. No runtime Node checkout through GitHub connector, zero reducer scenarios executed.
+
+- **Here Comes Team Rocket!**: `classic_trainer_core.js` sets `g.prizesFaceUp=true`; inspect global Prize visibility, replacements and future Prize decisions in runtime.
+- **Rocket's Sneak Attack**: opposing Trainer hand selection via `oppHand` and shuffle into opponent deck; inspect empty selection, visibility, decision continuation.
+- **Rainbow Energy**: `headless_duel.js` grants one Any Energy unit, applies 10 self-damage on attachment, calls direct KO at HP threshold; inspect Power interactions, KO/Prize/promotion and turn preservation.
+- **Dark Charmeleon**: Tail Slap 20; Fireball coin heads 70 plus Fire discard, tails zero. Historical test-file citations retained as provenance only, not current execution.
+- **Dark Flareon**: Rage 10 plus 10 per damage counter; Playing with Fire 30/50 and Fire discard on heads. Historical test citations retained as provenance only.
+
+No confirmed new gameplay defect or gameplay source change. No new tests, CI, PRs or Apex edits. Prior fidelity PRs #440/#507 already merged; open audit PR search found none. Ledger: **1 verified, 370 partial, 752 unreviewed; 1122 not fully verified**.
