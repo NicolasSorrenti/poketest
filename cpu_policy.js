@@ -860,7 +860,7 @@ function knockoutTempoBonus(a,o,cfg){
 // Estimate what additional cards ALREADY in the player's own hand could unlock
 // after the current Energy attachment. No future draw is assumed, no opponent
 // hidden cards are accessed, and no engine reducer/coin oracle is consulted.
-function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSerial=0,benchCount=null){
+function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSerial=0,benchCount=null,isActive=false){
  if(!unit||!defender)return 0;
  const immediate=projectedAttackValue(unit,defender,turnSerial,benchCount);
  if(remaining===0)return immediate;
@@ -868,7 +868,7 @@ function horizonAttackValue(unit,defender,hand,remaining=1,futureRound=0,turnSer
  // attachment forecast. A lethally poisoned Active cannot benefit from
  // next-turn Energy in hand, even if that Energy would cure Poison then.
  // Keep today's payable attack value; never project a post-KO attacker.
- if(unit.poison&&hpRemaining(unit)>0&&
+ if(isActive&&unit.poison&&hpRemaining(unit)>0&&
     (unit.poisonDamage||10)>=hpRemaining(unit))return immediate;
  // Paralysis expires at the end of the affected turn; unlike Sleep, recovery
  // is guaranteed by our next turn. Do not treat it as a permanent attack lock.
@@ -934,8 +934,8 @@ function energyHorizonBonus(action,o,cfg){
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
  const futureRound=(Number(o.round)||0)+1;
  // Defaulting to serial zero makes expired public locks look active.
- const before=horizonAttackValue(u,q.active,futureHand,1,futureRound,o.turnSerial,p.bench.length);
- const changed=horizonAttackValue(after,q.active,futureHand,1,futureRound,o.turnSerial,p.bench.length);
+ const before=horizonAttackValue(u,q.active,futureHand,1,futureRound,o.turnSerial,p.bench.length,v.slot===-1);
+ const changed=horizonAttackValue(after,q.active,futureHand,1,futureRound,o.turnSerial,p.bench.length,v.slot===-1);
  const direct=projectedAttackValue(after,q.active,o.turnSerial,p.bench.length)-
   projectedAttackValue(u,q.active,o.turnSerial,p.bench.length);
  // Reward immediate Energy unlocks, but value two-card lines only insofar as
