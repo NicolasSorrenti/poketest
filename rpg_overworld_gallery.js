@@ -96,7 +96,8 @@
  }
  // Reuse one live artwork dialog across CG and other art categories. The
  // request counter ensures an old image load never marks a newer card viewed.
- let lightbox=null,lightboxSequence=0;
+ let lightbox=null,lightboxSequence=0,activePan=null,activeControls=null,activeResize=null;
+ function cleanupPan(){activeControls?.dispose();activeControls=null;activePan?.dispose();activePan=null;activeResize?.disconnect();activeResize=null;}
  function openLightbox(doc,entry,handlers){
   if(!doc||!entry?.unlocked)return false;
   if(!lightbox){
@@ -109,16 +110,22 @@
    close.onclick=()=>dialog.close();
    toolbar.append(title,close);
    const stage=element(doc,'div','cg-lightbox-stage');
-   dialog.append(toolbar,stage);
+   const controls=element(doc,'div','cg-lightbox-pan-controls');
+   controls.hidden=true;
+   dialog.append(toolbar,stage,controls);
    dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
-   dialog.addEventListener('close',()=>{lightboxSequence++;});
+   dialog.addEventListener('close',()=>{lightboxSequence++;cleanupPan();});
    doc.body.append(dialog);lightbox=dialog;
   }
+  cleanupPan();
   const request=++lightboxSequence;
   const title=lightbox.querySelector('.cg-lightbox-title');
   const stage=lightbox.querySelector('.cg-lightbox-stage');
   title.textContent=entry.title||'Artwork';
   stage.replaceChildren();
+  lightbox.classList.remove('cg-lightbox-animated');
+  const controlsHost=lightbox.querySelector('.cg-lightbox-pan-controls');
+  controlsHost.hidden=true;controlsHost.replaceChildren();
   if(entry.character)handlers?.discreetAvatar?.(stage,entry.character);
   const img=doc.createElement('img');img.alt=entry.title||'Artwork';img.hidden=true;
   const pending=element(doc,'p','cg-pending','Artwork not installed yet.');
@@ -129,6 +136,31 @@
   const success=()=>{
    if(!current())return;
    img.hidden=false;pending.hidden=true;
+   const animated=!!doc.getElementById('galleryOpenAnimated')?.checked;
+   if(animated&&doc.defaultView?.NeoRpgCGPan&&img.naturalWidth&&img.naturalHeight){
+    const engine=doc.defaultView.NeoRpgCGPan;
+    const viewport=element(doc,'div','cg-lightbox-pan-viewport');
+    viewport.style.cssText='position:relative;overflow:hidden;flex:none;background:#080b12';
+    stage.replaceChildren(viewport);
+    viewport.append(img);
+    lightbox.classList.add('cg-lightbox-animated');
+    controlsHost.hidden=false;
+    const measure=()=>{
+     if(!current()||!img.naturalWidth)return;
+     const maxWidth=Math.max(1,stage.clientWidth-24);
+     const maxHeight=Math.max(1,stage.clientHeight-24);
+     const width=Math.max(1,Math.min(maxWidth,maxHeight*2*img.naturalWidth/img.naturalHeight));
+     viewport.style.width=width+'px';
+     viewport.style.height=(width*img.naturalHeight/img.naturalWidth/2)+'px';
+     activePan?.refresh();
+    };
+    measure();
+    activePan=engine.attach(viewport,img,true);
+    activeControls=engine.createControls(controlsHost,config=>activePan?.updateConfig(config));
+    if(typeof ResizeObserver==='function'){
+     activeResize=new ResizeObserver(measure);activeResize.observe(stage);
+    }
+   }
    handlers?.onViewed?.();
   };
   if(entry.type){
