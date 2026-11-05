@@ -980,3 +980,16 @@ Exactly five distinct previously unreviewed printings: `base5-27` Dark Machamp, 
 - **Dark Electrode**: printed Energy Bomb moves all attached Energy to own Bench in any distribution, or discards them if Bench empty. `headless_duel.js` gathers one destination per attached Energy and handles no-Bench discard. Pending multiple-choice continuation, KO, damage timing and Energy ownership.
 
 No new confirmed defect; no gameplay changes. Imported card text reviewed, but independent authoritative errata/historical ruling adjudication incomplete. No executable repository checkout was available from the direct GitHub connector; **zero reducer scenarios executed**, and all five remain **partial**. No tests, CI, PR, legacy or Apex changes. Ledger recount: **1 verified, 362 partial, 760 unreviewed; 1122 not fully verified**.
+
+
+## 2026-11-05 — Team Rocket Powers and spread five-printing source-only pass
+
+Exactly five distinct printings: `base5-36` Dark Gloom, `base5-39` Dark Kadabra, `base5-41` Dark Muk, `base5-43` Dark Primeape, `base5-83` Dark Raichu. All **partial**, not verified. Live match authority: `classic_local_service.js` imports `headless_duel.js`, RPG UI settlement via `rpg_duel_bridge.js`; effect modules `classic_power_core.js` and `attack_effects_core.js`. Legacy engine excluded. Existing audit PRs #440/#507 previously merged; open PR search found unrelated older RPG PRs, not fidelity changes. Recent main includes Apex CPU and RPG network work; untouched.
+
+- **Dark Gloom**: Pollen Stench ONCE/ACTIVATED in `classic_power_core.js`, flips to Confuse opposing Active on heads or own Active on tails; Poisonpowder printed 10 plus Poison. Pending active/Bench status, suppression, coin and attack ownership.
+- **Dark Kadabra**: Matter Exchange uses interactive hand discard then draw, once per turn and status lock; Mind Shock printed 30 ignoring Weakness/Resistance. Pending empty deck, multiple decisions, attack modifiers and deck-out.
+- **Dark Muk**: Sticky Goo passive in `headless_duel.js` retreat-cost computation, checks opposing Active and adds two Energy units; Sludge Punch 20 plus Poison. Pending protected/Double Colorless Energy, statuses and retreat payment.
+- **Dark Primeape**: Frenzy passive checked in `headless_duel.js` for Confused attack damage and failed-Confusion self-hit (+30); Frenzied Attack printed 40 then self-Confusion. Pending damage modifier ordering, self-KO, prizes and turn progression.
+- **Dark Raichu**: Surprise Thunder printed 30, first coin heads triggers second coin (heads 20 / tails 10 to each opposing Bench). Pending nested coin execution, Bench prevention, simultaneous KOs, Prizes and promotion.
+
+Source text from imported `cards/base5.json` (TCGdex attribution) compared to active handlers; independent official errata and historical rulings not completed. Direct GitHub connector does not provide an executable Node checkout; **zero reducer sequences executed**. No confirmed gameplay defect and no source fix. No tests, scripts, CI, PR, legacy or Apex changes. Ledger recount: **1 verified, 367 partial, 755 unreviewed; 1122 not fully verified**.
