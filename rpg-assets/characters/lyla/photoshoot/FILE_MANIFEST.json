@@ -1,0 +1,242 @@
+[
+  {
+    "character": "lyla",
+    "status": "final",
+    "source": "a_highly_detailed_photorealistic_close_up_portrai.png",
+    "destination": "rpg-assets/characters/lyla/events/final/lyla_sneeze_parody.png",
+    "size_bytes": 2369709,
+    "sha256": "2cf7ed4ce61aabedd5a54179dcf0a70a3ba061ff1a9d4c4acaab95ee164a5b75"
+  },
+  {
+    "character": "barb",
+    "status": "final",
+    "source": "a_highly_detailed_studio_lit_ultra_realistic_clo.png",
+    "destination": "rpg-assets/characters/barb/events/final/barb_sneeze_parody.png",
+    "size_bytes": 2412868,
+    "sha256": "3440660842781addc0eceb6293c2f2a4a1593d4e43ae19ec261a0510abc9d6e0"
+  },
+  {
+    "character": "laca",
+    "status": "final",
+    "source": "a_hyper_realistic_highly_detailed_stylized_photo.png",
+    "destination": "rpg-assets/characters/laca/events/final/laca_sneeze_parody.png",
+    "size_bytes": 2354569,
+    "sha256": "9010d4a3323e71f925b239765d7000bf4223dfd14e088ef36e9d6b78abef8054"
+  },
+  {
+    "character": "daisy",
+    "status": "final",
+    "source": "a_hyper_realistic_highly_detailed_close_up_portra.png",
+    "destination": "rpg-assets/characters/daisy/events/final/daisy_sneeze_parody.png",
+    "size_bytes": 2624116,
+    "sha256": "9036db37efa54e154fdb9c30fbc6ad61b06da3c453560f23f2944c389c90e43c"
+  },
+  {
+    "character": "elena",
+    "status": "final",
+    "source": "a_highly_detailed_photorealistic_studio_lit_clos.png",
+    "destination": "rpg-assets/characters/elena/events/final/elena_sneeze_parody.png",
+    "size_bytes": 2426914,
+    "sha256": "d69a35bb1c0fcfeca3ea870cf8f22b4b7f1635fdd7c05d17368f13676bf5a12e"
+  },
+  {
+    "character": "camila",
+    "status": "final",
+    "source": "a_hyper_realistic_highly_detailed_glamour_portrai.png",
+    "destination": "rpg-assets/characters/camila/events/final/camila_sneeze_parody.png",
+    "size_bytes": 2579817,
+    "sha256": "406b09db704cd5a1bc490e9aeee23aa2aa207f3a5e74040581450ec83afa7825"
+  },
+  {
+    "character": "hana",
+    "status": "final",
+    "source": "hana_bostezando_con_cabello_rosa_y_bomber_floral.png",
+    "destination": "rpg-assets/characters/hana/events/final/hana_sneeze_parody.png",
+    "size_bytes": 2420800,
+    "sha256": "c36689f774b3504d82605e7c32924e29a6997efb37c45601554ef162cb7c8e85"
+  },
+  {
+    "character": "iris",
+    "status": "final",
+    "source": "a_highly_detailed_stylized_glossy_anime_illustra.png",
+    "destination": "rpg-assets/characters/iris/events/final/iris_sneeze_parody.png",
+    "size_bytes": 2711993,
+    "sha256": "0e411d4519986d1208a9d506fb65ecf3c90b8d3869dfc9c9d542096fedce9267"
+  },
+  {
+    "character": "jinx",
+    "status": "final",
+    "source": "a_highly_detailed_glossy_photoreal_anime_style_c.png",
+    "destination": "rpg-assets/characters/jinx/events/final/jinx_sneeze_parody.png",
+    "size_bytes": 2660324,
+    "sha256": "4192d68da61869649960eab88e83dd5bd7fbd53dde6c676c90c7965521a59deb"
+  },
+  {
+    "character": "kaede",
+    "status": "final",
+    "source": "a_hyper_detailed_glossy_high_detail_anime_style.png",
+    "destination": "rpg-assets/characters/kaede/events/final/kaede_sneeze_parody.png",
+    "size_bytes": 2451498,
+    "sha256": "d027640e3f52b797906617103f5a990d873437ad5c0afac89eef1a4cba09357f"
+  },
+  {
+    "character": "luna",
+    "status": "final",
+    "source": "parody_recovered/luna_final.png",
+    "destination": "rpg-assets/characters/luna/events/final/luna_sneeze_parody.png",
+    "size_bytes": 2652128,
+    "sha256": "1c8cac11ed40a07e9c22c8690059f4ea1202a27372b9b373ed44e670ab5281fa"
+  },
+  {
+    "character": "marina",
+    "status": "final",
+    "source": "a_high_detail_glossy_anime_style_close_up_parody.png",
+    "destination": "rpg-assets/characters/marina/events/final/marina_sneeze_parody.png",
+    "size_bytes": 2572466,
+    "sha256": "8a090ce3f216e3c148251e327e7aa1cb9f7368675265bb902dd61703a48a1e60"
+  },
+  {
+    "character": "reina",
+    "status": "final",
+    "source": "a_highly_detailed_ultra_glossy_anime_style_reali.png",
+    "destination": "rpg-assets/characters/reina/events/final/reina_sneeze_parody.png",
+    "size_bytes": 2766514,
+    "sha256": "51d7a6cd02fc90581c6a416f4988601cc2a190878cc38a05f1f8f61c4f3a2e9b"
+  },
+  {
+    "character": "rina",
+    "status": "final",
+    "source": "a_hyper_detailed_glossy_anime_style_close_up_port.png",
+    "destination": "rpg-assets/characters/rina/events/final/rina_sneeze_parody.png",
+    "size_bytes": 2847053,
+    "sha256": "5753853386c18fdd8d9103cbd590204454053540e3a4e0e62afecdce21947c95"
+  },
+  {
+    "character": "shiori",
+    "status": "final",
+    "source": "a_hyper_realistic_highly_detailed_close_up_head.png",
+    "destination": "rpg-assets/characters/shiori/events/final/shiori_sneeze_parody.png",
+    "size_bytes": 2651738,
+    "sha256": "6a398ad36bc896c644f90bfd7cad848f3b15510d72f76ca81d7912d086c4ed0e"
+  },
+  {
+    "character": "sierra",
+    "status": "final",
+    "source": "estornudo_tropical_de_sierra.png",
+    "destination": "rpg-assets/characters/sierra/events/final/sierra_sneeze_parody.png",
+    "size_bytes": 2686712,
+    "sha256": "2e075236a84475829192de0dcfd2ee0b6e18dd462b684d5f4718f95d10d4d53f"
+  },
+  {
+    "character": "sol",
+    "status": "final",
+    "source": "a_highly_detailed_glossy_anime_style_close_up_upp.png",
+    "destination": "rpg-assets/characters/sol/events/final/sol_sneeze_parody.png",
+    "size_bytes": 2610972,
+    "sha256": "c55e0d630e837dd2e52021d56e5b830199d14ae477c69338a654d12b1ed37b1b"
+  },
+  {
+    "character": "yuna",
+    "status": "final",
+    "source": "a_highly_detailed_photorealistic_anime_style_illu.png",
+    "destination": "rpg-assets/characters/yuna/events/final/yuna_sneeze_parody.png",
+    "size_bytes": 2761762,
+    "sha256": "d087d42f0aa39b1b97c97665f8ae473fc97d8204030f84c66714cbc58e5e5e83"
+  },
+  {
+    "character": "jicy",
+    "status": "final",
+    "source": "a_highly_detailed_glossy_realistic_anime_illustr.png",
+    "destination": "rpg-assets/characters/jicy/events/final/jicy_sneeze_parody.png",
+    "size_bytes": 2370149,
+    "sha256": "bf4992e864ec711c97313db246fc206894e66b80871947d9064432815c18c98b"
+  },
+  {
+    "character": "live",
+    "status": "final",
+    "source": "a_highly_detailed_glossy_anime_style_close_up_ill.png",
+    "destination": "rpg-assets/characters/live/events/final/live_sneeze_parody.png",
+    "size_bytes": 2441409,
+    "sha256": "c614b467b244fb257f573201afdd751784e8347095f77cbbf8500c2ed1c87159"
+  },
+  {
+    "character": "mia",
+    "status": "final",
+    "source": "a_highly_detailed_polished_anime_illustration_in.png",
+    "destination": "rpg-assets/characters/mia/events/final/mia_sneeze_parody.png",
+    "size_bytes": 2529307,
+    "sha256": "1fa5da6c92e355c8a1813380fd4e1e978ab1ecd66a0599bbd573124f688dc78c"
+  },
+  {
+    "character": "hana",
+    "status": "final_notapproved",
+    "source": "a_highly_detailed_glossy_hyper_realistic_anime_s.png",
+    "destination": "rpg-assets/characters/hana/events/final_notapproved/draft_01_wrong_proportions.png",
+    "size_bytes": 2619404,
+    "sha256": "5975bec87d322954b3cdbb48f67e37dacd5619149253e1aa84e717d7fb36a7d0"
+  },
+  {
+    "character": "hana",
+    "status": "final_notapproved",
+    "source": "a_highly_detailed_photorealistic_anime_style_clos.png",
+    "destination": "rpg-assets/characters/hana/events/final_notapproved/draft_02_wrong_proportions.png",
+    "size_bytes": 2527501,
+    "sha256": "f52f414d2c16aa35057dabac9382e6344a37a23b0d2e6ef2a01823a055d3635f"
+  },
+  {
+    "character": "hana",
+    "status": "final_notapproved",
+    "source": "parody_recovered/hana_rejected_v3.png",
+    "destination": "rpg-assets/characters/hana/events/final_notapproved/draft_03_wrong_proportions.png",
+    "size_bytes": 2527501,
+    "sha256": "f52f414d2c16aa35057dabac9382e6344a37a23b0d2e6ef2a01823a055d3635f"
+  },
+  {
+    "character": "shiori",
+    "status": "final_notapproved",
+    "source": "a_highly_detailed_hyper_real_anime_style_illustra.png",
+    "destination": "rpg-assets/characters/shiori/events/final_notapproved/draft_01_text_spray.png",
+    "size_bytes": 3206169,
+    "sha256": "8117553f400be9340288ceb39bde4d9acbfdac9cea9110939504d7fbe4e98452"
+  },
+  {
+    "character": "shiori",
+    "status": "final_notapproved",
+    "source": "a_highly_detailed_dynamic_anime_style_illustratio.png",
+    "destination": "rpg-assets/characters/shiori/events/final_notapproved/draft_02_text_spray.png",
+    "size_bytes": 3007649,
+    "sha256": "35a17db1df7209ab7b77e6526d28b6c795c24a045ff6b3b68588ecf1ba9b97ef"
+  },
+  {
+    "character": "sol",
+    "status": "final_notapproved",
+    "source": "a_highly_detailed_vibrant_anime_style_illustratio.png",
+    "destination": "rpg-assets/characters/sol/events/final_notapproved/draft_01_text_spray.png",
+    "size_bytes": 2852968,
+    "sha256": "54a4e2ab6ae97a2344b8db22657510ee5c5baf2e57047dcfab03de56a4ad151c"
+  },
+  {
+    "character": "yuna",
+    "status": "final_notapproved",
+    "source": "a_highly_detailed_glossy_anime_style_close_up_po.png",
+    "destination": "rpg-assets/characters/yuna/events/final_notapproved/draft_01_text_spray.png",
+    "size_bytes": 2865786,
+    "sha256": "63c5b9b2a335dc1d09752341e2c29ab52807f98db6e855080bf088beb8900ec5"
+  },
+  {
+    "character": "jicy",
+    "status": "final_notapproved",
+    "source": "a_hyper_detailed_anime_style_glossy_digital_illus.png",
+    "destination": "rpg-assets/characters/jicy/events/final_notapproved/draft_01_text_spray.png",
+    "size_bytes": 2533143,
+    "sha256": "cb3c64c1859c8e9ae697b3d8ee9693db752c5653017c64ea02a0762faca4a459"
+  },
+  {
+    "character": "daisy",
+    "status": "final_notapproved",
+    "source": "parody_recovered/daisy_wrong_character_sol.png",
+    "destination": "rpg-assets/characters/daisy/events/final_notapproved/draft_wrong_character_sol_instead_of_daisy.png",
+    "size_bytes": 2543329,
+    "sha256": "8b95def9c7fe21d36d1351cf49b063702881a7ace1b2ac11053139c805ccb640"
+  }
+]
