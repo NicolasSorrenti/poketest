@@ -341,9 +341,61 @@
       audioSettingsPanel.hidden=false;
     }
     menuButton.onclick=()=>{closeSheet();menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));};
+    // Developer-only preview of the Live event artwork. Never alters campaign state.
+    function showAnimatedCgTest(){
+      if(!window.NeoRpgCGPan){showNotice('Animated CG viewer is not loaded. Refresh the page.');return;}
+      let dialog=document.getElementById('neoAnimatedCgTest');
+      if(!dialog){
+        dialog=document.createElement('dialog');
+        dialog.id='neoAnimatedCgTest';
+        dialog.setAttribute('aria-label','Animated CG test viewer');
+        dialog.style.cssText='border:1px solid #b38bb8;border-radius:15px;background:#10101c;color:white;padding:0;width:min(94vw,880px);max-width:94vw;max-height:94dvh;overflow:hidden;box-shadow:0 18px 70px #000d';
+        const top=document.createElement('div');
+        top.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;background:#252039';
+        const title=document.createElement('strong');
+        title.textContent='TEST · Live CG · Automatic Pan';
+        const close=document.createElement('button');
+        close.type='button';close.textContent='✕ Close';
+        close.style.cssText='background:#3c3055;color:white;border:1px solid #b38bb8;border-radius:8px;padding:7px 12px;cursor:pointer';
+        close.onclick=()=>dialog.close();
+        top.append(title,close);
+        const viewport=document.createElement('div');
+        viewport.className='neo-cg-test-viewport';
+        viewport.style.cssText='position:relative;overflow:hidden;margin:auto;width:100%;height:50dvh;background:#080810;isolation:isolate';
+        const img=document.createElement('img');
+        img.alt='Live event CG animation test';
+        img.draggable=false;
+        img.style.cssText='position:absolute;left:0;top:0;width:100%;height:auto;max-width:none;max-height:none;display:block;pointer-events:none';
+        viewport.append(img);
+        const footer=document.createElement('p');
+        footer.textContent='1.0s bottom · 0.4s up · 0.2s top · 0.4s down · continuous loop';
+        footer.style.cssText='font:12px system-ui;color:#d3c6e4;text-align:center;margin:0;padding:12px';
+        dialog.append(top,viewport,footer);
+        document.body.append(dialog);
+        dialog.addEventListener('close',()=>{dialog._cgPan?.dispose();dialog._cgPan=null;img.removeAttribute('src');});
+      }
+      const viewport=dialog.querySelector('.neo-cg-test-viewport');
+      const img=viewport.querySelector('img');
+      dialog._cgPan?.dispose();dialog._cgPan=null;
+      img.onload=()=>{
+        if(!dialog.open||!img.naturalWidth||!img.naturalHeight)return;
+        // Use the actual image aspect ratio: precisely half its height is visible.
+        const maxWidth=Math.min(window.innerWidth*.92,850);
+        const maxHeight=window.innerHeight*.72;
+        const width=Math.max(1,Math.min(maxWidth,maxHeight*2*img.naturalWidth/img.naturalHeight));
+        viewport.style.width=width+'px';
+        viewport.style.height=(width*img.naturalHeight/img.naturalWidth/2)+'px';
+        dialog._cgPan=window.NeoRpgCGPan.attach(viewport,img,{visibleHeightPercent:50,bottomHold:1000,moveUp:400,topHold:200,moveDown:400});
+      };
+      img.onerror=()=>{dialog.querySelector('p').textContent='Could not load Live event artwork. Check the asset path.';};
+      dialog.querySelector('p').textContent='1.0s bottom · 0.4s up · 0.2s top · 0.4s down · continuous loop';
+      dialog.showModal();
+      img.src='/rpg-assets/characters/live/events/2live_confy_scene2.jpg';
+    }
     const menuItems=[
       ['▣ Deck Studio',showDeck],
       ['▧ CG Gallery',()=>bridge()?.openGallery?.()],
+      ['▶ Test Animated CG (Live)',showAnimatedCgTest],
       ['♥ Status & Relationships',()=>bridge()?.openStatus?.()],
       ['▦ Calendar',()=>bridge()?.openCalendar?.()],
       ['🏆 Circuit & Tournaments',()=>showEvents('circuit')],
