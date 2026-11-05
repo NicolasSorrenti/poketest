@@ -956,3 +956,14 @@ Exactly five printings: `base5-3` Dark Blastoise, `base5-20` Dark Blastoise, `ba
 - **Dark Dragonair**: Evolutionary Light searches an Evolution card once per own turn, with status lock and shuffle; active Power module selects Stage 1 or Stage 2. Tail Strike heads 40/tails 20. Pending empty-deck, disabled-Power, repeated-use, and decision-continuation execution.
 
 No confirmed new defect; no gameplay changes. Direct GitHub connector does not furnish executable Node checkout, so **zero reducer scenarios executed**. Independent official errata and historical rulings not fully adjudicated. No tests, CI, PR, legacy engine or Apex files changed. Ledger recount: **1 verified, 352 partial, 770 unreviewed; 1122 not fully verified**.
+
+
+## 2026-11-05 — Team Rocket Hypno, Magneton and Weezing (active-engine source-only)
+
+Exactly five printings: `base5-9` Dark Hypno, `base5-26` Dark Hypno, `base5-11` Dark Magneton, `base5-28` Dark Magneton, `base5-14` Dark Weezing. Current authority: `classic_local_service.js` requires `headless_duel.js`, RPG entrypoint `rpg_duel_bridge.js`, attack compilation in `attack_effects_core.js`, with card-specific decisions in `headless_duel.js`. Legacy engine excluded. PR #440 and #507 already merged.
+
+- Dark Hypno (both): Psypunch 20; Bench Manipulation opponent flips one coin per own Benched Pokémon, 20 per tails, ignores Weakness/Resistance but not subsequent modifiers. Pending defender-owned coin outcomes, 0–5 Bench counts, prevention, Prize and promotion sequence.
+- Dark Magneton (both): Sonicboom ignores Weakness/Resistance; Magnetic Lines moves one Basic Energy from opposing Active to an opposing Benched Pokémon if possible. `headless_duel.js` has interactive `magnetic-lines` energy and target decisions and checks Energy Protection. The imported printings have differing Sonicboom damage/cost fields (base5-11: 40/GGCC, base5-28: 20/CC); independently adjudicate print scans before changing data. Pending Energy type selection, no-Bench, protected Energy, status and knockout sequences.
+- Dark Weezing: Mass Explosion counts all Koffing, Weezing and Dark Weezing in play, then deals 20 to each, including own; Stun Gas heads Poison/tails Paralysis. Pending damage-prevention, simultaneous KOs, multiple Prizes, coin outcomes and promotion.
+
+No confirmed gameplay defect and no gameplay source changed. GitHub connector provides source, not an executable checkout; zero reducer scenarios executed. Historical rulings and independent official errata comparison incomplete. No tests, scripts, workflows, PRs or Apex files introduced. Ledger counts should be taken from JSON, not assumed.
