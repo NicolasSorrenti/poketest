@@ -368,7 +368,7 @@
         img.style.cssText='position:absolute;left:0;top:0;width:100%;height:auto;max-width:none;max-height:none;display:block;pointer-events:none';
         viewport.append(img);
         const footer=document.createElement('p');
-        footer.textContent='0.2s bottom · 0.4s up · 0.2s top · 0.4s down · continuous loop';
+        footer.textContent='0.2s bottom · 0.2s up · 0.2s top · 0.2s down · continuous loop';
         footer.style.cssText='font:12px system-ui;color:#d3c6e4;text-align:center;margin:0;padding:12px';
         const controlsHost=document.createElement('div');
         controlsHost.className='neo-live-cg-controls';
@@ -386,8 +386,7 @@
       const controlsHost=dialog.querySelector('.neo-live-cg-controls');
       dialog._cgControls=window.NeoRpgCGPan.createControls(controlsHost,config=>{
         if(!dialog.open||!img.naturalWidth)return;
-        dialog._cgPan?.dispose();
-        dialog._cgPan=window.NeoRpgCGPan.attach(viewport,img,config);
+        dialog._cgPan?.updateConfig(config);
       });
       img.onload=()=>{
         if(!dialog.open||!img.naturalWidth||!img.naturalHeight)return;
