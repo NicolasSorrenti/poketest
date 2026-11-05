@@ -13,10 +13,12 @@
  const $=id=>document.getElementById(id),img=$('cgViewerImage'),canvas=$('cgViewerCanvas');
  let index=0,scale=1,tx=0,ty=0,drag=null,pinch=null,pan=null;
  const items=()=>[...grid.querySelectorAll('.cg-tile.unlocked')];
- function stopPan(){pan?.dispose();pan=null;$('cgViewerPan').setAttribute('aria-pressed','false');$('cgViewerPan').textContent='▶ Pan';}\n function reset(){stopPan();scale=1;tx=0;ty=0;apply();}
+ function stopPan(){pan?.dispose();pan=null;$('cgViewerPan').setAttribute('aria-pressed','false');$('cgViewerPan').textContent='▶ Pan';}
+ function reset(){stopPan();scale=1;tx=0;ty=0;apply();}
  function apply(){img.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')';}
  function zoom(next){stopPan();scale=Math.max(1,Math.min(5,next));if(scale===1){tx=0;ty=0;}apply();}
- function show(i){\n  stopPan();
+ function show(i){
+  stopPan();
   const tiles=items();if(!tiles.length)return;
   index=(i+tiles.length)%tiles.length;
   const tile=tiles[index];tile.click();
@@ -42,7 +44,13 @@
   const found=tiles.findIndex(tile=>tile.querySelector('strong')?.textContent===title);
   open(Math.max(0,found));
  });
- $('cgViewerClose').onclick=()=>viewer.close();\n $('cgViewerPan').onclick=()=>{\n  if(pan){stopPan();return;}\n  if(!window.NeoRpgCGPan||!img.complete||!img.naturalWidth)return;\n  reset();pan=window.NeoRpgCGPan.attach(canvas,img,true);\n  $('cgViewerPan').setAttribute('aria-pressed','true');$('cgViewerPan').textContent='■ Stop pan';\n };
+ $('cgViewerClose').onclick=()=>viewer.close();
+ $('cgViewerPan').onclick=()=>{
+  if(pan){stopPan();return;}
+  if(!window.NeoRpgCGPan||!img.complete||!img.naturalWidth)return;
+  reset();pan=window.NeoRpgCGPan.attach(canvas,img,true);
+  $('cgViewerPan').setAttribute('aria-pressed','true');$('cgViewerPan').textContent='■ Stop pan';
+ };
  $('cgViewerPrev').onclick=()=>show(index-1);$('cgViewerNext').onclick=()=>show(index+1);
  $('cgViewerZoomIn').onclick=()=>zoom(scale+.5);$('cgViewerZoomOut').onclick=()=>zoom(scale-.5);$('cgViewerReset').onclick=reset;
  viewer.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();show(index-1);}if(e.key==='ArrowRight'){e.preventDefault();show(index+1);}if(e.key==='+'||e.key==='=')zoom(scale+.5);if(e.key==='-')zoom(scale-.5);});
