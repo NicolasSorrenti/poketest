@@ -204,7 +204,8 @@
           "name": "Seismic Toss",
           "status": "partial",
           "evidence": [
-            "test_card_fidelity_machamp.js"
+            "test_card_fidelity_machamp.js",
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
           ],
           "scope": "Typed attack cost rejection; attacks resolve in tested Machamp scenarios."
         },
@@ -214,7 +215,8 @@
           "name": "Strikes Back",
           "status": "partial",
           "evidence": [
-            "test_card_fidelity_machamp.js"
+            "test_card_fidelity_machamp.js",
+            "2026-11-05 active headless_duel.js source audit: targeted Bench damage from gym:last-magic-darts / gym:last-flame-jet failed to trigger Strikes Back; fixed on main commit 7eb60a2. Broader Bench spread damage and reducer execution remain unverified."
           ],
           "scope": "Retaliation when Machamp takes damage even if Knocked Out; suppressed by Asleep, Confused and Paralyzed; surviving Machamp retaliation. Classic reducer; print and historical ruling review pending."
         }
@@ -402,7 +404,8 @@
           "status": "partial",
           "evidence": [
             "test_card_fidelity_venusaur.js",
-            "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry."
+            "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry.",
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
           ],
           "scope": "Solarbeam 60 damage and four-Grass typed cost accepted/rejected in reducer configurations: Classic for base1-15, Neo, online-preview 60-card and online-preview 40-card; base4-18 online-preview 60-card and 40-card. Historical rulings and client/network integration pending."
         },
@@ -413,7 +416,8 @@
           "status": "partial",
           "evidence": [
             "test_card_fidelity_venusaur.js",
-            "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry."
+            "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry.",
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
           ],
           "scope": "Repeated Energy Trans transfers in one turn and explicit Finish; same-Pokémon source/target exclusion; disabled while Venusaur is Asleep, Confused or Paralyzed; equivalent Basic Grass Energy reprints auto-resolve, non-Grass Energy including Rainbow Energy is ineligible; reducer configurations: Classic for base1-15, Neo, online-preview 60-card and online-preview 40-card; base4-18 online-preview 60-card and 40-card. Historical rulings and client/network integration pending."
         }
@@ -575,13 +579,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Electric Shock",
-          "status": "partial"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Buzzap",
-          "status": "partial"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
+          ]
         }
       ]
     },
@@ -6029,7 +6039,8 @@
           "status": "partial",
           "evidence": [
             "test_card_fidelity_venusaur.js",
-            "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry."
+            "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry.",
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
           ],
           "scope": "Solarbeam 60 damage and four-Grass typed cost accepted/rejected in reducer configurations: Classic for base1-15, Neo, online-preview 60-card and online-preview 40-card; base4-18 online-preview 60-card and 40-card. Historical rulings and client/network integration pending."
         },
@@ -6040,7 +6051,8 @@
           "status": "partial",
           "evidence": [
             "test_card_fidelity_venusaur.js",
-            "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry."
+            "Card text compared across TCGdex, Serebii, and Limitless; official Pokémon errata PDF searched with no Venusaur entry.",
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
           ],
           "scope": "Repeated Energy Trans transfers in one turn and explicit Finish; same-Pokémon source/target exclusion; disabled while Venusaur is Asleep, Confused or Paralyzed; equivalent Basic Grass Energy reprints auto-resolve, non-Grass Energy including Rainbow Energy is ineligible; reducer configurations: Classic for base1-15, Neo, online-preview 60-card and online-preview 40-card; base4-18 online-preview 60-card and 40-card. Historical rulings and client/network integration pending."
         }
@@ -6221,13 +6233,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Electric Shock",
-          "status": "partial"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Buzzap",
-          "status": "partial"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 active-engine cross-module source audit: checked printed catalogue text, Power dispatch and attack/KO continuation. No runtime reducer execution available; further interactions and historical rulings remain unverified."
+          ]
         }
       ]
     },
