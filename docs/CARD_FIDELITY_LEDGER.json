@@ -9404,7 +9404,11 @@
           "kind": "attack",
           "index": 1,
           "name": "Knock Back",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only inspection; no Node reducer execution; printed TCGdex catalogue text compared to active handlers; independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only: Drag Off requires opposing Bench and target choice before 20 damage; Knock Back deals 30 before defender chooses promotion. KO/promotion/turn flow not executed."
         }
       ]
     },
@@ -9444,13 +9448,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Fascinate",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only inspection; no Node reducer execution; printed TCGdex catalogue text compared to active handlers; independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only: Fascinate requires opponent Bench and heads coin before forced switch; Poison Claws deals 10 and poisons on heads. Prevention and decision paths not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Poison Claws",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only inspection; no Node reducer execution; printed TCGdex catalogue text compared to active handlers; independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only: Fascinate requires opponent Bench and heads coin before forced switch; Poison Claws deals 10 and poisons on heads. Prevention and decision paths not executed."
         }
       ]
     },
@@ -9566,13 +9578,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Conversion 1",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only inspection; no Node reducer execution; printed TCGdex catalogue text compared to active handlers; independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only: Conversion 1 optional Weakness replacement excludes Colorless and permits no-effect when target lacks Weakness; Psybeam 20 plus heads Confusion. Switch expiry not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Psybeam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only inspection; no Node reducer execution; printed TCGdex catalogue text compared to active handlers; independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only: Conversion 1 optional Weakness replacement excludes Colorless and permits no-effect when target lacks Weakness; Psybeam 20 plus heads Confusion. Switch expiry not executed."
         }
       ]
     },
@@ -9807,13 +9827,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Mischief",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only inspection; no Node reducer execution; printed TCGdex catalogue text compared to active handlers; independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only: Mischief shuffles opposing deck without reveal; Anger 20 or 40 by coin. RNG sequencing and attack ownership not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Anger",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only inspection; no Node reducer execution; printed TCGdex catalogue text compared to active handlers; independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only: Mischief shuffles opposing deck without reveal; Anger 20 or 40 by coin. RNG sequencing and attack ownership not executed."
         }
       ]
     },
@@ -9894,13 +9922,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Quick Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only inspection; no Node reducer execution; printed TCGdex catalogue text compared to active handlers; independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only: Trickery exchanges selected Prize with top deck card, once per turn and status restricted; Quick Attack 10/20 by coin. Prize face-up and subsequent KO interactions not executed."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Trickery",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only inspection; no Node reducer execution; printed TCGdex catalogue text compared to active handlers; independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only: Trickery exchanges selected Prize with top deck card, once per turn and status restricted; Quick Attack 10/20 by coin. Prize face-up and subsequent KO interactions not executed."
         }
       ]
     },
