@@ -9353,13 +9353,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Lightning Flash",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Lightning Flash defender attack-failure coin on next turn; Thunder Attack paralysis heads versus recoil tails, KO/Prize ordering pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Thunder Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Lightning Flash defender attack-failure coin on next turn; Thunder Attack paralysis heads versus recoil tails, KO/Prize ordering pending."
         }
       ]
     },
@@ -9506,13 +9514,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Rear Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Rear Kick basic damage; Flame Pillar optional attached Energy discard, 10 Bench damage target choice, no Bench case and KO ordering pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Flame Pillar",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Rear Kick basic damage; Flame Pillar optional attached Energy discard, 10 Bench damage target choice, no Bench case and KO ordering pending."
         }
       ]
     },
@@ -9525,13 +9541,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Bite",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Bite baseline; Whirlpool mandatory opponent attached Energy selection/discard and protection interactions pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Whirlpool",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Bite baseline; Whirlpool mandatory opponent attached Energy selection/discard and protection interactions pending."
         }
       ]
     },
@@ -9646,13 +9670,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Fire Tail",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Gather Fire once-per-turn Fire Energy transfer from another own Pokémon with status restrictions; Fire Tail damage; activation/turn and multiple source choices pending."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Gather Fire",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Gather Fire once-per-turn Fire Energy transfer from another own Pokémon with status restrictions; Fire Tail damage; activation/turn and multiple source choices pending."
         }
       ]
     },
@@ -9779,13 +9811,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Poison Gas",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Poison Gas Sleep; Sticky Hands heads +20 and Paralysis versus tails 10, typed costs and prevention pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Sticky Hands",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live source-only review: cards/base5.json, headless_duel.js, attack_effects_core.js, classic_power_core.js and classic_final_manifest.json where applicable; no reducer execution or independent historical-ruling certification."
+          ],
+          "scope": "Poison Gas Sleep; Sticky Hands heads +20 and Paralysis versus tails 10, typed costs and prevention pending."
         }
       ]
     },
