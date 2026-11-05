@@ -1392,6 +1392,18 @@ function score(a,o,cfg,used){
    const needed=hpRemaining(q.active)-(damage+activePlusPowers*10);
    // PlusPower only boosts an attack that can actually be paid for.
    // Preserve the card when the Active cannot attack this turn.
+   // Apex values a PlusPower as urgent only if it creates a reliable,
+   // currently legal knockout, not a speculative expected-damage crossing.
+   if(cfg.level===8&&p.active&&q.active){
+    const moves=p.active.effectiveAttacks||card(p.active.id)?.attacks||[];
+    const reliableKo=extra=>moves.some((attack,index)=>
+     eligibleAttack(o,p.active,attack,index)&&
+     knockoutChance(attack,p.active,q.active,p.bench.length,
+      activePlusPowers*10+extra)*(p.active.status==='Confused'?.5:1)>=.75);
+    if(reliableKo(0))return -120*style.damage;
+    if(reliableKo(10))return 300*style.damage;
+    return damage>0?45*style.damage:-500*style.damage;
+   }
    return (damage>0&&needed>0&&needed<=10?300:
     cfg.level>=8&&damage<=0?-500:cfg.level>=3?45:118)*style.damage;
   }
