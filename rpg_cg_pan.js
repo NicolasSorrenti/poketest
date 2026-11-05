@@ -116,7 +116,7 @@
   function draw(){
    for(const [key] of keys)inputs[key].value=(values[key]/1000).toFixed(2);
    autoCheck.checked=auto;
-   status.textContent=auto?['Stage 1 · Original speed','Stage 2 · 25% shorter','Stage 3 · Another 25% shorter (held)'][stage]:'Manual timing';
+   status.textContent=auto?['Stage 1 · Original speed','Stage 2 · 25% faster','Stage 3 · Another 25% faster (held)'][stage]:'Manual timing';
   }
   function clearTimers(){for(const t of timers)clearTimeout(t);timers=[];}
   function stopAuto(){clearTimers();auto=false;stage=0;draw();}
@@ -129,7 +129,7 @@
      timers.push(setTimeout(()=>{
       if(!auto)return;
       stage=n;
-      for(const [key] of keys)values[key]=base[key]*(0.75**stage);
+      for(const [key] of keys)values[key]=base[key]/(1.25**stage);
       draw();changed();
      },3000*n));
     }
