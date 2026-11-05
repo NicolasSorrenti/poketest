@@ -826,14 +826,14 @@ for(const plan of missedAppointments)log('You missed your planned meet-up with '
 queueMandatory();if(state.day===beforeDay)arriveForScheduledPlan();persist();
 if(!suppressTimeFlash&&timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource}))timeSequence.flush();}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
-function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null){
+function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null,creditBond=false){
  if(!Array.isArray(lines)||!lines.length)return;
  const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
  if(!script.length)return;
  const first=script[0];
  scene={speaker:first.speaker==='Protagonist'?'You':cast[first.speaker]?.name||first.speaker,
   line:first.text,choices:script.length>1?[['Continue ›','chatNext']]:afterChoices,
-  dialogue:script,index:0,afterChoices,reactionId,invitation,
+  dialogue:script,index:0,afterChoices,reactionId,invitation,bondConversation:creditBond,
    memoryId:memory?.kind==='followup'?memory.id:null,memoryOfferId:memory?.kind==='intro'?memory.id:null,
    casualId:casual?.id||null,asideId:casual?.asideId||null};
  state.scene=scene;persist();render();
@@ -847,7 +847,7 @@ function advanceConversation(){
  scene.choices=scene.index===scene.dialogue.length-1?scene.afterChoices:[['Continue ›','chatNext']];
  // Completing a real conversation adds a small amount of affection once per
  // character each day. A story invitation alone grants nothing.
- if(scene.index===scene.dialogue.length-1&&!scene.invitation&&state.selected&&cast[state.selected]){
+ if(scene.index===scene.dialogue.length-1&&scene.bondConversation&&!scene.invitation&&state.selected&&cast[state.selected]){
   state.relationshipTalkCredit=state.relationshipTalkCredit||{};
   const key=state.day+':'+state.selected;
   if(!state.relationshipTalkCredit[key]){
@@ -1351,7 +1351,7 @@ function selectPerson(id,{skipInvitation=false}={}){
   const invitations=fresh?VN.choices(state,id):[];
   const memory=!first&&!context&&!invitations.length?MEM?.offer(state,id):null;
   const casual=!context&&!memory?ordinaryTalk(id,c,{first,present:currentPeople()}):null;
-  sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||invitations,context?.id||null,null,memory,casual?.record);
+  sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||invitations,context?.id||null,null,memory,casual?.record,true);
  }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
@@ -1858,7 +1858,7 @@ function act(action){
   const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
   const memory=!context?MEM?.offer(state,id):null;
   const casual=!context&&!memory?ordinaryTalk(id,c,{present:currentPeople()}):null;
-  return sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||[],context?.id||null,null,memory,casual?.record);
+  return sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||[],context?.id||null,null,memory,casual?.record,true);
  }
  if(type==='flirt'){
   state.talked['flirt:'+key]=true;
