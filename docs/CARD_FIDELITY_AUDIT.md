@@ -850,3 +850,19 @@ Scope: exactly five distinct printings `base3-54` Shellder, `base3-55` Slowpoke,
 | `base3-58` Mr. Fuji | `classic_trainer_core.js` selects a Benched Pokémon and shuffles Pokémon plus attachments, with special Clefairy Doll ownership handling. Execute ownership, target legality, shuffle and attachments. | partial |
 
 No independent historical ruling adjudication or deterministic live-reducer/browser scenario was completed in this pass. **No verified statuses or confirmed active-engine defects**; no gameplay code, tests, CI or Apex modifications. Source inspection is not proof of correct gameplay. Ledger recount: **331 partial, 791 unreviewed, 1 verified; 1122 not fully verified**. The single verified printing was not retested.
+
+## 2026-11-05: Fossil 59–62 and Base Set 2 Alakazam (current engine only)
+
+Current RPG/match authority: `classic_local_service.js` imports `createGame` and `reduce` from `headless_duel.js`. Trainer resolution is in `classic_trainer_core.js`; Powers in `classic_power_core.js`; `rpg_duel_bridge.js` connects RPG duels. Legacy `engine.js` is not evidence.
+
+Five distinct printings compared with their imported printed text (`cards/base3.json`, `cards/base4.json`) and current-engine handlers. No new deterministic gameplay run or independent historical-ruling adjudication was completed in this batch. Source-only review is **partial**, never verified.
+
+| Printing | Current-engine observations and pending work | Effect-level status |
+| --- | --- | --- |
+| `base3-59` Energy Search | Printed Basic Energy deck search and shuffle. Current `classic_trainer_core.js` searches and shuffles. An empty Basic Energy search previously raised a mandatory-choice error; fixed and merged in [#505](https://github.com/NicolasSorrenti/poketest/pull/505), commit `da689d27`. Execute successful/empty searches, shuffle, cancel, and ownership. | partial |
+| `base3-60` Gambler | Printed shuffle hand into deck, heads draw 8, tails draw 1. Current handler shuffles remaining hand and flips. Execute both coin outcomes, deck exhaustion, Trainer discard timing and card conservation. | partial |
+| `base3-61` Recycle | Printed heads returns one discard card to top of deck. Empty discard on heads previously raised a mandatory-choice error; fixed and merged in [#506](https://github.com/NicolasSorrenti/poketest/pull/506), commit `dbee7cf5`. Execute heads/tails, empty discard, top-card placement and card ownership. | partial |
+| `base3-62` Mysterious Fossil | Printed as Basic Pokémon while in play, no attacks/retreat/status, no KO Prize, voluntary discard and Fossil evolution. Special-card behavior spans multiple active modules and is not represented by an effect entry; **do not infer verification from an empty effects array**. Execute play, KO, evolution, discard, Bench limits, statuses and Prize behavior. | unreviewed (special rules) |
+| `base4-1` Alakazam | Confuse Ray printed 30 for PPP and heads Confusion; active attack/coin outcomes not run. Damage Swap retains earlier 48 reducer scenarios but further historical rulings/interactions remain. | partial |
+
+No new engine change this batch: #505 and #506 were already merged before this pass. No test files, CI, or Apex AI files modified. Ledger effect-level recount after this update: 334 partial, 789 unreviewed; **1,123 printings not fully verified under strict all-effects/runtime criterion**. This is an effect-evidence count; special-rule cards with empty effects remain unreviewed.
