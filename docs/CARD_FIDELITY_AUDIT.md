@@ -967,3 +967,16 @@ Exactly five printings: `base5-9` Dark Hypno, `base5-26` Dark Hypno, `base5-11` 
 - Dark Weezing: Mass Explosion counts all Koffing, Weezing and Dark Weezing in play, then deals 20 to each, including own; Stun Gas heads Poison/tails Paralysis. Pending damage-prevention, simultaneous KOs, multiple Prizes, coin outcomes and promotion.
 
 No confirmed gameplay defect and no gameplay source changed. GitHub connector provides source, not an executable checkout; zero reducer scenarios executed. Historical rulings and independent official errata comparison incomplete. No tests, scripts, workflows, PRs or Apex files introduced. Ledger counts should be taken from JSON, not assumed.
+
+
+## 2026-11-05 — Team Rocket five reprints (active-engine source-only)
+
+Exactly five distinct previously unreviewed printings: `base5-27` Dark Machamp, `base5-29` Dark Slowbro, `base5-30` Dark Vileplume, `base5-31` Dark Weezing, `base5-34` Dark Electrode. Traced RPG entrypoint `rpg_duel_bridge.js` and match service `classic_local_service.js` into `headless_duel.js`, `classic_power_core.js` and `attack_effects_core.js`. No legacy engine counted. Existing audit PRs #440 and #507 merged; no outstanding fidelity PR found.
+
+- **Dark Machamp**: printed Fling needs opposing Bench, shuffles opposing Active and attached cards into opponent's deck. Active reducer checks Bench availability before attack. Pending full attachment ownership, shuffle, replacement, attack-turn and effect-prevention sequences.
+- **Dark Slowbro**: printed Reel In retrieves up to three Basic/Evolution Pokémon from discard when evolved from hand. `classic_power_core.js` provides up-to-three discard Pokémon choices and moves selected cards to hand. Pending status lock, on-play timing, precise target eligibility and interactive decisions.
+- **Dark Vileplume**: printed Hay Fever prevents Trainer cards while Power active and not Asleep/Confused/Paralyzed. `headless_duel.js` play-trainer gate consults `powerInPlay`. Petal Whirlwind needs three coins and self-Confusion on at least two heads. Pending status and coin execution.
+- **Dark Weezing**: printed Mass Explosion counts all Koffing/Weezing/Dark Weezing in play, then spreads 20 damage to each; Stun Gas inflicts Poison on heads or Paralysis on tails. Pending both-side spread, prevention, simultaneous KO and Prize ordering.
+- **Dark Electrode**: printed Energy Bomb moves all attached Energy to own Bench in any distribution, or discards them if Bench empty. `headless_duel.js` gathers one destination per attached Energy and handles no-Bench discard. Pending multiple-choice continuation, KO, damage timing and Energy ownership.
+
+No new confirmed defect; no gameplay changes. Imported card text reviewed, but independent authoritative errata/historical ruling adjudication incomplete. No executable repository checkout was available from the direct GitHub connector; **zero reducer scenarios executed**, and all five remain **partial**. No tests, CI, PR, legacy or Apex changes. Ledger recount: **1 verified, 362 partial, 760 unreviewed; 1122 not fully verified**.
