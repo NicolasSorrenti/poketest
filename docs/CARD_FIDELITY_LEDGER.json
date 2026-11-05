@@ -9282,13 +9282,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Poisonpowder",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only: Pollen Stench active in classic_power_core.js ONCE/ACTIVATED and heads opponent Confused/tails own Active Confused; Poisonpowder printed 10 plus Poison. No live reducer execution; decision, status lock, turn and attack sequences pending; historical rulings not independently adjudicated."
+          ],
+          "scope": "Source-only printed effect and current-engine handler trace; not executed or fully verified."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Pollen Stench",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only: Pollen Stench active in classic_power_core.js ONCE/ACTIVATED and heads opponent Confused/tails own Active Confused; Poisonpowder printed 10 plus Poison. No live reducer execution; decision, status lock, turn and attack sequences pending; historical rulings not independently adjudicated."
+          ],
+          "scope": "Source-only printed effect and current-engine handler trace; not executed or fully verified."
         }
       ]
     },
@@ -9343,13 +9351,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Mind Shock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only: Matter Exchange hand-card selection, discard then draw in classic_power_core.js, once-per-turn and status gating; Mind Shock printed 30 ignoring Weakness/Resistance. No live reducer execution; empty deck, hand choice, attack modifiers and turn pending."
+          ],
+          "scope": "Source-only printed effect and current-engine handler trace; not executed or fully verified."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Matter Exchange",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only: Matter Exchange hand-card selection, discard then draw in classic_power_core.js, once-per-turn and status gating; Mind Shock printed 30 ignoring Weakness/Resistance. No live reducer execution; empty deck, hand choice, attack modifiers and turn pending."
+          ],
+          "scope": "Source-only printed effect and current-engine handler trace; not executed or fully verified."
         }
       ]
     },
@@ -9384,13 +9400,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Sludge Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only: Sticky Goo enabled for opposing Active in headless_duel.js retreatCost, adds 2 retreat Energy units; printed Power only while Dark Muk Active and healthy. Sludge Punch printed 20 plus Poison. No live reducer execution; Energy payments, status and stacking pending."
+          ],
+          "scope": "Source-only printed effect and current-engine handler trace; not executed or fully verified."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Sticky Goo",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only: Sticky Goo enabled for opposing Active in headless_duel.js retreatCost, adds 2 retreat Energy units; printed Power only while Dark Muk Active and healthy. Sludge Punch printed 20 plus Poison. No live reducer execution; Energy payments, status and stacking pending."
+          ],
+          "scope": "Source-only printed effect and current-engine handler trace; not executed or fully verified."
         }
       ]
     },
@@ -9422,13 +9446,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Frenzied Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only: Frenzy passive in classic_power_core.js and headless_duel.js adds 30 on positive attack damage while Confused, and on failed Confusion self-damage; Frenzied Attack printed 40 then self-Confusion. No live reducer execution; damage modifiers, self-KO, prizes and turn pending."
+          ],
+          "scope": "Source-only printed effect and current-engine handler trace; not executed or fully verified."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Frenzy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only: Frenzy passive in classic_power_core.js and headless_duel.js adds 30 on positive attack damage while Confused, and on failed Confusion self-damage; Frenzied Attack printed 40 then self-Confusion. No live reducer execution; damage modifiers, self-KO, prizes and turn pending."
+          ],
+          "scope": "Source-only printed effect and current-engine handler trace; not executed or fully verified."
         }
       ]
     },
@@ -10060,7 +10092,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Surprise Thunder",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 source-only: Surprise Thunder printed 30 plus nested coin outcomes for 20 or 10 to opposing Bench, no Bench Weakness/Resistance. Current attack effect dispatch requires full two-coin, shield, spread, KO and Prize review. No live reducer execution; historical rulings not independently adjudicated."
+          ],
+          "scope": "Source-only printed effect and current-engine handler trace; not executed or fully verified."
         }
       ]
     },
