@@ -1610,10 +1610,10 @@ function safeAct(action){
   $('notice').textContent='Action failed: '+(err?.message||'Unknown error')+'. Your save is intact.';
  }
 }
-function act(action){
+function act(action,confirmedInvitationHandoff=false){
  const [type,id,part]=action.split(':');
  if(mandatoryAction(type,id))return;
- if(conversationInProgress()){
+ if(conversationInProgress()&&!confirmedInvitationHandoff){
   const currentChoice=(scene.choices||[]).some(([,candidate])=>candidate===action);
   // A confirmed event invitation delegates to its existing action handler.
   // Permit only the matching validated handoff, not arbitrary actions during dialogue.
@@ -1673,9 +1673,11 @@ function act(action){
   if(id==='arc')return startArc(part);
   if(id==='situation')return beginSituation(part);
   if(id==='encounter')return startEncounter(part);
-  if(id==='cup')return act('cup:'+part);
-  if(id==='competitive')return act('competitive:'+part);
-  if(id==='exhibition')return act('event');
+  // The invitation itself was validated above. Let its duel handler run
+  // through the dialogue lock; ordinary, unconfirmed actions stay locked.
+  if(id==='cup')return act('cup:'+part,true);
+  if(id==='competitive')return act('competitive:'+part,true);
+  if(id==='exhibition')return act('event',true);
   return;
  }
  if(type==='eventChat'){
