@@ -493,7 +493,7 @@ function doPower(g,plan,h){
    (p.privateLog ||= []).push(id?`Peek: ${card(id).name}`:'Peek: no card');break;
   }
   case 'Summon Minions':if(have(plan,'deck')){for(const id of take(p.deck,selected(plan,'deck')))p.bench.push(h.unit(id,g.round));p.deck=h.shuffle(g,p.deck);}break;
-  case 'Sneak Attack':if(have(plan,'target')&&d.target.length){const target=pokemon(f,s('target'));target.damage+=h.calculateDamage(card(u.id),card(target.id),10,target);h.knockOuts(g,'direct');}break;
+  case 'Sneak Attack':if(have(plan,'target')&&d.target.length){const target=pokemon(f,s('target'));target.damage+=h.calculateDamage(card(u.id),card(target.id),10,target);h.knockOuts(g,'trainer');}break;
   case 'Reel In':if(have(plan,'discard'))p.hand.push(...take(p.discard,selected(plan,'discard')));break;
   default:throw Error(`Unported Power ${name}`);
  }
