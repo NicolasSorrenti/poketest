@@ -9876,13 +9876,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Tackle 20 at two Colorless; Magnetism 10 plus 10 per Magnemite/Magneton/Dark Magneton on OWN Bench. Live headless reducer supplies teamNameCount(names,'bench') to attack resolver; actual coinless damage/Weakness/KO sequences not executed.",
+            "Imported TCGdex Team Rocket text checked; independent printed image/errata/historical rulings not certified.",
+            "Source-only review 2026-11-05: no Node reducer execution; no test infrastructure added."
+          ],
+          "scope": "Current live engine source review only; runtime sequences and independent historical rulings pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Magnetism",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Tackle 20 at two Colorless; Magnetism 10 plus 10 per Magnemite/Magneton/Dark Magneton on OWN Bench. Live headless reducer supplies teamNameCount(names,'bench') to attack resolver; actual coinless damage/Weakness/KO sequences not executed.",
+            "Imported TCGdex Team Rocket text checked; independent printed image/errata/historical rulings not certified.",
+            "Source-only review 2026-11-05: no Node reducer execution; no test infrastructure added."
+          ],
+          "scope": "Current live engine source review only; runtime sequences and independent historical rulings pending."
         }
       ]
     },
@@ -9971,13 +9983,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Dizziness",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Dizziness draws one card via current attack_effects_core draw-one family. Water Gun is 20 plus 10 per extra Energy unit beyond [Colorless,Water], capped +20; this printing is NOT Fossil Lapras Water Gun. Mixed Energy, Double Colorless, empty deck, attack damage and turn effects not executed.",
+            "Imported TCGdex Team Rocket text checked; independent printed image/errata/historical rulings not certified.",
+            "Source-only review 2026-11-05: no Node reducer execution; no test infrastructure added."
+          ],
+          "scope": "Current live engine source review only; runtime sequences and independent historical rulings pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Dizziness draws one card via current attack_effects_core draw-one family. Water Gun is 20 plus 10 per extra Energy unit beyond [Colorless,Water], capped +20; this printing is NOT Fossil Lapras Water Gun. Mixed Energy, Double Colorless, empty deck, attack damage and turn effects not executed.",
+            "Imported TCGdex Team Rocket text checked; independent printed image/errata/historical rulings not certified.",
+            "Source-only review 2026-11-05: no Node reducer execution; no test infrastructure added."
+          ],
+          "scope": "Current live engine source review only; runtime sequences and independent historical rulings pending."
         }
       ]
     },
@@ -10017,13 +10041,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Afternoon Nap",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Afternoon Nap current attack extension compiles exact printed text to afternoon-nap, headless reducer offers eligible Energy deck-search and attaches selected Energy then shuffles. Headbutt 10 Psychic. Empty deck, special Energy, search selection, shuffle and turn ownership not executed.",
+            "Imported TCGdex Team Rocket text checked; independent printed image/errata/historical rulings not certified.",
+            "Source-only review 2026-11-05: no Node reducer execution; no test infrastructure added."
+          ],
+          "scope": "Current live engine source review only; runtime sequences and independent historical rulings pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Headbutt",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Afternoon Nap current attack extension compiles exact printed text to afternoon-nap, headless reducer offers eligible Energy deck-search and attaches selected Energy then shuffles. Headbutt 10 Psychic. Empty deck, special Energy, search selection, shuffle and turn ownership not executed.",
+            "Imported TCGdex Team Rocket text checked; independent printed image/errata/historical rulings not certified.",
+            "Source-only review 2026-11-05: no Node reducer execution; no test infrastructure added."
+          ],
+          "scope": "Current live engine source review only; runtime sequences and independent historical rulings pending."
         }
       ]
     },
@@ -10112,7 +10148,13 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current classic_trainer_core Challenge! offers opponent accept/decline; when both Benches full forces decline and player draws two; on acceptance each player chooses up to remaining Bench capacity from own deck and shuffles. Simultaneous reveal, decisions, zero choices and turn ownership not executed.",
+            "Imported TCGdex Team Rocket text checked; independent printed image/errata/historical rulings not certified.",
+            "Source-only review 2026-11-05: no Node reducer execution; no test infrastructure added."
+          ],
+          "scope": "Current live engine source review only; runtime sequences and independent historical rulings pending."
         }
       ]
     },
@@ -10156,7 +10198,13 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current classic_trainer_core Goop Gas Attack sets powerBlankUntil=turnSerial+2; classic_power_core blocks non-Toxic Gas powers while value > turnSerial. Verify both players' active/triggered Powers, interaction with Toxic Gas, expiry after opponent next turn and turn progression in reducer runtime.",
+            "Imported TCGdex Team Rocket text checked; independent printed image/errata/historical rulings not certified.",
+            "Source-only review 2026-11-05: no Node reducer execution; no test infrastructure added."
+          ],
+          "scope": "Current live engine source review only; runtime sequences and independent historical rulings pending."
         }
       ]
     },
