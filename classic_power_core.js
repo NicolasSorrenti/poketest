@@ -480,8 +480,10 @@ function doPower(g,plan,h){
    // Buzzap Knocks Electrode Out: resolve the opponent's Prize choice and
    // any required promotion with the same flow as every other Knock Out.
    h.awardKnockoutPrize(g,1-side);
-   if(h.promptPrize(g,'direct'))break;
-   h.completeKnockouts(g,'direct');
+   // Buzzap is a Pokémon Power, not an attack or end-of-turn action.
+   // Prize selection and Active promotion must return to this same turn.
+   if(h.promptPrize(g,'trainer'))break;
+   h.completeKnockouts(g,'trainer');
    break;
   }
   case 'Peek':{
