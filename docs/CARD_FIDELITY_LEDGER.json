@@ -8489,13 +8489,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Giant Tail",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "Printed coin flip, 70 damage on heads and zero on tails; typed Energy and normal attack end-turn still require execution."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Summon Minions",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "On-play up to two Basic Pokémon, deck search, bench capacity, shuffle, decision continuation."
         }
       ]
     },
@@ -8527,13 +8535,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Flitter",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "Printed damage and any target/secondary effect require runtime and historical ruling review."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Sneak Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "On-play optional 10 damage to opponent Active/Bench, printed Weakness/Resistance, KO Prize/promotion continuation; fixed incorrect direct turn advancement in dc290604."
         }
       ]
     },
@@ -8622,13 +8638,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Fickle Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "Printed Fickle Attack coin outcome and attack end-turn require runtime validation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Reel In",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "On-play return up to three Pokémon from discard, target and selection limits, no turn advancement."
         }
       ]
     },
@@ -8792,13 +8816,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Giant Tail",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "Printed coin flip, 70 damage on heads and zero on tails; typed Energy and normal attack end-turn still require execution."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Summon Minions",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "On-play up to two Basic Pokémon, deck search, bench capacity, shuffle, decision continuation."
         }
       ]
     },
@@ -8830,13 +8862,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Flitter",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "Printed damage and any target/secondary effect require runtime and historical ruling review."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Sneak Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 current-engine source-only audit: imported Team Rocket printed text compared with classic_power_core.js and headless_duel.js; no reducer execution or independent historical ruling verification."
+          ],
+          "scope": "On-play optional 10 damage to opponent Active/Bench, printed Weakness/Resistance, KO Prize/promotion continuation; fixed incorrect direct turn advancement in dc290604."
         }
       ]
     },
