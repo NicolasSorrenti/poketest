@@ -2085,7 +2085,15 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   const key=extra.gymLastData?.target?.[0],which=Number(key?.split(':')[1]);
   if((program.kind==='gym:last-magic-darts'||roll.flips[0])&&(!key||!Number.isInteger(which)||which< -1||which>=f.bench.length))fail('Illegal Gym attack target');
   if(program.kind==='gym:last-flame-jet'&&!roll.flips[0])dmg=0;
-  if(key&&which>=0){if(dmg>0)f.bench[which].damage+=dmg;dmg=0;}
+  if(key&&which>=0){
+   if(dmg>0){
+    const target=f.bench[which];
+    target.damage+=dmg;
+    // Strikes Back reacts to attack damage on the Bench as well as Active.
+    if(isClassicRules(g)&&CLASSIC_POWERS.enabled(g,target,'Strikes Back'))u.damage+=10;
+   }
+   dmg=0;
+  }
  }
  f.active.damage+=dmg;
  if(isClassicRules(g)&&dmg>0&&CLASSIC_POWERS.enabled(g,f.active,'Strikes Back'))u.damage+=10;
