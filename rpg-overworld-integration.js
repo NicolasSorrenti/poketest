@@ -1,13 +1,19 @@
 'use strict';
-// Optional adapter. All campaign changes go through the existing RPG controller.
+// Primary RPG overworld presentation. All gameplay commands use the RPG state bridge.
 (()=>{
+  // Bootstrap the canonical story DOM from the overworld's own template.
+  // This runs before rpg.js so its scene/choice/CG bindings see exactly one
+  // stable set of nodes, without loading or borrowing the retired RPG layout.
+  const stageTemplate=document.getElementById('neoOverworldStageTemplate');
+  if(!stageTemplate?.content?.querySelector('#neoOverworldStage'))
+    throw Error('Overworld story-stage template is missing.');
+  if(!document.getElementById('neoOverworldStage')){
+    const stage=stageTemplate.content.querySelector('#neoOverworldStage').cloneNode(true);
+    document.body.append(stage);
+  }
   const bridge=()=>window.NeoRpgOverworldBridge;
   function mount(){
-    if(document.getElementById('neoOverworldLaunch')||!bridge())return;
-    const mapToggle=document.getElementById('rpgMapToggle');
-    if(!mapToggle)return;
-    const open=document.createElement('button');open.type='button';open.id='neoOverworldLaunch';open.className='toolbar-btn';open.textContent='◈ OVERWORLD';open.title='Explore your current location on the overworld map';
-    mapToggle.insertAdjacentElement('afterend',open);
+    if(document.getElementById('neoOverworldOverlay')||!bridge())return;
     const overlay=document.createElement('section');
     overlay.id='neoOverworldOverlay';overlay.hidden=true;overlay.setAttribute('aria-label','Explore Neo Harbor overworld');
     Object.assign(overlay.style,{position:'fixed',inset:'0',zIndex:'9998',background:'#101021',display:'none',flexDirection:'column',color:'#fff',fontFamily:'system-ui,sans-serif'});
@@ -19,6 +25,9 @@
     title.append(locationName,dayLabel);
     const note=document.createElement('div');note.id='neoOverworldNotice';note.hidden=true;note.setAttribute('role','status');note.setAttribute('aria-live','polite');
     const showNotice=message=>{note.textContent=message;note.hidden=false;};
+    window.addEventListener('neo-rpg-save-status',event=>{
+      if(event.detail?.message)showNotice(event.detail.message);
+    });
     const frame=document.createElement('iframe');frame.title='Current Neo Campus location';Object.assign(frame.style,{flex:'1',minHeight:'0',width:'100%',border:'0'});
     // A map is a persistent view, not a disposable result of each RPG render.
     let activeMapKey='',activeCastKey='',lastIndicatorKey='';
@@ -86,22 +95,37 @@
     compact.append(next,travelToggle);
     const quick=document.createElement('div');quick.className='neo-ow-quick';
     bottom.append(sheet,compact,quick);overlay.append(sheetBackdrop,bottom);
-    const planner=document.getElementById('dailyPlanner');
-    const plannerHome=planner?.parentNode,plannerNext=planner?.nextSibling||null;
     const placeArt={arcade:'arcade.jpg',home:'home.jpg',park:'park.jpg',shop:'card-shop-day.png',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
     const placeIcon={arcade:'🎮',home:'⌂',park:'🌳',shop:'🎁',cafe:'☕',center:'♟',library:'📚'};
     let expandedSheet=null;
-    function restorePlanner(){
-      if(!planner||!plannerHome||planner.parentNode!==sheetBody)return;
-      if(plannerNext?.parentNode===plannerHome)plannerHome.insertBefore(planner,plannerNext);
-      else plannerHome.append(planner);
-    }
+    let guideSignature='';
     function closeSheet(){
       if(!expandedSheet&&sheet.hidden)return;
-      restorePlanner();expandedSheet=null;sheet.hidden=true;sheetBackdrop.hidden=true;
+      expandedSheet=null;guideSignature='';sheet.hidden=true;sheetBackdrop.hidden=true;
       next.setAttribute('aria-expanded','false');travelToggle.setAttribute('aria-expanded','false');
       next.classList.remove('is-open');travelToggle.classList.remove('is-open');
       sheetBody.replaceChildren();
+    }
+    function renderGuide(){
+      const view=window.NeoRpgOverworldGuide,api=bridge();
+      if(!view?.render||!api?.guide||!api?.guideAction){
+        sheetBody.replaceChildren();
+        const unavailable=document.createElement('p');
+        unavailable.textContent='Your daily guide is not available yet.';
+        sheetBody.append(unavailable);
+        return;
+      }
+      const model=api.guide();
+      const signature=JSON.stringify(model);
+      if(signature===guideSignature&&sheetBody.children.length)return;
+      const scroll=sheetBody.scrollTop;
+      view.render(sheetBody,model,(kind,id)=>{
+        closeSheet();
+        if(!bridge()?.guideAction?.(kind,id))
+          showNotice('That opportunity is no longer available. Refresh the guide to see current choices.');
+      });
+      guideSignature=signature;
+      sheetBody.scrollTop=scroll;
     }
     function openSheet(kind){
       if(bridge()?.snapshot()?.locked||!storyShield.hidden){showNotice('Finish the current scene before opening another panel.');return;}
@@ -112,8 +136,7 @@
       closeSheet();expandedSheet=kind;
       sheetHeading.textContent=kind==='travel'?'Choose a destination':'Your next opportunities';
       if(kind==='next'){
-        if(planner)sheetBody.append(planner);
-        else {const empty=document.createElement('p');empty.textContent='Your daily guide is not available yet.';sheetBody.append(empty);}
+        renderGuide();
       }else{
         const grid=document.createElement('div');grid.className='neo-ow-travel-grid';
         const data=snapshot();
@@ -149,33 +172,44 @@
       quick.append(b);
     }
     quickButton('Activities','🎮',()=>showActivities(bridge()?.activities()||[]));
-    const eventList=document.getElementById('storyEvents');
-    const eventHome=eventList?.parentNode;
-    const eventNext=eventList?.nextSibling||null;
+    // The current overworld renders typed event data. No hidden dashboard
+    // list is cloned, moved or kept in sync behind the screen.
     const eventPanel=document.createElement('section');eventPanel.id='neoOverworldEvents';eventPanel.hidden=true;
     eventPanel.style.cssText='position:absolute;z-index:7;left:50%;top:12%;transform:translateX(-50%);width:min(620px,94vw);max-height:75dvh;overflow:auto;background:#19172cf5;border:1px solid #b58cc7;border-radius:14px;padding:15px;box-shadow:0 18px 55px #000c';
     const eventHead=document.createElement('div');eventHead.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:10px';
     const eventTitle=document.createElement('strong');eventTitle.textContent='▦ EVENTS';
     const eventClose=document.createElement('button');eventClose.type='button';eventClose.textContent='✕ Close';eventClose.style.cssText='padding:8px;background:#453153;color:white;border:1px solid #a98bb6;border-radius:8px';
-    eventHead.append(eventTitle,eventClose);eventPanel.append(eventHead);overlay.append(eventPanel);
-    function hideEvents(){if(eventHome&&eventList){if(eventNext&&eventNext.parentNode===eventHome)eventHome.insertBefore(eventList,eventNext);else eventHome.append(eventList);}eventPanel.hidden=true;}
+    const eventContent=document.createElement('div');
+    eventContent.id='neoOverworldOpportunityGroups';
+    eventHead.append(eventTitle,eventClose);eventPanel.append(eventHead,eventContent);overlay.append(eventPanel);
+    function hideEvents(){eventPanel.hidden=true;}
     eventClose.onclick=hideEvents;
-    function showEvents(){closeSheet();if(!eventList){showNotice('Events are not available yet.');return;}hideMenu();eventPanel.append(eventList);eventPanel.hidden=false;}
+    function showEvents(section='all'){
+      closeSheet();hideMenu();
+      const api=window.NeoRpgOverworldOpportunities;
+      if(!api?.render||!bridge()?.opportunities){showNotice('Events are not available yet.');return;}
+      api.render(eventContent,bridge().opportunities(),(kind,id)=>{
+        if(!bridge()?.runOpportunity?.(kind,id)){
+          showNotice('This event is no longer available.');showEvents();return;
+        }
+        hideEvents();
+        queueStorySync();
+      },document);
+      eventPanel.hidden=false;
+      if(section==='circuit'){
+        const circuit=eventContent.querySelector('[data-opportunity-section="circuit"]');
+        if(circuit)eventPanel.scrollTop=Math.max(0,circuit.offsetTop-eventPanel.offsetTop-30);
+      }
+    }
     quickButton('Events','▦',showEvents);
     quickButton('Deck','▤',()=>showDeck());
-    quickButton('Status','♥',()=>document.getElementById('statusBtn')?.click());
+    quickButton('Status','♥',()=>bridge()?.openStatus?.());
     // The real planner DOM (including its action handlers) moves into the sheet.
     // When collapsed or interrupted, it returns to the original RPG stage.
     const navStyle=document.createElement('style');
     navStyle.textContent=`
-      /* The new overworld owns navigation. Its shared native story stage
-         still contains the legacy Characters/Events/Circuit/Activities dock.
-         Hide only that dock while the new UI is open, regardless of whether
-         its stage has been reparented. The original RPG retains its dock. */
-      html:has(#neoOverworldOverlay:not([hidden])) #rpgActionDock,
-      #neoOverworldOverlay #rpgActionDock{
-        display:none!important;visibility:hidden!important;pointer-events:none!important;
-      }
+      /* The overworld owns navigation; the internal story stage contains no
+         separate navigation controls. */
       #neoOverworldOverlay .neo-ow-header{z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#16152ceb;border-bottom:1px solid #a881a65c;padding:9px max(12px,env(safe-area-inset-left));min-height:58px}
       #neoOverworldOverlay .neo-ow-place{display:flex;flex-direction:column;gap:3px}
       #neoOverworldOverlay .neo-ow-place strong{font-size:17px;line-height:1.1}
@@ -198,8 +232,33 @@
       #neoOverworldBottom .neo-ow-sheet-head strong{font:700 16px system-ui}
       #neoOverworldBottom .neo-ow-sheet-head button{border:1px solid #8d7296;border-radius:8px;padding:6px 10px;background:#3a2a4a;color:#fff;cursor:pointer}
       #neoOverworldBottom .neo-ow-sheet-body{overflow-y:auto;overscroll-behavior:contain;min-height:0;padding:2px}
-      #neoOverworldBottom .neo-ow-sheet-body #dailyPlanner{display:grid!important;gap:8px}
+      #neoOverworldBottom .neo-ow-guide-section{display:grid;gap:8px;margin-bottom:13px;padding:4px 1px 12px;border-bottom:1px solid #95739955}
+      #neoOverworldBottom .neo-ow-guide-heading{margin:0 0 2px;font:700 14px system-ui;letter-spacing:.02em;color:#f5cfed}
+      #neoOverworldBottom .neo-ow-guide-section .meeting-card{background:#29233d;border:1px solid #826a91;border-radius:10px;padding:10px}
+      #neoOverworldBottom .neo-ow-guide-section .meeting-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+      #neoOverworldBottom .neo-ow-guide-section button{cursor:pointer}
+      #neoOverworldBottom .neo-ow-guide-section button:disabled{opacity:.55;cursor:not-allowed}
+      #neoOverworldBottom .neo-ow-guide-section .intention-choice{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:11px;background:#352b49;color:white;border:1px solid #977ba0;border-radius:10px}
+      #neoOverworldBottom .neo-ow-guide-section .journey-goal{display:flex;flex-direction:column;gap:2px;margin:3px 0}
+      #neoOverworldBottom .neo-ow-guide-section .journey-gallery{padding:9px;border:1px solid #b58db7;border-radius:9px;background:#4c3458;color:#fff}
       #neoOverworldBottom .neo-ow-sheet-body .planner-card{background:#2c2440;border:1px solid #826a91;border-radius:10px;padding:10px}
+      #neoOverworldEvents .neo-ow-quest-journal{margin:10px 0 4px;padding:10px;border:1px solid #896e98;border-radius:10px;background:#241b38}
+      #neoOverworldEvents .neo-ow-quest-journal summary{font:700 13px system-ui;color:#f5c9e9;cursor:pointer}
+      #neoOverworldEvents .neo-ow-quest-journal .calendar-entry{margin:8px 0;font-size:12px;line-height:1.5;color:#eee}
+      #neoOverworldBottom .neo-ow-guide-history{margin:8px 0;padding:11px;background:#251d38;border:1px solid #866c96;border-radius:10px}
+      #neoOverworldBottom .neo-ow-guide-history>summary{cursor:pointer;font:700 13px system-ui;color:#f0cee9}
+      #neoOverworldBottom .neo-ow-guide-receipt{margin:12px 0;padding:11px;border:1px solid #a88ab5;border-radius:10px;background:#382846}
+      #neoOverworldBottom .neo-ow-guide-receipt p{margin:7px 0;font-size:12px;line-height:1.45}
+      #neoOverworldBottom .neo-ow-guide-receipt button{padding:7px 10px;border:1px solid #ac8dbc;border-radius:8px;background:#493354;color:#fff}
+      #neoOverworldBottom .neo-ow-guide-history h4{margin:12px 0 5px;font:700 12px system-ui}
+      #neoOverworldBottom .neo-ow-guide-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+      #neoOverworldBottom .neo-ow-guide-stat{display:flex;justify-content:space-between;gap:8px;margin:0;padding:8px;background:#382b47;border-radius:8px;font-size:11px}
+      #neoOverworldBottom .neo-ow-guide-log{margin:5px 0;font-size:12px;color:#eee}
+      #neoOverworldEvents .neo-ow-circuit-brackets{margin-top:10px;border:1px solid #8e759c;border-radius:11px;padding:11px;background:#251b37}
+      #neoOverworldEvents .neo-ow-circuit-brackets>summary{font:700 14px system-ui;color:#ffe0f0;cursor:pointer}
+      #neoOverworldEvents .neo-circuit-card{margin-top:11px;padding:12px;border:1px solid #765f89;border-radius:10px;background:#181429}
+      #neoOverworldEvents .neo-bracket-rounds{margin-top:6px}
+      #neoOverworldEvents .neo-bracket-round{display:flex;justify-content:space-between;gap:9px;padding:5px 0;font-size:12px}
       #neoOverworldBottom .neo-ow-sheet-body .planner-card strong{display:block;margin:4px 0}
       #neoOverworldBottom .neo-ow-sheet-body .planner-card p{margin:3px 0 8px}
       #neoOverworldBottom .neo-ow-sheet-body .planner-action{background:#58365e;color:#fff;border:1px solid #bd8fbc;border-radius:8px;padding:8px;cursor:pointer}
@@ -232,19 +291,129 @@
     const deckFrame=document.createElement('iframe');deckFrame.title='Neo Campus Deck Studio';deckFrame.style.cssText='width:100%;border:0;flex:1;min-height:0';
     deckPanel.append(deckBar,deckFrame);overlay.append(deckPanel);
     const showDeck=()=>{closeSheet();hideMenu();deckPanel.hidden=false;deckPanel.style.display='flex';deckFrame.src='/rpg_deck_studio.html';};
-    const hideDeck=()=>{deckPanel.hidden=true;deckPanel.style.display='none';deckFrame.src='about:blank';};
+    const hideDeck=()=>{
+      // Commit the iframe's saved-deck state to the still-running campaign.
+      if(!deckPanel.hidden)window.NeoRpgSyncDeckStudio?.();
+      deckPanel.hidden=true;deckPanel.style.display='none';deckFrame.src='about:blank';
+    };
     deckClose.onclick=hideDeck;
     function hideMenu(){menu.hidden=true;menuButton.setAttribute('aria-expanded','false');}
+    // Audio preferences are now part of the overworld rather than an old
+    // utility bar. The shared audio service still persists the settings.
+    let audioSettingsPanel=null;
+    function showAudioSettings(){
+      hideMenu();closeSheet();
+      if(!audioSettingsPanel){
+        const panel=document.createElement('section');
+        panel.id='neoOverworldAudioSettings';
+        panel.setAttribute('role','dialog');
+        panel.setAttribute('aria-label','Audio settings');
+        panel.style.cssText='position:absolute;z-index:12;top:75px;right:12px;width:min(350px,calc(100vw - 24px));max-height:calc(100dvh - 95px);overflow:auto;padding:17px;background:#211934f7;border:1px solid #b28fb9;border-radius:13px;box-shadow:0 16px 42px #000b';
+        const heading=document.createElement('strong');heading.textContent='♫ Audio settings';
+        const toggle=document.createElement('button');toggle.type='button';
+        const volumeLabel=document.createElement('label');
+        volumeLabel.textContent='Volume';
+        const volume=document.createElement('input');volume.type='range';volume.min='0';volume.max='100';volume.step='5';
+        volume.setAttribute('aria-label','Sound effects volume');volumeLabel.append(volume);
+        const ambienceLabel=document.createElement('label');ambienceLabel.style.display='block';
+        const ambience=document.createElement('input');ambience.type='checkbox';
+        ambienceLabel.append(ambience,document.createTextNode(' Ambient sounds'));
+        const close=document.createElement('button');close.type='button';close.textContent='Close';
+        for(const el of [toggle,close])el.style.cssText='display:block;margin:12px 0;padding:9px 14px;border-radius:9px;border:1px solid #ae89b1;background:#392946;color:white;cursor:pointer';
+        volumeLabel.style.cssText='display:flex;flex-direction:column;gap:8px;margin:10px 0;font:600 13px system-ui';
+        panel.append(heading,toggle,volumeLabel,ambienceLabel,close);
+        toggle.onclick=()=>{
+          const audio=window.NeoRpgAudio;
+          audio?.setEnabled?.(!audio.settings.enabled);
+          toggle.textContent=audio?.settings?.enabled?'Sound effects: on':'Sound effects: off';
+          audio?.play?.('ui');
+        };
+        volume.oninput=()=>window.NeoRpgAudio?.setVolume?.(Number(volume.value)/100);
+        ambience.onchange=()=>window.NeoRpgAudio?.setAmbience?.(ambience.checked);
+        close.onclick=()=>{panel.hidden=true;};
+        overlay.append(panel);audioSettingsPanel=panel;
+      }
+      const settings=window.NeoRpgAudio?.settings||{};
+      const [toggle,volumeLabel,ambienceLabel]=audioSettingsPanel.querySelectorAll('button,input[type="range"],input[type="checkbox"]');
+      if(toggle)toggle.textContent=settings.enabled?'Sound effects: on':'Sound effects: off';
+      if(volumeLabel)volumeLabel.value=String(Math.round((settings.volume??.35)*100));
+      if(ambienceLabel)ambienceLabel.checked=!!settings.ambience;
+      audioSettingsPanel.hidden=false;
+    }
     menuButton.onclick=()=>{closeSheet();menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));};
+    // Developer-only preview of the Live event artwork. Never alters campaign state.
+    function showAnimatedCgTest(){
+      if(!window.NeoRpgCGPan){showNotice('Animated CG viewer is not loaded. Refresh the page.');return;}
+      let dialog=document.getElementById('neoAnimatedCgTest');
+      if(!dialog){
+        dialog=document.createElement('dialog');
+        dialog.id='neoAnimatedCgTest';
+        dialog.setAttribute('aria-label','Animated CG test viewer');
+        dialog.style.cssText='border:1px solid #b38bb8;border-radius:15px;background:#10101c;color:white;padding:0;width:min(94vw,880px);max-width:94vw;max-height:94dvh;overflow:hidden;box-shadow:0 18px 70px #000d';
+        const top=document.createElement('div');
+        top.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;background:#252039';
+        const title=document.createElement('strong');
+        title.textContent='TEST · Live CG · Automatic Pan';
+        const close=document.createElement('button');
+        close.type='button';close.textContent='✕ Close';
+        close.style.cssText='background:#3c3055;color:white;border:1px solid #b38bb8;border-radius:8px;padding:7px 12px;cursor:pointer';
+        close.onclick=()=>dialog.close();
+        top.append(title,close);
+        const viewport=document.createElement('div');
+        viewport.className='neo-cg-test-viewport';
+        viewport.style.cssText='position:relative;overflow:hidden;margin:auto;width:100%;height:50dvh;background:#080810;isolation:isolate';
+        const img=document.createElement('img');
+        img.alt='Live event CG animation test';
+        img.draggable=false;
+        img.style.cssText='position:absolute;left:0;top:0;width:100%;height:auto;max-width:none;max-height:none;display:block;pointer-events:none';
+        viewport.append(img);
+        const footer=document.createElement('p');
+        footer.textContent='0.2s bottom · 0.2s up · 0.2s top · 0.2s down · continuous loop';
+        footer.style.cssText='font:12px system-ui;color:#d3c6e4;text-align:center;margin:0;padding:12px';
+        const controlsHost=document.createElement('div');
+        controlsHost.className='neo-live-cg-controls';
+        dialog.append(top,viewport,controlsHost,footer);
+        document.body.append(dialog);
+        dialog.addEventListener('close',()=>{
+          dialog._cgControls?.dispose();dialog._cgControls=null;
+          dialog._cgPan?.dispose();dialog._cgPan=null;img.removeAttribute('src');
+        });
+      }
+      const viewport=dialog.querySelector('.neo-cg-test-viewport');
+      const img=viewport.querySelector('img');
+      dialog._cgControls?.dispose();dialog._cgControls=null;
+      dialog._cgPan?.dispose();dialog._cgPan=null;
+      const controlsHost=dialog.querySelector('.neo-live-cg-controls');
+      dialog._cgControls=window.NeoRpgCGPan.createControls(controlsHost,config=>{
+        if(!dialog.open||!img.naturalWidth)return;
+        dialog._cgPan?.updateConfig(config);
+      });
+      img.onload=()=>{
+        if(!dialog.open||!img.naturalWidth||!img.naturalHeight)return;
+        // Use the actual image aspect ratio: precisely half its height is visible.
+        const maxWidth=Math.min(window.innerWidth*.92,850);
+        const maxHeight=window.innerHeight*.72;
+        const width=Math.max(1,Math.min(maxWidth,maxHeight*2*img.naturalWidth/img.naturalHeight));
+        viewport.style.width=width+'px';
+        viewport.style.height=(width*img.naturalHeight/img.naturalWidth/2)+'px';
+        dialog._cgPan=window.NeoRpgCGPan.attach(viewport,img,dialog._cgControls.getConfig());
+      };
+      img.onerror=()=>{dialog.querySelector('p').textContent='Could not load Live event artwork. Check the asset path.';};
+      dialog.querySelector('p').textContent='Adjust the timings manually or enable Auto mode: 3 seconds per stage.';
+      dialog.showModal();
+      img.src='/rpg-assets/characters/live/events/2live_confy_scene2.jpg';
+    }
     const menuItems=[
       ['▣ Deck Studio',showDeck],
-      ['▧ CG Gallery',()=>document.getElementById('galleryBtn')?.click()],
-      ['♥ Status & Relationships',()=>document.getElementById('statusBtn')?.click()],
-      ['▦ Calendar',()=>document.getElementById('calendarBtn')?.click()],
-      ['✧ Save Game',()=>document.getElementById('save')?.click()],
+      ['▧ CG Gallery',()=>bridge()?.openGallery?.()],
+      ['▶ Test Animated CG (Live)',showAnimatedCgTest],
+      ['♥ Status & Relationships',()=>bridge()?.openStatus?.()],
+      ['▦ Calendar',()=>bridge()?.openCalendar?.()],
+      ['🏆 Circuit & Tournaments',()=>showEvents('circuit')],
+      ['✧ Save Game',()=>{void bridge()?.saveCampaign?.();}],
       ['◇ Discreet / Chibi Mode',()=>{toggleChibiPreference();refresh();}],
+      ['♫ Audio Settings',showAudioSettings],
       ['⌾ Travel',()=>openSheet('travel')],
-      ['← Original RPG',()=>dismiss()],
       ['↻ Reset Campaign',()=>{const reset=bridge()?.resetCampaign;if(typeof reset==='function')void reset();else showNotice('Campaign reset is not available. Reload the page and try again.');}]
     ];
     for(const [label,action] of menuItems){
@@ -254,13 +423,10 @@
       button.onclick=()=>{hideMenu();action();};menu.append(button);
     }
 
-    // Reparent the live RPG stage rather than cloning dialogue/CG/choice handlers.
-    // Every existing event listener and rendered state stays attached to the same nodes.
-    const stage=document.querySelector('.stage-panel');
-    const stageHome=stage?.parentNode;
-    const stageNext=stage?.nextSibling||null;
-    // Overworld-only presentation: scene portraits and CGs above the map;
-    // original dialogue and choice DOM stays live, without its old room backdrop.
+    // One overworld-owned stage remains stable across all dialogue/CG changes.
+    // Its nodes already existed before the controller loaded; no old RPG
+    // stage or fallback interface is involved.
+    const stage=document.getElementById('neoOverworldStage');
     const visualStyle=document.createElement('style');
     visualStyle.textContent=`
       /* Time wipes are appended to the page body; keep them above this full-screen overlay. */
@@ -268,18 +434,14 @@
       #neoOverworldStoryDock{width:min(760px,calc(100vw - 16px));max-height:76dvh!important;right:auto!important;bottom:max(8px,env(safe-area-inset-bottom))!important;overscroll-behavior:contain}
       #neoOverworldStoryDock .stage-panel{background:#171326!important;border:0!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;gap:0!important}
       #neoOverworldStoryDock #scene{background:none!important;background-image:none!important;min-height:clamp(140px,27dvh,290px)!important;max-height:32dvh!important;height:auto!important;position:relative!important;border:0!important}
-      #neoOverworldStoryDock #scene .scene-head,#neoOverworldStoryDock #homeBanner,#neoOverworldStoryDock .rpg-discreet-stage{display:none!important}
-      #neoOverworldStoryDock #portrait{position:relative!important;inset:auto!important;margin:auto!important;max-height:30dvh!important;height:100%!important;overflow:hidden!important}
-      #neoOverworldStoryDock #portrait img{max-height:30dvh!important;object-fit:contain!important;object-position:center bottom!important}
       #neoOverworldStoryDock #rpgSceneCG:not([hidden]){display:block!important;position:relative!important;max-height:30dvh!important;width:100%!important;object-fit:contain!important}
       #neoOverworldStoryDock #dialogue{position:relative!important;margin:0!important;width:100%!important;max-width:none!important;min-height:110px!important;overflow:visible!important}
       #neoOverworldStoryDock #choices{max-height:32dvh;overflow-y:auto;overscroll-behavior:contain}
-      #neoOverworldStoryDock .stage-planner,#neoOverworldStoryDock .scene-foot{display:none!important}
       #neoOverworldStoryDock #characterActions:not([hidden]){display:flex!important;flex-wrap:wrap!important}
       @media(max-width:650px){
         #neoOverworldStoryDock{left:8px!important;right:8px!important;width:auto!important;max-height:72dvh!important}
         #neoOverworldStoryDock #scene{min-height:120px!important;max-height:24dvh!important}
-        #neoOverworldStoryDock #portrait,#neoOverworldStoryDock #portrait img,#neoOverworldStoryDock #rpgSceneCG{max-height:23dvh!important}
+        #neoOverworldStoryDock #rpgSceneCG{max-height:23dvh!important}
       }
     `;
     visualStyle.textContent+=`
@@ -287,15 +449,13 @@
       #neoOverworldStoryDock{left:50%!important;transform:translateX(-50%)!important;right:auto!important;width:min(980px,calc(100vw - 24px))!important;max-height:86dvh!important;background:transparent!important;border:0!important;box-shadow:none!important;overflow-y:auto!important}
       #neoOverworldStoryDock>.stage-panel{padding:0!important;background:transparent!important;gap:0!important}
       #neoOverworldStoryDock #scene{min-height:0!important;height:auto!important;max-height:43dvh!important;background:transparent!important;pointer-events:none}
-      #neoOverworldStoryDock #portrait{height:auto!important;max-height:40dvh!important;display:flex!important;align-items:flex-end;justify-content:center}
-      #neoOverworldStoryDock #portrait img{max-height:40dvh!important;width:auto!important;object-fit:contain!important;filter:drop-shadow(0 8px 20px #0009)}
       #neoOverworldStoryDock #rpgSceneCG:not([hidden]){max-height:40dvh!important}
       #neoOverworldStoryDock #dialogue{background:#16152bf0!important;border:1px solid #ae82b9!important;border-radius:14px!important;padding:16px!important;box-shadow:0 12px 32px #0009!important;color:white!important}
       #neoOverworldStoryDock #characterActions:not([hidden]){padding:9px;background:#19172fe8;border-radius:12px}
       #neoOverworldStoryDock>button{background:#302644d9!important;border:1px solid #b68aaf!important;border-radius:9px!important;position:sticky!important;top:0!important;width:auto!important;margin-left:auto!important}
       @media(max-width:650px){
         #neoOverworldStoryDock{width:calc(100vw - 14px)!important;max-height:82dvh!important}
-        #neoOverworldStoryDock #scene,#neoOverworldStoryDock #portrait,#neoOverworldStoryDock #portrait img,#neoOverworldStoryDock #rpgSceneCG{max-height:33dvh!important}
+        #neoOverworldStoryDock #scene,#neoOverworldStoryDock #rpgSceneCG{max-height:33dvh!important}
         #neoOverworldStoryDock #dialogue{padding:11px!important}
       }
     `;
@@ -314,9 +474,7 @@
       // throughout VN dialogue/CGs. The iframe can reload when schedules change.
       frame.contentWindow?.postMessage({type:'neo-overworld-story-visibility',hidden:!!locked},location.origin);
       frame.style.pointerEvents=locked?'none':'auto';
-      // Keep the UI switcher available during story locks. Returning to the
-      // original interface only changes presentation; it does not advance or
-      // resolve the active event.
+      // The new header remains available while story input is locked.
       toolbar.style.pointerEvents='auto';
       menuButton.disabled=false;
       next.disabled=locked;
@@ -336,18 +494,14 @@
       #neoOverworldStoryDock{z-index:5!important;pointer-events:auto}
       #neoOverworldStoryDock .stage-panel{max-width:none!important;width:100%!important}
       #neoOverworldStoryDock #scene{display:flex!important;align-items:flex-end!important;justify-content:center!important}
-      /* The engine creates its own legacy scene cast; the overworld owns all VN portraits. */
-      #neoOverworldStoryDock #rpgSceneCast,
-      #neoOverworldStoryDock .rpg-scene-cast,
-      #neoOverworldStoryDock #portrait{display:none!important}
-      #neoOverworldStoryDock #portrait{max-width:100%!important;width:100%!important;min-height:0!important}
+      /* The overworld owns the active VN portraits. */
       #neoOverworldStoryDock #dialogue{width:100%!important}
       #neoOverworldStoryDock #characterActions{margin-top:8px!important}
       #neoOverworldOverlay:has(#neoOverworldStoryDock:not([hidden])) #neoOverworldBottom{visibility:hidden}
       #neoOverworldStoryDock #scene .home-banner{display:none!important}
     `;
-    // Keep the original RPG's interaction buttons wired to their native handlers,
-    // but reveal them only when the player deliberately opens Actions.
+    // Keep current campaign action handlers attached to the stable stage nodes;
+    // reveal them when the player opens Actions.
     const actionTray=document.createElement('div');
     actionTray.id='neoOverworldActionTray';
     const actionToggle=document.createElement('button');
@@ -368,9 +522,6 @@
       #neoOverworldStoryDock #neoOverworldActionTray.expanded + #characterActions:not([hidden]){display:flex!important}
       #neoOverworldStoryDock #rpgSceneCG:not([hidden]){z-index:2!important}
       #neoOverworldStoryDock #scene:has(#rpgSceneCG:not([hidden])) #neoOverworldScenePeople{display:none!important}
-      #neoOverworldStoryDock #scene:has(#rpgSceneCG:not([hidden])) #portrait{display:none!important}
-      #neoOverworldStoryDock #scene:has(#rpgSceneCG:not([hidden])) #portrait{visibility:hidden!important;position:absolute!important}
-      #neoOverworldStoryDock #portrait{transition:opacity .18s ease,filter .18s ease}
       #neoOverworldStoryDock #dialogue .dialogue-title{display:flex;align-items:center;gap:12px}
       #neoOverworldStoryDock #dialogue #speaker:not([hidden]){color:#f4b5dc;font-weight:800}
     `;
@@ -545,7 +696,6 @@
       sceneArea?.classList.toggle('neo-ow-participants',!!visibleParticipants.length);
     }
     visualStyle.textContent+=`
-      #neoOverworldStoryDock #scene.neo-ow-participants #portrait{display:none!important}
       #neoOverworldStoryDock #neoOverworldScenePeople{display:flex;align-items:flex-end;justify-content:center;gap:clamp(3px,2vw,20px);width:100%;max-height:39dvh;overflow:hidden}
       #neoOverworldStoryDock #neoOverworldScenePeople[hidden]{display:none!important}
       #neoOverworldStoryDock .neo-ow-person{display:flex;flex:1 1 0;min-width:0;max-width:260px;max-height:38dvh;align-items:center;flex-direction:column;justify-content:flex-end;transition:opacity .2s,filter .2s,transform .2s}
@@ -559,7 +709,6 @@
       #neoOverworldOverlay.neo-ow-arriving #neoOverworldBottom{display:none!important}
       #neoOverworldStoryDock{width:calc(100vw - 20px)!important;max-width:1520px!important;max-height:90dvh!important;overflow-y:auto!important}
       #neoOverworldStoryDock #scene{min-height:0!important;max-height:54dvh!important;width:100%!important}
-      #neoOverworldStoryDock #portrait{display:none!important}
       #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){display:flex!important;align-items:flex-end!important;justify-content:center!important;gap:clamp(4px,2vw,22px)!important;width:100%!important;height:min(50dvh,660px)!important;max-height:50dvh!important;overflow:hidden!important}
       #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person{flex:0 0 40vw!important;width:40vw!important;max-width:40vw!important;height:100%!important;max-height:none!important;overflow:hidden!important}
       #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person img{display:block;object-fit:contain!important;object-position:center bottom!important;max-width:100%!important;width:100%!important;height:calc(100% - 29px)!important;max-height:none!important}
@@ -742,7 +891,6 @@
         border-radius:9px;cursor:pointer;font:700 14px system-ui;
       }
       #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-planner,
-      #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .scene-foot{display:none!important}
       @media(max-width:650px){
         #neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock .stage-panel{
           grid-template-columns:minmax(0,1fr) minmax(145px,.75fr)!important;
@@ -1245,35 +1393,69 @@
       }
     `;
     document.head.append(mobileSubmenuGrid);
+
+    // Remove the retired outer frame without changing the idle character menu
+    // or the dedicated CG viewer. The portrait remains centered and flush with
+    // the translucent VN dialogue panel, without clipped outer corners.
+    const dialogueFramePolish=document.createElement('style');
+    dialogueFramePolish.id='neoOverworldDialogueFramePolish';
+    dialogueFramePolish.textContent=`
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock{
+        border:0!important;border-radius:0!important;
+        background:transparent!important;box-shadow:none!important;
+        overflow:visible!important;
+      }
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock > .stage-panel{
+        padding:0!important;margin:0!important;gap:0!important;
+        background:transparent!important;border:0!important;
+        box-shadow:none!important;overflow:visible!important;
+      }
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #scene{
+        border:0!important;border-radius:0!important;
+        background:transparent!important;box-shadow:none!important;
+        margin:0!important;padding:0!important;
+        display:flex!important;align-items:flex-end!important;
+        justify-content:center!important;
+      }
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #neoOverworldScenePeople:not([hidden]){
+        margin:0 auto!important;padding:0!important;
+        justify-content:center!important;align-items:flex-end!important;
+      }
+      #neoOverworldOverlay:not(.neo-ow-idle-interaction) #neoOverworldStoryDock #dialogue{
+        margin:0!important;
+        background:linear-gradient(110deg,rgba(16,18,36,.84),rgba(27,22,46,.86))!important;
+        border:1px solid rgba(196,151,207,.8)!important;
+        border-radius:13px!important;
+        box-shadow:0 12px 30px #0007!important;
+        backdrop-filter:blur(7px);
+        -webkit-backdrop-filter:blur(7px);
+      }
+    `;
+    document.head.append(dialogueFramePolish);
+
     attachChoicePanels();
     let storyDock=null;
     let lastSceneKey='';
     let suspendedForDuel=false;
     let syncDuel=()=>{};
     function showStory(){
-      if(!stage||!stageHome)return false;
+      if(!stage)return false;
       if(!storyDock){
         storyDock=document.createElement('section');
         storyDock.id='neoOverworldStoryDock';
         storyDock.setAttribute('aria-label','RPG conversation and story');
-        Object.assign(storyDock.style,{position:'absolute',zIndex:'4',bottom:'12px',left:'max(8px,env(safe-area-inset-left))',right:'max(8px,env(safe-area-inset-right))',maxHeight:'min(72vh,680px)',overflow:'auto',border:'2px solid #b58cc7',borderRadius:'14px',background:'#181329',boxShadow:'0 10px 45px #000c'});
-        const back=document.createElement('button');back.type='button';back.textContent='← Back to map';back.style.cssText='position:sticky;top:0;z-index:5;display:block;width:100%;padding:11px;border:0;background:#352548;color:white;font:700 14px system-ui;cursor:pointer';
-        back.id='neoOverworldStoryMapBack';
-        back.onclick=()=>{
-          if(bridge()?.snapshot()?.locked){showNotice('Finish the current conversation or event first.');return;}
-          interactionFocus=null;bridge()?.clearInteraction?.();hideStory();queueStorySync();
-        };storyDock.append(back);
+        Object.assign(storyDock.style,{position:'absolute',zIndex:'4',bottom:'12px',left:'max(8px,env(safe-area-inset-left))',right:'max(8px,env(safe-area-inset-right))',maxHeight:'min(86dvh,800px)',overflow:'visible',border:'0',borderRadius:'0',background:'transparent',boxShadow:'none'});
+
       }
       overlay.append(storyDock);storyDock.append(stage);
-      stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:8px';
+      stage.style.cssText='display:block;position:relative;width:100%;max-width:none;height:auto;min-height:0;overflow:visible;margin:0;padding:0;background:transparent';
       storyDock.hidden=false;
       actionTray.classList.remove('expanded');actionToggle.textContent='✦ Actions';
       actionToggle.setAttribute('aria-expanded','false');lockMapForStory(true);return true;
     }
     function hideStory(){
-      if(!stageHome||!stage)return;
-      // Never reparent stage back to the classic layout between conversations.
-      // Only explicit dismiss() restores it after hiding the overworld overlay.
+      if(!stage)return;
+      // Keep the overworld-owned story stage mounted across conversations.
       if(storyDock)storyDock.hidden=true;
       lockMapForStory(false);
       portraitWindow?.reset();lastPortraitSignature='';
@@ -1325,7 +1507,7 @@
       if(pageContinue.hidden||!storyDock||storyDock.hidden)return;
       pageIndex++;syncDialoguePages(false);
     };
-    // The original RPG listens for Space to advance story steps. Consume it
+    // The shared story controller listens for Space to advance story steps. Consume it
     // while a long sentence still has unread pages.
     document.addEventListener('keydown',event=>{
       if(pageContinue.hidden||overlay.hidden||event.target===pageContinue)return;
@@ -1400,11 +1582,30 @@
       storySyncQueued=true;
       queueMicrotask(()=>{storySyncQueued=false;syncStory();});
     }
+    // The calendar/planner may request navigation while a travel wipe is active.
+    // Queue the focus and open the current panel only after the new scene settles.
+    let pendingOpportunityKind=null;
+    function presentPendingOpportunity(){
+      if(!pendingOpportunityKind||overlay.hidden||suspendedForDuel)return;
+      const data=bridge()?.snapshot();
+      if(!data||data.locked||data.arriving||data.storyActive)return;
+      const kind=pendingOpportunityKind;
+      pendingOpportunityKind=null;
+      if(kind==='activity')showActivities(bridge()?.activities()||[]);
+      else if(['tournament','event','Official event','cup','competitive'].includes(kind))
+        showEvents('circuit');
+      else showEvents();
+    }
+    window.addEventListener('neo-rpg-focus-opportunities',event=>{
+      pendingOpportunityKind=String(event.detail?.kind||'story');
+      queueMicrotask(presentPendingOpportunity);
+    });
     window.addEventListener('neo-rpg-overworld-render',()=>{
       if(overlay.hidden||suspendedForDuel)return;
       refresh();
       queueStorySync();
       syncPoseTriggerQueue();
+      presentPendingOpportunity();
     });
     for(const id of ['line','choices','characterActions','rpgSceneCG','speaker']){
       const el=document.getElementById(id);
@@ -1437,23 +1638,18 @@
         activeMapKey=mapKey;activeCastKey=people;lastIndicatorKey='';
         if(frame.getAttribute('src')!==nextSrc)frame.src=nextSrc;
       }else syncNpcIndicators();
+      if(expandedSheet==='next')renderGuide();
       note.hidden=true;
     }
-    function dismiss(){
-      interactionFocus=null;
-      restoreChoicePanels();
-      closeSheet();hideMenu();hideEvents();hideDeck();suspendedForDuel=false;hideStory();
-      // Only an explicit return to the classic interface restores its stage.
-      if(stage&&stageHome&&stage.parentNode===storyDock){
-        if(stageNext&&stageNext.parentNode===stageHome)stageHome.insertBefore(stage,stageNext);
-        else stageHome.append(stage);
-        stage.removeAttribute('style');
-      }
-      overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());
-      overlay.classList.remove('neo-ow-activity-open');
-      overlay.hidden=true;overlay.style.display='none';frame.src='about:blank';open.focus();
+    function activate(){
+      attachChoicePanels();
+      refresh();
+      overlay.hidden=false;
+      overlay.style.display='flex';
+      queueStorySync();
+      syncPoseTriggerQueue();
+      syncDuel();
     }
-    open.addEventListener('click',()=>{attachChoicePanels();refresh();overlay.hidden=false;overlay.style.display='flex';queueStorySync();syncPoseTriggerQueue();syncDuel();});
     document.getElementById('rpgDiscreetToggle')?.addEventListener('click',()=>{syncChibiButton();syncChibiMode();});
     function performTravel(target){
       const data=snapshot();if(!data)return;
@@ -1472,7 +1668,7 @@
       if(overlay.classList.contains('neo-ow-activity-open')||!storyShield.hidden)return;
       if(message.kind==='navigation'){
         if(message.id==='deck'){showDeck();return;}
-        if(message.id==='status'){document.getElementById('statusBtn')?.click();return;}
+        if(message.id==='status'){bridge()?.openStatus?.();return;}
         if(message.id==='activities'||message.id==='events'){hideMenu();if(message.id==='activities')showActivities(bridge()?.activities()||[]);else showEvents();return;}
       }
       if(message.kind==='person'){
@@ -1482,7 +1678,7 @@
         if(poseTrigger){void playPoseTrigger(poseTrigger,message.src);return}
         // Capture the explicitly tapped NPC before the native engine renders.
         interactionFocus=message.id;
-        if(!showStory())dismiss();
+        if(!showStory()){showNotice('The story view is unavailable; reload to retry without losing progress.');return;}
         if(!bridge()?.interact(message.id)){
           interactionFocus=null;hideStory();showNotice('Character interaction is not currently available.');
         }else queueStorySync();
@@ -1518,7 +1714,7 @@
         backdrop.onclick=closeActivities;
         for(const a of eligible){const button=document.createElement('button');button.textContent=a.title;button.type='button';Object.assign(button.style,{display:'block',marginTop:'8px',padding:'10px',width:'100%',background:'#403051',color:'white',borderRadius:'8px'});button.onclick=()=>{
           closeActivities();
-          if(!showStory())dismiss();
+          if(!showStory()){showNotice('The story view is unavailable; reload to retry without losing progress.');return;}
           if(!bridge()?.activity(a.id)){hideStory();showNotice('Activity no longer available.');}
           else queueStorySync();
         };panel.append(button);}
@@ -1527,12 +1723,13 @@
         cancel.onclick=closeActivities;panel.append(cancel);overlay.append(backdrop,panel);
     }
     document.addEventListener('keydown',event=>{if(event.key!=='Escape'||overlay.hidden)return;
+      if(audioSettingsPanel&&!audioSettingsPanel.hidden){event.preventDefault();audioSettingsPanel.hidden=true;return;}
       if(overlay.classList.contains('neo-ow-has-choices')&&!overlay.classList.contains('neo-ow-choices-collapsed')&&!overlay.classList.contains('neo-ow-paging')){
         event.preventDefault();setChoicesCollapsed(true);syncChoicePresentation(false);return;
       }
-      if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}if(!bridge()?.snapshot()?.locked)dismiss();});
-    // Battles run in the original full-screen duel layer. Resume the map as soon as
-    // its battle layer closes, without restarting the campaign or changing saves.
+      if(!storyShield.hidden){event.preventDefault();return;}if(overlay.classList.contains('neo-ow-activity-open')){event.preventDefault();overlay.querySelectorAll('[data-overworld-activity-panel],[data-overworld-activity-backdrop]').forEach(el=>el.remove());overlay.classList.remove('neo-ow-activity-open');return;}if(expandedSheet){event.preventDefault();closeSheet();return;}if(!deckPanel.hidden){hideDeck();return;}if(!eventPanel.hidden){hideEvents();return;}if(!menu.hidden){hideMenu();return;}event.preventDefault();});
+    // Battles run in the authoritative full-screen duel layer. Restore the
+    // overworld when it closes, without restarting or modifying the campaign save.
     const duel=document.getElementById('duel');
     if(duel){
       syncDuel=()=>{
@@ -1549,7 +1746,7 @@
       new MutationObserver(syncDuel).observe(duel,{attributes:true,attributeFilter:['hidden']});
       syncDuel();
     }
-    if(window.NeoRpgOverworldStandalone)setTimeout(()=>{if(bridge()&&overlay.hidden)open.click();},0);
+    activate();
   }
   window.addEventListener('neo-rpg-overworld-bridge-ready',mount);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();

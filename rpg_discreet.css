@@ -1,60 +1,10 @@
-/* Discreet Mode changes character/event artwork only. Keep the RPG's real location background, scene overlays, and scenery intact. */
-.rpg-discreet-stage{display:none}
-:root[data-rpg-discreet="on"] #rpgDiscreetToggle{background:#224e60;border-color:#8cbacc;color:#e9f9ff}
-:root[data-rpg-discreet="on"] #portrait img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] .rpg-cast-member img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] .rpg-cast-member .avatar-fallback,
-:root[data-rpg-discreet="on"] .person-avatar img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] .person-avatar .avatar-fallback,
-:root[data-rpg-discreet="on"] .preduel-art img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] #packGiver img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] #victoryPortrait img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] #victoryPortrait .avatar-fallback,
-:root[data-rpg-discreet="on"] #cgMomentArt img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] #galleryPreview img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] #neoOverworldScenePeople .neo-ow-person>img:not(.rpg-safe-avatar){display:none!important}
+
+:root[data-rpg-discreet="on"] #rpgDiscreetToggle{background:#224e60;border-color:#8cbacc;color:#e9f9ff}:root[data-rpg-discreet="on"] .preduel-art img:not(.rpg-safe-avatar), :root[data-rpg-discreet="on"] #packGiver img:not(.rpg-safe-avatar), :root[data-rpg-discreet="on"] #victoryPortrait img:not(.rpg-safe-avatar), :root[data-rpg-discreet="on"] #victoryPortrait .avatar-fallback, :root[data-rpg-discreet="on"] #galleryGrid .cg-thumb img:not(.rpg-safe-avatar), :root[data-rpg-discreet="on"] #galleryPreview img:not(.rpg-safe-avatar), :root[data-rpg-discreet="on"] #neoOverworldScenePeople .neo-ow-person>img:not(.rpg-safe-avatar){display:none!important}
 :root[data-rpg-discreet="on"] #neoOverworldScenePeople .neo-ow-person>.rpg-safe-avatar{display:block!important;object-fit:contain!important;object-position:center bottom!important;width:100%;height:min(34dvh,520px);background:transparent;filter:drop-shadow(0 6px 12px #0009)}
 :root[data-rpg-discreet="on"] .neo-tournament-versus__portrait img:not(.rpg-safe-avatar),
-:root[data-rpg-discreet="on"] .npc-reaction-portrait img:not(.rpg-safe-avatar) {display:none!important}
-:root[data-rpg-discreet="on"] .rpg-scene-cast{align-items:center;justify-content:center;gap:clamp(6px,1.5vw,20px)}
-:root[data-rpg-discreet="on"] .rpg-cast-member{
- flex:0 1 170px;min-width:0;max-width:185px;height:clamp(126px,40%,190px);
- border:1px solid #7796af;background:linear-gradient(145deg,#20374edc,#152437ef);
- box-shadow:0 12px 32px #050c1a8a;border-radius:12px;filter:none;
- justify-content:center;gap:5px;
-}
-:root[data-rpg-discreet="on"] .rpg-cast-member::before{
- content:attr(data-initials);display:grid;place-items:center;width:66px;height:66px;
- border:1px solid #6786a8;border-radius:50%;color:#f3f7fc;
- font:900 35px 'Barlow Condensed',sans-serif;letter-spacing:.04em;
- background:#1d2e47;
-}
-:root[data-rpg-discreet="on"] .rpg-cast-member span:last-child{
- border:0;background:none;color:#d5e7f3;padding:2px 4px;text-align:center;
- font:800 16px 'Barlow Condensed',sans-serif;
-}
-:root[data-rpg-discreet="on"] .rpg-scene-cast.is-conversation .rpg-cast-member.is-speaking{
- border-color:#ffd6a3;box-shadow:0 0 0 2px #c1a67a66,0 12px 30px #0007;
- transform:translateY(-8px) scale(1.04);
-}
-:root[data-rpg-discreet="on"] .person-avatar::after{
- content:attr(data-initials);color:#e4edf7;font:900 21px 'Barlow Condensed',sans-serif;
-}
-:root[data-rpg-discreet="on"] .preduel-art,
-:root[data-rpg-discreet="on"] #packGiver,
-:root[data-rpg-discreet="on"] #victoryPortrait,
-:root[data-rpg-discreet="on"] #cgMomentArt,
-:root[data-rpg-discreet="on"] #galleryPreview,
-:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb{
+:root[data-rpg-discreet="on"] .npc-reaction-portrait img:not(.rpg-safe-avatar) {display:none!important}:root[data-rpg-discreet="on"] .preduel-art, :root[data-rpg-discreet="on"] #packGiver, :root[data-rpg-discreet="on"] #victoryPortrait, :root[data-rpg-discreet="on"] #galleryPreview, :root[data-rpg-discreet="on"] #galleryGrid .cg-thumb{
  background:radial-gradient(circle at 40% 30%,#2b4961,#152438 74%);
-}
-:root[data-rpg-discreet="on"] .preduel-art::after,
-:root[data-rpg-discreet="on"] #packGiver::after,
-:root[data-rpg-discreet="on"] #victoryPortrait::after,
-:root[data-rpg-discreet="on"] #cgMomentArt::after,
-:root[data-rpg-discreet="on"] #galleryPreview::after,
-:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb::after{
+}:root[data-rpg-discreet="on"] .preduel-art::after, :root[data-rpg-discreet="on"] #packGiver::after, :root[data-rpg-discreet="on"] #victoryPortrait::after, :root[data-rpg-discreet="on"] #galleryPreview::after, :root[data-rpg-discreet="on"] #galleryGrid .cg-thumb::after{
  content:"◈  NEO HARBOR";display:grid;place-items:center;min-height:110px;
  width:100%;height:100%;color:#b8c9d9;letter-spacing:.18em;
  font:900 clamp(14px,2vw,24px) 'Barlow Condensed',sans-serif;
@@ -62,12 +12,7 @@
 :root[data-rpg-discreet="on"] #galleryGrid .cg-thumb::after{min-height:0;font-size:12px}
 :root[data-rpg-discreet="on"] .npc-reaction-card{grid-template-columns:minmax(0,1fr)!important}
 :root[data-rpg-discreet="on"] .npc-reaction-copy{width:100%;max-width:100%;padding-left:clamp(12px,4vw,50px)}
-@media(max-width:700px){
- :root[data-rpg-discreet="on"] .rpg-scene-cast{gap:4px}
- :root[data-rpg-discreet="on"] .rpg-cast-member{height:115px;min-width:0;padding:4px;flex:1}
- :root[data-rpg-discreet="on"] .rpg-cast-member::before{width:44px;height:44px;font-size:23px}
- :root[data-rpg-discreet="on"] .rpg-cast-member span:last-child{font-size:11px}
-}
+
 
 /* Local, cropped anime headshots keep each NPC recognizable without showing their outfit. */
 :root[data-rpg-discreet="on"] [data-rpg-safe-id]{position:relative}
@@ -78,33 +23,7 @@
  background:#20354c;box-shadow:0 8px 25px #0005;
 }
 :root[data-rpg-discreet="on"] [data-rpg-safe-id] .rpg-safe-avatar[hidden]{display:none!important}
-:root[data-rpg-discreet="off"] .rpg-safe-avatar{display:none!important}
-:root[data-rpg-discreet="on"] #portrait:not([hidden]){
- display:flex;align-items:center;justify-content:center;filter:none;mask-image:none;
-}
-:root[data-rpg-discreet="on"] #portrait[hidden]{display:none!important}
-:root[data-rpg-discreet="on"] #portrait .rpg-safe-avatar{
- height:min(54vh,360px);width:min(88%,360px);border:3px solid #9dbbce;border-radius:17px;object-fit:cover;box-shadow:0 16px 48px #020c1ec7,0 0 0 6px #132338a8;
-}
-:root[data-rpg-discreet="on"] .rpg-cast-member::before{display:none}
-:root[data-rpg-discreet="on"] .rpg-cast-member .rpg-safe-avatar{
- height:min(70%,138px);width:min(90%,138px);border-radius:10px;border:2px solid #96b5c9;object-fit:cover;
- order:0;
-}
-:root[data-rpg-discreet="on"] .rpg-cast-member span:last-child{order:1}
-:root[data-rpg-discreet="on"] .rpg-cast-member:has(.rpg-safe-avatar:not([hidden])){background:#14283c}
-:root[data-rpg-discreet="on"] .rpg-cast-member:not(:has(.rpg-safe-avatar:not([hidden])))::before{display:grid}
-:root[data-rpg-discreet="on"] .person-avatar{position:relative}
-:root[data-rpg-discreet="on"] .person-avatar:has(.rpg-safe-avatar:not([hidden]))::after{content:none}
-:root[data-rpg-discreet="on"] .person-avatar .rpg-safe-avatar{
- position:absolute;inset:0;width:100%;height:100%;border-radius:5px;object-fit:cover
-}
-:root[data-rpg-discreet="on"] .preduel-art::after,
-:root[data-rpg-discreet="on"] #packGiver::after,
-:root[data-rpg-discreet="on"] #victoryPortrait::after,
-:root[data-rpg-discreet="on"] #cgMomentArt::after,
-:root[data-rpg-discreet="on"] #galleryPreview::after,
-:root[data-rpg-discreet="on"] #galleryGrid .cg-thumb::after{display:none}
+:root[data-rpg-discreet="off"] .rpg-safe-avatar{display:none!important}:root[data-rpg-discreet="on"] .preduel-art::after, :root[data-rpg-discreet="on"] #packGiver::after, :root[data-rpg-discreet="on"] #victoryPortrait::after, :root[data-rpg-discreet="on"] #galleryPreview::after, :root[data-rpg-discreet="on"] #galleryGrid .cg-thumb::after{display:none}
 :root[data-rpg-discreet="on"] .preduel-art .rpg-safe-avatar{
  position:relative;height:min(260px,35vh);width:min(260px,55%);
  margin:12px auto;border:3px solid #6687a0
@@ -114,9 +33,7 @@
 }
 :root[data-rpg-discreet="on"] #victoryPortrait .rpg-safe-avatar{
  margin:0 auto;width:min(320px,90%);height:100%;object-fit:contain
-}
-:root[data-rpg-discreet="on"] #cgMomentArt .rpg-safe-avatar,
-:root[data-rpg-discreet="on"] #galleryPreview .rpg-safe-avatar{
+}:root[data-rpg-discreet="on"] #galleryPreview .rpg-safe-avatar{
  height:min(48vh,310px);width:min(90%,310px);margin:12px auto
 }
 :root[data-rpg-discreet="on"] #galleryGrid .cg-thumb .rpg-safe-avatar{
@@ -140,7 +57,6 @@
  content:attr(data-rpg-safe-initials);color:#9fbad0
 }
 @media(max-width:600px){
- :root[data-rpg-discreet="on"] .rpg-cast-member .rpg-safe-avatar{height:min(65%,75px);width:min(90%,75px)}
  :root[data-rpg-discreet="on"] .npc-reaction-card{grid-template-columns:32% minmax(0,1fr)!important}
 }
 
@@ -148,18 +64,6 @@
 :root[data-rpg-discreet="on"] [data-rpg-safe-kind="chibi"] .rpg-safe-avatar{
  object-fit:contain!important;object-position:center center;background:transparent;
 }
-
-/* Town map radar: show character chibis when Discreet Mode is enabled. */
-.radar-person-avatar{display:none}
-:root[data-rpg-discreet="on"] .radar-person-avatar{display:flex;align-items:center;justify-content:center;width:54px;height:54px;flex:none;grid-row:span 2}
-:root[data-rpg-discreet="on"] .radar-person-avatar .rpg-safe-avatar{display:block;width:100%;height:100%;object-fit:contain;background:transparent}
-:root[data-rpg-discreet="on"] .radar-person:has(.radar-person-avatar){grid-template-columns:54px minmax(0,1fr);column-gap:10px;align-items:center}
-:root[data-rpg-discreet="on"] .radar-person .radar-person-avatar~strong,:root[data-rpg-discreet="on"] .radar-person .radar-person-avatar~small{grid-column:2}
-
-/* RPG battles expose the same Discreet Mode preference as the overworld. */
-.duel-utility-toolbar #rpgDiscreetToggle[hidden]{display:none!important}
-.duel-utility-toolbar #rpgDiscreetToggle{white-space:nowrap;min-width:max-content}
-:root[data-rpg-discreet="on"] .duel-utility-toolbar #rpgDiscreetToggle{background:#224e60;border-color:#8cbacc;color:#e9f9ff}
 
 
 /* Chibi mode replaces character artwork in battles and CG views. */

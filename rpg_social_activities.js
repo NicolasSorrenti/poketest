@@ -153,6 +153,8 @@
   s.credits=clamp((s.credits||0)-a.credits,999999);
   s.insight=clamp((s.insight||0)+insight,99);
   REL.apply(s,npc,{affection,trust,respect});
+  s.relationshipQualityTime=s.relationshipQualityTime||{};
+  s.relationshipQualityTime[npc]=(Number(s.relationshipQualityTime[npc])||0)+1;
   s.hungOut=s.hungOut||{};
   s.hungOut[s.day+':'+npc]=true;
   const likedTags=Array.isArray(previous?.likedTags)?previous.likedTags.filter(t=>tags.has(t)):[];

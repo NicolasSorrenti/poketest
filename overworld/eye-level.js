@@ -55,13 +55,14 @@ window.NeoOverworldEyeLevel = (() => {
       'body.neo-eye-level #camera.dragging,#neoEyeLevelStage.is-dragging{cursor:grabbing}',
       'body.neo-eye-level #world,body.neo-eye-level #edges{display:none!important}',
       '#neoEyeLevelStage .neo-eye-background{position:absolute;inset:0 auto 0 0;height:100%;max-width:none;pointer-events:none;object-fit:fill;will-change:transform}',
-      '#neoEyeLevelStage .neo-eye-ground-shade{position:absolute;inset:0 auto 0 0;pointer-events:none;background:linear-gradient(0deg,#100a1a9e 0%,transparent 30%,transparent 85%,#100a1a28 100%)}',
+      '#neoEyeLevelStage .neo-eye-ground-shade{position:absolute;inset:0 auto 0 0;pointer-events:none;background:linear-gradient(0deg,#130d1f77 0%,#130d1f15 28%,transparent 65%)}',
       '#neoEyeLevelStage .neo-eye-cast{position:absolute;left:0;top:0;height:100%;pointer-events:none;will-change:transform}',
-      '#neoEyeLevelStage .neo-eye-character{position:absolute;bottom:12%;padding:0;border:0;background:transparent;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;pointer-events:auto;filter:drop-shadow(0 9px 10px #070419a3)}',
+      '#neoEyeLevelStage .neo-eye-character{position:absolute;padding:0;border:0;background:transparent;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;pointer-events:auto;isolation:isolate;filter:drop-shadow(0 6px 9px #07041988)}',
+      '#neoEyeLevelStage .neo-eye-character::before{content:"";position:absolute;bottom:-3px;left:50%;width:90px;height:17px;max-width:78%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,#09091888 0%,#09091822 55%,transparent 75%);z-index:-1;pointer-events:none}',
       '#neoEyeLevelStage .neo-eye-character>.neo-npc-indicator{position:absolute;top:-6px;left:50%;transform:translate(-50%,-100%);display:grid;place-items:center;min-width:32px;height:32px;padding:2px 6px;background:#211e3fec;border:2px solid #fffc;border-radius:999px;font:800 22px/1 system-ui;z-index:15;pointer-events:none;filter:drop-shadow(0 3px 5px #0009)}',
       'body.neo-overworld-dialogue #neoEyeLevelStage .neo-npc-indicator{display:none!important}',
       '#neoEyeLevelStage .neo-eye-character img{display:block;height:var(--neo-eye-height);width:auto;max-width:none;object-fit:contain;object-position:center bottom;pointer-events:none}',
-      '#neoEyeLevelStage .neo-eye-character .neo-eye-name{margin-top:3px;display:block;border:1px solid #d996d7;border-radius:9px;padding:4px 11px;background:#171329ed;color:white;font:800 13px system-ui;white-space:nowrap}',
+      '#neoEyeLevelStage .neo-eye-character .neo-eye-name{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);display:block;border:1px solid #d996d7bb;border-radius:999px;padding:5px 12px;background:#171329d9;box-shadow:0 3px 12px #08071866;color:white;font:700 13px system-ui;white-space:nowrap;pointer-events:none}',
       '#neoEyeLevelStage .neo-eye-character:focus-visible .neo-eye-name,#neoEyeLevelStage .neo-eye-character:hover .neo-eye-name{background:#77466c}',
       '#neoEyeLevelStage .neo-eye-character .neo-eye-fallback{display:none;width:80px;height:120px;place-items:center;background:#4c3459;border-radius:30px;font-size:32px}',
       '#neoEyeLevelStage .neo-eye-character.is-missing img{display:none}',
@@ -83,25 +84,40 @@ window.NeoOverworldEyeLevel = (() => {
     const slot = Number(params.get('slot') || 0);
     const oldName = map.id === 'shop' && slot === 2 ? 'card-shop-evening.png' : classicBackgrounds[map.id];
     const classicUrl = '/rpg-assets/' + (oldName || 'park.jpg');
-    // Dedicated, character-free 3200x1080 PNGs take priority over the
+    // Dedicated, character-free 3200x1080 plates take priority over the
     // transitional mirrored SVG panoramas. Never modify the top-down art.
     const productionBackgrounds = {
-      arcade:'arcade-eye-level.png',
-      cafe:'cafe-eye-level.png',
-      park:'park-eye-level.png',
-      home:'apartment-eye-level.png',
-      center:'tournament-eye-level.png',
-      library:'library-eye-level.png'
+      arcade:'arcade-eye-level-v2.webp',
+      cafe:'cafe-eye-level-v2.webp',
+      park:'park-eye-level-v2.webp',
+      home:'apartment-eye-level-v2.webp',
+      center:'tournament-eye-level-v2.webp',
+      library:'library-eye-level-v2.webp',
+      shop:'shop-eye-level-v2.webp'
     };
     const productionUrl = productionBackgrounds[map.id]
       ? '/rpg-assets/eye-level/' + productionBackgrounds[map.id] : null;
     const panoramaUrl = '/rpg-assets/eye-level/' + map.id + '-panorama.svg';
-    // The original shop illustration is an eye-level plate already, but is too large
-    // for the repository connector to embed into an SVG. Build its wider version
-    // from that same artwork in the browser, without changing the source image.
+    // Fallback: the original shop illustration is a narrower eye-level plate.
+    // Build a wider legacy variant only if the new original panorama cannot load.
+    // Evening prioritizes a newly generated original sunset café plate.
+    // Preserve the prior dusk treatment and the approved daytime plate as
+    // fallbacks. The top-down map art is never modified.
+    const eveningPlateUrl = slot === 2
+      ? (map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level-sunset-v3.webp'
+        : map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level-night-v2.webp' : null)
+      : null;
     const sources = map.id === 'shop'
-      ? [classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
-      : [productionUrl, panoramaUrl, classicUrl, map.image].filter(Boolean);
+      ? [productionUrl, classicUrl, '/rpg-assets/card-shop-day.png', panoramaUrl, map.image].filter(Boolean)
+      : [eveningPlateUrl, map.id === 'cafe' && slot === 2
+         ? '/rpg-assets/eye-level/cafe-eye-level-evening-v2.webp' : null,
+         productionUrl, map.id === 'cafe' ? '/rpg-assets/eye-level/cafe-eye-level.png' :
+         map.id === 'arcade' ? '/rpg-assets/eye-level/arcade-eye-level.png' :
+         map.id === 'park' ? '/rpg-assets/eye-level/park-eye-level.png' :
+          map.id === 'center' ? '/rpg-assets/eye-level/tournament-eye-level.png' :
+         map.id === 'home' ? '/rpg-assets/eye-level/apartment-eye-level.png' :
+         map.id === 'library' ? '/rpg-assets/eye-level/library-eye-level.png' : null,
+         panoramaUrl, classicUrl, map.image].filter(Boolean);
     let sourceIndex = 0;
     const sourceImage = new Image();
     const showNextSource = () => {
@@ -129,7 +145,7 @@ window.NeoOverworldEyeLevel = (() => {
     }
     sourceImage.onload = () => {
       try {
-        backdrop.src = map.id === 'shop' && sourceIndex < 2
+        backdrop.src = map.id === 'shop' && sourceIndex >= 1 && sourceIndex <= 2
           ? shopPanorama(sourceImage) || sourceImage.src
           : sourceImage.src;
       } catch(error) {
@@ -139,7 +155,7 @@ window.NeoOverworldEyeLevel = (() => {
     };
     sourceImage.onerror = showNextSource;
     backdrop.onerror = showNextSource;
-    backdrop.onload = () => layout();
+    backdrop.onload = () => { if (active) center(); else layout(); };
     sourceImage.src = sources[0];
 
     function frontArt(p) {
@@ -207,59 +223,74 @@ window.NeoOverworldEyeLevel = (() => {
       buttons[0].disabled = offset <= 1;
       buttons[1].disabled = offset >= stageWidth - camera.clientWidth - 1;
     }
+    // Keep the room's floor in view while cropping the empty upper band
+    // baked into the newer panoramic plates. The original top-down map is untouched.
+    let focusFraction = .5;
     function layout() {
       const width = camera.clientWidth, height = camera.clientHeight;
       if (!width || !height) return;
       const ratio = backdrop.naturalWidth && backdrop.naturalHeight
-        ? backdrop.naturalWidth / backdrop.naturalHeight : 3200/1080;
-      const spriteHeight = Math.round(clamp(height * (useChibi ? .43 : .69), useChibi ? 115 : 210, useChibi ? 270 : 590));
-      // Normalized staging positions for the 3200x1080 panoramas. These are
-      // deliberately separate from top-down map coordinates and can be tuned
-      // once the final PNG artwork is installed without touching gameplay.
-      // Each zone keeps feet on a common plane and avoids extreme side edges.
+        ? backdrop.naturalWidth / backdrop.naturalHeight : 3200 / 1080;
+      // Portrait PNGs have to read as people in a room, not full-screen posters.
+      // A smaller, consistent scale makes characters and furniture feel proportional.
+      const spriteHeight = Math.round(clamp(
+        height * (useChibi ? .35 : (width >= 900 ? .66 : .54)),
+        useChibi ? 105 : 180, useChibi ? 245 : 590));
       const sceneStaging = {
-        shop:   {slots:[.23,.44,.66,.83], ground:.105, scale:1.00},
-        arcade: {slots:[.16,.32,.50,.68,.84],ground:.115,scale:.98},
-        park:   {slots:[.15,.32,.50,.68,.85],ground:.105,scale:1.00},
-        cafe:   {slots:[.19,.39,.61,.81],ground:.12, scale:.96},
-        home:   {slots:[.23,.48,.75],ground:.115,scale:.94},
-        center: {slots:[.15,.32,.50,.68,.85],ground:.105,scale:1.00},
-        library:{slots:[.19,.39,.61,.81],ground:.115,scale:.96}
+        shop:    {slots:[.23,.44,.66,.83],ground:.085,scale:1.00,cropTop:0},
+        arcade:  {slots:[.16,.32,.50,.68,.84],ground:.09,scale:.98,cropTop:.05},
+        park:    {slots:[.15,.32,.50,.68,.85],ground:.085,scale:1.00,cropTop:0},
+        cafe:    {slots:[.19,.39,.61,.81],ground:.095,scale:.96,cropTop:.08},
+        home:    {slots:[.23,.48,.75],ground:.09,scale:.94,cropTop:.04},
+        center:  {slots:[.15,.32,.50,.68,.85],ground:.09,scale:1.00,cropTop:.04},
+        library: {slots:[.19,.39,.61,.81],ground:.09,scale:.96,cropTop:.02}
       };
       const zone = sceneStaging[map.id] || sceneStaging.shop;
-      // Maintain the authored 3200x1080 proportions. Never stretch a
-      // panoramic background differently on mobile and desktop.
-      stageWidth = Math.ceil(Math.max(width * 1.4, height * ratio));
-      backdrop.style.width = shade.style.width = cast.style.width = stageWidth + 'px';
-      // Choose a centered run of slots, retaining location-specific anchors.
-      // For more NPCs than authored slots, distribute uniformly in the safe
-      // 12%-88% span. Preserve the RPG's NPC order for predictable tapping.
+      // Only trim the dedicated 3200x1080 scene artwork. Legacy panoramas
+      // and fallback location images retain their original full framing.
+      const usingAuthoredPlate = sourceIndex === 0 || (eveningPlateUrl && sourceIndex === 1) ||
+        (map.id === 'cafe' && slot === 2 && sourceIndex === 2);
+      const cropTop = productionUrl && usingAuthoredPlate ? zone.cropTop : 0;
+      stageWidth = Math.ceil(Math.max(width * 1.35, height * ratio / (1 - cropTop)));
+
       const count = sprites.length;
       let slots;
-      if(count <= zone.slots.length){
-        const start=Math.floor((zone.slots.length-count)/2);
-        slots=zone.slots.slice(start,start+count);
+      // On a narrow phone an NPC must never start outside the center of view.
+      // Keep pairs close enough to be visible together, then scroll for larger casts.
+      if (count === 1) slots = [.5];
+      else if (count === 2) slots = [.45, .55];
+      else if (count === 3) slots = [.405, .5, .595];
+      else if (count <= zone.slots.length) {
+        const start = Math.floor((zone.slots.length - count) / 2);
+        slots = zone.slots.slice(start, start + count);
       } else {
-        slots=Array.from({length:count},(_,i)=>.12 + .76*(i+.5)/count);
+        slots = Array.from({length:count},(_,i)=>.12 + .76 * (i + .5) / count);
       }
-      // Don't let large sprites overlap on narrower screens. Widen the stage
-      // rather than shrinking characters or hiding NPCs.
-      const desiredGap = Math.round(Math.max(useChibi?140:210,spriteHeight*(useChibi?.55:.70)));
-      const minSpan = count>1 ? desiredGap*(count-1)/Math.max(.01,slots[count-1]-slots[0]) : 0;
-      if(minSpan > stageWidth){
-        stageWidth=Math.ceil(minSpan);
-        backdrop.style.width=shade.style.width=cast.style.width=stageWidth+'px';
-      }
+      const desiredGap = Math.round(Math.max(useChibi ? 120 : 170,
+        spriteHeight * (useChibi ? .6 : .70)));
+      const minSpan = count > 1
+        ? desiredGap * (count - 1) / Math.max(.01, slots[count - 1] - slots[0]) : 0;
+      stageWidth = Math.ceil(Math.max(stageWidth, minSpan));
+
+      // Scale the scenery uniformly, and bottom-align the visible part so
+      // its ground and the character feet stay in the same visual space.
+      const imageHeight = stageWidth / ratio;
+      backdrop.style.width = stageWidth + 'px';
+      backdrop.style.height = Math.ceil(imageHeight) + 'px';
+      backdrop.style.top = Math.round(height - imageHeight) + 'px';
+      shade.style.width = cast.style.width = stageWidth + 'px';
+      focusFraction = count > 3 ? slots[Math.floor((count - 1) / 2)] : .5;
       sprites.forEach(({button},i) => {
-        button.style.left=Math.round(slots[i]*stageWidth)+'px';
-        button.style.bottom=(zone.ground*100)+'%';
-        button.style.setProperty('--neo-eye-height',Math.round(spriteHeight*zone.scale)+'px');
+        button.style.left = Math.round(slots[i] * stageWidth) + 'px';
+        button.style.bottom = (zone.ground * 100) + '%';
+        button.style.setProperty('--neo-eye-height',
+          Math.round(spriteHeight * zone.scale) + 'px');
       });
       moveTo(offset);
     }
     function center() {
       layout();
-      moveTo((stageWidth - camera.clientWidth)/2,true);
+      moveTo(focusFraction * stageWidth - camera.clientWidth / 2, true);
     }
     function setMode(enabled) {
       active = !!enabled;
@@ -312,7 +343,12 @@ window.NeoOverworldEyeLevel = (() => {
         moveTo(offset + event.deltaX);
       }
     },{passive:false});
-    addEventListener('resize',layout);
+    addEventListener('resize', () => {
+      const previousCenter = stageWidth
+        ? (offset + camera.clientWidth / 2) / stageWidth : focusFraction;
+      layout();
+      moveTo(previousCenter * stageWidth - camera.clientWidth / 2);
+    });
     setChibiMode(useChibi);
     let saved = 'map';
     try { saved = localStorage.getItem(preferenceKey) || 'map'; } catch {}

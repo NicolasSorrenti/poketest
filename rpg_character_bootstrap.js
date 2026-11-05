@@ -63,12 +63,21 @@
  "/rpg_partner_decks.js",
  "/rpg_npc_deck_progression.js?v=lyla-legal-deck-20261031-1",
  "/rpg_live_everyday_events.js?v=live-scenes-20261103",
+ "/rpg_live_campaign_content.js?v=extracted-20261104",
  "/rpg_mandatory_events.js",
  "/rpg_season_events.js",
  "/rpg_audio.js",
  "/rpg_time_transitions.js?v=rpg-scene-wipe-20261031-1",
  "/rpg_render_perf.js",
- "/rpg_ui_motion.js",
+ "/rpg_overworld_stage_view.js?v=stage-presenter-20261104",
+ "/rpg_overworld_opportunities.js?v=owned-stage-20261104",
+ "/rpg_overworld_guide.js?v=recovery-view-20261104",
+ "/rpg_overworld_modals.js?v=modal-split-20261104",
+ "/rpg_overworld_gallery.js?v=lightbox-split-20261104",
+ "/rpg_overworld_collection_view.js?v=collection-split-20261104",
+ "/rpg_overworld_preduel_view.js?v=preduel-split-20261104",
+ "/rpg_overworld_pack_view.js?v=pack-split-20261104",
+ "/rpg_overworld_duel_recovery_view.js?v=recovery-view-20261104",
  "/rpg_character_motion.js",
  "/rpg_scene_cast.js?v=two-voice-window-20261029",
  "/rpg_event_invites.js?v=1",
@@ -79,7 +88,7 @@
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=live-after-20261103"
+ "/rpg.js?v=state-deck-validation-20261104"
 ];
   function registry(packs){
     // Normalize the authenticated/API roster too (not just the generated file).

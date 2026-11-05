@@ -3295,13 +3295,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Tongue Wrap",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed 10 damage plus heads-only Paralysis; exact-one Colorless cost and coinStatus dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-38 text/cost checked against https://limitlesstcg.com/cards/JU/38.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Heads-only Confusion with zero damage and printed Energy requirement; coinStatus dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-38 text/cost checked against https://limitlesstcg.com/cards/JU/38.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
@@ -3314,13 +3326,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Bonemerang",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Exactly two flips at 30 damage per heads, Fighting-Fighting cost; multi dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-39 text/cost checked against https://limitlesstcg.com/cards/JU/39.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Call for Friend",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Fighting Basic-only deck search to Bench, five-Pokémon Bench cap and shuffle; searchBasicToBench dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-39 text/cost checked against https://limitlesstcg.com/cards/JU/39.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
@@ -3333,13 +3357,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Heads-only Confusion with zero damage and printed Energy requirement; coinStatus dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-40 text/cost checked against https://limitlesstcg.com/cards/JU/40.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Double Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Two flips at 30 damage per heads, Grass/Colorless/Colorless cost; multi dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-40 text/cost checked against https://limitlesstcg.com/cards/JU/40.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
@@ -3352,13 +3388,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Spore",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Automatic Sleep with double-Grass cost and no damage; status dispatcher inspected.",
+          "evidence": [
+            "Jungle base2-41 text/cost checked against https://limitlesstcg.com/cards/JU/41.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Slash",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Plain 30 damage with three Colorless Energy requirements.",
+          "evidence": [
+            "Jungle base2-41 text/cost checked against https://limitlesstcg.com/cards/JU/41.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
@@ -3371,13 +3419,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Plain 20 damage with two Colorless Energy requirements.",
+          "evidence": [
+            "Jungle base2-42 text/cost checked against https://limitlesstcg.com/cards/JU/42.",
+            "engine.js: attackPattern and shared attack reducer source-inspected.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Pounce",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed 30 damage plus 10 reduction next rival turn. Fixed premature return in defendReduce handler; damage now proceeds into normal calculation. Source-target restriction and real runtime interactions still unverified.",
+          "evidence": [
+            "Jungle base2-42 text/cost checked against https://limitlesstcg.com/cards/JU/42.",
+            "engine.js: defendReduce now continues into normal damage resolution when printed damage is nonzero.",
+            "No live reducer/browser execution or historical edge-ruling verification in this batch; NOT fully verified."
+          ]
         }
       ]
     },
@@ -3390,13 +3450,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Fury Swipes",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Three independent coin flips at 20 per heads: multi regex and common damage pipeline inspected; no deterministic runtime cases.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-43) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/43.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Tantrum",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "50 damage and tails-only self Confusion after damage: coinSelfConfuse path inspected; post-KO timing and status edge cases untested.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-43) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/43.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         }
       ]
     },
@@ -3409,13 +3481,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Stomp",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "20 or 30 based on coin: coinDamageChoice parses printed 20+10 and 20 tails.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-44) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/44.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Agility",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "30 damage; heads-only protection against attack damage and effects next opponent turn: agilityShield path inspected; switches/expiry untested.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-44) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/44.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         }
       ]
     },
@@ -3428,13 +3512,26 @@
           "kind": "attack",
           "index": 0,
           "name": "Horn Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "30 damage; Fighting plus two Colorless requirements; normal damage path inspected.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-45) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/45.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Ram",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "50 damage, 20 self recoil and opponent-choice forced switch, even if Rhydon KOs itself: recoilForceSwitch path applies recoil and switches first Bench slot by default. **Confirmed choice-owner discrepancy** when opponent has multiple Bench options; KO order requires runtime verification.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-45) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/45.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding.",
+            "2026-11-04 follow-up (not part of the new five): classic_attack_extensions.js now compiles exact Jungle Rhydon Ram (50 damage, 20 self-damage) into existing defender-owned ram_switch decision code in headless_duel.js. An isolated compiler/resolve check passes; live duel flow and legacy engine.js still require verification."
+          ]
         }
       ]
     },
@@ -3447,13 +3544,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Horn Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "10 damage for Water requirement; plain damage path inspected.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-46) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/46.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Waterfall",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "30 damage for Water+Colorless requirement; plain damage path inspected.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-46) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/46.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         }
       ]
     },
@@ -3466,13 +3575,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Stomp",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "20 or 30 on coin: coinDamageChoice branch inspected.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-47) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/47.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rampage",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "20 + 10 per own damage counter and tails-only self Confusion after damage: selfDamageBonusConfuse branches inspected; interaction with KO/Weakness/Resistance not executed.",
+          "evidence": [
+            "TCGdex Base Set 2/Jungle reprint catalogue cards/base2.json (base2-47) matched against attackPattern and attack() in engine.js.",
+            "Printed reference: https://limitlesstcg.com/cards/JU/47.",
+            "Source inspection only: not end-to-end verified; historical rulings and runtime branches remain outstanding."
+          ]
         }
       ]
     },
@@ -3485,13 +3606,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Poisonpowder",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #48 printed one-Grass attack does 10 damage, then one coin flip; only heads applies Poison. Headless compiler coin-status-alias/coin-status; no damage/status timing execution performed.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/48: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Razor Leaf",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #48 printed two-Grass attack deals flat 30 damage, no extra effect. Generic flat damage compiler path inspected.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/48: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },
@@ -3504,13 +3637,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Vine Whip",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #49 printed one-Grass attack deals 10 damage; normal flat damage compiler.",
+          "evidence": [
+            "https://www.serebii.net/card/jungle/049.shtml: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Call for Family",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #49 printed one-Grass attack searches Basic Bellsprout, puts it on own Bench, then shuffles deck; cannot announce if Bench full. headless call-family compile, familyCandidates and optional fail-to-find choice inspected; actual choice/run not executed.",
+          "evidence": [
+            "https://www.serebii.net/card/jungle/049.shtml: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },
@@ -3523,13 +3668,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Snivel",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #50 printed one-Colorless attack, no damage, reduces by 20 only damage from named Defending Pokémon when it attacks Cubone on next turn; benching either ends effect. Headless reactive-shield compiler and sourceId guarded reduction inspected. Source-ID versus Pokémon-instance identity and complete switch/expiry interactions remain unresolved.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/50: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rage",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #50 printed two-Fighting attack does 10 + 10 per existing damage counter on Cubone, calculated before attack damage; headless own-counters path inspected, runtime modifiers untested.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/50: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },
@@ -3542,13 +3699,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Tail Wag",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #51 printed one-Colorless coin attack; heads prevents Defending Pokémon attacking this Eevee next turn; benching either ends effect. Headless coin-attack-lock/attackLock targetId source inspected. Same-printing target identity and bench/switch edge cases need runtime review.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/51: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Quick Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #51 printed two-Colorless attack: 30 on heads, 10 on tails; CLASSIC coin-more and generic coin-bonus signature inspected. Real coin selection/attack damage not executed.",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/51: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },
@@ -3561,13 +3730,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Hypnosis",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #52 printed one-Psychic attack inflicts Sleep without damage or coin. Generic status compiler and application inspected; status immunity/timing untested.",
+          "evidence": [
+            "https://ns5.serebii.net/card/jungle/052.shtml: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "Engine source inspection only: headless_duel.js, attack_effects_core.js and classic_attack_extensions.js.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Leech Seed",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle JU #52 printed two-Grass 20-damage attack plus 10 HP healing if damage is dealt; historical WotC erratum removes optional may. CLASSIC leech-seed and headless healFromDamage='seed' enforce compulsory one-counter healing when post-modifier damage > 0. Prevention/modified damage runtime cases untested.",
+          "evidence": [
+            "https://ns5.serebii.net/card/jungle/052.shtml: printed Jungle card text and printed attack Energy costs compared with cards/base2.json",
+            "https://jklaczpokemon.com/wotc-erratas/: WotC-era Exeggcute Leech Seed healing is compulsory, not optional.",
+            "Source-level evidence only; no deterministic duel scenario or full historical rulings audit, so this effect is PARTIAL."
+          ]
         }
       ]
     },
@@ -3580,7 +3761,13 @@
           "kind": "attack",
           "index": 0,
           "name": "Horn Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #53: Water cost, flat 10 damage, no additional effect. Compiles to flat(10) and isolated resolve produces 10 for both injected coin values.",
+          "evidence": [
+            "Printed Jungle listing: https://pokemondungeon.com/jungle-set/; compared with cards/base2.json, printing base2-53.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
@@ -3593,13 +3780,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Lullaby",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #54: single Colorless Energy causes Asleep without coin/damage. Compiles to status Asleep; isolated resolve gives zero damage + Asleep independent of coin.",
+          "evidence": [
+            "Printed Jungle listing: https://pokemondungeon.com/jungle-set/; compared with cards/base2.json, printing base2-54.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Pound",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #54: two Colorless Energies, 20 plain damage. Compiles to flat(20); isolated resolve gives 20.",
+          "evidence": [
+            "Printed Jungle listing: https://pokemondungeon.com/jungle-set/; compared with cards/base2.json, printing base2-54.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
@@ -3612,13 +3811,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #55: single Colorless Energy, plain 10 damage. Compiles to flat(10); isolated resolve gives 10.",
+          "evidence": [
+            "Printed Jungle listing: https://arcatcg.com/cards/base2-55; compared with cards/base2.json, printing base2-55.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Peek",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #55: activated once per turn before attacking; look at top of either deck, random opposing hand card, or either Prize; disabled when this Mankey is Asleep, Confused or Paralyzed. classic_power_core.js registers Peek in ACTIVATED and ONCE, its enabled() gates status, and the choice handler keeps revealed card in the controlling player's privateLog. Only source inspected; actual choices, visibility and concurrent power usage not runtime tested.",
+          "evidence": [
+            "Printed Jungle listing: https://arcatcg.com/cards/base2-55; compared with cards/base2.json, printing base2-55.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
@@ -3631,7 +3842,13 @@
           "kind": "attack",
           "index": 0,
           "name": "Pay Day",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #56: two Colorless Energies, 10 damage plus one flip; heads draw 1, tails draw 0. Classic coin-draw program isolated outputs 10/1 on heads and 10/0 on tails; headless draw() path found, runtime draw/KO timing untested.",
+          "evidence": [
+            "Printed Jungle listing: https://bulbapedia.bulbagarden.net/wiki/Meowth_(Jungle_56); compared with cards/base2.json, printing base2-56.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
@@ -3644,13 +3861,25 @@
           "kind": "attack",
           "index": 0,
           "name": "Fury Swipes",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #57: one Grass Energy, three flips times 10 per heads. Generic coin-times(3,10); isolated simulated all heads gives 30, all tails gives 0.",
+          "evidence": [
+            "Printed Jungle listing: https://limitlesstcg.com/cards/JU/57; compared with cards/base2.json, printing base2-57.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Call for Family",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Jungle #57: two Grass Energy, search deck for Basic Nidoran♂ or Nidoran♀, Bench it, shuffle, cannot use with full Bench. Exact printed wording uses sex symbols whereas TCGdex catalogue spells them Nidoran M/F; compiler generates restriction Nidoran M or Nidoran F, and familyCandidates recognizes both symbol names. Decision, fail-to-find, Bench capacity and shuffle source paths inspected, not full gameplay tested.",
+          "evidence": [
+            "Printed Jungle listing: https://limitlesstcg.com/cards/JU/57; compared with cards/base2.json, printing base2-57.",
+            "2026-11-04: isolated attack_effects_core.js + classic_attack_extensions.js compile/resolve heads/tails checks for applicable attacks; all 7 attack routines passed; Mankey Peek source registration and privateLog checked only.",
+            "Remaining: full reducer and UI duel runs, status/KO/choice ownership/privacy interactions, special Energy and WotC historical edge rulings. Source/isolated validation only; not fully verified."
+          ]
         }
       ]
     },
@@ -3663,13 +3892,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Stun Spore",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/58",
+            "Stun Spore: Limitless JU/58 confirms G, 10, heads Paralysis; source ATTACK coin-status; heads/tails, shields and timing not run."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Sprout",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/58",
+            "Sprout: Limitless JU/58 confirms GG, named Oddish Basic, Bench-full restriction and shuffle; classic_attack_extensions.js call-family restriction, headless_duel.js deck-search and full-Bench guard inspected; deck mutation not executed."
+          ]
         }
       ]
     },
@@ -3682,13 +3919,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/59",
+            "Scratch: printed CC, 20; flat attack compiler source inspected, no end-to-end reducer validation."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Spore",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/59",
+            "Spore: printed GG, unconditional Sleep; status compiler inspected, status immunity and sleep recovery not run."
+          ]
         }
       ]
     },
@@ -3701,7 +3946,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Spark",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/60",
+            "Spark: Limitless JU/60 confirms LL, 20 Active and selected opposing Bench 10 without Weakness/Resistance; attack_effects_core.js bench-target and headless_duel.js target choice inspected; no executed KO or Bench shielding validation."
+          ]
         }
       ]
     },
@@ -3714,13 +3963,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Leer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/61",
+            "Leer: printed C, heads lock targeting Rhyhorn until next opponent turn, broken by Benching; classic_attack_extensions.js coin-attack-lock and headless_duel.js state inspected, no switch/replacement execution."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Horn Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/61",
+            "Horn Attack: printed FCC, 30; flat damage source inspected, no real reducer cost and modifiers run."
+          ]
         }
       ]
     },
@@ -3733,13 +3990,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Peck",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/62",
+            "Peck: Limitless JU/62 confirms C, 10; flat compiler source inspected, no reducer run."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Mirror Move",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "https://limitlesstcg.com/cards/JU/62",
+            "Mirror Move: Limitless JU/62 confirms CCC and copy final result of previous attack; headless_duel.js lastAttackImpact tracking and mirror-move path inspected. Potential uncovered edge: previous attack doing zero damage and no status may not be recorded; needs targeted reducer proof before fix."
+          ]
         }
       ]
     },
@@ -3752,13 +4017,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Stun Spore",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed Jungle #63 Stun Spore G 10 + heads Paralysis and Leech Life GC 10 healing equal to final damage checked against Serebii/Bulbapedia.",
+            "Classic compiler coin-status and drain match; headless healFromDamage uses final dmg; legacy drainDamage uses final dmg. No actual reducer execution, WotC interaction or protection tests."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Leech Life",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed Jungle #63 Stun Spore G 10 + heads Paralysis and Leech Life GC 10 healing equal to final damage checked against Serebii/Bulbapedia.",
+            "Classic compiler coin-status and drain match; headless healFromDamage uses final dmg; legacy drainDamage uses final dmg. No actual reducer execution, WotC interaction or protection tests."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
@@ -3769,7 +4044,12 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Jungle #64 Poké Ball: heads permits search for any Pokémon card, reveal, hand, shuffle; tails no search. Catalogue restricts to Basic/Evolution, equivalent to Pokémon-card types.",
+            "classic_trainer_core.js coin search and selection inspectable, including optional selection and deck shuffle. Flip persistence, failed search, empty deck, visibility and UI not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
@@ -3782,13 +4062,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Wing Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #1 Aerodactyl Wing Attack CCC 30; Prehistoric Power forbids playing Evolutions while active unless asleep/confused/paralyzed.",
+            "headless evolve checks powerInPlay and legacy evolve checks continuousPower. Evolution into play via alternate effects, fossil evolution status and power suppression not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Prehistoric Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #1 Aerodactyl Wing Attack CCC 30; Prehistoric Power forbids playing Evolutions while active unless asleep/confused/paralyzed.",
+            "headless evolve checks powerInPlay and legacy evolve checks continuousPower. Evolution into play via alternate effects, fossil evolution status and power suppression not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
@@ -3801,13 +4091,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Freeze Dry",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #2 Articuno Freeze Dry WWW 30 + heads Paralysis; Blizzard WWWW 50 and heads opponent/tails own Bench 10, no W/R.",
+            "attack_effects_core.js bench-splash-coin resolves heads/opponent vs tails/self; headless hitBench dispatch and legacy coinBenchSpread inspected. Simultaneous KO, protection, full/empty Bench and real flip not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Blizzard",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #2 Articuno Freeze Dry WWW 30 + heads Paralysis; Blizzard WWWW 50 and heads opponent/tails own Bench 10, no W/R.",
+            "attack_effects_core.js bench-splash-coin resolves heads/opponent vs tails/self; headless hitBench dispatch and legacy coinBenchSpread inspected. Simultaneous KO, protection, full/empty Bench and real flip not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
@@ -3820,7 +4120,12 @@
           "kind": "power",
           "index": 0,
           "name": "Transform",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil #3 Ditto Transform copies Defending Pokémon only while Active, including stats, attacks and flexible attached Energy; disabled while statused; cannot evolve.",
+            "headless effectiveCard and attack payment special handling inspected; classic_power_core passive registration. Transformation identity, HP/KO recalculation, energy payment, opponent Ditto and status interactions not executed."
+          ],
+          "scope": "Printed text and implementation source comparison only; full reducer and historical edge-case validation outstanding."
         }
       ]
     },
@@ -3833,13 +4138,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Slam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Slam: four Colorless Energy and two independent 40-damage coin flips; compiler/roll path inspected; 0/1/2 heads and Resistance require reducer execution."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Step In",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Step In: printed once during own turn from Bench; classic_power_core.js ONCE/Step In Bench selection and swap inspected; legacy stepIn checks Bench and Power but repeated-use, status and switching interaction require reducer validation."
+          ]
         }
       ]
     },
@@ -3852,13 +4163,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Dark Mind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Dark Mind: PPP, 30 Active plus 10 selected opposing Bench without Weakness/Resistance; target and no-Bench behavior require reducer validation."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Curse",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Curse: printed once per turn, move one opponent damage counter to another even if KO; classic_power_core.js allows KO and resolves prizes. Legacy engine.js incorrectly forbade lethal destination and did not resolve KO; corrected in audit branch; pending validation."
+          ]
         }
       ]
     },
@@ -3871,13 +4188,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Nightmare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Transparency: printed prevention of all attack effects on heads, only disabled while Asleep; headless defender coin branch clears damage/status but other effect channels and zero-damage attacks require verification."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Transparency",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Transparency: printed prevention of all attack effects on heads, only disabled while Asleep; headless defender coin branch clears damage/status but other effect channels and zero-damage attacks require verification."
+          ]
         }
       ]
     },
@@ -3890,13 +4213,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Stretch Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Stretch Kick: FF, 20 chosen opposing Bench and no Active damage; legacy engine.js rejects missing Bench and applies 20 direct; test target choice, bench protection, prizes and headless reducer."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "High Jump Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "High Jump Kick: FFF, flat 50 Active; Weakness/Resistance, Energy legality and KO checks pending."
+          ]
         }
       ]
     },
@@ -3909,13 +4238,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Prophecy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Prophecy: P, look at up to 3 top cards of either deck and reorder; headless validates deckOwner/deckOrder presence; legality, permutation, privacy, 0-2 cards and legacy decision paths need execution."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dark Mind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Dark Mind: PPP, 30 Active and 10 selected opposing Bench; verify selection, shields and simultaneous KO in reducer."
+          ]
         }
       ]
     },
@@ -3928,13 +4263,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Sharp Sickle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Sharp Sickle: printed FF 30, no secondary effect; ordinary damage route inspected; cost, Weakness/Resistance and KO reducer cases pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Absorb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Absorb: FFFF 40, heals half of actual damage after Weakness/Resistance rounded to nearest ten; classic_attack_extensions drain and headless healFromDamage route inspected; shield/zero damage and heal cap need execution."
+          ]
         }
       ]
     },
@@ -3947,13 +4288,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Water Gun: W 10+ with +10 per extra Energy (not restricted to Water), maximum +20; legacy engine previously recognized only 'Water Energy' template and failed to award Lapras bonus. Fixed legacy computation; dynamic DCE and cap pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Confuse Ray",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Confuse Ray: WW 10, heads Confusion; coin-status and status suppression source inspected, both outcomes and defender protection pending."
+          ]
         }
       ]
     },
@@ -3966,13 +4313,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Sonicboom",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Sonicboom: LC 20 ignores Weakness and Resistance, but post-W/R effects still apply; legacy ignoreWR route inspected; shield/defender effects pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Selfdestruct",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Selfdestruct: LLLL 100 Active, 20 all Bench, 100 self; self-KO, bench immunity, simultaneous prizes and W/R on Active require reducer validation."
+          ]
         }
       ]
     },
@@ -3985,13 +4338,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Wildfire",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Wildfire: F, may discard any number of attached Fire Energy to mill that many opponent deck cards; headless choice and index validation inspected, zero payment, short deck and legacy payment pending."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dive Bomb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Dive Bomb: FFFF 80 on heads, no damage on tails; coin-failure source inspected, prevention/KO and both outcomes pending."
+          ]
         }
       ]
     },
@@ -4004,13 +4363,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Sludge",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Sludge: GGG 30 and heads Poison; coin-status and status-block paths inspected; both outcomes and immunity pending."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Toxic Gas",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Toxic Gas: all other Pokémon Powers ignored while Muk is not Asleep, Confused or Paralyzed; classic_power_core and legacy continuousPower guards inspected; multiple Muk, status transitions and Powers triggered mid-attack pending."
+          ]
         }
       ]
     },
@@ -4023,7 +4388,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Gigashock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed LLLL 30 Active plus 10 to up to three distinct opposing Benched Pokémon; fewer than three means all. Compared base3 catalogue text and legacy benchSpreadChoose mapping; headless bench-up-to-three resolver inspected. Need deterministic target-choice, no/short Bench, damage prevention and simultaneous KO checks."
+          ]
         }
       ]
     },
@@ -4036,7 +4404,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Thunderstorm",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed LLLL 40 Active; independently flip once per opposing Bench Pokémon, heads 20 to that Bench target, tails 10 recoil to Zapdos. classic_attack_extensions thunderstorm compiler/resolver inspected; verify independent rolls, self-KO, zero Bench and shields in reducer."
+          ]
         }
       ]
     },
@@ -4049,13 +4420,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Wing Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed CCC 30; basic flat damage path and energy payment inspected. Need runtime W/R, cost and KO validation."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Prehistoric Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed passive forbids playing Evolution cards while Aerodactyl is not Asleep/Confused/Paralyzed. headless evolution gate and classic_power_core passive registry inspected; test status suppression, bench scope, multiple Aerodactyl and alternate evolution entry."
+          ]
         }
       ]
     },
@@ -4068,13 +4445,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Freeze Dry",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed WWW 30 and heads Paralysis; core coin-status route inspected. Need both coin outcomes, immunity, cost and KO validation."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Blizzard",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed WWWW 50 Active plus heads 10 all opposing Bench or tails 10 own Bench, ignoring W/R on Bench. Core bench-splash-coin and headless application inspected; need deterministic rolls, protections, Bench KO and prizes."
+          ]
         }
       ]
     },
@@ -4087,7 +4470,10 @@
           "kind": "power",
           "index": 0,
           "name": "Transform",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed Active-only copy of opposing Pokémon including HP/type/Weakness/attacks, except Ditto cannot evolve, keeps Transform and treats attached Energy as any type; disabled while Asleep/Confused/Paralyzed. headless effectiveCard and payment exception, legacy dynamic card examined. Need reducer tests for mirrored Ditto, changing HP and KO, energy units, suppression and evolution restrictions."
+          ]
         }
       ]
     },
@@ -4100,13 +4486,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Slam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Step In",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4."
         }
       ]
     },
@@ -4119,13 +4513,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Dark Mind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Curse",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5."
         }
       ]
     },
@@ -4138,13 +4540,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Nightmare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Transparency",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6."
         }
       ]
     },
@@ -4157,13 +4567,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Stretch Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7. Check empty Bench, multiple targets, shields and KO/prizes in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "High Jump Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7. Check empty Bench, multiple targets, shields and KO/prizes in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7."
         }
       ]
     },
@@ -4176,13 +4594,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Prophecy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dark Mind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04 audit: printed Fossil reprint text compared to cards/base3.json and matching holo printing; inspected legacy engine.js, headless_duel.js and classic_power_core.js. Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. No deterministic runtime validation or comprehensive historical ruling review; not verified."
+          ],
+          "scope": "Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8."
         }
       ]
     },
@@ -4195,13 +4621,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Sharp Sickle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/24 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FF 30 Active; requires attack-cost and W/R runtime cases. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer code path: classic_local_service.js -> headless_duel.js -> attack_effects_core.js; Sharp Sickle FF 30 and Absorb FFFF 40 heal half actual damage rounded up to 10. Not runtime certified. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "FF 30 Active; requires attack-cost and W/R runtime cases."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Absorb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/24 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FFFF 40, heal half actual damage rounded to 10; shields and KO timing unresolved. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer code path: classic_local_service.js -> headless_duel.js -> attack_effects_core.js; Sharp Sickle FF 30 and Absorb FFFF 40 heal half actual damage rounded up to 10. Not runtime certified. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "FFFF 40, heal half actual damage rounded to 10; shields and KO timing unresolved."
         }
       ]
     },
@@ -4214,13 +4650,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/25 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; Printed Fossil FO/25 and TCGdex say extra WATER Energy, +10 each up to +20; earlier audit says any Energy, conflicting with printed reference. Legacy code now uses any Energy. Historical errata ruling must be established before changing engine. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer uses attack_effects_core.js before generic Classic extensions. Lapras Water Gun must use water-extra, W 10+ with +10 per additional Water Energy, max +20; non-Water excluded. Confuse Ray WW 10, heads Confused. Source-level fix awaiting gameplay validation. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "Printed Fossil FO/25 and TCGdex say extra WATER Energy, +10 each up to +20; earlier audit says any Energy, conflicting with printed reference. Legacy code now uses any Energy. Historical errata ruling must be established before changing engine."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Confuse Ray",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/25 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; WW 10, heads Confusion; prevention/status and both flips untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer uses attack_effects_core.js before generic Classic extensions. Lapras Water Gun must use water-extra, W 10+ with +10 per additional Water Energy, max +20; non-Water excluded. Confuse Ray WW 10, heads Confused. Source-level fix awaiting gameplay validation. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "WW 10, heads Confusion; prevention/status and both flips untested."
         }
       ]
     },
@@ -4233,13 +4679,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Sonicboom",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/26 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; LC 20 ignores Weakness and Resistance; other protection effects remain; runtime untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer attack_effects_core.js: Sonicboom LC 20 ignores W/R; Selfdestruct LLLL 100 Active, 20 both Benches, 100 self. KO sequencing untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "LC 20 ignores Weakness and Resistance; other protection effects remain; runtime untested."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Selfdestruct",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/26 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; LLLL 100 Active, 20 both Benches, 100 self; simultaneous KO and protection untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer attack_effects_core.js: Sonicboom LC 20 ignores W/R; Selfdestruct LLLL 100 Active, 20 both Benches, 100 self. KO sequencing untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "LLLL 100 Active, 20 both Benches, 100 self; simultaneous KO and protection untested."
         }
       ]
     },
@@ -4252,13 +4708,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Wildfire",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/27 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; F optional Fire Energy discard and matching opponent deck mill; headless explicit payment choice; short deck and 0 choice untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer headless_duel.js Wildfire offers optional Fire Energy selection (min 0), validates selected indices; Dive Bomb FFFF 80, tails nothing. Deck depletion and random outcomes untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "F optional Fire Energy discard and matching opponent deck mill; headless explicit payment choice; short deck and 0 choice untested."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dive Bomb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/27 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; FFFF 80, tails no damage; two coin outcomes and prevention untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer headless_duel.js Wildfire offers optional Fire Energy selection (min 0), validates selected indices; Dive Bomb FFFF 80, tails nothing. Deck depletion and random outcomes untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "FFFF 80, tails no damage; two coin outcomes and prevention untested."
         }
       ]
     },
@@ -4271,13 +4737,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Sludge",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/28 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; GGG 30, heads Poison; status immunity and both coin outcomes untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer classic_power_core.js live/has/blocked implements Toxic Gas and status lock; Sludge GGG 30 heads Poison. Multiple Muk and transitions untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "GGG 30, heads Poison; status immunity and both coin outcomes untested."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Toxic Gas",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-04: compared cards/base3.json with Fossil FO/28 print listings (Limitless, PokémonDungeon) and engine.js/headless_duel.js; Suppress all other Pokémon Powers unless Muk asleep/confused/paralyzed; multiple Muk and status transitions untested. No runtime reducer execution or complete historical ruling review.",
+            "2026-11-04 active-engine follow-up: Active reducer classic_power_core.js live/has/blocked implements Toxic Gas and status lock; Sludge GGG 30 heads Poison. Multiple Muk and transitions untested. No executable reducer scenario was run; historical ruling coverage remains incomplete. Legacy engine findings are excluded from current-game certification."
+          ],
+          "scope": "Suppress all other Pokémon Powers unless Muk asleep/confused/paralyzed; multiple Muk and status transitions untested."
         }
       ]
     },
@@ -4290,7 +4766,12 @@
           "kind": "attack",
           "index": 0,
           "name": "Gigashock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: cards/base3.json Gigashock LLLL 30 plus 10 to exactly three distinct opponent Benched Pokémon if at least three; otherwise all. classic_attack_extensions.js compiles bench-up-to-three and headless_duel.js creates an exactly-three target decision when Bench >3, validating distinct indices.",
+            "No current-reducer runtime execution; Bench sizes 0–5, attack payment, Bench shields and simultaneous KOs remain unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
@@ -4303,7 +4784,12 @@
           "kind": "attack",
           "index": 0,
           "name": "Thunderstorm",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Thunderstorm LLLL 40; classic_attack_extensions.js compiles thunderstorm with 20 per opposing Bench heads and 10 self per tails; headless_duel.js imports attack_effects_core.js for resolution.",
+            "No current-reducer runtime execution; independent flips, Weakness/Resistance, empty Bench, self-KO and prizes remain unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
@@ -4316,13 +4802,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Terror Strike",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Terror Strike G 10 plus heads-only opponent-chosen switch after damage compiled as coin-defender-switch in classic_attack_extensions.js; Poison Fang GGC 20 and unconditional Poison from printed card text.",
+            "No current-reducer runtime execution; opponent choice ownership, KO-before-switch, empty Bench, coin outcomes and status shields unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Poison Fang",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Terror Strike G 10 plus heads-only opponent-chosen switch after damage compiled as coin-defender-switch in classic_attack_extensions.js; Poison Fang GGC 20 and unconditional Poison from printed card text.",
+            "No current-reducer runtime execution; opponent choice ownership, KO-before-switch, empty Bench, coin outcomes and status shields unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
@@ -4335,13 +4831,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Clamp",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Clamp WW 30 heads with Paralysis, tails no damage or effect compiled as coin-clamp; Spike Cannon WW 30 per heads on two flips, printed in cards/base3.json.",
+            "No current-reducer runtime execution; both Clamp outcomes, Spike Cannon 0/1/2 heads, damage prevention and status interactions unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Spike Cannon",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Clamp WW 30 heads with Paralysis, tails no damage or effect compiled as coin-clamp; Spike Cannon WW 30 per heads on two flips, printed in cards/base3.json.",
+            "No current-reducer runtime execution; both Clamp outcomes, Spike Cannon 0/1/2 heads, damage prevention and status interactions unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
@@ -4354,13 +4860,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Lick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Lick P 10 plus heads Paralysis; Energy Conversion PP retrieves up to two Energy cards from own discard and deals 10 self-damage. classic_attack_extensions.js compiles energy-conversion; headless_duel.js offers 0–2 discard-recovery choices and validates indices.",
+            "No current-reducer runtime execution; empty discard, special Energy eligibility, self-KO/prizes and ordering unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Energy Conversion",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current-engine source inspection: Lick P 10 plus heads Paralysis; Energy Conversion PP retrieves up to two Energy cards from own discard and deals 10 self-damage. classic_attack_extensions.js compiles energy-conversion; headless_duel.js offers 0–2 discard-recovery choices and validates indices.",
+            "No current-reducer runtime execution; empty discard, special Energy eligibility, self-KO/prizes and ordering unverified."
+          ],
+          "scope": "Active engine source and imported card text only; no deterministic reducer execution or full historical ruling review"
         }
       ]
     },
@@ -4373,13 +4889,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Wing Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Wing Attack CCC 30 is flat damage; Leech Life GGC 20 drains damage actually dealt after W/R, limited by existing damage counters."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Leech Life",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Wing Attack CCC 30 is flat damage; Leech Life GGC 20 drains damage actually dealt after W/R, limited by existing damage counters."
         }
       ]
     },
@@ -4392,13 +4924,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Psyshock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Psyshock P 10 has heads Paralysis; Hyper Beam WWC 20 discards a selected defending attached Energy, when present."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hyper Beam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Psyshock P 10 has heads Paralysis; Hyper Beam WWC 20 discards a selected defending attached Energy, when present."
         }
       ]
     },
@@ -4411,13 +4959,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Avalanche",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Avalanche FFFC 60 is flat damage; Selfdestruct FFFF 100 hits both Benches for 20 without W/R and self for 100."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Selfdestruct",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Avalanche FFFC 60 is flat damage; Selfdestruct FFFF 100 hits both Benches for 20 without W/R and self for 100."
         }
       ]
     },
@@ -4430,13 +4994,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Harden",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Harden FF prevents <=30 post-W/R incoming damage next opponent turn but not attack side effects; Rock Throw FFC 40 flat."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rock Throw",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Harden FF prevents <=30 post-W/R incoming damage next opponent turn but not attack side effects; Rock Throw FFC 40 flat."
         }
       ]
     },
@@ -4449,13 +5029,29 @@
           "kind": "attack",
           "index": 0,
           "name": "Flail",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Flail W 10 per Kingler damage counter, Crabhammer WWC 40 flat."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Crabhammer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "cards/base3.json",
+            "attack_effects_core.js",
+            "classic_attack_extensions.js",
+            "headless_duel.js",
+            "docs/CARD_FIDELITY_AUDIT.md"
+          ],
+          "scope": "Current-engine source/text review only; runtime and independent historical rulings outstanding. Flail W 10 per Kingler damage counter, Crabhammer WWC 40 flat."
         }
       ]
     },
@@ -4468,13 +5064,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Smokescreen",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Smokescreen: current headless_duel.js attackPenalty pre-Confusion coin check; check attack costs, switching, bench status, expiry and both coin outcomes.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Smog",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Smog: coin-status Poisoned compiler; check both coin outcomes, prevention and W/R.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
@@ -4487,13 +5091,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Water Gun: generic extra-energy compiler for printed each Energy; 20 base +10 per extra attached Energy, capped +20; check multitype Energy, energy-cost allocation and 20/30/40.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Spike Cannon",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Spike Cannon: coin-times 2 flips at 30 each; check 0/1/2 heads and W/R.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
@@ -4506,13 +5118,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Slash",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Slash: flat 20 current attack compiler; check energy payment, weakness and resistance.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Fury Swipes",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fury Swipes: coin-times 3 flips at 20 each; check 0–3 heads and damage prevention.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
@@ -4525,13 +5145,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Water Gun: generic extra-energy 20+ with +10 each extra Energy, max +20; unlike user-confirmed Lapras-specific Water-only override; independently verify printed/errata interpretation.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Agility",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Agility: coin shield attack effect, check heads/tails, bench movement, next-turn expiration, damage and non-damage effects.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
@@ -4544,13 +5172,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Psyshock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Psyshock: coin-status Paralyzed compiler; check both coin outcomes and protection.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Strange Behavior",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Strange Behavior: classic_power_core.js activated power selects damaged friendly source and moves 10 damage to Slowbro, rejects KO; check status suppression, repeated uses, no legal source, bench interactions.",
+            "cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js (source inspection only; runtime and independent rulings pending)"
+          ]
         }
       ]
     },
@@ -4563,13 +5199,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Supersonic's Water cost and heads-only Confusion compile as coin-status (0 damage); Jellyfish Sting's WW cost, 10 damage and guaranteed Poison compile as status. Need reducer outcomes, status replacement, prevention, Weakness/Resistance, Energy legality.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Jellyfish Sting",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Supersonic's Water cost and heads-only Confusion compile as coin-status (0 damage); Jellyfish Sting's WW cost, 10 damage and guaranteed Poison compile as status. Need reducer outcomes, status replacement, prevention, Weakness/Resistance, Energy legality.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
@@ -4582,13 +5228,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Smog",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Smog GG 20 and heads Poison uses coin-status; Selfdestruct GGC 60, 10 damage each Bench and 60 self uses bench-both-recoil. Need simultaneous KOs, Bench shields, prize sequence, self-damage and typed cost.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Selfdestruct",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Smog GG 20 and heads Poison uses coin-status; Selfdestruct GGC 60, 10 damage each Bench and 60 self uses bench-both-recoil. Need simultaneous KOs, Bench shields, prize sequence, self-damage and typed cost.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
@@ -4601,13 +5257,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Spit Poison",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Spit Poison G is zero-damage heads Poison; Wrap CG is 20 plus heads Paralysis; both map to coin-status. Need heads/tails, statuses, W/R and mixed Energy payment.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Wrap",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Spit Poison G is zero-damage heads Poison; Wrap CG is 20 plus heads Paralysis; both map to coin-status. Need heads/tails, statuses, W/R and mixed Energy payment.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
@@ -4620,7 +5286,12 @@
           "kind": "attack",
           "index": 0,
           "name": "Stone Barrage",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Stone Barrage FC is 10 per consecutive heads until first tails, compiled by classic_attack_extensions.js coins-until-tails; resolver loops until tails with 1000-head safety bound. Need deterministic 0/1/multiple heads, bounded RNG, W/R, Energy payment.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
@@ -4633,13 +5304,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Nasty Goo",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Nasty Goo C is 10 plus heads Paralysis (coin-status); Minimize G is 20 damage reduction after W/R for next opposing turn, via classic_attack_extensions.js damage-shield. Need 0/10/20/30 damage, attack effects through reduction, turn expiry, switch, stacking, status and legality.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Minimize",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Nasty Goo C is 10 plus heads Paralysis (coin-status); Minimize G is 20 damage reduction after W/R for next opposing turn, via classic_attack_extensions.js damage-shield. Need 0/10/20/30 damage, attack effects through reduction, turn expiry, switch, stacking, status and legality.",
+          "evidence": [
+            "Imported cards/base3.json attack text and Energy costs compared to current attack_effects_core.js and classic_attack_extensions.js compiler patterns, and headless_duel.js reducer paths.",
+            "Current authority classic_local_service.js -> headless_duel.js (live and RPG bridge); legacy engine.js excluded. No executable reducer or browser scenarios performed; independent printed image and historical rulings remain unchecked."
+          ]
         }
       ]
     },
@@ -4652,7 +5333,12 @@
           "kind": "attack",
           "index": 0,
           "name": "Smokescreen",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Smokescreen damage and attack-penalty handler; coin, switch and expiration not executed"
         }
       ]
     },
@@ -4665,13 +5351,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Scratch and passive Kabuto Armor after Weakness/Resistance; damage rounding/status suppression not executed"
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Kabuto Armor",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Scratch and passive Kabuto Armor after Weakness/Resistance; damage rounding/status suppression not executed"
         }
       ]
     },
@@ -4684,13 +5380,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Call for Family",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Call for Family bench-full legality, named Krabby deck choice and Irongrip; reducer decisions not executed"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Irongrip",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Call for Family bench-full legality, named Krabby deck choice and Irongrip; reducer decisions not executed"
         }
       ]
     },
@@ -4703,13 +5409,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Clairvoyance passive and Water Gun extra-Water-only compiler correction; mixed-Energy reducer cases not executed"
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Clairvoyance",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Clairvoyance passive and Water Gun extra-Water-only compiler correction; mixed-Energy reducer cases not executed"
         }
       ]
     },
@@ -4722,13 +5438,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Headache",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Headache Trainer lock and Fury Swipes three-coin resolver; duration and coin scenarios not executed"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Fury Swipes",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "current-engine source inspection: cards/base3.json; attack_effects_core.js; classic_attack_extensions.js; headless_duel.js; classic_power_core.js",
+            "printed-card comparison: tcgcodex.com Fossil card listings (Omanyte #52, Kabuto #50, Psyduck #53); runtime/historical edge cases pending"
+          ],
+          "scope": "Headache Trainer lock and Fury Swipes three-coin resolver; duration and coin scenarios not executed"
         }
       ]
     },
@@ -4741,13 +5467,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed heads-only Confusion; inspect current attack compilation and reducer; coin outcomes, status immunity, attack costs and W/R interactions not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hide in Shell",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed heads-only prevention of damage during opponent next turn, while other attack effects still apply; prevention expiry, switching, status effects and coin outcomes not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         }
       ]
     },
@@ -4760,16 +5494,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Spacing Out",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed coin-heads heal one damage counter, illegal with no counters; no-damage legality, tails, heads and prevention interactions not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Scavenge",
           "status": "partial",
-          "scope": "Under Sand-attack tails, verifies Scavenge's two-Psychic attack cost remains payable before its attached-Energy discard, discard commits before prevention, identical Energy names auto-select, distinct Energy cards remain the attacker's choice, and no Trainer-recovery choice/effect occurs when prevented. Successful Trainer recovery and other interactions remain unreviewed.",
+          "scope": "Under Sand-attack tails, verifies Scavenge's two-Psychic attack cost remains payable before its attached-Energy discard, discard commits before prevention, identical Energy names auto-select, distinct Energy cards remain the attacker's choice, and no Trainer-recovery choice/effect occurs when prevented. Successful Trainer recovery and other interactions remain unreviewed. Previously partial for discard-before-prevention ordering; current headless_duel.js explicitly chooses attached Energy cost and discarded Trainer recovery; successful choice and all edge cases remain unexecuted.",
           "evidence": [
-            "test_card_fidelity_sandshrew.js: Scavenge's discard-before-prevention ordering, equivalent and distinct Energy choice paths, and skipped Trainer recovery when prevention stops the attack across Classic, Neo-theme and online-preview 60/40; partial interaction only."
+            "test_card_fidelity_sandshrew.js: Scavenge's discard-before-prevention ordering, equivalent and distinct Energy choice paths, and skipped Trainer recovery when prevention stops the attack across Classic, Neo-theme and online-preview 60/40; partial interaction only.",
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
           ]
         }
       ]
@@ -4783,13 +5522,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Acid",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed W:10 fixed damage; current reducer damage and Energy legality, weakness/resistance, status and prevention not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Cowardice",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Current classic_power_core.js checks playedTurn >= round and returns Tentacool to hand while discarding attachments; active replacement, ownership, disabled status and turn legality not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         }
       ]
     },
@@ -4802,13 +5549,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Supersonic",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed heads-only Confusion at CC; current reducer coin, status and attack-cost paths not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Leech Life",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Printed 10 damage and heal by damage dealt after Weakness/Resistance; actual damage-to-counter conversion, prevention, cap and zero-damage scenarios not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         }
       ]
     },
@@ -4819,7 +5574,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "scope": "Current classic_trainer_core.js targets Bench and shuffles target plus attachments into deck, with special ownership handling for Clefairy Doll; active target, ownership, shuffling and legality not executed.",
+          "evidence": [
+            "Current-engine source review 2026-11-05: cards/base3.json; headless_duel.js; classic_power_core.js; classic_trainer_core.js. No deterministic execution or independent historical-ruling validation; not verified."
+          ]
         }
       ]
     },

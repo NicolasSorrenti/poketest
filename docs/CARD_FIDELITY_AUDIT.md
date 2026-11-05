@@ -582,3 +582,271 @@ Other source-inspected effects: Wigglytuff Lullaby/Do the Wave; Clefable Metrono
 
 A user-requested immediate run of the scheduled card audit reviewed `base2-28` Vaporeon, `base2-29` Venomoth, `base2-30` Victreebel, `base2-31` Vileplume, `base2-32` Wigglytuff, `base2-33` Butterfree, `base2-34` Dodrio, `base2-35` Exeggutor, `base2-36` Fearow and `base2-37` Gloom. The printed attacks and Powers were compared to the compiler and reducer paths, including attack payment and outcomes, status/choice ownership, Retreat Aid, and the previously fixed Heal and Shift effects. Ledger status: **partial source review** for all 10 (20 attack/Power entries); no card was claimed end-to-end verified. No new discrepancy was confirmed, so no gameplay change was justified. No new tests, test files or CI changes. Further runtime scenarios and complete errata/rulings coverage remain to certify these cards.
 
+
+## 2026-11-04 — Jungle five-printing source audit (38–42)
+
+Scope: exact five unreviewed Jungle printings; catalogue effect text/costs compared with Limitless printed listings and inspected against engine.js shared attack dispatch. **All five remain partial**: this batch did not run real reducer/browser scenarios or independently resolve all WotC-era edge rulings. No new tests were added.
+
+| Card | Checked attacks / current status | Finding |
+| --- | --- | --- |
+| [Lickitung JU #38](https://limitlesstcg.com/cards/JU/38) (`base2-38`) | Tongue Wrap / Supersonic — partial | Source routes 10 + coin Paralysis and heads-only Confusion through `coinStatus`; runtime coin outcomes untested. |
+| [Marowak JU #39](https://limitlesstcg.com/cards/JU/39) (`base2-39`) | Bonemerang / Call for Friend — partial | `multi` and `searchBasicToBench` handlers reflect printed two-flip damage, Fighting-only Basic search, full Bench restriction and shuffle; choice paths not exercised. |
+| [Nidorina JU #40](https://limitlesstcg.com/cards/JU/40) (`base2-40`) | Supersonic / Double Kick — partial | Source maps coin Confusion and two-flip 30× heads; energy-cost edge cases untested. |
+| [Parasect JU #41](https://limitlesstcg.com/cards/JU/41) (`base2-41`) | Spore / Slash — partial | Source maps automatic Sleep and plain 30 damage; interactions untested. |
+| [Persian JU #42](https://limitlesstcg.com/cards/JU/42) (`base2-42`) | Scratch / Pounce — partial | **Fixed** `defendReduce` returning before Pounce's printed 30 damage; now the +10 protection logic returns early only for attacks with zero printed damage. Specific-Defending-Pokémon requirement, switching termination and runtime checks remain open. |
+
+Code change: `engine.js` keeps the existing early return for non-damaging reduction attacks (such as Minimize), while damaging protection attacks fall through to the ordinary damage, weakness/resistance, and KO pipeline. Targeted static reasoning only; no execution or CI validation claimed here.
+
+## 2026-11-04 — Jungle printings 43–47 (five-card batch)
+
+Source audit only; five distinct unreviewed printings, ten attacks. **All five partial, zero fully verified.** Compared TCGdex catalogue (`cards/base2.json`), printed Jungle card listings (https://limitlesstcg.com/cards/JU/43 through /47), and `engine.js` attack classifiers, coin branches, Energy costs, damage and switch handling. No new tests or CI changes.
+
+- `base2-43` Primeape: Fury Swipes (three flips, 20 per heads), Tantrum (50 then tails self-Confusion). Patterns `multi` and `coinSelfConfuse` present; runtime status timing untested. **Partial.**
+- `base2-44` Rapidash: Stomp (20/30), Agility (30 and heads shield). `coinDamageChoice` and `agilityShield` present; protection expiration and switch behavior not exercised. **Partial.**
+- `base2-45` Rhydon: Horn Attack (30), Ram (50, 20 self-recoil, opponent selects forced switch even if Rhydon KOs itself). **Confirmed discrepancy:** shared `recoilForceSwitch` uses first opposing Bench slot by default, not an actual opponent-controlled selection when multiple choices exist; fix requires an asynchronous defending-player choice path, so no unsafe shortcut was committed. Self-KO ordering not runtime tested. **Partial, defect outstanding.**
+- `base2-46` Seaking: Horn Attack (10) and Waterfall (30) map to `plain` damage; no special-effect paths. **Partial.**
+- `base2-47` Tauros: Stomp (20/30) and Rampage (20 + 10 per own damage counter, tails self-Confusion) match `coinDamageChoice` and `selfDamageBonusConfuse` source paths. **Partial.**
+
+Follow-up: exercise deterministic heads/tails and self-KO/switch choice cases using existing runtime checks, verify WotC-era rulings and fix Ram's choice ownership. Avoid declaring any of these verified until then.
+
+## 2026-11-04 — Five Jungle printings #48–52; Rhydon Ram follow-up
+
+Reviewed **exactly five previously unreviewed printings** (ten attacks), comparing `cards/base2.json` with printed English Jungle card entries and the game code in `attack_effects_core.js`, `classic_attack_extensions.js`, `headless_duel.js`, and `engine.js`. Results are **partial**: no browser/online match or complete historical interaction matrix was executed, and this run did not add any tests or CI changes.
+
+| Card and printing | Attack review | Source-level conclusion |
+| --- | --- | --- |
+| [Weepinbell JU #48](https://limitlesstcg.com/cards/JU/48) (`base2-48`) | Poisonpowder; Razor Leaf | One Grass Energy → 10 + heads-only Poison; two Grass → plain 30. Headless status-coin and ordinary damage dispatch identified. **Partial.** |
+| [Bellsprout JU #49](https://www.serebii.net/card/jungle/049.shtml) (`base2-49`) | Vine Whip; Call for Family | Plain 10; one-Grass search specifically for Basic Bellsprout, Bench cap, shuffle and deck-choice contract identified. Actual choose/fail-to-find not run. **Partial.** |
+| [Cubone JU #50](https://limitlesstcg.com/cards/JU/50) (`base2-50`) | Snivel; Rage | Snivel's conditional 20 reduction uses the shared `reactive-shield` implementation; Rage is 10 + 10 per damage counter. The source-side shield records the printed source ID rather than a unique in-play target; same-printing copies and bench/switch timing need follow-up. **Partial.** |
+| [Eevee JU #51](https://limitlesstcg.com/cards/JU/51) (`base2-51`) | Tail Wag; Quick Attack | Headless `coin-attack-lock` and `coin-more` classify printed heads-only attack prevention and 10/30 attack. Lock tracking uses card ID, so alternate same-printing instances/bench transitions need careful validation. **Partial.** |
+| [Exeggcute JU #52](https://ns5.serebii.net/card/jungle/052.shtml) (`base2-52`) | Hypnosis; Leech Seed | Sleep requires Psychic Energy and no coin. Leech Seed does 20 for GG; [WotC-era erratum](https://jklaczpokemon.com/wotc-erratas/) makes its one-damage-counter healing compulsory when the attack actually deals damage. The headless `leech-seed` route uses final damage to decide automatic healing. **Partial.** |
+
+**Previous-batch defect repaired in this PR (not counted as a sixth newly reviewed card):** `base2-45` Rhydon / Ram. The authoritative headless reducer already had a `ram_switch` decision owned by the defending player, with the printed self-KO ordering, but the historical attack compiler returned `null`. Added an **exact Jungle Ram text, cost and damage** match to `classic_attack_extensions.js` and a corresponding resolver returning 50 damage plus 20 attacker self-damage; existing reducer logic now receives the `ram` program. An isolated in-memory compile/resolve check confirmed output `{ damage:50, selfDamage:20, flips:[] }`. No full reducer/gameplay test was run and the separate legacy `engine.js` path still defaults opponent replacements; do **not** mark Ram fully verified until those paths and historical rulings are addressed.
+
+**Validation:** the Classic attack compiler was evaluated in isolation without adding any test file. The patch specifically recognizes the Jungle Rhydon text and four Fighting Energy cost. All printings remain partial pending full in-game validation and relevant historical edge rulings.
+
+## 2026-11-04 — Five Jungle printings 53–57 (source and isolated effect checks)
+
+The previous review PR [#451](https://github.com/NicolasSorrenti/poketest/pull/451) was **squash merged into main** after all four original required workflows passed. Merge commit [56d72a8](https://github.com/NicolasSorrenti/poketest/commit/56d72a86307003a7e890b7bb703d7edf82b7ebfc). It enabled Rhydon's exact Jungle Ram program in the headless compiler and repaired stale references in the existing Gust of Wind test. Rhydon's legacy UI and full runtime edge cases remain partial.
+
+Exactly five next **unreviewed** Jungle printings were examined. English Jungle text was compared with `cards/base2.json` (notably Nidoran♂/♀ glyphs vs. source catalogue M/F spelling). Generic and Classic compilers and their `resolve` functions were evaluated in-memory with deterministic heads/tails for **seven printed attack routines**; Mankey's activated Peek was reviewed via source, not executed as a whole-game Power. No new test file, suite or CI workflow was created.
+
+| Printing | Inspected effects | Evidence / status |
+| --- | --- | --- |
+| [Goldeen #53](https://pokemondungeon.com/jungle-set/) (`base2-53`) | Horn Attack (W; 10) | `flat` compiler and 10 damage on isolated evaluation; **partial**. |
+| [Jigglypuff #54](https://pokemondungeon.com/jungle-set/) (`base2-54`) | Lullaby (C; automatic Sleep); Pound (CC; 20) | `status` (0 damage, Asleep) and `flat` (20) output as printed; **partial**. |
+| [Mankey #55](https://arcatcg.com/cards/base2-55) (`base2-55`) | Scratch (C; 10); Peek Power | Scratch compiled 10. `classic_power_core.js` activates Peek once per turn, checks status/suppression, offers both deck tops, random opponent hand or either Prize, and writes private results to controlling player's log. Randomness, revealed-card privacy, empty zones and multiplayer scenarios not executed; **partial**. |
+| [Meowth #56](https://bulbapedia.bulbagarden.net/wiki/Meowth_(Jungle_56)) (`base2-56`) | Pay Day (CC; 10 + coin draw) | `coin-draw` gives 10 damage; draws 1 on heads and 0 on tails; actual deck-out/KO timing not runtime tested; **partial**. |
+| [Nidoran♀ #57](https://limitlesstcg.com/cards/JU/57) (`base2-57`) | Fury Swipes (G; 3× 10); Call for Family (GG) | `coin-times` all-heads 30 / all-tails 0. `call-family` compiles correct restriction and `familyCandidates` explicitly accepts symbol and letter aliases for both Nidoran genders. Deck choice/fail to find, full Bench, shuffle and special-Energy corner cases still require gameplay validation; **partial**. |
+
+No new confirmed rule mismatch in this batch. Status remains partial for **all five cards** and all **eight total effects** (seven attacks, one Power); no card certified complete solely on source-level or isolated effect execution. The audit ledger now has 267 cards with at least partial review, 855 wholly unreviewed, one with no listed effects, and 0 fully certified. Follow-up must test the actual reducer/duel execution paths and related WotC rulings.
+
+## 2026-11-04 — Jungle #58–62 (five printings; source/print review only)
+
+PR [#440](https://github.com/NicolasSorrenti/poketest/pull/440) was already merged when this batch started; no unresolved audit PR was found. The five Jungle catalogue printings were compared to [Limitless](https://limitlesstcg.com/cards/JU/58) and inspected against `attack_effects_core.js`, `classic_attack_extensions.js`, `headless_duel.js` and the legacy `engine.js`. No reducer/browser scenario was executed in this run, so **none is fully verified**. No new tests, CI changes, or card engine changes were made.
+
+| Printing | Printed behavior and inspected implementation | Status / remaining evidence |
+| --- | --- | --- |
+| [Oddish #58](https://limitlesstcg.com/cards/JU/58) (`base2-58`) | Stun Spore: G, 10 and heads Paralysis; Sprout: GG, search named Basic Oddish onto Bench, shuffle, forbidden at full Bench. Coin-status, call-family deck choice and full-Bench guard inspected. | **Partial**; both flips, shuffled deck, legal/fail-to-find search, status immunity, Bench and KO interactions need actual reducer validation. |
+| [Paras #59](https://limitlesstcg.com/cards/JU/59) (`base2-59`) | Scratch: CC for 20; Spore: GG for unconditional Sleep. Flat/status compiler paths inspected. | **Partial**; typed payment, Sleep recovery, protection and KO timing not exercised. |
+| [Pikachu #60](https://limitlesstcg.com/cards/JU/60) (`base2-60`) | Spark: LL for 20 Active and selected opponent Bench target for 10 without Weakness/Resistance. Bench-target compiler and headless target choice inspected. | **Partial**; mandatory Bench choice, damage shields, simultaneous KO and real UI selection not exercised. |
+| [Rhyhorn #61](https://limitlesstcg.com/cards/JU/61) (`base2-61`) | Leer: C, heads attack lock against Rhyhorn until next opponent turn or Benching; Horn Attack: FCC for 30. Coin-attack-lock and flat compiler paths inspected. | **Partial**; switch expiry, coin outcomes, legal attack selection and modifiers need reducer checks. |
+| [Spearow #62](https://limitlesstcg.com/cards/JU/62) (`base2-62`) | Peck: C for 10; Mirror Move: CCC, repeat previous attack's final result. `headless_duel.js` lastAttackImpact capture and replay inspected. | **Partial**; potentially missing impact record for a previous attack that dealt zero damage and no status; must reproduce before changing engine. Check Weakness/Resistance, status, prevention and switch edge cases. |
+
+The ledger was updated for exactly these five printings. No defect was proven in an executed scenario, so no engine fix was applied. **0 / 1,123 printings are fully certified; 1,123 remain not fully verified** (including partial and unreviewed records). Continue with prior partials or Jungle #63 onward without reusing this five-card batch.
+
+
+## 2026-11-04 — Jungle #63–64 and Fossil #1–3 (five-printing source audit)
+
+No open card-fidelity PR found at start; earlier #440 already merged. Exactly five previously unreviewed printings examined, using catalogue, printed-card reference and relevant headless/legacy engine paths. All remain **partial**; no full reducer or browser scenario executed, no confirmed defect, no engine/test/CI changes.
+
+| Printing | Source inspection and unresolved validation | Status |
+| --- | --- | --- |
+| [Venonat Jungle #63](https://www.serebii.net/card/jungle/063.shtml) (`base2-63`) | Stun Spore G 10 + heads Paralysis, Leech Life GC 10 and healing from final damage. Headless `drain` and `healFromDamage`, legacy `drainDamage` inspected. Verify actual healing after Weakness/Resistance, shielding and status. | **partial** |
+| [Poké Ball Jungle #64](https://limitlesstcg.com/cards/JU/64) (`base2-64`) | Heads-only optional Pokémon search/reveal, hand transfer and shuffle in `classic_trainer_core.js`; validate flip persistence, tails, fail-to-find, empty deck and reveal privacy. | **partial** |
+| [Aerodactyl Fossil #1](https://limitlesstcg.com/cards/FO/1) (`base3-1`) | Wing Attack CCC 30 and Prehistoric Power evolution restriction; `headless_duel.js` `powerInPlay` and legacy `continuousPower` guards inspected. Validate status suppression and other evolution-entry paths. | **partial** |
+| [Articuno Fossil #2](https://limitlesstcg.com/cards/FO/2) (`base3-2`) | Freeze Dry WWW 30 + heads Paralysis; Blizzard WWWW 50 + heads opposing/tails own Bench 10. `bench-splash-coin` and legacy `coinBenchSpread` inspected. Validate both flip outcomes, Bench immunity, damage/KO ordering. | **partial** |
+| [Ditto Fossil #3](https://limitlesstcg.com/cards/FO/3) (`base3-3`) | Transform Active-only, copies Defending Pokémon except evolution and own Power, flexible attached Energy. `effectiveCard` and payment handling inspected; test dynamic HP/KO, status suppression, mirrored Ditto and energy costs. | **partial** |
+
+**Validation:** source inspection only, not reducer execution. Historical rulings not independently exhausted. No card promoted to fully verified. Continue with next unreviewed printings or revisit these partials with actual scenarios.
+
+## 2026-11-04 — Fossil #4–8 (five printings; source/print review, one legacy fix)
+
+At start, PR #440 was previously merged; no open card-fidelity audit PR was found. Compared printed Fossil English text recorded in `cards/base3.json` and reference [Fossil listings](https://limitlesstcg.com/cards/FO) with `classic_power_core.js`, `headless_duel.js`, and `engine.js`. This is a source/text review, **not full reducer or browser validation**. All five remain partial.
+
+| Printing | Effects and findings | Status |
+| --- | --- | --- |
+| [Dragonite #4](https://limitlesstcg.com/cards/FO/4) `base3-4` | Step In once during own turn from Bench; Slam four Colorless, two 40× coin flips. Core once-use and Bench switch paths inspected; legacy Step In once-use and attack flips not executed. | **partial** |
+| [Gengar #5](https://limitlesstcg.com/cards/FO/5) `base3-5` | Curse can move one opposing damage counter to another **even if KO**; core correctly permits KO. **Confirmed legacy mismatch**: `engine.js` disallowed lethal destination in `curse()` and UI, and omitted KO processing. Corrected all three. Dark Mind 30 Active + 10 chosen opponent Bench. | **partial** pending runtime confirmation |
+| [Haunter #6](https://limitlesstcg.com/cards/FO/6) `base3-6` | Transparency prevents all effects on heads and ceases only while Asleep; headless shield and Nightmare 10 + Sleep inspected. Test effect-only attacks and full prevention, plus status/KO. | **partial** |
+| [Hitmonlee #7](https://limitlesstcg.com/cards/FO/7) `base3-7` | Stretch Kick FF, 20 chosen opposing Bench; High Jump Kick FFF, 50 Active. Legacy Bench target/no-Bench checks inspected; actual reducer and shields pending. | **partial** |
+| [Hypno #8](https://limitlesstcg.com/cards/FO/8) `base3-8` | Prophecy P, reorder up to three top cards of either deck; Dark Mind PPP, 30 Active + 10 chosen Bench. Headless choice validation inspected; reorder legality, short decks and visibility untested. | **partial** |
+
+No new tests, suites or CI configuration. Full historical ruling survey, deterministic real reducer scenarios, browser behavior and check results are required before any verified designation. Prior source-level partials remain outstanding.
+
+## 2026-11-04 — Fossil #9–13 (five distinct printings)
+
+At start, PR #440 was already merged and prior Fossil PR #455 was open. Eight existing GitHub Actions workflows on #455's head all concluded success, and GitHub reported mergeable; #455 was safely squash-merged as `c9464cd61bcffe57c80e0aa10996bb0a723ae5e9` before this separate batch. This batch compared catalogue printed effect text against legacy `engine.js`, headless `headless_duel.js`, and classic attack/power handlers. Historical rulings and deterministic runtime scenarios remain outstanding; **all five are partial**, not verified.
+
+| Printing | Findings and validation outstanding | Status |
+| --- | --- | --- |
+| [Kabutops Fossil #9](https://limitlesstcg.com/cards/FO/9) `base3-9` | Sharp Sickle FF 30; Absorb FFFF 40 heals half actual post-W/R damage, rounded up to ten. Headless drain path inspected; validate healing against Resistance, shield, KO, max HP. | **partial** |
+| [Lapras Fossil #10](https://limitlesstcg.com/cards/FO/10) `base3-10` | Water Gun W 10+, bonus per extra **any Energy**, cap +20; Confuse Ray WW 10 and heads Confusion. **Fixed legacy Water Gun**: old code matched only 'Water Energy' and silently left Lapras at 10; now counts all attached Energy units beyond payment. Validate cap, special Energy, heads/tails and status immunity. | **partial** |
+| [Magneton Fossil #11](https://limitlesstcg.com/cards/FO/11) `base3-11` | Sonicboom LC 20 ignores W/R; Selfdestruct LLLL 100, 20 each Bench, 100 self. Check after-W/R shields, simultaneous KO and prizes, Bench protections. | **partial** |
+| [Moltres Fossil #12](https://limitlesstcg.com/cards/FO/12) `base3-12` | Wildfire F, optional Fire Energy discard/mill; Dive Bomb FFFF 80 only on heads. Headless selection validation inspected; verify zero payment, short deck, special Energy and tails. | **partial** |
+| [Muk Fossil #13](https://limitlesstcg.com/cards/FO/13) `base3-13` | Sludge GGG 30 and heads Poison; Toxic Gas suppresses other Powers while Muk unaffected by Asleep/Confused/Paralyzed. Validate status transitions, multi-Muk and simultaneous Powers. | **partial** |
+
+No new test files, suites or CI changes. Existing GitHub Actions checks on the new batch are required before merging. Neither code inspection nor CI success by itself promotes any printing to verified.
+
+## 2026-11-04 — Fossil #14–18 (five distinct printings; source/text audit)
+
+At start, prior audit PR [#456](https://github.com/NicolasSorrenti/poketest/pull/456) was open. Its head `22ee12bd1bf5484652bc331df266b3b08f3647a8` had eight completed, successful existing GitHub Actions workflows and the branch was three commits ahead of main without divergence; squash-merged safely as [`54474840`](https://github.com/NicolasSorrenti/poketest/commit/54474840b7184c51a9420c26e000ee05f9be3776). PR #440 and #455 were already merged. The independent Apex PR #457 was left untouched.
+
+This batch compares the printed text stored in `cards/base3.json` against the relevant `attack_effects_core.js`, `classic_attack_extensions.js`, `classic_power_core.js`, `headless_duel.js` and `engine.js` paths. Source inspection only: **no deterministic reducer execution, complete historical rulings review or full game interaction validation**, so all five are **partial** and none is verified.
+
+| Printing | Inspected behavior and remaining validation | Status |
+| --- | --- | --- |
+| [Raichu #14](https://limitlesstcg.com/cards/FO/14) `base3-14` | Gigashock LLLL 30 Active plus 10 each to up to three distinct opposing Bench targets; legacy `benchSpreadChoose` and headless Bench choice path inspected. Verify selection with 0–5 Bench, protections, and KO ordering. | **partial** |
+| [Zapdos #15](https://limitlesstcg.com/cards/FO/15) `base3-15` | Thunderstorm LLLL 40 Active, one coin per opponent Bench, 20 each heads, 10 self per tails; classic extension resolver inspected. Verify independent flips, empty Bench, self-KO, and prevention. | **partial** |
+| [Aerodactyl #16](https://limitlesstcg.com/cards/FO/16) `base3-16` | Wing Attack CCC 30; Prehistoric Power blocks playing Evolution cards while unaffected by special conditions. Headless evolution guard and passive power registration inspected. Verify all evolution routes and suppression. | **partial** |
+| [Articuno #17](https://limitlesstcg.com/cards/FO/17) `base3-17` | Freeze Dry WWW 30 + heads Paralysis; Blizzard WWWW 50 + heads opposing/tails own Bench 10. Coin-status and bench-splash compiler inspected. Verify both flips, damage shields and simultaneous KOs. | **partial** |
+| [Ditto #18](https://limitlesstcg.com/cards/FO/18) `base3-18` | Transform Active-only dynamic copy and flexible attached Energy, except retains Power and cannot evolve; headless `effectiveCard` and legacy dynamic copy inspected. Verify HP change, status suppression, mirrored Ditto, evolution and payment. | **partial** |
+
+No confirmed engine defect in this batch, and no new tests, suites or CI changes. Ledger and notes committed directly to main. After this batch, **292 / 1,123 printings have at least partial evidence, 831 have no review evidence, and 0 are fully certified; 1,123 remain not fully verified**. Future executions should prioritize completing prior partial records with deterministic runtime evidence rather than repeatedly treating source inspection as certification.
+
+
+## 2026-11-04 — Fossil #19–23 (five distinct non-holo reprints)
+
+At start, PR #440 was already merged and no open card-fidelity PR was present (Apex and RPG PRs were left untouched). These five non-holo printings reproduce the corresponding holo Fossil #4–8 text in the local catalogue. Compared the imported card text and engine handlers in `engine.js`, `headless_duel.js`, `classic_power_core.js`; the printed-card references below provide independent text cross-checks, but full historical rulings and deterministic gameplay scenarios are still pending. All remain **partial**, not verified. No engine code or tests were changed.
+
+| Printing | Findings and remaining validation | Status |
+| --- | --- | --- |
+| [Dragonite #19](https://limitlesstcg.com/cards/FO/19) `base3-19` | Slam 2 coin outcomes (0/40/80) and four Colorless cost; Step In Bench-only optional switch, once per turn; shared print with base3-4. Need deterministic flips, switched status/effect cleanup and once-per-turn runtime scenarios. | **partial** |
+| [Gengar #20](https://limitlesstcg.com/cards/FO/20) `base3-20` | Dark Mind 30 Active and optional 10 to opponent Bench; Curse one opposing damage counter transfer can KO, once per turn and status lock; shared print with base3-5. Confirm direct KO prizes, targeting when no Bench, and independent status/turn cases in runtime. | **partial** |
+| [Haunter #21](https://limitlesstcg.com/cards/FO/21) `base3-21` | Nightmare 10 and unconditional Sleep; Transparency on incoming attack can prevent all effects (not merely damage), except when Asleep; shared print with base3-6. Legacy engine appears to gate Transparency on nonzero damage; status-only attacks need reproduction and correction. | **partial** |
+| [Hitmonlee #22](https://limitlesstcg.com/cards/FO/22) `base3-22` | Stretch Kick two Fighting cost, 20 opponent Bench only, no Weakness/Resistance; High Jump Kick three Fighting cost, 50 Active; shared print with base3-7. Check empty Bench, multiple targets, shields and KO/prizes in runtime. | **partial** |
+| [Hypno #23](https://limitlesstcg.com/cards/FO/23) `base3-23` | Prophecy one Psychic cost, reorder up to three cards of either deck; Dark Mind three Psychic cost, 30 Active and 10 chosen opponent Bench; shared print with base3-8. Check top-of-deck ordering, deck lengths 0–2, choice ownership, Bench target and KO in runtime. | **partial** |
+
+Potential legacy discrepancy to reproduce: Transparency is gated by `if(dmg)` in `engine.js`, so an attack that has only a non-damage effect may not trigger the required coin flip. Do not treat this as a confirmed regression until a targeted runtime scenario is executed. No new tests or CI changes.
+
+
+## 2026-11-04 — Fossil #24–28 (five non-holo printings; source/print review)
+
+At start no open card-fidelity audit PR was found; #440 and previous audit PRs are closed. Apex #459 and unrelated RPG PRs untouched. Five previously unreviewed non-holo Fossil printings compared with [Fossil printed card list](https://pokemondungeon.com/fossil-set/), [Fossil set index](https://www.serebii.net/card/fossil/), [Kabutops FO/24](https://limitlesstcg.com/cards/FO/24), local `cards/base3.json`, `engine.js`, `headless_duel.js`, and existing earlier holo reviews. **All five remain partial**, because deterministic gameplay and comprehensive historical rulings have not been completed.
+
+| Printing | Finding and required validation | Status |
+| --- | --- | --- |
+| `base3-24` Kabutops | Sharp Sickle FF 30; Absorb FFFF 40 heals half post-W/R damage rounded to ten. Check shields, resistance, damage counters and KO order. | partial |
+| `base3-25` Lapras | Water Gun W 10+ with capped +20 bonus; Confuse Ray WW 10 + heads Confusion. **Conflicting source:** printed Fossil FO/25 sources specify extra *Water Energy*, whereas prior #10 audit interpreted *any Energy* and modified legacy engine. [TCG ONE](https://tcg.one/cards/lapras-fo-25) transcribes any Energy. Do not revert without authoritative historical errata/ruling; runtime both interpretations and Energy payment still untested. | partial |
+| `base3-26` Magneton | Sonicboom LC 20 ignores W/R; Selfdestruct LLLL 100, 20 each Bench, 100 self. Simultaneous KO, shields, prizes untested. | partial |
+| `base3-27` Moltres | Wildfire F optional discard Fire Energy and mill equal cards; Dive Bomb FFFF 80 on heads only. Optional 0, short decks and coin cases untested. | partial |
+| `base3-28` Muk | Sludge GGG 30 + heads Poison; Toxic Gas suppresses other Powers unless Muk status-locked. Multi-Muk and status transitions untested. | partial |
+
+No engine change, new tests, suites or CI changes. **Potential Lapras interpretation mismatch is unresolved**, not certified as a defect. Source review only, no new verified cards. Review evidence on 302/1,123 printings; remaining not fully verified 1,123.
+
+## 2026-11-04 — Active-engine follow-up: Fossil #24–28
+
+Scope is the current game engine only: `play.html` routes single play to `classic_live.html`; `classic_local_service.js` imports `headless_duel.js` and calls `createGame` / `reduce`. `rpg_duel_bridge.js` is a UI/result adapter, not a second card-rules engine. The current reducer uses `attack_effects_core.js`, `classic_attack_extensions.js`, and `classic_power_core.js`. Earlier `engine.js` legacy-only findings are NOT validation evidence.
+
+| Printing | Active-engine source review and unresolved cases | Status |
+| --- | --- | --- |
+| `base3-24` Kabutops | Sharp Sickle and Absorb compiled through current attack effects; half-damage healing, protection, weakness/resistance, KO and energy-cost scenarios still need reducer execution. | partial |
+| `base3-25` Lapras | Imported `cards/base3.json` says each Energy; user explicitly resolved Fossil Water Gun as **only extra Water Energy**, capped +20. Current `classic_attack_extensions.js` otherwise compiles generic `extra-energy`; scoped override in `attack_effects_core.js` now emits `water-extra` for the Lapras printing family, leaving other generic Energy attacks unchanged. Confuse Ray and actual damage cases still need reducer execution. | partial |
+| `base3-26` Magneton | Current reducer handles ignore-W/R and Bench recoil families; simultaneous knockouts, protections and prize ordering unexecuted. | partial |
+| `base3-27` Moltres | Current `headless_duel.js` offers Wildfire optional Fire Energy choices (0 to available), validates payment; Dive Bomb coin failure compiled. Short opponent deck and coin results unexecuted. | partial |
+| `base3-28` Muk | Current `classic_power_core.js` checks Toxic Gas suppression and status locks; Sludge coin-status path identified. Multiple Muk, status changes, other Powers and damage prevention unexecuted. | partial |
+
+Source inspection and a code change are **not runtime verification**. No new tests, suites, or CI changes. Printed-card references and historical ruling gaps from the previous Fossil #24–28 entry remain relevant; this entry corrects engine provenance and the user-confirmed Water-only interpretation. All five remain partial.
+
+## 2026-11-04 — Active-engine Fossil #29–33 (five distinct printings)
+
+At start, [PR #464](https://github.com/NicolasSorrenti/poketest/pull/464) was confirmed merged as [597d5524](https://github.com/NicolasSorrenti/poketest/commit/597d5524fa1c652a1a1faf219ae2f7ff3b565833), and no open card-fidelity PR was found. Live match authority: `play.html` → `classic_live.html` → `classic_local_service.js` → `headless_duel.js`; RPG bridge delegates to the same local authority. Attack effects compile through `attack_effects_core.js` / `classic_attack_extensions.js`. Legacy `engine.js` was not used as evidence.
+
+Five **previously unreviewed** Fossil printings compared to imported TCGdex card text in `cards/base3.json` and the active compiler/reducer source. **No current-reducer runtime scenario was executed**, and independent historical ruling checks remain outstanding; every status is **partial** rather than verified.
+
+| Printing | Active-engine evidence and outstanding runtime scenarios | Status |
+| --- | --- | --- |
+| [Raichu #29](https://limitlesstcg.com/cards/FO/29) `base3-29` | Gigashock LLLL: 30 Active + 10 each to exactly 3 distinct opposing Bench targets (or all if fewer). `classic_attack_extensions.js` compiles `bench-up-to-three`; `headless_duel.js` requests exactly three distinct choices for Bench >3. Test Bench 0–5, shields, cost, and KOs. | **partial** |
+| [Zapdos #30](https://limitlesstcg.com/cards/FO/30) `base3-30` | Thunderstorm LLLL: 40 Active, independent coin for each opposing Bench, 20 each heads and 10 self per tails. Dedicated `thunderstorm` compiler identified; no coin, self-KO or protection runtime scenarios. | **partial** |
+| [Arbok #31](https://limitlesstcg.com/cards/FO/31) `base3-31` | Terror Strike G: 10 then heads-only opponent-chosen switch; `coin-defender-switch` compiler identified. Poison Fang GGC: 20 and Poison. Test defender KO before switch, choice ownership, no Bench, statuses. | **partial** |
+| [Cloyster #32](https://limitlesstcg.com/cards/FO/32) `base3-32` | Clamp WW: heads 30 and Paralysis, tails nothing; `coin-clamp` compiler identified. Spike Cannon WW: two flips, 30 per heads. Test all flips, status immunity, prevention. | **partial** |
+| [Gastly #33](https://limitlesstcg.com/cards/FO/33) `base3-33` | Lick P: 10 and heads Paralysis. Energy Conversion PP: recover 0–2 discard Energy, then 10 self-damage. Dedicated compiler and `headless_duel.js` discard-recovery choice/validation inspected. Test empty discard, special Energy, self-KO, ordering. | **partial** |
+
+No current-engine defect was confirmed from source inspection alone, so no gameplay code was modified. No test files, suites, or CI configuration were added. Ledger after this batch: **307 partially reviewed**, **816 unreviewed**, **0 fully verified**, **1123 not fully verified** of 1123. The new batch requires real reducer execution and historical rulings before promotion.
+
+
+## 2026-11-04 — Current-engine Fossil #34–38 (five distinct printings)
+
+Previously merged [PR #484](https://github.com/NicolasSorrenti/poketest/pull/484) was confirmed merged; no open card-fidelity PR found. Current match authority is `classic_local_service.js` importing `headless_duel.js`, which compiles effects via `attack_effects_core.js` and `classic_attack_extensions.js`. `classic_live.html` loads the RPG duel bridge. Legacy `engine.js` was excluded. Source evidence is imported `cards/base3.json` text and current compiler/reducer code, **not** deterministic runtime execution or a full historical ruling cross-check. All five remain **partial**.
+
+| Printing | Active-engine source review and outstanding validation | Status |
+| --- | --- | --- |
+| `base3-34` | Wing Attack CCC 30 is flat damage; Leech Life GGC 20 drains damage actually dealt after W/R, limited by existing damage counters. Check prevented damage, W/R, full HP, and defender KO sequencing. | partial |
+| `base3-35` | Psyshock P 10 has heads Paralysis; Hyper Beam WWC 20 discards a selected defending attached Energy, when present. Check target choice across different Energy names, protected Energy, empty attachments and KO timing. | partial |
+| `base3-36` | Avalanche FFFC 60 is flat damage; Selfdestruct FFFF 100 hits both Benches for 20 without W/R and self for 100. Check simultaneous KOs, self-damage W/R immunity, bench protection, and prize order. | partial |
+| `base3-37` | Harden FF prevents <=30 post-W/R incoming damage next opponent turn but not attack side effects; Rock Throw FFC 40 flat. Check exact 30/40 thresholds, W/R ordering, non-damage statuses, bench/reset and turn expiration. | partial |
+| `base3-38` | Flail W 10 per Kingler damage counter, Crabhammer WWC 40 flat. Check 0 to near-KO counters, W/R, protection, and energy payment. | partial |
+
+The current compiler has a `drain` pattern for Golbat Leech Life, `damage-shield` threshold for Graveler Harden, `flail-counters` for Kingler Flail, and `bench-both-recoil` for Golem Selfdestruct. Hyper Beam has a defending Energy-selection path in `headless_duel.js`. These are handler/code-path observations, **not executed proof**. No confirmed new-engine defect, no gameplay changes, no tests or CI added. 312 partially reviewed, 811 unreviewed, 0 fully verified, 1123 not fully verified.
+
+
+## 2026-11-04 — Current-engine Fossil #39–43 (five distinct printings)
+
+The previous audit PR [#492](https://github.com/NicolasSorrenti/poketest/pull/492) is merged and no outstanding card-fidelity PR was found. Active authority remains `classic_local_service.js` importing `headless_duel.js`; attack compilation is `attack_effects_core.js` plus `classic_attack_extensions.js`, and Pokémon Powers are in `classic_power_core.js`. Imported `cards/base3.json` supplied the transcribed card text. **No executable reducer scenarios or independent historical ruling verification were performed in this pass.** All five remain partial, and absence of a detected bug is not proof of correctness.
+
+| Printing | Current-engine review; unresolved execution/rulings | Status |
+| --- | --- | --- |
+| `base3-39` Magmar | Smokescreen F: 10 and next-turn attack-failure coin. `headless_duel.js` checks `attackPenalty` before Confusion; Smog FF: 20 and heads Poisoned. Need both coins, discard-payment ordering, switch/reset, protection and expiry scenarios. | partial |
+| `base3-40` Omastar | Water Gun WC: 20+; imported text says each extra Energy (not Water-specific), cap +20; generic `extra-energy` compiler identified. Spike Cannon WW: two 30-per-head flips. Need mixed Energy, exact cost allocation, 0/1/2 heads and W/R. | partial |
+| `base3-41` Sandslash | Slash CC: flat 20. Fury Swipes FF: 20 per head across three flips, `coin-times` compiler. Need 0–3 heads, cost, Grass weakness, Lightning resistance and prevention. | partial |
+| `base3-42` Seadra | Water Gun WC: 20+ and generic `extra-energy` compiler, cap +20. **Do not apply the user-confirmed Lapras-specific Water-only ruling to Seadra without independent evidence.** Agility WCC: 20, heads prevents next-turn damage and effects; check all outcomes, status effects, switch and expiration. | partial |
+| `base3-43` Slowbro | Psyshock PP: 20, heads Paralysis. Strange Behavior is activated in `classic_power_core.js`: select damaged friendly source and transfer one counter to Slowbro without KO. Need repeat use, status suppression, legal source, bench, 50/60 damage threshold, and timing checks. | partial |
+
+No gameplay fix confirmed. No test files, suites, or CI changed. A full ledger recount after this update yields **317 partial**, **805 unreviewed**, **1 verified**, **1122 not fully verified**, total 1123. The single verified printing predates this batch and has not been revalidated here.
+
+
+## 2026-11-04 — Current-engine Fossil #44–48 (five distinct printings)
+
+At start [PR #440](https://github.com/NicolasSorrenti/poketest/pull/440) and [PR #496](https://github.com/NicolasSorrenti/poketest/pull/496) were merged; no open fidelity PR was returned. The current authority is `classic_local_service.js` → `headless_duel.js`, reached from the live match and RPG bridge. Source evidence: `cards/base3.json`, `attack_effects_core.js`, `classic_attack_extensions.js`, and `headless_duel.js`. **This pass did not execute reducer/browser scenarios or independently confirm historical rulings, so none is fully verified.**
+
+| Printing | Active-engine source findings and gaps | Status |
+| --- | --- | --- |
+| `base3-44` Tentacruel | Supersonic W, zero damage + heads Confusion; Jellyfish Sting WW, 10 + automatic Poison. `coin-status` and `status` compiler families. Need both coin outcomes, status interactions, W/R, legality. | partial |
+| `base3-45` Weezing | Smog GG, 20 + heads Poison; Selfdestruct GGC, 60 Active, 10 each Bench, 60 self. `bench-both-recoil` family. Need simultaneous KOs, Bench shields, prizes and payment. | partial |
+| `base3-46` Ekans | Spit Poison G, zero + heads Poison; Wrap CG, 20 + heads Paralysis. Both `coin-status`; need heads/tails, W/R and status replacement. | partial |
+| `base3-47` Geodude | Stone Barrage FC, 10 per heads until first tails. Dedicated `coins-until-tails` compiler and resolver with 1000-head safety limit. Need deterministic sequences and cost/defense cases. | partial |
+| `base3-48` Grimer | Nasty Goo C, 10 + heads Paralysis; Minimize G, 20 less incoming damage after W/R on opponent's next turn. `coin-status` and `damage-shield` compiler families; `headless_duel.js` subtracts `shield.reduce` after W/R. Need 0/10/20/30 damage, switch, expiry, non-damage effects, stacking. | partial |
+
+No current-engine defect confirmed, no gameplay or tests/CI changed. Ledger recount: **322 partial, 800 unreviewed, 1 verified**, **1122 not fully verified** of 1123. The single previously verified printing was not revalidated here.
+
+
+## 2026-11-04 — Current-engine Fossil #49–53 (five distinct printings)
+
+Checked [#440](https://github.com/NicolasSorrenti/poketest/pull/440) (merged) and searched for open card-fidelity PRs (none). The live authority is `classic_local_service.js` requiring `headless_duel.js`, with `rpg_duel_bridge.js` providing UI integration rather than independent battle rules. Current attack compilation/resolution is `attack_effects_core.js` + `classic_attack_extensions.js` + `headless_duel.js`; passive Powers use `classic_power_core.js`. Source catalogue: `cards/base3.json`. Compared historical printed text on [TCG Codex Omanyte](https://tcgcodex.com/card-details/357/omanyte), [Kabuto](https://tcgcodex.com/card-details/344/kabuto), and [Psyduck](https://tcgcodex.com/card-details/366/psyduck). Independent historical rulings and **real reducer/browser execution were not completed**; all remain partial.
+
+| Printing | Active-engine evidence / outstanding scenarios | Status |
+| --- | --- | --- |
+| `base3-49` Horsea | Smokescreen W: 10 plus next-turn attack-penalty coin, whose pre-Confusion gate is in `headless_duel.js`. Still need heads/tails, switching, expiry, W/R and prevention execution. | partial |
+| `base3-50` Kabuto | Scratch C: 10; Kabuto Armor passive appears in `classic_power_core.js` and `headless_duel.js` uses `Math.floor(dmg/20)*10` after W/R. Still need 10/20/30/40 incoming damage, status suppression, self-attack and other effects. | partial |
+| `base3-51` Krabby | Call for Family W: search named Basic Krabby and bench; full-Bench rejection and deck-search decisions exist in `headless_duel.js`. Irongrip WC: 20 flat. Still need no-match, full-Bench, search choice, shuffle and cost execution. | partial |
+| `base3-52` Omanyte | **Confirmed source mismatch:** printed Water Gun W: 10+ specifies *extra Water Energy*, but imported text says generic Energy and compiled `extra-energy`. Scoped override now compiles `water-extra`, +10 per qualifying extra Water Energy capped +20. Clairvoyance is a passive Power, disabled by Asleep/Confused/Paralyzed. Still need mixed Energy, cost allocation, status suppression, hand visibility and reset execution. | partial |
+| `base3-53` Psyduck | Headache P: next-turn Trainer lock (`trainer-lock`); Fury Swipes W: three coins, 10 per heads (`coin-times`). Still need Trainer legality across turn boundary, 0–3 heads, W/R and prevention execution. | partial |
+
+**Fix:** `attack_effects_core.js` now narrowly overrides Fossil Omanyte Water Gun before generic classic compilation, matching the printed Water-specific bonus. This is distinct from the user-confirmed Fossil Lapras ruling, which remains unchanged. No new tests, test suites or CI changes. No browser/reducer scenario was executed, so do not certify these cards as verified.
+
+Ledger recount after this batch: **327 partial, 795 unreviewed, 1 verified**, total 1123; **1122 not fully verified**. The single earlier verified printing was not retested.
+
+
+## 2026-11-05 — Fossil 54–58 (active-engine source-only pass)
+
+Scope: exactly five distinct printings `base3-54` Shellder, `base3-55` Slowpoke, `base3-56` Tentacool, `base3-57` Zubat, `base3-58` Mr. Fuji. Checked imported printed text in `cards/base3.json` and relevant active-engine source. Live authority is `classic_local_service.js` requiring `headless_duel.js`; `rpg_duel_bridge.js` is UI integration. Attack, Power and Trainer execution lives in `headless_duel.js`, `classic_power_core.js` and `classic_trainer_core.js`. Legacy `engine.js` excluded. PR #440 already merged; no competing fidelity PR found before branch creation.
+
+| Printing | Source evidence and remaining verification | Status |
+| --- | --- | --- |
+| `base3-54` Shellder | Supersonic heads-only Confusion and Hide in Shell heads-only damage prevention (not other effects) compared to imported printed text. Execute coin outcomes, prevention duration, switch, damage/status distinctions and Energy legality. | partial |
+| `base3-55` Slowpoke | Spacing Out heals one counter on heads and cannot attack undamaged; Scavenge requires attached Energy discard and discarded Trainer retrieval. `headless_duel.js` explicitly sequences Scavenge cost and Trainer selection; existing partial prevention evidence retained. Execute successful recovery, heads/tails, no-counter legality and cost/choice edge cases. | partial |
+| `base3-56` Tentacool | Acid W:10; Cowardice forbids turn played, returns Tentacool to hand and discards attachments in `classic_power_core.js`. Execute active replacement, no-Bench outcome, special card ownership, status disablement and turn restrictions. | partial |
+| `base3-57` Zubat | Supersonic heads-only Confusion; Leech Life heals by actual damage after Weakness/Resistance. Execute coin, damage prevention, counter conversion, heal cap, costs and W/R. | partial |
+| `base3-58` Mr. Fuji | `classic_trainer_core.js` selects a Benched Pokémon and shuffles Pokémon plus attachments, with special Clefairy Doll ownership handling. Execute ownership, target legality, shuffle and attachments. | partial |
+
+No independent historical ruling adjudication or deterministic live-reducer/browser scenario was completed in this pass. **No verified statuses or confirmed active-engine defects**; no gameplay code, tests, CI or Apex modifications. Source inspection is not proof of correct gameplay. Ledger recount: **331 partial, 791 unreviewed, 1 verified; 1122 not fully verified**. The single verified printing was not retested.

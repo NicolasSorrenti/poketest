@@ -776,8 +776,10 @@ function prizeRaceBonus(action,o,cfg){
   // Sleeping/Paralyzed Pokémon cannot immediately attack. An omniscient
   // "potential attack" should not provoke a desperate unnecessary retreat.
   if(['Asleep','Paralyzed'].includes(enemy.active.status))return 0;
-  const outgoing=strongestAffordableAttack(enemy.active,old,enemy.bench.length);
-  const incoming=strongestAffordableAttack(enemy.active,alternate,enemy.bench.length);
+  const outgoing=cfg.level===8?strongestUsableOpponentAttack(o,old):
+   strongestAffordableAttack(enemy.active,old,enemy.bench.length);
+  const incoming=cfg.level===8?strongestUsableOpponentAttack(o,alternate):
+   strongestAffordableAttack(enemy.active,alternate,enemy.bench.length);
   const deadly=outgoing>=hpRemaining(old)&&outgoing>0;
   const escape=incoming<hpRemaining(alternate);
   const myKO=strongestAffordableAttack(old,enemy.active,own.bench.length)>=hpRemaining(enemy.active);
@@ -801,14 +803,28 @@ function opponentResponseBonus(action,o,cfg){
  if(['Asleep','Paralyzed'].includes(q.active.status))return 0;
  const attacker=p.active,next=p.bench[action.payload.slot];
  if(!next)return 0;
- const now=strongestAffordableAttack(q.active,attacker,q.bench.length);
- const after=strongestAffordableAttack(q.active,next,q.bench.length);
- const threat=now>=hpRemaining(attacker)&&now>0;
- if(!threat||after>=hpRemaining(next))return 0;
+ // Apex must evaluate attacks the opponent can actually declare. Printed
+ // payable damage is not a threat while Amnesia or Gym locks prevent it.
+ const now=cfg.level===8?strongestUsableOpponentAttack(o,attacker):
+  strongestAffordableAttack(q.active,attacker,q.bench.length);
+ const after=cfg.level===8?strongestUsableOpponentAttack(o,next):
+  strongestAffordableAttack(q.active,next,q.bench.length);
+ // A Confused opponent has only a 50% chance to execute its attack.
+ // Use the existing likely-KO forecast for Apex rather than granting a
+ // full rescue bonus for an uncertain knockout.
+ const threat=cfg.level===8?likelyOpponentKnockout(o,attacker,true):
+  now>=hpRemaining(attacker)&&now>0;
+ const replacementThreat=cfg.level===8?likelyOpponentKnockout(o,next,true):
+  after>=hpRemaining(next);
+ if(!threat||replacementThreat)return 0;
  const currentKO=(attacker.effectiveAttacks||card(attacker.id)?.attacks||[])
-  .some(a=>canPayEnergy(a.cost||[],energyPool(attacker))&&knockoutChance(a,attacker,q.active,p.bench.length)>=.75);
+  .some((a,i)=>(cfg.level===8?eligibleAttack(o,attacker,a,i):
+   canPayEnergy(a.cost||[],energyPool(attacker)))&&
+   knockoutChance(a,attacker,q.active,p.bench.length)*
+    (cfg.level===8&&attacker.status==='Confused'?.5:1)>=.75);
  if(currentKO)return 0;
- const replacement=strongestAffordableAttack(next,q.active,p.bench.length);
+ const replacement=cfg.level===8?projectedAttackValue(next,q.active,o.turnSerial,p.bench.length):
+  strongestAffordableAttack(next,q.active,p.bench.length);
  if(!replacement)return 0; // Do not flee into a passive Bench that cannot defend itself.
  const lostEnergy=Math.min(attacker.energies?.length||0,(card(attacker.id)?.retreatCost||[]).length);
  const advantage=Math.max(0,replacement-strongestAffordableAttack(attacker,q.active,p.bench.length))*.25;
@@ -1032,7 +1048,13 @@ function benchMatchupValue(pokemonId,o){
  const candidate={id:pokemonId,energies:[],damage:0,status:null};
  const enemy=o.opponent.active;
  if(!enemy)return 0;
- const incoming=strongestAffordableAttack(enemy,candidate,o.opponent.bench.length);
+ // Permanently spent Gym attacks cannot threaten a future Bench replacement.
+ // Temporary locks may expire before promotion and are not filtered here.
+ const enemyMoves=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
+ const enemyPool=energyPool(enemy);
+ const incoming=enemyMoves.reduce((best,attack,index)=>
+  enemy.gymAttackOnce?.includes(index)||!canPayEnergy(attack.cost||[],enemyPool)?best:
+   Math.max(best,estimatedDamage(attack,enemy,candidate,o.opponent.bench.length)),0);
  const hp=hpRemaining(candidate);
  const canBeKnockedOut=incoming>0&&incoming>=hp;
  // A newly benched Pokémon can use only an Energy attachment that is
@@ -1192,13 +1214,17 @@ function score(a,o,cfg,used){
   // 55% multiplier here previously double-discounted random attacks. Higher
   // levels instead compute the actual KO probability for known coin families.
   const lethal=boostedDamage>=hp&&hp>0;
-  const koChance=cfg.level>=3?knockoutChance(attack,p.active,q.active,p.bench.length,plusPower):(lethal?1:0);
+  // Confusion requires a successful coin flip before the chosen attack
+  // resolves. Do not value its damage or Prize chance as guaranteed.
+  // Keep the calibrated scoring of lower CPU levels unchanged.
+  const confusionChance=cfg.level===8&&p.active.status==='Confused'?.5:1;
+  const koChance=(cfg.level>=3?knockoutChance(attack,p.active,q.active,p.bench.length,plusPower):(lethal?1:0))*confusionChance;
   const riskPreference=uncertain?style.risk*40:0;
   // Apex values damage that actually removes HP, not overkill. KO chance is
   // scored separately, so a 120-damage attack against 20 HP should not win
   // solely on excess damage over a cheaper, equally reliable knockout.
-  const direct=(cfg.level===8?Math.min(boostedDamage,hp):boostedDamage)*style.damage;
-  const statusValue=/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0;
+  const direct=(cfg.level===8?Math.min(boostedDamage,hp):boostedDamage)*style.damage*confusionChance;
+  const statusValue=(/Poison|Paraly|Sleep|Confus/i.test(attack?.text||'')?16:0)*confusionChance;
   // A retreat-lock such as Murkrow's Mean Look does not stack. Once the
   // defending Pokemon is already unable to retreat, repeating the zero-damage
   // move forfeits an entire attack. Prefer a payable damaging attack instead.
@@ -1316,8 +1342,20 @@ function score(a,o,cfg,used){
    currentPressure>0&&currentIncoming<hpRemaining(before);
   // Expert profiles recognize when an incoming attack is likely to KO their
   // Active, but do not sacrifice an immediate winning attack to flee.
-  const oldDamage=strongestAffordableAttack(before,q.active,p.bench.length);
-  const newDamage=strongestAffordableAttack(to,q.active,p.bench.length);
+  // A payable attack can still be barred by Amnesia or Gym restrictions.
+  // Use actual legal attack pressure for Apex's retreat comparison, not
+  // theoretical damage from a move the Active cannot declare.
+  const legalPressure=(unit)=>{
+   const moves=unit.effectiveAttacks||card(unit.id)?.attacks||[];
+   return moves.reduce((best,attack,index)=>
+    eligibleAttack(o,unit,attack,index)?
+     Math.max(best,estimatedDamage(attack,unit,q.active,p.bench.length)*
+      (unit.status==='Confused'?.5:1)):best,0);
+  };
+  const oldDamage=cfg.level===8?legalPressure(before):
+   strongestAffordableAttack(before,q.active,p.bench.length);
+  const newDamage=cfg.level===8?legalPressure(to):
+   strongestAffordableAttack(to,q.active,p.bench.length);
   // A printed, payable KO is not necessarily usable: Amnesia and Gym
   // restrictions can block that attack, and coin-dependent attacks are not
   // guaranteed. Do not penalize a defensive retreat by 300 for a phantom KO.
@@ -1402,8 +1440,8 @@ function projectedAttackValue(active,defender,turnSerial=0,benchCount=null){
   // Confused attack as a guaranteed KO (or guaranteed damage). The status
   // can be removed by a projected Full Heal Energy or evolution beforehand.
   const confusionChance=active.status==='Confused'?.5:1;
-  const impact=(Math.min(dmg,hp)*1.05+ko*115)*confusionChance+
-   (/Poison|Paraly|Sleep|Confus/i.test(attack.text||'')?10:0);
+  const impact=(Math.min(dmg,hp)*1.05+ko*115+
+   (/Poison|Paraly|Sleep|Confus/i.test(attack.text||'')?10:0))*confusionChance;
   best=Math.max(best,impact);
  }
  return best;

@@ -1,124 +1,11 @@
 'use strict';
 (()=>{
-const DRAW_ASSIST_KEY='neoRpgCpuDrawAssistEnabled';
-const drawAssistToggle=document.getElementById('rpgDrawAssistToggle');
-if(drawAssistToggle){
- const refresh=()=>{const enabled=localStorage.getItem(DRAW_ASSIST_KEY)!=='false';drawAssistToggle.textContent='CPU HELP: '+(enabled?'ON':'OFF');drawAssistToggle.setAttribute('aria-pressed',String(enabled));};
- drawAssistToggle.addEventListener('click',()=>{localStorage.setItem(DRAW_ASSIST_KEY,String(localStorage.getItem(DRAW_ASSIST_KEY)==='false'));refresh();});
- refresh();
-}
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
 const LIVE_NEW=window.NeoRpgLiveEverydayEvents||{events:[],art:{},followups:{},artAt:()=>null,finalArt:()=>null,fallback:()=>null,byId:()=>null};
-const LIVE_EVENTS=[
- {id:'live_home_welcome',title:'Someone Is Already Home',kind:'season',priority:95,earliestDay:2,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:2},lines:[
-  {speaker:'Narrator',text:'You wake up to the smell of fresh coffee. Someone is moving around the kitchen.'},
-  {speaker:'Live',text:"Morning! Your mom asked me to look after the apartment. I'm Live. I hope you don't mind me making myself at home."},
-  {speaker:'Protagonist',text:'You already seem pretty comfortable here.'},
-  {speaker:'Live',text:"Of course! I want you to feel completely taken care of. Oh—did that sound strange? I just mean breakfast!"}
- ],choices:[{label:'Thank her for breakfast',reply:"You're welcome! There's plenty more where that came from.",flag:'live_welcome_kind'},{label:'Ask how she knows Mom',reply:"We've been friends for ages! She said you'd need someone to keep the place in order.",flag:'live_welcome_curious'}]},
- {id:'live_home_cooking',title:'A Little Something in the Kitchen',kind:'season',priority:94,earliestDay:5,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_home_welcome'},lines:[
-  {speaker:'Narrator',text:'You return home to find Live cooking with her sleeves rolled up.'},
-  {speaker:'Live',text:"Perfect timing! I made enough for two. I like it when you come home hungry."},
-  {speaker:'Protagonist',text:'That sounded a little—'},
-  {speaker:'Live',text:"What? Oh! I meant dinner. Taste the sauce before it gets cold!"}
- ],choices:[{label:'Help set the table',reply:"That's sweet of you. I knew we'd make a good team!",flag:'live_cooking_help'},{label:'Try the sauce',reply:"See? A little patience makes everything better.",flag:'live_cooking_taste'}]},
- {id:'live_home_reading',title:'The Quiet Afternoon',kind:'season',priority:93,earliestDay:9,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_home_cooking'},lines:[
-  {speaker:'Narrator',text:'Live is curled up with a book on the sofa when you enter.'},
-  {speaker:'Live',text:"There you are! Come sit close; I saved you the warm spot."},
-  {speaker:'Protagonist',text:'You say things like that so naturally.'},
-  {speaker:'Live',text:"Well, the sunlight reaches this cushion first. What did you think I meant?"}
- ],choices:[{label:'Sit and read together',reply:"Lovely. You can have the next chapter when I'm done.",flag:'live_read_together'},{label:'Ask about her book',reply:"It's a mystery! I always think I've solved it, and then I'm wrong.",flag:'live_read_book'}]},
- {id:'live_home_relaxing',title:'A Moment to Unwind',kind:'season',priority:92,earliestDay:14,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_home_reading'},lines:[
-  {speaker:'Narrator',text:'Live has finished tidying the living room and is relaxing with a cup of tea.'},
-  {speaker:'Live',text:"Long day? You can let everything go when you're here. I'll take care of the rest."},
-  {speaker:'Protagonist',text:'You really do a lot around here.'},
-  {speaker:'Live',text:"It's no trouble. Your mom trusted me with this place, and I want you to feel safe in it."}
- ],choices:[{label:'Offer to make her tea next time',reply:"Oh, I'd love that. You remembered how I take it?",flag:'live_tea_offer'},{label:'Thank her for looking after home',reply:"You don't have to thank me. Still, it's nice to hear.",flag:'live_home_thanks'}]},
- {id:'live_brushing_teeth',title:'A Busy Bathroom Morning',kind:'season',priority:90,earliestDay:17,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_home_relaxing'},lines:[{speaker:'Narrator',text:"You hear the tap running and find Live brushing her teeth."},{speaker:'Live',text:"Oh! Good morning. I was just making room for you at the sink."},{speaker:'Protagonist',text:"You always get up this early?"}],choices:[{label:'Spend a moment with Live',reply:"Only when there's something worth getting up for. Like a clean kitchen!"}]},
- {id:'live_getting_ready',title:'Running a Little Late',kind:'season',priority:90,earliestDay:20,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_brushing_teeth'},lines:[{speaker:'Narrator',text:"Live is searching for her keys by the apartment door."},{speaker:'Live',text:"I thought I was ready, but apparently my keys have other plans."},{speaker:'Protagonist',text:"Need a hand?"}],choices:[{label:'Spend a moment with Live',reply:"Yes, please! You're very good at finding things I lose."}]},
- {id:'live_cleaning_table',title:'A Spotless Table',kind:'season',priority:90,earliestDay:23,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_getting_ready'},lines:[{speaker:'Narrator',text:"Live is carefully wiping down the dining table."},{speaker:'Live',text:"There you are! I wanted everything nice and clean before you came back."},{speaker:'Protagonist',text:"You didn't have to do all this."}],choices:[{label:'Spend a moment with Live',reply:"I know. But I like making this place feel welcoming."}]},
- {id:'live_vacuuming',title:'The Vacuum Ambush',kind:'season',priority:90,earliestDay:26,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_cleaning_table'},lines:[{speaker:'Narrator',text:"A vacuum cleaner hums in the hallway as you enter."},{speaker:'Live',text:"Oh! You surprised me. I didn't hear you over this thing."},{speaker:'Protagonist',text:"I can take over if you want."}],choices:[{label:'Spend a moment with Live',reply:"Deal! Just watch that loose cable by the couch."}]},
- {id:'live_laundry',title:'Laundry Day',kind:'season',priority:90,earliestDay:29,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_vacuuming'},lines:[{speaker:'Narrator',text:"A neat pile of freshly folded laundry sits beside Live."},{speaker:'Live',text:"I was just sorting the washing. I hope you don't mind that I folded yours too."},{speaker:'Protagonist',text:"You really don't have to."}],choices:[{label:'Spend a moment with Live',reply:"It's no trouble. Just tell me if you'd rather do it yourself."}]},
- {id:'live_workout_break',title:'Taking Five',kind:'season',priority:90,earliestDay:33,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_laundry'},lines:[{speaker:'Narrator',text:"Live is taking a break after stretching in the living room."},{speaker:'Live',text:"Phew! I thought I'd have more energy than this."},{speaker:'Protagonist',text:"You look like you earned a break."}],choices:[{label:'Spend a moment with Live',reply:"I certainly did. Would you bring me a glass of water?"}]},
- {id:'live_workout_exhausted',title:'One Last Stretch',kind:'season',priority:90,earliestDay:37,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_workout_break'},lines:[{speaker:'Narrator',text:"You find Live resting on her exercise mat."},{speaker:'Live',text:"I might have overdone it. Remind me not to compete with my own workout plan."},{speaker:'Protagonist',text:"Want me to move the mat?"}],choices:[{label:'Spend a moment with Live',reply:"In a minute. First, I need to remember how standing works."}]},
- {id:'live_extra_exhaused_workout',title:'Past Her Limit',kind:'season',priority:90,earliestDay:39,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_workout_exhausted'},lines:[
-  {speaker:'Narrator',text:'You hear a tired sigh from the living room. Live is sitting beside her exercise mat, sweat on her forehead and her breathing still a little heavy.'},
-  {speaker:'Protagonist',text:'Live? Are you okay? You look exhausted.'},
-  {speaker:'Live',text:"I'm okay! I just thought one more round would be easy. Apparently my legs strongly disagree."},
-  {speaker:'Protagonist',text:"You don't have to push yourself that hard."},
-  {speaker:'Live',text:"You're right. I got a little carried away. Could you sit with me for a moment while I catch my breath?"}
- ],choices:[
-  {label:'Bring her some water',reply:"Thank you. You're always so thoughtful. Next time I'll remember to take breaks before I need rescuing.",flag:'live_extra_workout_water'},
-  {label:'Sit beside her until she recovers',reply:"This is nice. I mean, the company—not the part where I can barely move my legs!",flag:'live_extra_workout_company'}
- ]},
- {id:'live_waking_up_casual',title:'The Early Riser',kind:'season',priority:90,earliestDay:41,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_extra_exhaused_workout'},lines:[{speaker:'Narrator',text:"The apartment is quiet until Live appears in the kitchen, still sleepy."},{speaker:'Live',text:"Morning. I was hoping to get breakfast ready before you woke up."},{speaker:'Protagonist',text:"You can sleep in sometimes, you know."}],choices:[{label:'Spend a moment with Live',reply:"I know. I just like having someone to make breakfast for."}]},
- {id:'live_waking_up_lavender',title:'A Slow Start',kind:'season',priority:90,earliestDay:46,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_waking_up_casual'},lines:[{speaker:'Narrator',text:"Live emerges from her room with a sleepy smile."},{speaker:'Live',text:"I think the alarm clock and I have agreed to disagree today."},{speaker:'Protagonist',text:"Coffee?"}],choices:[{label:'Spend a moment with Live',reply:"Please. You're a lifesaver. And I promise I'll make the next pot."}]}
-];
-// Everyday apartment moments are replayable; they never join the one-time Live storyline.
-const REPEATABLE_LIVE_EVENTS=[
- {id:'live_clothe_washing',title:"An Extra Load",kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[{"speaker":"Narrator","text":"The washing machine is running when you find Live sorting clothes in the apartment."},{"speaker":"Live","text":"Oh, you're home! I thought I could finish the washing before you noticed the laundry basket was full."},{"speaker":"Protagonist","text":"You do know you can leave some of that for me."},{"speaker":"Live","text":"I know. It's just satisfying to get it all done before lunch."}],choices:[{"label":"Offer to help fold","reply":"Then we're a team. You can take the towels!","flag":"live_clothes_help"},{"label":"Tell her to take a break","reply":"All right, but only if you promise not to do it all yourself.","flag":"live_clothes_break"}]},
- {id:'live_cleaning',title:"A Little Tidying",kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[{"speaker":"Narrator","text":"You find Live busy cleaning the apartment, carefully working around the furniture."},{"speaker":"Live","text":"There you are! I was trying to make the place feel a little brighter."},{"speaker":"Protagonist","text":"It already looked fine to me."},{"speaker":"Live","text":"That's sweet. But it feels even nicer when everything has its place."}],choices:[{"label":"Help her finish","reply":"That'll make this go twice as fast. Thank you!","flag":"live_cleaning_help"},{"label":"Tell her she has done enough","reply":"Maybe you're right. I could use a cup of tea.","flag":"live_cleaning_rest"}]},
- {id:'live_cooking',title:"Something on the Stove",kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[{"speaker":"Narrator","text":"A familiar smell drifts out of the apartment kitchen as Live watches something simmer."},{"speaker":"Live","text":"Oh! You're just in time to try this. I changed the recipe a little."},{"speaker":"Protagonist","text":"It smells great. What's different?"},{"speaker":"Live","text":"That's the secret. Well, mostly I added more herbs."}],choices:[{"label":"Taste her cooking","reply":"You like it? Good! I'll write down what I changed.","flag":"live_cooking_taste_new"},{"label":"Offer to set the table","reply":"Perfect. I'll bring everything over in a minute.","flag":"live_cooking_table_new"}]},
- {id:'live_library',title:"A Borrowed Afternoon",kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[{"speaker":"Narrator","text":"You find Live at home with a book and several notes spread across the table."},{"speaker":"Live","text":"I borrowed this from the library. It was supposed to be a quick read, but I lost track of time."},{"speaker":"Protagonist","text":"What has you so interested?"},{"speaker":"Live","text":"A little mystery. I'm trying to solve it before the last chapter."}],choices:[{"label":"Ask her to read you a passage","reply":"Okay, but you have to promise not to guess the ending out loud.","flag":"live_library_read"},{"label":"Try to solve the mystery with her","reply":"Now that's an idea. Let's compare notes.","flag":"live_library_guess"}]},
- {id:'live_sweater_bra',title:'Getting Ready',kind:'season',priority:90,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
-  {speaker:'Narrator',text:"You stop by the apartment to find Live getting dressed for the day, pulling on her sweater over her everyday underclothes. She doesn't seem bothered by your presence."},
-  {speaker:'Protagonist',text:"Oh—sorry. I didn't know you were changing."},
-  {speaker:'Live',text:"It's okay! I trust you. I was just finishing getting ready."},
-  {speaker:'Narrator',text:"Live smiles casually, apparently unaware that the moment has left you a little flustered."},
-  {speaker:'Live',text:"Could you hand me the cardigan on the chair? I keep forgetting where I put things."}
- ],choices:[
-  {label:'Hand her the cardigan',reply:"Thank you! You're always so helpful. Now, where did I put my keys?"},
-  {label:'Give her some privacy',reply:"Oh, sure! That's thoughtful of you. I'll be out in a moment."}
- ]}
-];
-const REPEATABLE_LIVE_IDS=new Set([...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events].map(event=>event.id));
-// All ordinary apartment moments can repeat; the first introduction is unique.
-const LIVE_ROTATING_EVENTS=[...LIVE_EVENTS.filter(event=>event.id!=='live_home_welcome'),...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events];
-const LIVE_ROTATING_IDS=new Set(LIVE_ROTATING_EVENTS.map(event=>event.id));
-const LIVE_EVENT_ART={"live_clothe_washing":"/rpg-assets/characters/live/events/live_clothe_washing.jpg","live_cleaning":"/rpg-assets/characters/live/events/live_cleaning.jpg","live_cooking":"/rpg-assets/characters/live/events/live_cooking.jpg","live_library":"/rpg-assets/characters/live/events/live_library.jpg","live_sweater_bra":"/rpg-assets/characters/live/events/live_sweater_bra.jpg","live_home_welcome":"/rpg-assets/characters/live/events/live_couch_sweater.png","live_home_cooking":"/rpg-assets/characters/live/events/live_cooking_evening.png","live_home_reading":"/rpg-assets/characters/live/events/live_reading.png","live_home_relaxing":"/rpg-assets/characters/live/events/live_relaxing_sofa.png","live_brushing_teeth":"/rpg-assets/characters/live/events/live_brushing_teeth.png","live_getting_ready":"/rpg-assets/characters/live/events/live_getting_ready.png","live_cleaning_table":"/rpg-assets/characters/live/events/live_cleaning_table.png","live_vacuuming":"/rpg-assets/characters/live/events/live_vacuuming.png","live_laundry":"/rpg-assets/characters/live/events/live_laundry.png","live_workout_break":"/rpg-assets/characters/live/events/live_workout_break.png","live_workout_exhausted":"/rpg-assets/characters/live/events/live_workout_exhausted.png","live_extra_exhaused_workout":"/rpg-assets/characters/live/events/live_extra_exhaused_workout.jpg","live_waking_up_casual":"/rpg-assets/characters/live/events/live_waking_up_casual.png","live_waking_up_lavender":"/rpg-assets/characters/live/events/live_waking_up_lavender.png"};
-
-Object.assign(LIVE_EVENT_ART,LIVE_NEW.art);
-
-// Glance milestones are independent of the rotating apartment encounters.
-// The later two images can be added without changing event code; the CG
-// presenter will fall back to the already-shipped couch image if unavailable.
-const LIVE_SPECIAL_EVENTS=[
- {id:'live_glance_talk_one',title:'A Word on the Couch',kind:'season',priority:99,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
-  {speaker:'Narrator',text:"After you finish looking, Live motions for you to join her on the couch."},
-  {speaker:'Live',text:"Can we talk for a moment? You've been looking my way quite a lot lately."},
-  {speaker:'Live',text:"Be a good kid, okay? I went to school with your mom, you know. I've known your family for years."},
-  {speaker:'Protagonist',text:"I know. I don't mean to make things awkward."}
- ],choices:[
-  {label:"I'm not a kid anymore",reply:"I know you've grown up. I just want us to be careful with each other's feelings."},
-  {label:"I understand. I respect you",reply:"Thank you. That's what I wanted to hear."}
- ]},
- {id:'live_glance_talk_two',title:'Please Be Serious',kind:'season',priority:99,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
-  {speaker:'Narrator',text:"Live asks you to sit down beside her again. This time, her expression is serious."},
-  {speaker:'Live',text:"We should talk again. You know I've been alone for a while."},
-  {speaker:'Live',text:"So please don't play around with me, okay? If there's something you want to say, mean it."},
-  {speaker:'Protagonist',text:"I hear you."}
- ],choices:[
-  {label:"I wouldn't play with your feelings",reply:"All right. Thank you for taking me seriously."},
-  {label:"I'll give you some space if you want",reply:"I appreciate that. Being honest with me matters more than anything."}
- ]},
- {id:'live_glance_next_morning',title:'A Quiet Morning Together',kind:'season',priority:100,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
-  {speaker:'Narrator',text:"You wake to find Live waiting in the living room."},
-  {speaker:'Live',text:"Oh, I know you've been wanting to talk about this for a while..."},
-  {speaker:'Narrator',text:"The two of you spend the morning together in private. The details fade as the day moves on."},
-  {speaker:'Live',text:"Ah..."}
- ],choices:[{label:"Continue to the afternoon",reply:"The afternoon begins, and the usual rhythm of the apartment returns."}]}
-];
-const LIVE_SPECIAL_IDS=new Set(LIVE_SPECIAL_EVENTS.map(event=>event.id));
-const LIVE_SPECIAL_ART={
- live_glance_talk_one:'/rpg-assets/characters/live/events/live_couch_sweater.png',
- live_glance_talk_two:'/rpg-assets/characters/live/events/live_couch_sweater _2.png',
- live_glance_next_morning:'/rpg-assets/characters/live/events/live_confy_scene.jpg'
-};
-const LIVE_FINAL_ART_2='/rpg-assets/characters/live/events/live_confy_scene2.jpg';
-const LIVE_AFTER_ART='/rpg-assets/characters/live/events/live_after.png';
+const {LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART}=window.NeoRpgLiveCampaignContent;
 function startLiveGlanceMilestone(id){
  if(!LIVE_SPECIAL_IDS.has(id)||state.liveSpecialSeen?.[id])return;
  const active=state.mandatoryEventState?.active;
@@ -147,56 +34,6 @@ function liveDiscreetEnabled(){
  return document.documentElement.dataset.rpgDiscreet==='on'||
   window.NeoRpgDiscreet?.isEnabled?.()===true;
 }
-const LIVE_LYLA_PHOTO_EVENT={id:'live_lyla_photo_sighting',title:'A Familiar Face',kind:'season',priority:98,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
- {speaker:'Narrator',text:'Live calls you over and holds out a photograph she spotted around town.'},
- {speaker:'Live',text:"Hey, you play cards at that shop, right? Do you know this girl? I thought I'd seen her around."},
- {speaker:'Protagonist',text:'Wait. Is that Lyla? She plays Umbreon at the TCG store.'},
- {speaker:'Live',text:"That's the one! I didn't realize she modeled, too. Small world, isn't it?"}
-],choices:[
- {label:"Yeah, that's Lyla from the card shop",reply:"I thought so! She looks different in a magazine, but I'd recognize that face."},
- {label:"I didn't know her pictures were everywhere",reply:"Neither did I! Imagine seeing your card-shop friends on the side of a bus."}
-]};
-
-const LIVE_DAY_FOLLOWUP={id:'live_day_followup',title:'Later at Home',kind:'season',priority:94,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},
- lines:[{speaker:'Live',text:'You came back.'}],
- choices:[{label:'See how her day went',reply:"It's been a full day."}]};
-const LIVE_AFTER_EVENT={id:'live_after_intimate',title:'After a Quiet Morning',kind:'season',priority:101,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
- {speaker:'Narrator',text:'A little later, Live is still catching her breath, her expression soft and astonished.'},
- {speaker:'Live',text:'Honey... that was so... wow.'},
- {speaker:'Protagonist',text:'Are you okay?'},
- {speaker:'Live',text:'More than okay. I just need a moment to find my words.'},
- {speaker:'Narrator',text:'Live smiles at you, then takes a quiet moment to herself. Before long, you are both ready to return to the day.'}
-],choices:[{label:'Give her a moment',reply:'Thank you, honey. I will see you in a little while.'}]};
-LIVE_EVENT_ART[LIVE_AFTER_EVENT.id]=LIVE_AFTER_ART;
-const LIVE_REPEAT_MORNING={id:'live_repeat_private_morning',title:'A Morning Together',kind:'season',priority:99,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},
- lines:[
-  {speaker:'Live',text:"Honey... let's keep this just between us, okay?"},
-  {speaker:'Narrator',text:"You spend a quiet morning together, away from the rest of the world."},
-  {speaker:'Narrator',text:"The scene fades to black. By the time you return to the living room, the morning has passed."}
- ],choices:[{label:'Continue the day',reply:"Live smiles and says she'll see you later."}]};
-const LIVE_FOLLOWUPS={
- live_home_welcome:["I've made myself at home now. Your mom would be pleased you were so welcoming.","The coffee pot's washed and I'm settling in. Thank you for being so kind."],
- live_home_cooking:["I kept some of the sauce for you. It turned out even better after resting.","Dinner was lovely! I put the leftovers in the fridge."],
- live_home_reading:["I finished another chapter. I'm starting to suspect everyone.","I finally found the answer. No spoilers until you've read it."],
- live_home_relaxing:["That little break did wonders. I feel much better now.","I'm calling it an early night. Don't stay up too late."],
- live_brushing_teeth:["The bathroom's all yours now; I finished getting ready.","Everything's tidied up. I left you a fresh towel."],
- live_getting_ready:["I finally found my keys and got everything sorted.","I'm all set for tomorrow now."],
- live_cleaning_table:["The table looks so much better. I even polished it.","Everything's clean now. Let's keep it that way for a few hours."],
- live_vacuuming:["I finished the vacuuming. Much quieter in here now, isn't it?","I put the vacuum away. It's time for a rest."],
- live_laundry:["The clothes are dry now. I folded yours too.","Everything's put away. One less chore for tomorrow."],
- live_workout_break:["My legs are complaining, but it was a good workout.","I stretched and had some water. I think I'll rest now."],
- live_workout_exhausted:["I'm feeling a little more human after that workout.","I'm still worn out. No more exercise for me today."],
- live_extra_exhaused_workout:["I'm still recovering from that workout. I may have overdone it.","I've earned an early night after all that exercise."],
- live_waking_up_casual:["I finally woke up properly. Coffee really does help.","This morning feels ages ago. What a day."],
- live_waking_up_lavender:["I changed and made some breakfast after you left.","I was so sleepy this morning. Tomorrow I'm setting two alarms."],
- live_clothe_washing:["The wash is finished! Everything smells fresh.","The laundry's folded and put away. That's one job done."],
- live_cleaning:["I finished tidying. It feels nice to sit down now.","The apartment's spotless. I think I'll rest."],
- live_cooking:["The recipe turned out really well! I saved you a portion.","That meal was delicious, if I say so myself. There are leftovers."],
- live_library:["I finally worked out the twist in that mystery.","I finished the book. Tomorrow I'll have to find another."],
- live_sweater_bra:["I found my cardigan and headed out after getting ready.","I laid out tomorrow's clothes. Hopefully no more lost keys."]
-};
-Object.assign(LIVE_FOLLOWUPS,LIVE_NEW.followups);
-const LIVE_AWAY_IDS=new Set(['live_vacuuming','live_getting_ready','live_sweater_bra','live_clothe_washing','live_library']);
 function liveFollowupContent(){
  const dayScene=state.liveDayScene||{},base=dayScene.id||'live_home_cooking';
  const lines=LIVE_FOLLOWUPS[base]||["I finished up what I was doing earlier. Thanks for checking in.","It's been quite a day. I'm glad to be resting now."];
@@ -217,12 +54,6 @@ function liveCanRepeat(){
  return !!(state.mandatoryEventState?.seen?.live_glance_next_morning||state.liveSpecialSeen?.live_glance_next_morning)&&state.slot===0&&
   (!last||state.day>=last+6);
 }
-const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
- {speaker:'Narrator',text:'After spending time at home, you notice Live looking over from the living room.'},
- {speaker:'Live',text:"Oh, you're still here! I thought you might be heading out."},
- {speaker:'Live',text:"Are you okay? Why didn't you go out?"}
-],choices:[{label:'Leave now',reply:"I'll be here if you need anything."}]};
-const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundry','live_getting_ready','live_workout_break'].map(name=>'/rpg-assets/characters/live/events/'+name+'.png');
 function liveEventArt(id){
  if(id===LIVE_AFTER_EVENT.id)return LIVE_AFTER_ART;
  if(id===LIVE_REPEAT_MORNING.id)return state.mandatoryEventState?.active?.index>=1?LIVE_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning;
@@ -234,7 +65,8 @@ function liveEventArt(id){
  if(LIVE_NEW.byId(id))return LIVE_NEW.artAt(id,state.mandatoryEventState?.active?.id===id?Number(state.mandatoryEventState.active.index)||0:0);
  return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];
 }
-const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
+const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]).map(event=>
+ event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -295,7 +127,7 @@ function chooseStory(raw){
  const index=Number(raw),e=STORY.byId(a.id),choice=e.choices[index];
  if(!choice||!Number.isInteger(index))return;
  if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc)){
-  $('notice').textContent=state.partner&&state.partner!==e.npc?'You have already committed to another relationship.':'You need a stronger bond before taking this step.';return;
+  $('notice').textContent='You need a stronger bond before taking this step.';return;
  }
  a.phase='response';a.choice=index;persist();render();
 }
@@ -304,7 +136,8 @@ function finishStory(){
  const e=STORY.byId(a.id);
  try{STORY.resolve(state,a.id,a.choice);}
  catch(err){window.NeoRpgErrorReport?.capture(err,{source:'story-completion',action:'storyFinish'});console.error('RPG story completion failed',err);$('notice').textContent='Could not finish scene: '+err.message;return;}
- // Commit the resolved scene before any nonessential rewards or artwork.
+ // Story dialogue remains its own relationship reward: no affection, trust,
+ // respect or attraction increases. Collection gifts and credits are restored.
  state.activeStory=null;persist();
  const id=e.npc;let chapterReward=null;
  try{chapterReward=BONDS.reward(state,e,BOND_PLAN,COLLECT);}
@@ -312,11 +145,10 @@ function finishStory(){
  try{
   log('Finished '+e.title+' with '+cast[id].name+'.');
   recordCG('story_milestone',id,{eventId:e.id});
-  recordIntention('story');
-  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' reward from '+cast[id].name+': '+chapterReward.label+'.');
+  if(chapterReward)log('Bond chapter '+chapterReward.chapter+' gift from '+cast[id].name+': '+chapterReward.label+'.');
  }catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-story-effects',action:'storyFinish'});console.error('RPG optional story effects failed',err);}
  advance();state.selected=id;persist();closeSceneDialogue();
- if(chapterReward)$('notice').textContent='★ Chapter reward: '+chapterReward.label;
+ if(chapterReward)$('notice').textContent='★ Chapter gift: '+chapterReward.label;
 }
 
 function beginSideQuest(id){
@@ -450,14 +282,43 @@ if(typeof state.activeStory==='string')state.activeStory=null;
 STORY.recordExpiry(state);
 if(MANDATORY)MANDATORY.hydrate(state,MANDATORY_EVENTS);
 const persist=()=>{localStorage.setItem(KEY,JSON.stringify(state));window.NeoRpgCloudSave?.onLocalSave();};
+// Deck Studio is embedded in an iframe in the new overworld. Its localStorage
+// writes do not update this page's in-memory campaign object automatically.
+function syncDeckStudioSave(){
+ if(!state.deckJourney?.starter||state.pendingDuel)return false;
+ let saved;
+ try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{return false;}
+ if(saved?.deckJourney?.starter!==state.deckJourney.starter||
+    saved.day!==state.day||saved.slot!==state.slot||
+    (saved.pendingDuel?.id||null)!==(state.pendingDuel?.id||null))return false;
+ const edited=saved.deckJourney;
+ if(!COLLECT.check(edited.deck,edited.owned).valid)return false;
+ state.deckJourney=edited;
+ if(saved.deckStrategy)state.deckStrategy=saved.deckStrategy;
+ if(saved.gameplayTutorials)state.gameplayTutorials=saved.gameplayTutorials;
+ return true;
+}
+window.NeoRpgSyncDeckStudio=syncDeckStudioSave;
 const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
+// Recover chapter gifts earned during the reward-free build, without paying
+// any milestone twice or altering a single relationship statistic.
+try{
+ const recovered=BONDS.catchUp(state,BOND_PLAN,COLLECT);
+ if(recovered.length){
+  log('Restored '+recovered.length+' unclaimed character chapter gift'+(recovered.length===1?'':'s')+'.');
+  persist();
+ }
+}catch(error){
+ console.warn('Could not restore some previous relationship gifts',error);
+ window.NeoRpgErrorReport?.capture?.(error,{source:'bond-reward-recovery',action:'catchUp'});
+}
 window.NeoRpgErrorReport?.setContextProvider(()=>{
  const active=[['mandatory',state.mandatoryEventState?.active],['slice',state.activeSliceOfLife],['situation',state.activeSituation],['story',state.activeStory],['encounter',state.activeEncounter],['arc',state.activeArc],['sideQuest',state.activeSideQuest]].find(([,value])=>!!value);
  return {day:state.day,period:['Morning','Afternoon','Evening'][state.slot]||null,
   location:state.location,selectedCharacter:state.selected,activeType:active?.[0]||null,
   eventId:active?.[1]?.id||null,phase:active?.[1]?.phase||null};
 });
-// Both the classic and new overworld UIs share one guarded campaign reset.
+// The overworld UI uses one guarded campaign reset shared with cloud persistence.
 let campaignResetBusy=false;
 async function resetCampaign(){
  if(campaignResetBusy)return false;
@@ -970,7 +831,7 @@ if(state.day>beforeDay){
  phoneMessages?.onDayAdvance(beforeDay);
 }
 const expiredCups=TOURNAMENTS.expire(state);if(expiredCups.length)log('A tournament registration window has closed.');
-const missed=STORY.recordExpiry(state);if(missed.length)log('Some opportunities in town passed while you were busy.');
+STORY.recordExpiry(state); // Character story chapters are never lost to calendar expiry.
 const missedQuests=SIDE.expire(state);if(missedQuests.length)log('A local side-quest opportunity passed while you were away.');
 const missedAppointments=APPOINTMENTS.expire(state);
 INTENTIONS.hydrate(state); // Expire yesterday's optional choice before saving the new day.
@@ -981,14 +842,14 @@ for(const plan of missedAppointments)log('You missed your planned meet-up with '
 queueMandatory();if(state.day===beforeDay)arriveForScheduledPlan();persist();
 if(!suppressTimeFlash&&timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource}))timeSequence.flush();}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
-function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null){
+function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null,creditBond=false){
  if(!Array.isArray(lines)||!lines.length)return;
  const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
  if(!script.length)return;
  const first=script[0];
  scene={speaker:first.speaker==='Protagonist'?'You':cast[first.speaker]?.name||first.speaker,
   line:first.text,choices:script.length>1?[['Continue ›','chatNext']]:afterChoices,
-  dialogue:script,index:0,afterChoices,reactionId,invitation,
+  dialogue:script,index:0,afterChoices,reactionId,invitation,bondConversation:creditBond,
    memoryId:memory?.kind==='followup'?memory.id:null,memoryOfferId:memory?.kind==='intro'?memory.id:null,
    casualId:casual?.id||null,asideId:casual?.asideId||null};
  state.scene=scene;persist();render();
@@ -1000,6 +861,16 @@ function advanceConversation(){
  scene.speaker=next.speaker==='Protagonist'?'You':cast[next.speaker]?.name||next.speaker;
  scene.line=next.text;
  scene.choices=scene.index===scene.dialogue.length-1?scene.afterChoices:[['Continue ›','chatNext']];
+ // Completing a real conversation adds a small amount of affection once per
+ // character each day. A story invitation alone grants nothing.
+ if(scene.index===scene.dialogue.length-1&&scene.bondConversation&&!scene.invitation&&state.selected&&cast[state.selected]){
+  state.relationshipTalkCredit=state.relationshipTalkCredit||{};
+  const key=state.day+':'+state.selected;
+  if(!state.relationshipTalkCredit[key]){
+   REL.apply(state,state.selected,{affection:1});
+   state.relationshipTalkCredit[key]=true;
+  }
+ }
  // Do not consume an acknowledgement until the player actually reads its final line.
  if(scene.index===scene.dialogue.length-1&&scene.reactionId)REACT.mark(state,scene.reactionId);
  if(scene.index===scene.dialogue.length-1&&scene.memoryId)MEM?.mark(state,scene.memoryId);
@@ -1098,9 +969,260 @@ function liveOverworldPose(id){
  if(source&&window.NeoRpgOverworldBridge?.setVisiblePose(id,source))return visibleOverworldPose(id);
  return null;
 }
-// Optional overworld adapter: the existing campaign remains authoritative.
+// Event eligibility is evaluated from campaign state, not from hidden HTML
+// buttons. The overworld renders this view model and sends typed actions back.
+function overworldOpportunities(){
+ const locked=overworldControlsLocked(),present=currentPeople();
+ const story=eligibleStories().map(e=>{
+  const chapter=BOND_PLAN.byEvent[e.id];
+  return {kind:'story',id:e.id,label:'✦ '+e.title+' · ⏳ 1 period',
+   description:cast[e.npc].name+(chapter?' · Bond chapter '+chapter.chapter+' / 4':'')+
+    ' · Available whenever your bond is ready',disabled:locked};
+ });
+ for(const episode of ARC.available(state,present)){
+  story.push({kind:'arc',id:episode.id,label:'♜ '+episode.title+' · ⏳ 1 period',
+   description:cast.reina.name+' · an optional rivalry chapter',disabled:locked});
+ }
+ const circuit=[
+  {kind:'community',id:'board',label:'▦ Community Board · standings, rivalries & club news',disabled:locked}
+ ];
+ const consequence=CONSEQ.opportunities(state)[0];
+ if(consequence)circuit.push({kind:'consequence',id:String(consequence.id),
+  label:(state.location==='center'?'↗ Reflect on your match with ':'↗ Visit the Center to reflect on ')+
+   (cast[consequence.npc]?.name||'a rival')+' · free',disabled:locked});
+ for(const cup of TOURNAMENTS.available(state)){
+  const progress=TOURNAMENTS.status(state,cup.id);
+  circuit.push({kind:'cup',id:cup.id,
+   label:'🏆 '+cup.title+' · Round '+(progress.round+1)+'/3 · ⏳ 1 period',
+   description:'vs '+(cast[progress.opponent]?.name||'Tournament opponent'),disabled:locked});
+ }
+ const exhibition=scheduleEvent();
+ if(exhibition&&!TOURNAMENTS.cups.some(cup=>cup.day===exhibition.day))
+  circuit.push({kind:'exhibition',id:String(exhibition.day),
+   label:'⚔ '+exhibition.title+' · ⏳ 1 period · +'+exhibition.reward+' pts if you win',disabled:locked});
+ for(const entry of COMPETE.available(state))circuit.push({
+  kind:'competitive',id:entry.id,label:'⚔ '+entry.title,
+  description:(cast[entry.npc]?.name||'Circuit trainer')+' · '+entry.description,disabled:locked
+ });
+ const c=COMPETE.hydrate(state),local=COMPETE.localProgress(state);
+ if(state.location!=='center'&&state.day>=2&&state.day<=90&&!c.daily[state.day])
+  circuit.push({kind:'visitCircuit',id:'center',label:'↗ Train at the Community Center · free',disabled:locked});
+ if(state.location!=='shop'&&state.day<=90&&COMPETE.localDay(state.day)&&
+    local.status==='open'&&(local.round>0||state.slot<=1))
+  circuit.push({kind:'visitCircuit',id:'shop',label:'↗ Visit today’s Saturday Local at The Lucky Draw · free',disabled:locked});
+ const nextLocal=COMPETE.upcoming(state);
+ const circuitNote=(state.day<=90&&COMPETE.localDay(state.day)&&local.status==='champion'?'You won this week’s local!':
+  state.day<=90&&COMPETE.localDay(state.day)&&local.status==='eliminated'?'This week’s local is over for you.':
+  nextLocal?'Next Saturday Local: Day '+nextLocal+' at The Lucky Draw. Two rounds, one day.':'The competitive season has ended.')+
+  ' Daily challenges run at the Community Center and refresh each new day.';
+ const brackets=TOURNAMENTS.cups.map(cup=>
+  window.NeoRpgTournamentPresentation?.bracketModel?.(
+   cup,TOURNAMENTS.status(state,cup.id),state.day,cast
+  )).filter(Boolean);
+ return {
+  story,circuit,circuitNote,brackets,
+  situation:SITUATIONS.available(state,present).map(event=>({
+   kind:'situation',id:event.id,label:'✧ '+event.title+' · ⏳ 1 period',
+   description:cast[event.npc].name+' · optional surprise · '+event.focusCost+' focus',
+   disabled:locked
+  })),
+  sidequest:SIDE.available(state,present).map(entry=>({
+   kind:'sidequest',id:entry.quest.id,label:'◆ '+entry.stage.title+' · ⏳ 1 period',
+   description:cast[entry.stage.npc].name+' · '+entry.quest.title,disabled:locked
+  })),
+  questJournal:SIDE.journal(state).map(entry=>({
+   status:entry.status,title:entry.title,
+   summary:entry.status==='active'?String(entry.summary||'').replace(/shop|cafe|park|center|arcade|library/g,
+    place=>places[place]?.[0]||place):String(entry.summary||'')
+  })),
+  encounter:WORLD.availableEncounters(state,present).map(entry=>({
+   kind:'encounter',id:entry.id,label:'✧ '+entry.title+' · ⏳ 1 period',
+   description:(entry.npc?cast[entry.npc].name:'The neighborhood')+
+    ' · limited-time opportunity',disabled:locked
+  }))
+ };
+}
+function runOverworldOpportunity(kind,id){
+ if(overworldControlsLocked())return false;
+ const groups=overworldOpportunities();
+ const found=['story','situation','sidequest','encounter','circuit']
+  .flatMap(section=>groups[section]||[]).find(item=>
+   item.kind===kind&&String(item.id)===String(id)&&!item.disabled);
+ if(!found)return false;
+ if(kind==='story')startStory(found.id);
+ else if(kind==='arc')act('arc:'+found.id);
+ else if(kind==='situation')act('situation:'+found.id);
+ else if(kind==='sidequest')act('sideQuest:'+found.id);
+ else if(kind==='encounter')act('encounter:'+found.id);
+ else if(kind==='cup')act('cup:'+found.id);
+ else if(kind==='competitive')act('competitive:'+found.id);
+ else if(kind==='exhibition')act('event');
+ else if(kind==='community')openCommunityBoard();
+ else if(kind==='consequence')act('consequence');
+ else if(kind==='visitCircuit')return travelTo(String(found.id),{intro:false});
+ else return false;
+ return true;
+}
+// Read-only model of the visible RPG guide. No planner or progress DOM is
+// created by the campaign controller; the overworld owns the presentation.
+function overworldGuide(){
+ const locked=overworldControlsLocked(),ended=state.day>90;
+ const suggestions=!ended&&!locked?PLANNER.recommend(state,plannerDependencies()):[];
+ const plannerMessage=ended?'Your 90-day season is complete. See your report and gallery.':
+  locked?'Finish your current scene or duel to explore more opportunities.':
+  suggestions.length?'':'Nothing urgent right now. Explore, practice, or take a well-earned break.';
+ const priority=INTENTIONS.status(state);
+ const goal=ended?{message:'The season is complete. '+priority.completedCount+' daily priorities fulfilled.'}:
+  !priority.chosen?{
+   message:'Choose one focus for today. It is optional, and any result counts for duels.',
+   options:INTENTIONS.goals.map(item=>({id:item.id,title:item.title,detail:item.detail,reward:item.rewardLabel})),
+   countLabel:priority.completedCount+' priorities completed this season · resets tomorrow'
+  }:{
+   chosen:priority.selected?{title:priority.selected.title,detail:priority.selected.detail,
+     reward:priority.selected.rewardLabel}:null,
+   completed:!!priority.completed,
+   countLabel:priority.completedCount+' priorities completed this season · resets tomorrow'
+  };
+ const appointments=APPOINTMENTS.active(state).map(plan=>{
+  const ready=plan.day===state.day&&plan.slot===state.slot;
+  const samePlace=plan.place===state.location;
+  const activity=plan.activityId?SOCIAL.activities.find(item=>item.id===plan.activityId):null;
+  const description=activity?(plan.socialTone==='romantic'?'♥ DATE':
+   plan.socialTone==='rivalry'?'⚔ CHALLENGE':'● FRIENDS')+
+   ' · '+activity.title+' · '+activity.focus+' focus'+
+   (activity.credits?' + '+activity.credits+' credits':'')+' when we meet':'';
+  let actions;
+  if(ready&&samePlace){
+   const reason=DATES.canAttend(state,plan,currentPeople(),{
+    appointments:APPOINTMENTS,social:SOCIAL,cast
+   });
+   actions=[{kind:'attend',label:plan.socialTone==='romantic'?'Go on date · ⏳':
+    plan.activityId?'Enjoy outing · ⏳':'Meet now · ⏳',disabled:!!reason,reason:reason||''}];
+  }else if(ready){
+   actions=[{kind:'travelPlan',label:'Go there · free'}];
+  }else actions=[{kind:'cancelPlan',label:'Cancel · free'}];
+  return {id:plan.id,name:cast[plan.npc]?.name||plan.npc,
+   when:'DAY '+plan.day+' · '+periods[plan.slot]+' · '+(places[plan.place]?.[0]||plan.place),
+   description,actions};
+ });
+ const journey=JOURNEY.currentRun(state,CG);
+ return {
+  locked,day:state.day,
+  planner:{message:plannerMessage,items:suggestions.map(item=>({
+   id:item.id,title:item.title,detail:item.detail,upcoming:item.timing==='upcoming',
+   meta:item.timing==='upcoming'?'COMING UP · DAY '+item.day+' · '+periods[item.slot]:
+    (item.place===state.location?'HERE NOW':'FREE TRAVEL')+' · '+(item.timeCost?'⏳ 1 PERIOD':'FREE'),
+   actionLabel:item.timing==='now'&&item.action!=='none'?
+    (item.action==='travel'?'Go to '+(places[item.place]?.[0]||item.place)+' · free':'Show me where · free'):''
+  }))},
+  priority:goal,appointments,
+  townProgress:{
+   points:state.points,credits:state.credits,
+   lastDuel:state.lastDuelReceipt?{
+    title:state.lastDuelReceipt.outcome.toUpperCase()+' · '+state.lastDuelReceipt.name,
+    description:'+'+state.lastDuelReceipt.points+' circuit points · +'+
+     state.lastDuelReceipt.credits+' credits · +'+state.lastDuelReceipt.trust+' trust'+
+     (state.lastDuelReceipt.bonus?' (includes +'+state.lastDuelReceipt.bonus+' exhibition points)':'')+
+     (state.lastDuelReceipt.trainingBonus?' · +'+state.lastDuelReceipt.trainingBonus+' training credits':'')+
+     (state.lastDuelReceipt.tournamentBonus?.points?' · tournament bonus included':'')+
+     (state.lastDuelReceipt.competitiveBonus?' · local circuit bonus included':'')+
+     ' · Time advanced one period.'
+   }:null,
+   stats:[
+    {name:'FOCUS',value:state.focus,max:100,detail:'Energy for town activities and outings'},
+    {name:'INSIGHT',value:state.insight,max:99,detail:'Unlocks booster savings and masterclasses'},
+    {name:'REPUTATION',value:state.reputation,max:100,detail:'Unlocks clinics and sponsored boosters'},
+    {name:'DUEL PREP',value:state.preparation,max:3,detail:'Bonus credits after your next duel'}
+   ],
+   upcoming:eventCards.filter(event=>event.day>=state.day).slice(0,2).map(event=>({
+    day:event.day,title:event.title,period:periods[event.slot]
+   })),
+   recent:state.journal.slice(0,3)
+  },
+  journey:{
+   overview:'Season '+journey.run+' · Day '+journey.day+' / 90 · '+
+    journey.gallery.unlocked+'/'+journey.gallery.total+' memories across runs',
+   percent:journey.gallery.percent,
+   unlocked:journey.gallery.unlocked,total:journey.gallery.total,
+   milestones:JOURNEY.milestones(state,CG).map(item=>({title:item.title,detail:item.detail}))
+  }
+ };
+}
+// Every guide action is checked against fresh campaign state before dispatch,
+// so old sheet buttons cannot bypass the time, location or eligibility rules.
+function runOverworldGuideAction(kind,id){
+ if(overworldControlsLocked())return false;
+ if(kind==='gallery'){openGallery();return true;}
+ if(kind==='dismissReceipt'&&state.lastDuelReceipt){
+  state.lastDuelReceipt=null;persist();render();return true;
+ }
+ if(state.day>90)return false;
+ if(kind==='planner'){
+  const item=PLANNER.recommend(state,plannerDependencies()).find(item=>
+   String(item.id)===String(id)&&item.timing==='now'&&item.action!=='none');
+  if(!item)return false;
+  openPlannerSuggestion(item.id);return true;
+ }
+ if(kind==='priority'){
+  if(INTENTIONS.status(state).chosen||!INTENTIONS.goals.some(goal=>String(goal.id)===String(id)))return false;
+  act('intention:'+id);return true;
+ }
+ const plan=APPOINTMENTS.active(state).find(item=>String(item.id)===String(id));
+ if(!plan)return false;
+ const ready=plan.day===state.day&&plan.slot===state.slot;
+ if(kind==='cancelPlan'){
+  if(ready)return false;
+  act('cancelPlan:'+plan.id);return true;
+ }
+ if(kind==='travelPlan'){
+  if(!ready||plan.place===state.location)return false;
+  const moved=travelTo(plan.place,{intro:false});
+  if(moved&&currentPeople().includes(plan.npc))selectPerson(plan.npc);
+  return !!moved;
+ }
+ if(kind==='attend'){
+  if(!ready||plan.place!==state.location||
+     DATES.canAttend(state,plan,currentPeople(),{
+      appointments:APPOINTMENTS,social:SOCIAL,cast
+     }))return false;
+  act('attend:'+plan.id);return true;
+ }
+ return false;
+}
+// Direct commands for the overworld menu; no invisible legacy button proxies.
+function openStatusPanel(){
+ window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar,disableTutorials);
+ $('statusTutorialHelp').hidden=true;
+ if(!state.gameplayTutorials?.disabled)tutorialEvent('status','statusTutorialHelp');
+}
+async function saveCampaign(){
+ persist();
+ const cloud=window.NeoRpgCloudSave?.isSignedIn?.();
+ let ok=false;
+ try{ok=!!(await window.NeoRpgCloudSave?.syncNow?.());}
+ catch(error){console.warn('Explicit RPG cloud save failed',error);}
+ const message=cloud?
+  (ok?'Cloud campaign synced.':'Cloud sync pending. Progress is cached on this device until it reconnects.'):
+  'Campaign saved in this browser.';
+ $('notice').textContent=message;
+ window.dispatchEvent(new CustomEvent('neo-rpg-save-status',{detail:{message,ok:!cloud||ok}}));
+ return !cloud||ok;
+}
+// Arrival state must exist before publishing the RPG bridge to consumers.
+let pendingEntrySurprise=false;
+let pendingOverworldArrival=null;
+let arrivalGate=false;
+// Public command/query boundary between RPG state and its overworld presenter.
 window.NeoRpgOverworldBridge=Object.freeze({
  resetCampaign,
+ openStatus:openStatusPanel,
+ openGallery,
+ openCalendar,
+ saveCampaign,
+ guide:overworldGuide,
+ guideAction:runOverworldGuideAction,
+ opportunities:overworldOpportunities,
+ runOpportunity:runOverworldOpportunity,
  setVisiblePose(id,src){
   if(!cast[id]||!currentPeople().includes(id)||typeof src!=='string')return false;
   let url;try{url=new URL(src,location.href)}catch{return false}
@@ -1157,21 +1279,47 @@ window.NeoRpgOverworldBridge=Object.freeze({
   return intro?.id===id&&intro.location===state.location?intro.src:null;
  },
  interact(id){if(overworldControlsLocked()||!cast[id]||!currentPeople().includes(id))return false;selectPerson(id);return true;},
- activities(){const items=WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:overworldControlsLocked()||!!a.disabledReason}));if(state.location==='shop'&&state.deckJourney?.starter)items.unshift({id:'boosterShop',title:'Browse booster packs · The Lucky Draw',disabled:overworldControlsLocked()||state.day>90});return items;},
- activity(id){if(id==='boosterShop'){if(overworldControlsLocked()||state.day>90||state.location!=='shop'||!state.deckJourney?.starter)return false;openBoosterShop();return true;}if(overworldControlsLocked()||!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;performActivity(id);return true;},
+ activities(){
+  const locked=overworldControlsLocked(),ended=state.day>90;
+  const items=WORLD.activitiesAt(state).map(a=>({id:a.id,title:a.title,disabled:locked||ended||!!a.disabledReason}));
+  if(state.location==='shop'&&state.deckJourney?.starter)
+   items.unshift({id:'boosterShop',title:'Browse booster packs · The Lucky Draw',disabled:locked||ended});
+  items.push({id:'rest',title:state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period',disabled:locked||ended});
+  if(state.location==='home')
+   items.push({id:'sleep',title:'Sleep until morning · ⏳ '+(3-state.slot)+' period(s)',disabled:locked||ended});
+  return items;
+ },
+ activity(id){
+  if(overworldControlsLocked()||state.day>90)return false;
+  if(id==='boosterShop'){
+   if(state.location!=='shop'||!state.deckJourney?.starter)return false;
+   openBoosterShop();return true;
+  }
+  if(id==='rest'||id==='sleep'&&state.location==='home'){
+   safeAct(id);return true;
+  }
+  if(!WORLD.activitiesAt(state).some(a=>a.id===id&&!a.disabledReason))return false;
+  performActivity(id);return true;
+ },
 });
 function overworldStoryActive(){
  return !!(state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||
   state.activeStory||state.activeSideQuest||state.activeArc||state.activeEncounter||conversationInProgress());
 }
 function notifyOverworldRendering(){
- if(window.NeoRpgOverworldStandalone)window.dispatchEvent(new Event('neo-rpg-overworld-render'));
+ window.dispatchEvent(new Event('neo-rpg-overworld-render'));
 }
 function overworldControlsLocked(){
  return controlsLocked()||arrivalGate||!!pendingOverworldArrival||!!window.NeoRpgTimeTransitions?.active;
 }
-window.dispatchEvent(new Event('neo-rpg-overworld-bridge-ready'));
-function publicAppointments(place){return [...APPOINTMENTS.overrides(state),...STORY.available(state,place),...SIDE.appointments(state),...(SLICE?.scheduleOverrides?.(state)||[])];}
+// The bridge is not ready until all lexical campaign state and startup
+// listeners have initialized. Dispatching here used to mount the overworld
+// from inside this module, before arrivalGate existed (TDZ crash).
+function publicAppointments(place){return [...APPOINTMENTS.overrides(state),
+ // Story overrides must pin the character at the authored location TODAY,
+ // regardless of the obsolete day range still present in the story metadata.
+ ...STORY.available(state,place).map(e=>({...e,start:state.day,end:state.day})),
+ ...SIDE.appointments(state),...(SLICE?.scheduleOverrides?.(state)||[])];}
 function currentPeople(){if(state.day>90)return [];const regular=SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location));
 for(const e of eligibleStories())if(!regular.includes(e.npc))regular.push(e.npc);
 return regular;}
@@ -1219,7 +1367,7 @@ function selectPerson(id,{skipInvitation=false}={}){
   const invitations=fresh?VN.choices(state,id):[];
   const memory=!first&&!context&&!invitations.length?MEM?.offer(state,id):null;
   const casual=!context&&!memory?ordinaryTalk(id,c,{first,present:currentPeople()}):null;
-  sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||invitations,context?.id||null,null,memory,casual?.record);
+  sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||invitations,context?.id||null,null,memory,casual?.record,true);
  }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
@@ -1259,46 +1407,23 @@ async function glanceAt(id){
  // Glance must show the same sprite the player clicked, not a random
  // alternate from the crop catalog or a dialogue-expression portrait.
  const clickedPose=liveOverworldPose(id)||visibleOverworldPose(id);
- const overlay=document.getElementById('neoOverworldOverlay');
- const inOverworld=!!window.NeoRpgOverworldStandalone||!!overlay&&!overlay.hidden;
  let portrait=clickedPose||scenePortraitSource(id,'neutral',activeOutfitSceneId);
  const currentName=portrait.split('/').pop().split('?')[0];
  let focus=null;
  try{
-  const [activeResponse,topResponse,overworldResponse]=await Promise.all([
+  const [activeResponse,overworldResponse]=await Promise.all([
    fetch('/rpg-assets/outfit-chime-focus.json?v=20261030-glance-overworld-1'),
-   fetch('/rpg-assets/outfit-chime-focus-top.json?v=20261030-glance-overworld-1'),
    fetch('/rpg-assets/outfit-chime-overworld-candidates.json?v=20261030-glance-overworld-1')
   ]);
   const active=activeResponse.ok?await activeResponse.json():null;
-  const top=topResponse.ok?await topResponse.json():null;
   const overworld=overworldResponse.ok?await overworldResponse.json():null;
   const activeEntry=active?.characters?.[id]?.variants?.[currentName]||null;
-  const isSpecial=/special-day-\d+\.|\/overworld-variants\//i.test(portrait);
   const overworldVariants=Object.values(overworld?.characters?.[id]?.variants||{});
   const exact=overworldVariants.find(entry=>String(entry?.image||'').replace(/[?].*$/,'')===String(portrait).replace(/[?].*$/,''));
   if(clickedPose){
    // Crop metadata may shape the initial view but cannot replace this image.
    focus=exact||activeEntry||{top:0,bottom:1,left:0,right:1};
   }else if(activeEntry){focus=activeEntry;}
-  // Normal glances use the exact exported source path and crop preset.
-  // Special looks stay on the active stage image and active special crop.
-  if(!clickedPose&&!isSpecial&&!inOverworld){
-   // Only the old interface can choose a catalog default. In the overworld,
-   // missing pose information must not quietly show a different sprite.
-   const exportedOverworld=exact||overworldVariants[0]||null;
-   if(exportedOverworld?.image){
-    // The deliberate glance always presents the prepared overworld crop.
-    // If the current stage portrait is not itself an overworld pose, use the
-    // first prepared pose for that character as the preview source.
-    portrait=exportedOverworld.image;focus=exportedOverworld;
-   }else{
-    const variants=top?.characters?.[id]?.variants||{};
-    const primaryName=Object.keys(variants).find(name=>/^primary\\.(?:png|webp|jpe?g)$/i.test(name));
-    const exported=primaryName?variants[primaryName]:null;
-    if(exported?.image){portrait=exported.image;focus=exported;}
-   }
-  }
  }catch(_error){}
  const fallback={top:.06,bottom:.53,left:0,right:1};
  if(window.NeoOutfitChime?.glance)await window.NeoOutfitChime.glance(portrait,focus||fallback);
@@ -1749,7 +1874,7 @@ function act(action){
   const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
   const memory=!context?MEM?.offer(state,id):null;
   const casual=!context&&!memory?ordinaryTalk(id,c,{present:currentPeople()}):null;
-  return sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||[],context?.id||null,null,memory,casual?.record);
+  return sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||[],context?.id||null,null,memory,casual?.record,true);
  }
  if(type==='flirt'){
   state.talked['flirt:'+key]=true;
@@ -1757,7 +1882,7 @@ function act(action){
   persist();
   return sayConversation(lines,[]);
  }
- if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));if(!confirmTimeAdvance())return;state.hungOut[state.day+':'+id]=true;REL.apply(state,id,{affection:2,trust:1});log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
+ if(type==='hang'){if(state.hungOut[state.day+':'+id])return say(c.name,'I enjoyed our time today. Let us make plans another day.',options(id));if(!confirmTimeAdvance())return;state.hungOut[state.day+':'+id]=true;REL.apply(state,id,{affection:2,trust:1});state.relationshipQualityTime=state.relationshipQualityTime||{};state.relationshipQualityTime[id]=(Number(state.relationshipQualityTime[id])||0)+1;log('Spent time with '+c.name+'.');recordIntention('hangout');const memories=recordCG('hangout',id);advance();state.selected=null;say(c.name,Array.isArray(c.hangouts)&&c.hangouts.length?c.hangouts[(state.day+bond.duels)%c.hangouts.length]:'That was a lovely way to spend part of the day. See you around.');showCGMoment(memories[0]);return;}
 }
 
 const cardNames=new Map(),cardImages=new Map();
@@ -1775,92 +1900,58 @@ function showPackReveal(){
  if(!pack||pack.opened||modal.open)return;
  const isVictory=pack.source==='win';
  const giver=pack.giver&&cast[pack.giver]?pack.giver:null;
- const setName=COLLECT.THEMED_PACKS?.find(x=>x.id===pack.theme)?.name||COLLECT.SETS[pack.set]?.name||'Base Set';
- $('packEyebrow').textContent=isVictory?'✦ DUEL REWARD · YOUR CARDS':'✦ NEO HARBOR · CARD REWARDS';
- $('packTitle').textContent=isVictory?(pack.cards.length===10?(pack.kind==='championship'?'CHAMPION BOOSTER':'VICTORY BOOSTER'):'VICTORY MINI BOOSTER'):'NEW BOOSTER';
- $('packDescription').textContent=setName+' · '+pack.cards.length+' cards. Tap to flip individual cards, or reveal them all.';
- const portrait=$('packGiver');portrait.replaceChildren();
- if(giver)window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);
- const request=++packArtSerial; // An earlier booster image must never overwrite this giver.
- const fromShop=!isVictory&&!giver&&state.location==='shop';
- $('packContinue').textContent=$('boosterShopDialog').open?'Back to booster shop →':'Continue adventure →';
- if(fromShop){
-  // Ordinary shop purchases have no named giver. Show the clerk's dedicated CG instead of an empty frame.
-  const shopArt=new Image();
-  shopArt.className='pack-giver-art';
-  shopArt.alt='The Lucky Draw shopkeeper handing you a booster pack';
-  shopArt.onerror=()=>{if(request===packArtSerial){portrait.replaceChildren(makeAvatar('hana'));}};
-  shopArt.src='/rpg-assets/shop/shopkeeper-booster.webp';
-  portrait.append(shopArt);
- }
- if(giver){
-  // Show a known portrait immediately while optional artwork loads.
-  const showPortrait=()=>{if(request===packArtSerial){portrait.replaceChildren(makeAvatar(giver));window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);}};
-  showPortrait();
-  const outfit=OUTFITS?.select?.(cast[giver]?.art?.outfits,{location:state.location,slot:state.slot,day:state.day})?.key;
-  const candidates=PRE.boosterArtCandidates(giver);
-  if(outfit){
-   const outfitArt=PRE.boosterArtCandidates(giver,outfit)[0];
-   if(outfitArt)candidates.unshift(outfitArt);
-  }
-  const art=new Image();
-  art.alt=cast[giver].name+' presenting a booster';
-  art.className='pack-giver-art';
-  let attempt=0;
-  const tryNext=()=>{
-   if(request!==packArtSerial)return;
-   if(attempt<candidates.length)art.src=candidates[attempt++];
-   else showPortrait();
-  };
-  art.onload=()=>{if(request===packArtSerial){portrait.replaceChildren(art);window.NeoRpgDiscreetAvatars?.set?.(portrait,giver,'happy',cast[giver].name);}};
-  art.onerror=tryNext;
-  tryNext();
- }
- const target=$('packCards');target.replaceChildren();
- const cards=[];
- for(const [index,id] of pack.cards.entries()){
-  const button=document.createElement('button');button.type='button';button.className='pack-card';button.title='Reveal card '+(index+1);
-  button.style.setProperty('--card-position',String(index));
-  const back=document.createElement('span');back.className='pack-card-back';back.textContent='✦';button.append(back);
-  const reveal=(silent=false)=>{
-   if(button.className.includes('revealed'))return;
-   if(!silent)window.NeoRpgAudio?.play?.('flip');
-   button.className+=' revealed';button.replaceChildren();
-   const detail=document.createElement('strong');detail.textContent=labelCard(id);
-   const info=cardNames.get(id)||id;
-   const row=document.createElement('span');row.className='pack-card-number';row.textContent='CARD '+(index+1)+' / '+pack.cards.length;
-   button.append(row);
-   const data=cardImages.get(id);
-   if(data){
-    const img=document.createElement('img');img.alt=info;img.src=data;img.loading='lazy';img.onerror=()=>img.replaceWith(document.createTextNode('✦'));
-    button.append(img);
-   }else{
-    const symbol=document.createElement('span');symbol.className='pack-card-placeholder';symbol.textContent='✦';button.append(symbol);
+ const setName=COLLECT.THEMED_PACKS?.find(offer=>offer.id===pack.theme)?.name||
+  COLLECT.SETS[pack.set]?.name||'Base Set';
+ const request=++packArtSerial;
+ const outfit=giver?OUTFITS?.select?.(cast[giver]?.art?.outfits,{
+  location:state.location,slot:state.slot,day:state.day
+ })?.key:null;
+ const artworks=giver?[
+  ...(outfit?PRE.boosterArtCandidates(giver,outfit).slice(0,1):[]),
+  ...PRE.boosterArtCandidates(giver)
+ ]:[];
+ const cards=pack.cards.map(id=>({
+  id,label:labelCard(id),name:cardNames.get(id)||id,image:cardImages.get(id)||null
+ }));
+ const view=window.NeoRpgOverworldPack;
+ if(!view?.render?.(document,{
+  eyebrow:isVictory?'✦ DUEL REWARD · YOUR CARDS':'✦ NEO HARBOR · CARD REWARDS',
+  title:isVictory?(pack.cards.length===10?
+   (pack.kind==='championship'?'CHAMPION BOOSTER':'VICTORY BOOSTER'):
+   'VICTORY MINI BOOSTER'):'NEW BOOSTER',
+  description:setName+' · '+pack.cards.length+
+   ' cards. Tap to flip individual cards, or reveal them all.',
+  continueLabel:$('boosterShopDialog').open?'Back to booster shop →':'Continue adventure →',
+  giver,giverName:giver?cast[giver].name:null,
+  fromShop:!isVictory&&!giver&&state.location==='shop',
+  artworks,cards
+ },{
+  isCurrent:()=>request===packArtSerial&&
+   state.deckJourney?.lastPack===pack&&!pack.opened,
+  avatar:id=>makeAvatar(id),
+  discreet:(target,id)=>window.NeoRpgDiscreetAvatars?.set?.(
+   target,id,'happy',cast[id]?.name||id
+  ),
+  renderCards:(target,list,onFlip)=>
+   window.NeoRpgOverworldCollection?.renderPackCards?.(target,list,onFlip),
+  onFlip:()=>window.NeoRpgAudio?.play?.('flip'),
+  onContinue:()=>{
+   if(pack.opened)return;
+   pack.opened=true;++packArtSerial;
+   const queued=state.deckJourney?.pendingPacks?.shift()||null;
+   if(queued)state.deckJourney.lastPack=queued;
+   persist();modal.close();
+   if(queued)showPackReveal();
+   else{
+    if($('boosterShopDialog').open){
+     const shop=$('boosterShopDialog'),scroll=shop.scrollTop;
+     renderBoosterShop('Booster added to your collection. Pick another or close the shop.');
+     shop.scrollTop=scroll;
+    }
+    finishDuelRewardPresentation();
    }
-   button.append(detail);
-  };
-  button.onclick=reveal;cards.push(reveal);target.append(button);
- }
- $('packRevealAll').onclick=()=>{cards.forEach(show=>show(true));window.NeoRpgAudio?.play?.('flip');};
- $('packContinue').type='button';
- $('packRevealAll').type='button';
- $('packContinue').onclick=()=>{
-  pack.opened=true;
-  const queued=state.deckJourney?.pendingPacks?.shift()||null;
-  if(queued)state.deckJourney.lastPack=queued;
-  persist();modal.close();
-  if(queued)showPackReveal();
-  else{
-   if($('boosterShopDialog').open){
-    const shop=$('boosterShopDialog'),scroll=shop.scrollTop;
-    renderBoosterShop('Booster added to your collection. Pick another or close the shop.');
-    shop.scrollTop=scroll;
-   }
-   finishDuelRewardPresentation();
   }
- };
- modal.oncancel=e=>e.preventDefault(); // One handler, even after opening dozens of packs.
- modal.showModal();
+ }))throw Error('The overworld booster reward presenter did not load.');
  window.NeoRpgAudio?.play?.('booster');
 }
 
@@ -1883,56 +1974,23 @@ function controlsLocked({allowStarterIntro=false}={}){
 }
 function showStarterChoice(){
  if(controlsLocked({allowStarterIntro:true}))return;
- const root=$('starterChoices');root.replaceChildren();
- for(const starter of COLLECT.starters){
-  const button=document.createElement('button');button.className='starter-choice';
-  const heading=document.createElement('strong');heading.textContent=starter.name+' · '+starter.types.join(' / ');
-  const detail=document.createElement('small');detail.textContent=starter.description+' · 60 cards · 20 Pokémon / 16 Trainers / 24 Energy';
-  button.append(heading,detail);
-  button.onclick=()=>{
-   if(controlsLocked({allowStarterIntro:true}))return;
-   try{COLLECT.choose(state,starter.id);log('Chose '+starter.name+' as your first deck.');persist();
-    if($('starterDialog').open)$('starterDialog').close();
-    say('Narrator','Your '+starter.name+' deck is ready. The Lucky Draw has two free welcome mini packs waiting for you—choose from three different types. Later packs unlock as you explore; old ones are still worth opening.');
-   }catch(e){$('notice').textContent=e.message;}
-  };
-  root.append(button);
- }
+ const starters=COLLECT.starters.map(starter=>({
+  id:starter.id,
+  label:starter.name+' · '+starter.types.join(' / '),
+  description:starter.description+' · 60 cards · 20 Pokémon / 16 Trainers / 24 Energy'
+ }));
+ if(!window.NeoRpgOverworldCollection?.renderStarters?.($('starterChoices'),starters,id=>{
+  if(controlsLocked({allowStarterIntro:true}))return;
+  const starter=COLLECT.starters.find(item=>item.id===id);
+  if(!starter)return;
+  try{
+   COLLECT.choose(state,starter.id);
+   log('Chose '+starter.name+' as your first deck.');persist();
+   if($('starterDialog').open)$('starterDialog').close();
+   say('Narrator','Your '+starter.name+' deck is ready. The Lucky Draw has two free welcome mini packs waiting for you—choose from three different types. Later packs unlock as you explore; old ones are still worth opening.');
+  }catch(error){$('notice').textContent=error.message;}
+ }))throw Error('The overworld starter deck presenter did not load.');
  if(!$('starterDialog').open)$('starterDialog').showModal();
-}
-function renderCollection(){
- const root=$('deckCollection');root.replaceChildren();
- const journey=state.deckJourney,locked=controlsLocked();
- if(journey===null){
-  const p=document.createElement('p');p.textContent='Legacy campaign: your current theme deck remains available. Switch to a limited collection whenever you want a new challenge.';
-  const btn=document.createElement('button');btn.textContent='Begin starter-deck journey';btn.disabled=locked;
-  btn.onclick=showStarterChoice;root.append(p,btn);return;
- }
- if(!journey.starter){
-  const btn=document.createElement('button');btn.textContent='Choose one of three mixed-type starters';btn.disabled=locked;
-  btn.onclick=showStarterChoice;root.append(btn);return;
- }
- const starter=COLLECT.byId(journey.starter);
- const picker=$('deckPicker');
- if(picker.options?.length!==1||picker.options[0]?.value!=='custom'){
-  picker.replaceChildren();
-  const opt=document.createElement('option');opt.value='custom';opt.textContent=starter.name+' · Your collection';picker.append(opt);
- }else picker.options[0].textContent=starter.name+' · Your collection';
- picker.value='custom';picker.disabled=true;
- const total=Object.values(journey.owned).reduce((a,n)=>a+n,0);
- const summary=document.createElement('p');summary.textContent=starter.name+' · 60-card deck · '+total+' owned cards · '+journey.packs+' paid/voucher packs opened'+(journey.welcomePacks?' · '+journey.welcomePacks+' free welcome pick'+(journey.welcomePacks===1?'':'s')+' remaining':'');
- const studio=document.createElement('button');studio.className='studio-open';studio.textContent='✦ Build / edit your deck';studio.disabled=locked;
- studio.onclick=()=>{persist();location.assign('/rpg_deck_studio.html');};
- root.append(summary,studio);
- if(state.location==='shop'){
-  const shop=document.createElement('button');
-  shop.className='studio-open';
-  shop.textContent='✦ Browse booster packs · The Lucky Draw';
-  shop.disabled=locked||state.day>90;
-  shop.onclick=openBoosterShop;
-  root.append(shop);
-
- }
 }
 function openBoosterShop(){
  if(controlsLocked()||state.day>90||state.location!=='shop'||!state.deckJourney?.starter)return;
@@ -1956,86 +2014,65 @@ function purchaseBoosterPack(packId,useVoucher=false){
  }
 }
 function renderBoosterShop(message=''){
- const root=$('boosterShopGrid');root.replaceChildren();
  const remaining=state.deckJourney?.welcomePacks||0;
- $('boosterShopBalance').textContent='◈ '+(state.credits||0)+' credits · Day '+state.day+
-  (remaining?' · '+remaining+' welcome mini pack'+(remaining===1?'':'s')+' to choose':'');
- $('boosterShopStatus').textContent=message||
-  (remaining?'Choose any two opening mini packs for free. All three starter varieties stay in the shop afterward.':'Each pack has its own card pool. Earlier packs stay useful even as later eras unlock.');
+ const locked=controlsLocked();
  const wishes=(state.deckStrategy?.wishlist||[]).filter(id=>!(state.deckJourney?.owned?.[id]>0));
- for(const offer of COLLECT.themedPacks(state)){
-  const box=document.createElement('article');box.className='booster-offer'+(offer.unlocked?'':' is-locked');
-  const eyebrow=document.createElement('small');eyebrow.className='booster-offer-edition';
-  eyebrow.textContent=offer.unlocked?'THEMED BOOSTER · AVAILABLE':'THEMED BOOSTER · LOCKED';
-  const title=document.createElement('h3');title.textContent=offer.name;
-  const desc=document.createElement('p');desc.textContent=offer.description;
-  const sources=document.createElement('small');sources.className='booster-offer-edition';
-  sources.textContent='PRINTINGS · '+(offer.sources.length?offer.sources.slice(0,3).map(s=>COLLECT.SETS[s]?.name||s).join(' · ')+(offer.sources.length>3?' · +'+(offer.sources.length-3)+' more':''):'Not yet discovered');
-  const progress=document.createElement('div');progress.className='booster-collection-progress';
-  const track=document.createElement('div');track.className='booster-collection-track';
-  const fill=document.createElement('span');fill.style.width=offer.completion+'%';track.append(fill);
-  const count=document.createElement('small');count.textContent=offer.owned+' / '+offer.total+' possible cards discovered · '+offer.completion+'%';
-  progress.append(track,count);
-  const targets=wishes.filter(id=>COLLECT.themeContains(state,offer.id,id));
-  if(targets.length){
-   const tip=document.createElement('small');tip.className='booster-offer-targets';
-   tip.textContent='✦ '+targets.length+' missing tracked card'+(targets.length===1?'':'s')+
-    ' could appear here · no card guaranteed';
-   progress.append(tip);
-  }
-  const reason=document.createElement('p');reason.className='booster-offer-unlock';
+ const offers=COLLECT.themedPacks(state).map(offer=>{
   const free=offer.welcome>0&&offer.unlocked;
-  reason.textContent=!offer.unlocked?offer.unlockHint:
+  const affordable=(state.credits||0)>=offer.price;
+  let reason=!offer.unlocked?offer.unlockHint:
    free?'Welcome choice · five cards · one Rare and one Basic Energy':
    'Ten cards · one Rare and one Basic Energy · original card rarities';
-  if(offer.discount&&offer.unlocked&&!free)reason.textContent='Insight savings: -'+offer.discount+' credits · '+reason.textContent;
-  const buy=document.createElement('button');buy.type='button';buy.className='booster-offer-buy';
-  const affordable=(state.credits||0)>=offer.price;
-  buy.disabled=!offer.unlocked||(!free&&!affordable)||controlsLocked();
-  buy.textContent=free?'Choose free mini pack · '+offer.welcome+' left':
-   offer.unlocked?'Buy · '+offer.price+' credits':'Unlocks later';
+  if(offer.discount&&offer.unlocked&&!free)
+   reason='Insight savings: -'+offer.discount+' credits · '+reason;
   if(offer.unlocked&&!free&&!affordable)
-   reason.textContent='Need '+(offer.price-(state.credits||0))+' more credits · '+reason.textContent;
-  buy.onclick=()=>purchaseBoosterPack(offer.id,false);
-  box.append(eyebrow,title,desc,sources,progress,reason,buy);root.append(box);
- }
- // Chapter and tournament rewards earned in old or current saves remain
- // redeemable as their original source-set vouchers, separate from the new shop.
- for(const offer of COLLECT.shopPacks(state).filter(x=>x.vouchers>0)){
-  const box=document.createElement('article');box.className='booster-offer';
-  const eyebrow=document.createElement('small');eyebrow.className='booster-offer-edition';
-  eyebrow.textContent='EARNED EXPANSION VOUCHER';
-  const title=document.createElement('h3');title.textContent=offer.name+' · '+offer.vouchers+' free';
-  const desc=document.createElement('p');desc.textContent='A ten-card reward from '+offer.name+' (original expansion printings).';
-  const button=document.createElement('button');button.type='button';button.className='booster-offer-buy';
-  button.textContent='Redeem gift voucher · free';button.disabled=controlsLocked();
-  button.onclick=()=>purchaseBoosterPack(offer.set,true);
-  box.append(eyebrow,title,desc,button);root.append(box);
- }
+   reason='Need '+(offer.price-(state.credits||0))+' more credits · '+reason;
+  return {
+   id:offer.id,unlocked:offer.unlocked,name:offer.name,description:offer.description,
+   sourcesLabel:'PRINTINGS · '+(offer.sources.length?
+    offer.sources.slice(0,3).map(set=>COLLECT.SETS[set]?.name||set).join(' · ')+
+    (offer.sources.length>3?' · +'+(offer.sources.length-3)+' more':''):
+    'Not yet discovered'),
+   completion:offer.completion,owned:offer.owned,total:offer.total,
+   targetCount:wishes.filter(id=>COLLECT.themeContains(state,offer.id,id)).length,
+   reason,disabled:!offer.unlocked||(!free&&!affordable)||locked,
+   buyLabel:free?'Choose free mini pack · '+offer.welcome+' left':
+    offer.unlocked?'Buy · '+offer.price+' credits':'Unlocks later'
+  };
+ });
+ const vouchers=COLLECT.shopPacks(state).filter(offer=>offer.vouchers>0).map(offer=>({
+  name:offer.name,set:offer.set,vouchers:offer.vouchers,disabled:locked
+ }));
+ const model={
+  balance:'◈ '+(state.credits||0)+' credits · Day '+state.day+
+   (remaining?' · '+remaining+' welcome mini pack'+(remaining===1?'':'s')+' to choose':''),
+  status:message||(remaining?
+   'Choose any two opening mini packs for free. All three starter varieties stay in the shop afterward.':
+   'Each pack has its own card pool. Earlier packs stay useful even as later eras unlock.'),
+  offers,vouchers
+ };
+ if(!window.NeoRpgOverworldCollection?.renderShop?.(document,model,(id,voucher)=>{
+  if(controlsLocked())return;
+  purchaseBoosterPack(id,voucher);
+ }))throw Error('The overworld booster shop presenter did not load.');
 }
 function renderDeckWorkshop(){
- const j=state.deckJourney;if(!j?.starter)return;
- const draft=COLLECT.draft(state),owned=j.owned;
- const counts=COLLECT.rank(draft),remove=$('deckRemove'),add=$('deckAdd');
- const previousRemove=remove.value,previousAdd=add.value;
- remove.replaceChildren();add.replaceChildren();
- const label=(id,n)=>labelCard(id)+' · '+n+' copy'+(n===1?'':'ies');
- for(const [id,n] of Object.entries(counts)){
-  const option=document.createElement('option');option.value=id;option.textContent=label(id,n);remove.append(option);
- }
- for(const [id,n] of Object.entries(owned)){
-  if(!n)continue;
-  const option=document.createElement('option');option.value=id;option.textContent=label(id,n)+' owned / '+(counts[id]||0)+' in deck';add.append(option);
- }
- if(counts[previousRemove])remove.value=previousRemove;
- if(owned[previousAdd])add.value=previousAdd;
+ const journey=state.deckJourney;if(!journey?.starter)return;
+ const draft=COLLECT.draft(state),owned=journey.owned,counts=COLLECT.rank(draft);
+ const label=(id,count)=>labelCard(id)+' · '+count+' copy'+(count===1?'':'ies');
  const valid=COLLECT.check(draft,owned);
- $('deckEditStats').textContent=COLLECT.byId(j.starter).name+' · '+draft.length+'/60 cards · '+(valid.valid?'Ready to battle':'Deck needs attention');
- $('deckEditError').textContent=valid.errors[0]||'Swap any card you own, one for one. Only your saved deck goes into battle.';
- const list=$('deckList');list.replaceChildren();
- for(const [id,n] of Object.entries(counts)){
-  const item=document.createElement('span');item.textContent=n+'× '+labelCard(id);list.append(item);
- }
+ const model={
+  remove:Object.entries(counts).map(([id,count])=>({id,label:label(id,count)})),
+  add:Object.entries(owned).filter(([,count])=>count>0).map(([id,count])=>({
+   id,label:label(id,count)+' owned / '+(counts[id]||0)+' in deck'
+  })),
+  stats:COLLECT.byId(journey.starter).name+' · '+draft.length+
+   '/60 cards · '+(valid.valid?'Ready to battle':'Deck needs attention'),
+  message:valid.errors[0]||'Swap any card you own, one for one. Only your saved deck goes into battle.',
+  deck:Object.entries(counts).map(([id,count])=>({id,count,label:labelCard(id)}))
+ };
+ if(!window.NeoRpgOverworldCollection?.renderDeck?.(document,model))
+  throw Error('The overworld deck editor presenter did not load.');
 }
 function openDeckWorkshop(){
  if(controlsLocked()||!state.deckJourney?.starter)return;
@@ -2064,7 +2101,6 @@ async function loadCardNames(){
  try{const files=await Promise.all(Object.keys(COLLECT.SETS).map(async set=>{const res=await fetch('/cards/'+set+'.json');return res.ok?res.json():[];}));
   const cards=files.flat();
   for(const c of cards)if(c?.id&&c.name){cardNames.set(c.id,c.name);if(/^https:\/\//.test(c.images?.small||''))cardImages.set(c.id,c.images.small);else cardImages.set(c.id,'/api/cube-card-image/'+encodeURIComponent(c.id));}
-  renderCollection();
  }catch{}
 }
 
@@ -2079,50 +2115,38 @@ function showPreparedDuel(){
  if(!PRE.isReady(pending))return;
  const preview=describePreparedDuel();
  if(!preview)return;
- const modal=$('preDuelDialog'),art=$('preDuelArt');art.replaceChildren();
  const artRequest=++preDuelArtSerial;
- const matchStyle=window.NeoRpgTournamentPresentation?.matchModel?.(pending,{cast,cups:TOURNAMENTS.cups});
- modal.dataset.circuit=matchStyle?.kind||'friendly';
- $('preDuelContext').textContent=preview.stake;
- $('preDuelOpponent').textContent=preview.name;
+ const matchStyle=window.NeoRpgTournamentPresentation?.matchModel?.(
+  pending,{cast,cups:TOURNAMENTS.cups}
+ );
  const accelerated=pending.npcDeckTier>(pending.day<=30?1:pending.day<=60?2:3);
- $('preDuelDeck').textContent=preview.deckLabel+(pending.customOpponentDeck?' · YOUR COLLABORATIVE BUILD':pending.npcDeckTier===3?' · EXPERT DECK'+(accelerated?' · PERSONAL MILESTONE':''):pending.npcDeckTier===2?' · REFINED DECK'+(accelerated?' · PERSONAL MILESTONE':''):'')+' · '+preview.place;
- const line=preview.lines[pending.preview.index];
- $('preDuelSpeaker').textContent=line.speaker;
- $('preDuelLine').textContent=line.text;
- $('preDuelNext').hidden=pending.preview.index>=preview.lines.length-1;
- $('preDuelStart').hidden=pending.preview.index<preview.lines.length-1;
- const placeholder=document.createElement('span');placeholder.className='preduel-placeholder';
- placeholder.textContent='✦ '+preview.name+' · '+preview.place;
- art.append(placeholder);
- // Show the portrait immediately, then prefer the eligible story CG.
- // If it is missing (or none is eligible), reuse the booster / battle chime-in art.
- const face=makeAvatar(preview.npc);face.className+=' preduel-portrait';art.append(face);
- window.NeoRpgDiscreetAvatars?.set?.(art,preview.npc,'determined',preview.name);
- const artworkCandidates=[
-  ...(preview.artwork?.path?[{path:preview.artwork.path,kind:'event',alt:preview.artwork.title}]:[]),
-  ...PRE.boosterArtCandidates(preview.npc).map(path=>({path,kind:'booster',alt:preview.name+' before the duel'}))
+ const deck=preview.deckLabel+(pending.customOpponentDeck?
+  ' · YOUR COLLABORATIVE BUILD':
+  pending.npcDeckTier===3?' · EXPERT DECK'+(accelerated?' · PERSONAL MILESTONE':''):
+  pending.npcDeckTier===2?' · REFINED DECK'+(accelerated?' · PERSONAL MILESTONE':''):'')+
+  ' · '+preview.place;
+ const dialogue=preview.lines[pending.preview.index];
+ const artwork=[
+  ...(preview.artwork?.path?[{
+   path:preview.artwork.path,kind:'event',alt:preview.artwork.title
+  }]:[]),
+  ...PRE.boosterArtCandidates(preview.npc).map(path=>({
+   path,kind:'booster',alt:preview.name+' before the duel'
+  }))
  ];
- const tryArtwork=index=>{
-  if(index>=artworkCandidates.length||artRequest!==preDuelArtSerial)return;
-  const choice=artworkCandidates[index],photo=new Image();
-  photo.className='preduel-cg'+(choice.kind==='booster'?' preduel-booster-art':'');
-  photo.alt=choice.alt;
-  photo.decoding='async';
-  photo.onload=async()=>{
-   // Keep the original portrait until the higher-resolution artwork decodes.
-   if(typeof photo.decode==='function'){
-    try{await photo.decode();}catch{if(!photo.naturalWidth){tryArtwork(index+1);return;}}
-   }
-   if(artRequest!==preDuelArtSerial||!PRE.isReady(state.pendingDuel)||state.pendingDuel.id!==preview.id)return;
-   art.replaceChildren(photo);
-   window.NeoRpgDiscreetAvatars?.set?.(art,preview.npc,'determined',preview.name);
-  };
-  photo.onerror=()=>{if(artRequest===preDuelArtSerial)tryArtwork(index+1);};
-  photo.src=choice.path;
- };
- tryArtwork(0);
- if(!modal.open)modal.showModal();
+ const view=window.NeoRpgOverworldPreDuel;
+ if(!view?.render?.(document,{
+  circuit:matchStyle?.kind||'friendly',
+  stake:preview.stake,name:preview.name,npc:preview.npc,place:preview.place,
+  deck,speaker:dialogue.speaker,line:dialogue.text,
+  canContinue:pending.preview.index<preview.lines.length-1,artwork
+ },{
+  avatar:id=>makeAvatar(id),
+  discreet:(target,id,name)=>
+   window.NeoRpgDiscreetAvatars?.set?.(target,id,'determined',name),
+  isCurrent:()=>artRequest===preDuelArtSerial&&
+   PRE.isReady(state.pendingDuel)&&state.pendingDuel.id===preview.id
+ }))throw Error('The overworld pre-duel presenter did not load.');
 }
 function advancePreparedDuel(){
  if(!PRE.advance(state.pendingDuel))return;
@@ -2149,16 +2173,11 @@ function cancelPreparedDuel(){
 }
 let battleRecoveryTimer=null,battleReadyDuelId=null;
 function ensureBattleRecovery(){
- let panel=$('battleRecovery');
- if(panel)return panel;
- panel=document.createElement('section');panel.id='battleRecovery';panel.hidden=true;
- panel.setAttribute('role','status');panel.setAttribute('aria-live','polite');
- panel.style.cssText='position:fixed;z-index:100;left:50%;bottom:20px;transform:translateX(-50%);width:min(560px,calc(100vw - 24px));padding:16px;border:1px solid #c59bd1;border-radius:14px;background:#17152af2;color:#fff;box-shadow:0 10px 40px #000b;text-align:center';
- const message=document.createElement('p');message.textContent='The duel has not responded. You can retry loading it or return to your campaign.';
- message.style.margin='0 0 12px';
- const retry=document.createElement('button');retry.type='button';retry.textContent='Retry duel';retry.style.margin='4px';retry.onclick=retryPendingBattle;
- const abandon=document.createElement('button');abandon.type='button';abandon.textContent='Return to campaign';abandon.style.margin='4px';abandon.onclick=abandonPendingBattle;
- panel.append(message,retry,abandon);document.body.append(panel);return panel;
+ const panel=window.NeoRpgOverworldDuelRecovery?.ensure?.(
+  document,retryPendingBattle,abandonPendingBattle
+ );
+ if(!panel)throw Error('The overworld duel recovery presenter did not load.');
+ return panel;
 }
 function scheduleBattleRecovery(){
  clearTimeout(battleRecoveryTimer);
@@ -2209,6 +2228,7 @@ function launchPreparedDuel(){
 }
 
 function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false,competition=null){
+ syncDeckStudioSave(); // A new duel always snapshots the latest saved 60-card deck.
  if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
  if(state.deckJourney?.starter&&!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
  if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!competition&&!currentPeople().includes(id)))return;
@@ -2235,6 +2255,11 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  showPreparedDuel();
 }
 window.addEventListener('message',ev=>{
+ if(ev.data?.type==='neo-rpg-deck-studio-updated'){
+  const frame=document.querySelector('#neoOverworldDeckPanel iframe');
+  if(ev.origin===location.origin&&ev.source===frame?.contentWindow)syncDeckStudioSave();
+  return;
+ }
  const duel=state.pendingDuel;
  if((ev.data?.type==='neo-rpg-duel-ready'||ev.data?.type==='neo-rpg-duel-error')&&ev.origin===location.origin&&ev.source===$('battle').contentWindow&&ev.data.duelId===duel?.id){
   clearTimeout(battleRecoveryTimer);
@@ -2314,46 +2339,6 @@ window.addEventListener('message',ev=>{
  if(shown)window.NeoRpgDiscreetAvatars?.set?.($('victoryPortrait'),duel.npc,receipt.outcome==='Victory'?'happy':'vulnerable',cast[duel.npc].name);
  if(!shown)continueAfterResult();
 });
-function renderAppointments(locked){
- const root=$('appointments');root.replaceChildren();
- const plans=APPOINTMENTS.active(state);
- if(!plans.length){const note=document.createElement('p');note.className='empty-note';note.textContent='No plans yet. Talk to someone in town to arrange a future meet-up.';root.append(note);return;}
- for(const meeting of plans){
-  const entry=document.createElement('div');entry.className='meeting-card';
-  const name=document.createElement('strong');name.textContent=cast[meeting.npc]?.name||meeting.npc;
-  const detail=document.createElement('small');detail.textContent='DAY '+meeting.day+' · '+periods[meeting.slot]+' · '+places[meeting.place]?.[0];
-  entry.append(name,detail);
-  if(meeting.activityId){
-   const a=SOCIAL.activities.find(x=>x.id===meeting.activityId);
-   if(a){
-    const note=document.createElement('small');note.className='meeting-plan';
-    note.textContent=(meeting.socialTone==='romantic'?'♥ DATE':meeting.socialTone==='rivalry'?'⚔ CHALLENGE':'● FRIENDS')+
-      ' · '+a.title+' · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')+' when we meet';
-    entry.append(note);
-   }
-  }
-  const ready=meeting.day===state.day&&meeting.slot===state.slot;
-  const controls=document.createElement('div');controls.className='meeting-actions';
-  if(ready){
-   if(meeting.place===state.location){
-    const attend=document.createElement('button');attend.className='meeting-attend';attend.dataset.plannerKey=String(meeting.id);
-    attend.textContent=meeting.socialTone==='romantic'?'Go on date · ⏳':meeting.activityId?'Enjoy outing · ⏳':'Meet now · ⏳';
-    const reason=DATES.canAttend(state,meeting,currentPeople(),{appointments:APPOINTMENTS,social:SOCIAL,cast});
-    attend.disabled=locked||!!reason;if(reason)attend.title=reason;
-    attend.onclick=()=>act('attend:'+meeting.id);controls.append(attend);
-   }else{
-    const travel=document.createElement('button');travel.className='meeting-attend';travel.textContent='Go there · free';travel.disabled=locked;travel.onclick=()=>{
-     travelTo(meeting.place,{intro:false});
-     if(currentPeople().includes(meeting.npc))selectPerson(meeting.npc);};controls.append(travel);
-   }
-  }else{
-   const cancel=document.createElement('button');cancel.className='meeting-cancel';cancel.textContent='Cancel · free';cancel.disabled=locked;cancel.onclick=()=>act('cancelPlan:'+meeting.id);controls.append(cancel);
-  }
-  entry.append(controls);root.append(entry);
- }
-}
-
-
 function plannerDependencies(){return {schedules:SCHEDULES,appointments:APPOINTMENTS,story:STORY,side:SIDE,world:WORLD,
  tournaments:TOURNAMENTS,intentions:INTENTIONS,arc:ARC,social:SOCIAL,situations:SITUATIONS,cast,places,eventCards};}
 function openPlannerSuggestion(id){
@@ -2387,85 +2372,9 @@ function openPlannerSuggestion(id){
   if(invite?.kind===kind&&invite.id===pick.key)return selectPerson(actor);
  }
  // Never auto-start a duel or a story: highlight the actual action instead.
- rpgLocalTab=pick.kind==='tournament'||pick.kind==='event'?'circuit':
-  pick.kind==='activity'?'activities':'stories';
- renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});
- const section=$(pick.focusId);
- const owner=section?.closest?.('.side-section');
- const heading=owner?.querySelector?.('.sidebar-title span')?.textContent||'';
- rpgActivePanel=Object.entries(rpgPanelGroups).find(([,names])=>names.some(name=>heading.includes(name)))?.[0]||'plans';
- refreshRpgPanels();
- // Planner navigation should never open the Info drawer. Keep the main game view visible.
- const buttons=[...(section?.querySelectorAll?.('button')||[])].filter(x=>!x.disabled);
- const action=buttons.find(b=>b.dataset?.plannerKey===pick.key)||
-  buttons.find(b=>b.textContent?.includes(pick.key)||b.textContent?.includes(pick.title.split(' · ')[0]))||buttons[0];
- // Info is intentionally closed for What's Next shortcuts. Avoid scrolling
- // or focusing controls inside its hidden drawer after travelling.
- const info=$('rpgInfoPanel');
- const actionHiddenInInfo=!!(info&&action&&info.contains(action)&&info.getAttribute('aria-hidden')==='true');
- if(!actionHiddenInInfo){
-  (action||section)?.scrollIntoView?.({behavior:'smooth',block:'nearest'});
-  action?.focus?.({preventScroll:true});
- }
+ window.dispatchEvent(new CustomEvent('neo-rpg-focus-opportunities',{detail:{kind:pick.kind,focusId:pick.focusId}}));
  $('notice').textContent='You are in the right place. Pick the highlighted opportunity when you are ready; no time was spent getting here.';
 }
-function renderPlanner(locked){
- const root=$('dailyPlanner');root.replaceChildren();
- if(state.day>90){
-  const p=document.createElement('p');p.className='planner-empty';p.textContent='Your 90-day season is complete. See your report and gallery.';root.append(p);return;
- }
- if(locked){
-  const p=document.createElement('p');p.className='planner-empty';p.textContent='Finish your current scene or duel to explore more opportunities.';root.append(p);return;
- }
- const suggestions=PLANNER.recommend(state,plannerDependencies());
- if(!suggestions.length){
-  const p=document.createElement('p');p.className='planner-empty';p.textContent='Nothing urgent right now. Explore, practice, or take a well-earned break.';root.append(p);return;
- }
- for(const item of suggestions){
-  const card=document.createElement('div');card.className='planner-card'+(item.timing==='upcoming'?' planner-soon':'');
-  const meta=document.createElement('small');meta.className='planner-meta';
-  meta.textContent=item.timing==='upcoming'?'COMING UP · DAY '+item.day+' · '+periods[item.slot]:
-    (item.place===state.location?'HERE NOW':'FREE TRAVEL')+' · '+(item.timeCost?'⏳ 1 PERIOD':'FREE');
-  const heading=document.createElement('strong');heading.textContent=item.title;
-  const desc=document.createElement('p');desc.textContent=item.detail;
-  card.append(meta,heading,desc);
-  if(item.action!=='none'){
-   const b=document.createElement('button');b.className='planner-action';b.textContent=item.action==='travel'?'Go to '+places[item.place][0]+' · free':'Show me where · free';
-   b.onclick=()=>openPlannerSuggestion(item.id);card.append(b);
-  }
-  root.append(card);
- }
-}
-function renderDailyIntention(locked){
- const root=$('dailyIntention');root.replaceChildren();
- const progress=INTENTIONS.status(state);
- const summary=document.createElement('p');summary.className='intention-summary';
- if(state.day>90){
-  summary.textContent='The season is complete. '+progress.completedCount+' daily priorities fulfilled.';
-  root.append(summary);return;
- }
- if(!progress.chosen){
-  summary.textContent='Choose one focus for today. It is optional, and any result counts for duels.';
-  root.append(summary);
-  for(const goal of INTENTIONS.goals){
-   const button=document.createElement('button');button.className='intention-choice';button.disabled=locked;
-   const title=document.createElement('strong');title.textContent=goal.title;
-   const detail=document.createElement('small');detail.textContent=goal.detail;
-   const reward=document.createElement('span');reward.className='intention-reward';reward.textContent=goal.rewardLabel;
-   button.append(title,detail,reward);button.onclick=()=>act('intention:'+goal.id);root.append(button);
-  }
- }else{
-  const goal=progress.selected;
-  const card=document.createElement('div');card.className='intention-active'+(progress.completed?' complete':'');
-  const title=document.createElement('strong');title.textContent=(progress.completed?'✓ COMPLETED · ':'◷ TODAY · ')+goal.title;
-  const detail=document.createElement('p');detail.textContent=progress.completed?'You made progress on your own terms. Tomorrow brings a new choice.':goal.detail;
-  const reward=document.createElement('small');reward.textContent='REWARD · '+goal.rewardLabel;
-  card.append(title,detail,reward);root.append(card);
- }
- const count=document.createElement('small');count.className='intention-count';count.textContent=progress.completedCount+' priorities completed this season · resets tomorrow';
- root.append(count);
-}
-
 // Reuse existing character artwork until a scene-specific CG is installed.
 function loadCGArt(image,entry,thumbnail,onSuccess,onMissing){
  const candidates=CG.artCandidates(entry,thumbnail);
@@ -2555,7 +2464,7 @@ function rpgV2Expression(id,emotion='neutral'){
  const name=[...RPG_V2_MOODS,...RPG_V2_BATTLE].includes(key)?key:(RPG_V2_MOOD_ALIASES[key]||'neutral');
  return '/rpg-assets/characters/'+id+'/expressionsv2/'+name+'.png';
 }
-const ART_TYPES=[{id:'cg',label:'CGs'},{id:'expressions',label:'Expressions'},{id:'battle',label:'Battle art'},{id:'outfits',label:'Outfits'}];
+const ART_TYPES=[{id:'cg',label:'CGs'},{id:'expressions',label:'Expressions'},{id:'battle',label:'Battle art'},{id:'outfits',label:'Outfits'},{id:'photoshoot',label:'Photoshoots'}];
 const artEntries=new Map();
 const artSeen=state.artSeen&&typeof state.artSeen==='object'&&!Array.isArray(state.artSeen)?state.artSeen:(state.artSeen={});
 const artViewed=state.artViewed&&typeof state.artViewed==='object'&&!Array.isArray(state.artViewed)?state.artViewed:(state.artViewed={});
@@ -2569,7 +2478,7 @@ function buildArtEntries(){
   if(/\/(?:expression-portraits|expression-faces|vn-expressions|expressions)\//.test(path))return;
   const key=artKey(path);
   if(artEntries.has(key))return;
-  artEntries.set(key,{id,type,label,path:key,unlocked:!!artSeen[key],title:label,viewed:!!artViewed[key]});
+  artEntries.set(key,{id,type,label,path:key,unlocked:type==='photoshoot'||!!artSeen[key],title:label,viewed:!!artViewed[key]});
  };
  for(const item of window.NeoRpgArtManifest||[])if(cast[item.id])register(item.id,item.type,item.title,item.path);
  for(const id of RPG_V2_IDS)if(cast[id]){
@@ -2617,233 +2526,124 @@ $('battle')?.addEventListener('load',()=>{
  try{attachArtworkTracker($('battle').contentDocument);}catch{ /* cross-origin iframe is not accessible */ }
 });
 buildArtEntries();
-function showOtherArt(entry){
- if(!artSeen[entry.path])return;
- if(!galleryViewer){galleryOpenViewer({...entry,unlocked:true,character:entry.id,thumb:entry.path});return;}
- const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
- if(entry.id)window.NeoRpgDiscreetAvatars?.set?.(stage,entry.id,'neutral',entry.id);
- const image=document.createElement('img');image.alt=entry.title;
- image.onload=()=>{if(!artViewed[entry.path]){artViewed[entry.path]=true;persist();renderGallery();}};
- image.onerror=()=>{stage.textContent='Artwork file unavailable.';};
- image.src=entry.path;
- stage.append(image);galleryViewer.querySelector('.cg-lightbox-title').textContent=entry.title;
- if(!galleryViewer.open)galleryViewer.showModal();
+let galleryCharacterPage='';
+function openGalleryArtwork(entry){
+ if(!entry?.unlocked)return false;
+ const view=window.NeoRpgOverworldGallery;
+ return !!view?.openLightbox?.(document,entry,{
+  discreetAvatar:(target,id)=>
+   window.NeoRpgDiscreetAvatars?.set?.(target,id,'neutral',id),
+  loadCG:(image,art,onSuccess,onMissing)=>
+   loadCGArt(image,art,false,onSuccess,onMissing),
+  onViewed:()=>{
+   if(entry.type){
+    if(artViewed[entry.path])return;
+    artViewed[entry.path]=true;
+   }else CG.markViewed(state,entry.id);
+   persist();renderGallery();
+  }
+ });
 }
-let galleryCharacterPage='',galleryViewer=null;
+function showOtherArt(entry){
+ if(!entry?.unlocked)return;
+ if(!openGalleryArtwork({...entry,character:entry.character||entry.id}))
+  throw Error('The overworld artwork viewer did not load.');
+}
 function galleryOpenViewer(entry){
- if(!entry.unlocked)return;
- if(!galleryViewer){
-  galleryViewer=document.createElement('dialog');galleryViewer.className='cg-lightbox';
-  galleryViewer.setAttribute('aria-label','Full-screen unlocked artwork');
-  galleryViewer.innerHTML='<div class="cg-lightbox-toolbar"><span class="cg-lightbox-title"></span><button type="button" class="cg-lightbox-close" aria-label="Close full-screen image">✕ Close</button></div><div class="cg-lightbox-stage"></div>';
-  galleryViewer.querySelector('.cg-lightbox-close').onclick=()=>galleryViewer.close();
-  galleryViewer.addEventListener('click',e=>{if(e.target===galleryViewer)galleryViewer.close();});
-  document.body.append(galleryViewer);
- }
- const stage=galleryViewer.querySelector('.cg-lightbox-stage');stage.replaceChildren();
- if(entry.character)window.NeoRpgDiscreetAvatars?.set?.(stage,entry.character,'neutral',entry.character);
- galleryViewer.querySelector('.cg-lightbox-title').textContent=entry.title;
- const image=document.createElement('img');image.alt=entry.title;image.hidden=true;stage.append(image);
- const pending=document.createElement('p');pending.className='cg-pending';pending.textContent='Artwork not installed yet.';pending.hidden=true;stage.append(pending);
- galleryViewer.showModal();
- loadCGArt(image,entry,false,()=>{
-  pending.hidden=true;if(entry.type)artViewed[entry.path]=true;else CG.markViewed(state,entry.id);persist();renderGallery();
- },()=>{pending.hidden=false;});
+ if(!entry?.unlocked)return;
+ if(!openGalleryArtwork(entry))
+  throw Error('The overworld CG viewer did not load.');
+}
+function galleryCharacterIds(){
+ return [...new Set([...Object.keys(cast),...CG.catalog.map(entry=>entry.character)])]
+  .filter(id=>!!cast[id])
+  .sort((a,b)=>cast[a].name.localeCompare(cast[b].name));
 }
 function populateGalleryCharacters(){
- const select=$('galleryCharacter'),previous=select.value;
- const ids=[...new Set([...Object.keys(cast),...CG.catalog.map(entry=>entry.character)])].filter(id=>!!cast[id]);
- ids.sort((a,b)=>cast[a].name.localeCompare(cast[b].name));
- const everyone=document.createElement('option');everyone.value='';everyone.textContent='All characters';select.replaceChildren(everyone);
- for(const id of ids){const option=document.createElement('option');option.value=id;option.textContent=cast[id].name;select.append(option);}
- select.value=ids.includes(previous)?previous:'';
+ const items=galleryCharacterIds().map(id=>({id,name:cast[id].name}));
+ if(!window.NeoRpgOverworldGallery?.populateCharacters?.($('galleryCharacter'),items))
+  throw Error('The overworld gallery character list is unavailable.');
+}
+function galleryViewModel(){
+ buildArtEntries();
+ const select=$('galleryCharacter'),category=$('galleryCategory');
+ if(!galleryCharacterPage){
+  const ids=[...select.options].map(option=>option.value).filter(Boolean);
+  const all=[...CG.gallery(state),...artEntries.values()].map(entry=>({
+   ...entry,character:entry.character||entry.id
+  }));
+  return {
+   page:'',characters:ids.map(id=>{
+    const matches=all.filter(entry=>entry.character===id);
+    return {id,name:cast[id]?.name||id,total:matches.length,
+     earned:matches.filter(entry=>entry.unlocked).length};
+   })
+  };
+ }
+ const type=category.value;
+ const all=type==='cg'||!type?CG.gallery(state,{character:galleryCharacterPage}):
+  [...artEntries.values()]
+   .filter(entry=>entry.id===galleryCharacterPage&&entry.type===type)
+   .map(entry=>({...entry,character:entry.id,thumb:entry.path}));
+ const visible=$('galleryUnseen').checked?
+  all.filter(entry=>entry.unlocked&&!entry.viewed):all;
+ return {
+  page:galleryCharacterPage,title:cast[galleryCharacterPage]?.name||galleryCharacterPage,
+  type:category.value,categories:ART_TYPES,all,visible
+ };
 }
 function renderGallery(){
- const root=$('galleryGrid'),progress=$('galleryProgress');root.replaceChildren();progress.replaceChildren();$('galleryCharacterPage').replaceChildren();
- const select=$('galleryCharacter'),category=$('galleryCategory');
- const characterPage=$('galleryCharacterPage'),albumPage=$('galleryAlbumPage');
- characterPage.hidden=!!galleryCharacterPage;albumPage.hidden=!galleryCharacterPage;
- if(!galleryCharacterPage){
-  const ids=[...select.options].map(x=>x.value).filter(Boolean);
-  buildArtEntries();const all=[...CG.gallery(state),...artEntries.values()].map(e=>({...e,character:e.character||e.id}));
-  $('galleryCount').textContent='Choose a character to explore their memories.';
-  for(const id of ids){
-   const entries=all.filter(e=>e.character===id),earned=entries.filter(e=>e.unlocked);
-   const btn=document.createElement('button');btn.type='button';btn.className='cg-character-card';
-   const avatar=document.createElement('div');avatar.className='cg-character-avatar';
-   // Use the same canonical portrait and broken-image fallback as the RPG roster.
-   const face=makeAvatar(id);
-   face.alt=cast[id]?.name||id;
-   face.loading='lazy';
-   avatar.append(face);
-   const name=document.createElement('strong');name.textContent=cast[id]?.name||id;
-   const stat=document.createElement('small');stat.textContent=earned.length+' / '+entries.length+' memories unlocked';
-   btn.append(avatar,name,stat);
-   btn.onclick=()=>{galleryCharacterPage=id;select.value=id;category.value='cg';renderGallery();};
-   characterPage.append(btn);
-  }
-  return;
- }
- select.value=galleryCharacterPage;
- $('galleryCharacterTitle').textContent=cast[galleryCharacterPage]?.name||galleryCharacterPage;
- buildArtEntries();const type=category.value;const all=type==='cg'||!type?CG.gallery(state,{character:galleryCharacterPage}):[...artEntries.values()].filter(e=>e.id===galleryCharacterPage&&e.type===type).map(e=>({...e,character:e.id,thumb:e.path}));
- const visible=$('galleryUnseen').checked?all.filter(e=>e.unlocked&&!e.viewed):all;
- if(!visible.length){const empty=document.createElement('p');empty.className='cg-gallery-empty';empty.textContent=all.length?'No artwork matches this filter. Try turning off “Only new”.':'No artwork cataloged in this category yet.';root.append(empty);}
- const earned=all.filter(e=>e.unlocked).length;
- $('galleryCount').textContent=earned+' / '+all.length+' unlocked · '+visible.length+' shown';
- const categories=ART_TYPES;
- for(const cat of categories){
-  const btn=document.createElement('button');btn.type='button';btn.className='cg-category-tab'+(category.value===cat.id?' selected':'');
-  btn.textContent=cat.label;btn.setAttribute('aria-pressed',String(category.value===cat.id));
-  btn.onclick=()=>{category.value=cat.id;renderGallery();};progress.append(btn);
- }
-
- for(const entry of visible){
-  const tile=document.createElement('button');tile.type='button';tile.className='cg-tile'+(entry.unlocked?' unlocked':' locked');
-  tile.dataset.character=entry.character||'';
-  tile.disabled=!entry.unlocked;
-  const thumb=document.createElement('div');thumb.className='cg-thumb';
-  if(entry.character)window.NeoRpgDiscreetAvatars?.set?.(thumb,entry.character,'neutral',entry.character);
-  if(entry.unlocked){
-   const img=document.createElement('img');img.alt='';img.hidden=true;thumb.append(img);
-   if(entry.type){img.onload=()=>{img.hidden=false;};img.onerror=()=>{img.hidden=true;thumb.textContent='Artwork unavailable';};img.src=entry.path;}
-   else loadCGArt(img,entry,true,kind=>{img.classList.toggle('is-fallback',kind!=='event');},()=>{thumb.textContent='Artwork unavailable';});
-  }else{const mystery=document.createElement('span');mystery.textContent='🔒';thumb.append(mystery);}
-  const title=document.createElement('strong');title.textContent=entry.unlocked?entry.title:'???';
-  const note=document.createElement('small');note.textContent=entry.unlocked?(entry.viewed?'Viewed':'New · tap to view'):'Locked · discover in the story';
-  tile.append(thumb,title,note);tile.onclick=()=>entry.type?showOtherArt(entry):galleryOpenViewer(entry);root.append(tile);
- }
+ const model=galleryViewModel();
+ if(!window.NeoRpgOverworldGallery?.render?.(document,model,{
+  avatar:id=>makeAvatar(id),
+  chooseCharacter:id=>{
+   if(!cast[id])return;
+   galleryCharacterPage=id;
+   $('galleryCharacter').value=id;$('galleryCategory').value='cg';
+   renderGallery();
+  },
+  chooseCategory:id=>{
+   if(!ART_TYPES.some(type=>type.id===id))return;
+   $('galleryCategory').value=id;renderGallery();
+  },
+  discreetAvatar:(target,id)=>
+   window.NeoRpgDiscreetAvatars?.set?.(target,id,'neutral',id),
+  loadCG:(img,entry,onSuccess,onMissing)=>
+   loadCGArt(img,entry,true,onSuccess,onMissing),
+  open:entry=>entry.type?showOtherArt(entry):galleryOpenViewer(entry)
+ }))throw Error('The overworld gallery renderer is unavailable.');
 }
 function openGallery(){
  galleryCharacterPage='';$('galleryUnseen').checked=false;
  populateGalleryCharacters();$('galleryCategory').value='cg';renderGallery();$('galleryDialog').showModal();
 }
 function openCommunityBoard(){
- const table=$('communityStandings'),news=$('communityNews'),connections=$('communityConnections');
- table.replaceChildren();news.replaceChildren();connections.replaceChildren();
- const standings=COMMUNITY.rank(state,cast);
- if(!standings.length){
-  const p=document.createElement('p');p.className='empty-note';
-  p.textContent='The club season has only just begun. Results will appear as days pass.';
-  table.append(p);
- }
- for(const [i,entry] of standings.slice(0,8).entries()){
-  const row=document.createElement('div');row.className='club-standing';
-  const label=document.createElement('strong');label.textContent=(i+1)+'. '+entry.name;
-  const score=document.createElement('span');score.textContent=entry.wins+' W · '+entry.losses+' L';
-  row.append(label,score);table.append(row);
- }
- const events=COMMUNITY.recent(state,8);
- if(!events.length){
-  const p=document.createElement('p');p.className='empty-note';p.textContent='The community board is quiet for now.';
-  news.append(p);
- }
- for(const event of events){
-  const row=document.createElement('div');row.className='club-news-entry';
-  const date=document.createElement('small');date.textContent='DAY '+event.day+' · '+places[event.place]?.[0];
-  const detail=document.createElement('p');detail.textContent=COMMUNITY.describe(event,cast);
-  row.append(date,detail);news.append(row);
- }
  const links=Object.entries(COMMUNITY.hydrate(state).links)
-  .filter(([,v])=>(v.matches||0)>=2||(v.meetings||0)>=2)
+  .filter(([,progress])=>(progress.matches||0)>=2||(progress.meetings||0)>=2)
   .sort((a,b)=>(b[1].matches||0)+(b[1].meetings||0)-(a[1].matches||0)-(a[1].meetings||0));
- for(const [pair,progress] of links.slice(0,4)){
-  const [a,b]=pair.split(':');
-  const p=document.createElement('p');p.className='club-link';
-  p.textContent=(cast[a]?.name||a)+' & '+(cast[b]?.name||b)+' · '+
-   ((progress.matches||0)>=2?'Competitive rivals':'Familiar friends');
-  connections.append(p);
- }
- if(!links.length){
-  const p=document.createElement('p');p.className='empty-note';
-  p.textContent='Friendships and rivalries emerge as the season progresses.';
-  connections.append(p);
- }
+ const model={
+  standings:COMMUNITY.rank(state,cast).slice(0,8).map(entry=>({
+   name:entry.name,wins:entry.wins,losses:entry.losses
+  })),
+  events:COMMUNITY.recent(state,8).map(event=>({
+   day:event.day,place:places[event.place]?.[0]||event.place,
+   description:COMMUNITY.describe(event,cast)
+  })),
+  connections:links.slice(0,4).map(([pair,progress])=>{
+   const [a,b]=pair.split(':');
+   return {label:(cast[a]?.name||a)+' & '+(cast[b]?.name||b)+' · '+
+    ((progress.matches||0)>=2?'Competitive rivals':'Familiar friends')};
+  })
+ };
+ if(!window.NeoRpgOverworldModals?.renderCommunity?.(document,model))
+  throw Error('The overworld community board is unavailable.');
  $('communityDialog').showModal();
 }
-function renderCompetitiveCircuit(locked){
- const root=$('competitiveEvents');if(!root)return;
- root.replaceChildren();
- const board=document.createElement('button');board.type='button';board.className='activity';
- board.textContent='▦ Community Board · NPC standings, rivalries & club news';
- board.disabled=locked;board.onclick=openCommunityBoard;root.append(board);
- const turning=CONSEQ.opportunities(state)[0];
- if(turning){
-  const reflect=document.createElement('button');reflect.type='button';reflect.className='activity';
-  reflect.disabled=locked;
-  reflect.textContent=(state.location==='center'?'↗ Reflect on your match with ':'↗ Visit the Center to reflect on ')+
-   (cast[turning.npc]?.name||'a rival')+' · free';
-  reflect.onclick=()=>act('consequence');
-  root.append(reflect);
- }
- const entries=COMPETE.available(state);
- for(const entry of entries){
-  const button=document.createElement('button');button.type='button';button.className='activity';button.disabled=locked;
-  const title=document.createElement('strong');title.textContent='⚔ '+entry.title;
-  const detail=document.createElement('small');detail.textContent=(cast[entry.npc]?.name||'Circuit trainer')+' · '+entry.description;
-  button.append(title,detail);button.onclick=()=>act('competitive:'+entry.id);root.append(button);
- }
- const c=COMPETE.hydrate(state),local=COMPETE.localProgress(state);
- if(state.location!=='center'&&state.day>=2&&state.day<=90&&!c.daily[state.day]){
-  const button=document.createElement('button');button.className='activity';button.disabled=locked;
-  button.textContent='Train at the Community Center';
-  button.onclick=()=>{state.location='center';state.selected=null;persist();say('Narrator','The practice tables are set up for today’s rotating challenge.');};
-  root.append(button);
- }
- if(state.location!=='shop'&&state.day<=90&&COMPETE.localDay(state.day)&&local.status==='open'&&(local.round>0||state.slot<=1)){
-  const button=document.createElement('button');button.className='activity';button.disabled=locked;
-  button.textContent='Visit today’s Saturday Local at The Lucky Draw';
-  button.onclick=()=>{state.location='shop';state.selected=null;persist();say('Narrator','The local circuit has gathered for its weekly matches.');};
-  root.append(button);
- }
- const hint=document.createElement('p');hint.className='empty-note';
- const next=COMPETE.upcoming(state);
- hint.textContent=(state.day<=90&&COMPETE.localDay(state.day)&&local.status==='champion'?'You won this week’s local!':
-  state.day<=90&&COMPETE.localDay(state.day)&&local.status==='eliminated'?'This week’s local is over for you.':
-  next?'Next Saturday Local: Day '+next+' at The Lucky Draw. Two rounds, one day.':'The competitive season has ended.')+
-  ' Daily challenges run at the Community Center and refresh each new day.';
- root.append(hint);
-}
-function renderBracketProgress(){
- const root=$('bracketProgress');if(!root)return;
- // Keep bracket DOM stable across ordinary dialogue renders; only game progress updates it.
- const stamp=JSON.stringify([state.day,...TOURNAMENTS.cups.map(cup=>{
-  const current=TOURNAMENTS.status(state,cup.id);
-  return [cup.id,current.state,current.round,current.results?.length||0];
- })]);
- if(root.dataset.tournamentStamp===stamp)return;
- root.dataset.tournamentStamp=stamp;root.replaceChildren();
- for(const cup of TOURNAMENTS.cups){
-  const progress=TOURNAMENTS.status(state,cup.id);
-  const model=window.NeoRpgTournamentPresentation?.bracketModel?.(cup,progress,state.day,cast);
-  if(!model)continue;
-  const card=document.createElement('section');
-  card.className='bracket-card neo-circuit-card'+(model.state==='champion'?' bracket-champion':'')+
-   (model.state==='eliminated'?' bracket-eliminated':'');
-  card.setAttribute('aria-label',model.title+' · '+model.headline);
-  const title=document.createElement('strong');title.className='neo-bracket-title';title.textContent=model.title;
-  const label=document.createElement('span');label.className='neo-bracket-status';label.textContent=model.headline;
-  const rounds=document.createElement('div');rounds.className='neo-bracket-rounds';
-  for(const item of model.rows){
-   const row=document.createElement('div');
-   row.className='neo-bracket-round'+(item.label==='CLEARED'?' is-cleared':'')+
-    (item.current?' is-current':'')+(item.label==='ELIMINATED'?' is-eliminated':'');
-   row.setAttribute('aria-label','Round '+item.round+': '+item.opponent+' · '+item.label);
-   const number=document.createElement('span');number.className='neo-bracket-round__num';number.textContent=String(item.round).padStart(2,'0');
-   const name=document.createElement('span');name.className='neo-bracket-round__name';name.textContent=item.opponent;
-   const result=document.createElement('span');result.className='neo-bracket-round__state';result.textContent=item.label;
-   row.append(number,name,result);rounds.append(row);
-  }
-  card.append(title,label,rounds);root.append(card);
- }
-}
-
 // One spoiler-safe timeline for appointments, known stories and official fixtures.
-function openCalendar(){
- const root=$('calendarEntries');root.replaceChildren();
+function calendarEntries(){
  const now=APPOINTMENTS.stamp(state.day,state.slot);
  const rows=[];
- const add=(entry)=>{if(!places[entry.place])return;rows.push(entry);};
+ const add=entry=>{if(places[entry.place])rows.push(entry);};
  for(const plan of APPOINTMENTS.active(state)){
   if(APPOINTMENTS.stamp(plan.day,plan.slot)<now)continue;
   const activity=SOCIAL.activities?.find(item=>item.id===plan.activityId);
@@ -2851,19 +2651,21 @@ function openCalendar(){
    title:'Meet '+(cast[plan.npc]?.name||'your friend'),
    detail:activity?.title||'Agreed meet-up',npc:plan.npc});
  }
- for(const e of eventCards){
-  if(APPOINTMENTS.stamp(e.day,e.slot)<now||state.eventsDone?.[e.day+':'+e.title])continue;
-  add({day:e.day,slot:e.slot,place:e.place,kind:'Official event',title:e.title,
-   detail:'Scheduled circuit exhibition'});
+ for(const event of eventCards){
+  if(APPOINTMENTS.stamp(event.day,event.slot)<now||
+    state.eventsDone?.[event.day+':'+event.title])continue;
+  add({day:event.day,slot:event.slot,place:event.place,kind:'Official event',
+   title:event.title,detail:'Scheduled circuit exhibition'});
  }
  for(const cup of TOURNAMENTS.cups){
   const progress=TOURNAMENTS.status(state,cup.id);
-  if(cup.end<state.day||['champion','eliminated','expired','missed'].includes(progress.state))continue;
+  if(cup.end<state.day||
+    ['champion','eliminated','expired','missed'].includes(progress.state))continue;
   add({day:Math.max(state.day,cup.day),slot:null,place:cup.place,kind:'Tournament',
    title:cup.title,detail:'Registration: Days '+cup.day+'–'+cup.end+
     (progress.round?' · Round '+(progress.round+1)+'/3':'')});
  }
- // Only reveal a story already available to a character the player has met.
+ // Don't expose undiscovered character stories or unavailable schedule windows.
  for(const event of STORY.available(state)){
   if(!state['met_'+event.npc]&&!(event.npc==='reina'&&state.metReina))continue;
   if(event.slot!==null&&event.slot!==undefined&&event.slot!==state.slot)continue;
@@ -2875,41 +2677,38 @@ function openCalendar(){
    detail:'A conversation is available now',npc:event.npc});
  }
  rows.sort((a,b)=>a.day-b.day||(a.slot??0)-(b.slot??0)||a.kind.localeCompare(b.kind));
- if(!rows.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No known plans yet. Talk to people around town or check back later.';root.append(p);}
- let daySection=null,lastDay=null;
- for(const entry of rows){
-  if(entry.day!==lastDay){
-   lastDay=entry.day;daySection=document.createElement('section');daySection.className='rpg-calendar-day';
-   const heading=document.createElement('h3');heading.textContent='Day '+entry.day+(entry.day===state.day?' · Today':'');
-   daySection.append(heading);root.append(daySection);
-  }
-  const row=document.createElement('article');row.className='rpg-calendar-item';
-  const type=document.createElement('small');type.className='rpg-calendar-type';type.textContent=entry.kind;
-  const title=document.createElement('strong');title.textContent=entry.title;
-  const detail=document.createElement('p');detail.textContent=(entry.slot===null?'Any period':periods[entry.slot])+
-   ' · '+places[entry.place][0]+' · '+entry.detail;
-  row.append(type,title,detail);
-  const current=entry.day===state.day&&(entry.slot===null||entry.slot===state.slot);
-  if(current){
-   const action=document.createElement('button');action.type='button';
-   action.textContent=entry.place===state.location?'View here':'Visit '+places[entry.place][0]+' · free';
-   action.disabled=controlsLocked();
-   action.onclick=()=>{
-    $('calendarDialog').close();
-    if(entry.place!==state.location)travelTo(entry.place);
-    else if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
-    else{rpgLocalTab=entry.kind==='Tournament'||entry.kind==='Official event'?'activities':'stories';renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});}
-    if(entry.place===state.location&&entry.npc&&currentPeople().includes(entry.npc))return;
-    if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
-   };
-   row.append(action);
-  }
-  daySection.append(row);
- }
+ return rows;
+}
+function openCalendar(){
+ const rows=calendarEntries().map(entry=>({
+  ...entry,
+  period:entry.slot===null?'Any period':periods[entry.slot],
+  placeName:places[entry.place][0],
+  canVisit:entry.day===state.day&&(entry.slot===null||entry.slot===state.slot)
+ }));
+ const renderer=window.NeoRpgOverworldModals;
+ if(!renderer?.renderCalendar?.($('calendarEntries'),{
+  day:state.day,location:state.location,locked:controlsLocked(),entries:rows
+ },entry=>{
+  // Recheck the calendar against the authoritative state before following a
+  // shortcut. Calendar recommendations never auto-play a scene or start a duel.
+  const valid=calendarEntries().some(item=>
+   item.day===entry.day&&item.slot===entry.slot&&item.place===entry.place&&
+   item.kind===entry.kind&&item.title===entry.title&&item.npc===entry.npc);
+  if(!valid||controlsLocked())return;
+  $('calendarDialog').close();
+  if(entry.place!==state.location)travelTo(entry.place);
+  else if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
+  else window.dispatchEvent(new CustomEvent('neo-rpg-focus-opportunities',{
+   detail:{kind:entry.kind==='Tournament'||entry.kind==='Official event'?'tournament':'story'}
+  }));
+  if(entry.place===state.location&&entry.npc&&currentPeople().includes(entry.npc))return;
+  if(entry.npc&&currentPeople().includes(entry.npc))selectPerson(entry.npc);
+ }))throw Error('The overworld calendar is unavailable.');
  $('calendarDialog').showModal();
 }
 // Keep the previous portrait on screen until its replacement is fully decoded.
-const decodedPortraitAssets=new Map(),stagePortraitRequests=new WeakMap();
+const decodedPortraitAssets=new Map();
 function readyPortrait(path){
  if(!path)return Promise.resolve(false);
  if(decodedPortraitAssets.has(path))return decodedPortraitAssets.get(path);
@@ -2926,21 +2725,6 @@ function readyPortrait(path){
  decodedPortraitAssets.set(path,promise);
  if(decodedPortraitAssets.size>72)decodedPortraitAssets.delete(decodedPortraitAssets.keys().next().value);
  return promise;
-}
-function swapStagePortrait(image,paths,onReady,onMissing){
- const options=[...new Set(paths.filter(Boolean))],key=options.join('|');
- if(stagePortraitRequests.get(image)?.key===key)return;
- const request={key};stagePortraitRequests.set(image,request);
- void (async()=>{
-  for(const path of options){
-   if(!await readyPortrait(path)){failedScenePortraits.add(path);continue;}
-   if(stagePortraitRequests.get(image)!==request)return;
-   if(image.getAttribute('src')!==path)image.src=path;
-   onReady?.(path);
-   return;
-  }
-  if(stagePortraitRequests.get(image)===request)onMissing?.();
- })();
 }
 function makeAvatar(id,size=''){
  const img=document.createElement('img'),paths=size==='stage'?stagePortraitPaths(id,'neutral'):portraitPaths(id,'neutral');
@@ -2960,117 +2744,22 @@ function makeAvatar(id,size=''){
  return img;
 }
 
-function renderJourney(){
- const root=$('journeyProgress');root.replaceChildren();
- const stats=JOURNEY.currentRun(state,CG);
- const overview=document.createElement('p');overview.className='journey-overview';
- overview.textContent='Season '+stats.run+' · Day '+stats.day+' / 90 · '+stats.gallery.unlocked+'/'+stats.gallery.total+' memories across runs';
- root.append(overview);
- const progress=document.createElement('div');progress.className='journey-track';
- const fill=document.createElement('div');fill.className='journey-fill';fill.style.width=Math.max(0,Math.min(100,stats.gallery.percent))+'%';
- progress.append(fill);root.append(progress);
- for(const item of JOURNEY.milestones(state,CG)){
-  const p=document.createElement('p');p.className='journey-goal';
-  const title=document.createElement('strong');title.textContent=item.title;
-  const body=document.createElement('span');body.textContent=item.detail;
-  p.append(title,body);root.append(p);
- }
- const open=document.createElement('button');open.className='journey-gallery';
- open.textContent='Open memory album · '+stats.gallery.unlocked+'/'+stats.gallery.total;
- open.onclick=openGallery;root.append(open);
-}
 function mandatoryClosureDue(){
  return !!MANDATORY&&MANDATORY_EVENTS.some(e=>e.kind==='season'&&!state.mandatoryEventState?.seen?.[e.id]&&state.day>=e.earliestDay);
 }
 function renderSeasonReport(){
- const root=$('endSeason');root.replaceChildren();
  const complete=EPILOGUE.completed(state)&&!mandatoryClosureDue();
- root.hidden=!complete;
- if(!complete)return;
- const r=EPILOGUE.report(state);
- root.className='campaign-complete season-finale';
- const heading=document.createElement('h2');heading.textContent=r.title;
- const preface=document.createElement('p');preface.className='finale-subtitle';
- preface.textContent='NEO HARBOR · SEASON '+r.run+' · DAY 90 / 90';
- const closing=document.createElement('p');closing.className='finale-closing';closing.textContent=r.closing;
- const numbers=document.createElement('div');numbers.className='finale-stats';
- const details=[['Duels',r.played],['Victories',r.wins],['Draws',r.draws],['Circuit points',r.points],['Stories',r.storyScenes],['Town encounters',r.encounters],['Side quests',r.sidequests],['Plans kept',r.appointments],['Special moments',r.situations],['Gallery memories',r.galleryEarned]];
- for(const [key,value] of details){
-  const cell=document.createElement('div');cell.className='finale-stat';
-  const count=document.createElement('strong');count.textContent=String(value);
-  const label=document.createElement('small');label.textContent=key;cell.append(count,label);numbers.append(cell);
- }
- const trophyTitle=document.createElement('h3');trophyTitle.textContent='Your tournament record';
- const trophies=document.createElement('div');trophies.className='finale-cups';
- for(const cup of r.cups){
-  const el=document.createElement('div');el.className='finale-cup '+(cup.status==='champion'?'is-champion':'');
-  el.textContent=cup.title+' · '+(cup.status==='champion'?'Champion':cup.status==='eliminated'?'Eliminated after '+cup.roundsWon+' victories':cup.status==='missed'||cup.status==='expired'?'Not completed':cup.status);
-  trophies.append(el);
- }
- const social=document.createElement('p');social.className='finale-social';
- social.textContent=r.partner?'A bond that continues: '+r.partner+'.':r.closest.length?'People you grew closest to: '+r.closest.map(x=>x.name).join(', ')+'.':'The people of Neo Harbor are still there for a return visit.';
- const footer=document.createElement('div');footer.className='finale-actions';
- const replay=document.createElement('button');replay.className='time-advance';
- replay.textContent='↻ Start New Game+ · archive this season';replay.onclick=()=>act('replay');
- const explanation=document.createElement('small');explanation.textContent='Replaying starts a fresh 90-day season. Reports and your selected deck preset carry over; credits, character bonds and brackets reset.';
- footer.append(replay,explanation);
- const history=JOURNEY.archive(state),past=document.createElement('div');
- past.className='finale-archive';
- const archiveHeading=document.createElement('h3');archiveHeading.textContent='Your earlier seasons';
- past.append(archiveHeading);
- if(!history.length){
-  const first=document.createElement('p');first.textContent='Your first season will be saved here when you choose New Game+.';past.append(first);
- }else for(const season of history){
-  const row=document.createElement('p');row.className='finale-archive-entry';
-  row.textContent='Season '+season.run+' · '+season.title+' · '+season.wins+' wins · '+season.points+' points · '+season.memories+' collected memories';
-  past.append(row);
- }
- if(r.seasonLessons?.length){
-  const lessons=document.createElement('section');lessons.className='finale-lessons';
-  const title=document.createElement('h3');title.textContent='What changed along the way';
-  lessons.append(title);
-  for(const line of r.seasonLessons){
-   const item=document.createElement('p');item.textContent=line;lessons.append(item);
-  }
-  root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,lessons,past,footer);
- }else root.append(preface,heading,closing,numbers,trophyTitle,trophies,social,past,footer);
+ if(!window.NeoRpgOverworldModals?.renderSeason?.(
+  $('endSeason'),{
+   complete,
+   report:complete?EPILOGUE.report(state):null,
+   history:complete?JOURNEY.archive(state):[]
+  },
+  ()=>act('replay')
+ ))throw Error('The overworld season report is unavailable.');
 }
 
-// Presentation-only navigation: game state and action handlers remain authoritative.
-const rpgPanelGroups={
- scene:['WHO\'S HERE','YOUR DAY','TOWN LIFE','LOCAL CIRCUIT'],
- stories:['STORY OPPORTUNITIES','UNEXPECTED MOMENTS','SIDE QUESTS','LOCAL ENCOUNTERS'],
- plans:['WHAT NEXT?','TODAY\'S PRIORITY','UPCOMING PLANS','AROUND TOWN NOW'],
- progress:['YOUR 90-DAY JOURNEY','TOURNAMENT BRACKETS','YOUR DECK','SEASON JOURNAL']
-};
-let rpgActivePanel='plans',rpgLocalTab='people',lastRenderedLocation=null;
-function ensureRpgLayout(){
- if(typeof document.querySelector!=='function')return;
- const sidebar=document.querySelector('.sidebar'),sceneRoot=$('scene');
- if(!sidebar||!sceneRoot||$('rpgPanelTabs'))return;
- const nav=document.createElement('nav');nav.id='rpgPanelTabs';nav.className='rpg-panel-tabs';nav.setAttribute('aria-label','RPG information');
- for(const [id,label] of Object.entries({scene:'Here',plans:'Today',stories:'Stories',progress:'Progress'})){
-  const b=document.createElement('button');b.type='button';b.dataset.panel=id;b.textContent=label;
-  b.onclick=()=>{rpgActivePanel=id;refreshRpgPanels();};nav.append(b);
- }
- const drawerHeader=sidebar.querySelector(':scope > .rpg-drawer-header'); if(drawerHeader)drawerHeader.after(nav);else sidebar.prepend(nav);
- const castRoot=document.createElement('div');castRoot.id='rpgSceneCast';castRoot.className='rpg-scene-cast';castRoot.setAttribute('aria-label','Characters at this location');
- sceneRoot.append(castRoot);
- const dock=document.createElement('section');dock.id='rpgActionDock';dock.className='rpg-action-dock';
- dock.setAttribute('aria-label','Things to do here');sceneRoot.after(dock);
-}
-function refreshRpgPanels(){
- if(typeof document.querySelector!=='function')return;
- const sidebar=document.querySelector('.sidebar');if(!sidebar)return;
- for(const section of sidebar.querySelectorAll(':scope > .side-section')){
-  const heading=section.querySelector('.sidebar-title span')?.textContent||'';
-  const group=Object.entries(rpgPanelGroups).find(([,names])=>names.some(name=>heading.includes(name)))?.[0]||'progress';
-  section.hidden=group!==rpgActivePanel;
- }
- for(const button of $('rpgPanelTabs')?.querySelectorAll('button')||[]){
-  const active=button.dataset.panel===rpgActivePanel;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
- }
-}
+let lastRenderedLocation=null;
 // Keep the neutral character portrait as the only fallback when a v2 sheet is absent.
 const failedScenePortraits=new Set();
 let activeOutfitSceneId=null;
@@ -3155,16 +2844,6 @@ function defaultOverworldDialogueSource(id,expression,normal){
  return OVERWORLD_DIALOGUE_DEFAULTS[id]||null;
 }
 
-const PERSONA_C_CROPS={
- akari:[.028,0,.943,.597],alma:[.075,0,.868,.55],barb:[.296,0,.429,.363],
- camila:[.072,0,.894,.566],elena:[.225,0,.56,.355],elio:[.177,0,.673,.426],
- hana:[.054,0,.892,.565],iris:[.243,0,.52,.439],jinx:[.236,0,.508,.429],
- jun:[.165,0,.672,.567],kaede:[.053,0,.894,.566],laca:[.225,0,.505,.36],
- luna:[.276,0,.448,.378],marina:[.05,0,.9,.57],nereo:[.197,0,.616,.52],
- reina:[.053,0,.894,.566],rina:[.19,0,.627,.53],shiori:[.052,0,.896,.568],
- sierra:[.189,0,.626,.529],sol:[.18,0,.639,.54],teo:[.09,0,.819,.519],
- yuna:[.029,0,.943,.597]
-};
 function personaCStageCandidates(id,emotion,normal){
  const v2=rpgV2Expression(id,emotion);
  return v2?[v2]:normal.filter(src=>!/(?:\/expression-portraits\/|\/expression-faces\/|\/vn-expressions\/|\/expressions\/)/.test(src));
@@ -3228,25 +2907,6 @@ function scenePortraitSource(id,expression,sceneId=activeOutfitSceneId){
  const paths=stagePortraitPaths(id,expression,sceneId);
  return paths.find(src=>!failedScenePortraits.has(src))||paths[paths.length-1]||cast[id].portrait||'/rpg-assets/'+id+'.png';
 }
-function applyPersonaCStageCrop(img,id){
- // Crop the UI only: approved artwork and overworld sprites remain intact.
- // Standing art shows its top ~36%, from hair to the lower chest.
- const src=img.currentSrc||img.getAttribute('src')||'';
- const approved=APPROVED_DIALOGUE_MASTERS[id]&&src.includes(APPROVED_DIALOGUE_MASTERS[id]);
- const defaultPose=OVERWORLD_DIALOGUE_DEFAULTS[id]&&src.includes(OVERWORLD_DIALOGUE_DEFAULTS[id]);
- const lacaPose=id==='laca'&&Object.values(LACA_OVERWORLD_DIALOGUE_DEFAULTS).some(path=>src.includes(path));
- const fullBody=approved||defaultPose||lacaPose||
-  (id==='camila'&&src.includes(CAMILA_DIALOGUE_MASTER))||
-  /\/(?:overworld|overworld-variants)\//.test(src)||
-  /\/standing-front\.png(?:[?#]|$)/.test(src)||
-  /\/portraits\/special-day-\d+\.png(?:[?#]|$)/.test(src);
- const alreadyCropped=/\/(?:expression-portraits|expression-faces|vn-expressions)\//.test(src);
- const v2FullBody=/\/expressionsv2\//.test(src);
- img.style.setProperty('--rpg-dialogue-bust-height',
-  (fullBody||v2FullBody)?'278%':alreadyCropped?'165%':'190%');
- // Old inline size and offsets stretched the original images.
- for(const prop of ['width','height','left','top'])img.style.removeProperty(prop);
-}
 function dialogueExpression(line){
  const s=String(line||'').toLowerCase();
  if(/[!?]{2}|\b(wow|what?!|seriously|no way)\b/.test(s))return 'surprised';
@@ -3261,12 +2921,9 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
   // Do not construct, preload or display any regular character portraits.
   // Live's authored CG is the entire illustration for this scene.
   overworldScenePortraits={conversation:false,focused:null,participants:[]};
-  const root=typeof document.querySelector==='function'?$('rpgSceneCast'):null;
-  if(root){root.hidden=true;if(root.childNodes.length)root.replaceChildren();}
   return;
  }
- // Scene composition is shared with the separate overworld, even when the
- // classic RPG scene-cast container is absent in that HTML document.
+ // Compute scene composition for the sole overworld presenter.
  const composition=SCENE_CAST.select({cast,present:ids,portraitId,shown,...context});
  const {focused,participants}=composition;
  overworldScenePortraits={
@@ -3302,74 +2959,6 @@ function renderRpgCast(ids,locked,shown,portraitId,context={}){
    }
   }
  }
- if(typeof document.querySelector!=='function')return;
- const root=$('rpgSceneCast');if(!root)return;
- // The dedicated overworld has its own two-portrait scene renderer.
- // Never construct the legacy scene-cast portraits behind it: doing so
- // duplicated characters and needlessly loaded their full-size images.
- if(window.NeoRpgOverworldStandalone){
-  root.hidden=true;
-  if(root.childNodes.length)root.replaceChildren();
-  return;
- }
- if(state.location==='home'||!participants.length){root.hidden=true;root.replaceChildren();return;}
- root.hidden=false;
- // Narrator and player lines should not dim every NPC in the location.
- const inConversation=!!focused&&!!(shown?.line||locked);
- root.classList.toggle('is-conversation',inConversation);
- // Preserve existing DOM nodes between dialogue lines so CSS transitions actually play.
- const existing=new Map([...root.children].map(node=>[node.dataset.npc,node]));
- for(const id of participants){
-  let button=existing.get(id);
-  if(!button){
-   button=document.createElement('button');button.type='button';button.dataset.npc=id;
-   button.className='rpg-cast-member is-entering';
-   button.dataset.initials=cast[id].name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();
-   const stageFrame=document.createElement('div');stageFrame.className='rpg-stage-persona-frame';
-   stageFrame.append(makeAvatar(id,'stage'));button.append(stageFrame);
-   const name=document.createElement('span');name.textContent=cast[id].name.split(' ')[0];button.append(name);
-   button.onclick=()=>selectPerson(id);
-   button.addEventListener('animationend',event=>{if(event.target===button)button.classList.remove('is-entering');});
-  }
-  button.style.setProperty('--cast-order',String(participants.indexOf(id)));
-  const active=inConversation&&id===focused;
-  button.classList.toggle('is-speaking',active);
-  button.classList.toggle('is-listening',inConversation&&!active);
-  button.disabled=locked||inConversation;
-  button.title='Talk to '+cast[id].name;
-  button.setAttribute('aria-label','Talk to '+cast[id].name);
-  const image=button.querySelector('img');
-  if(image){
-   // Crop after selecting the current source to avoid stale portrait framing.
-   // Explicit reviewed sources, rather than transparent-margin heuristics.
-   const expression=active?(window.NeoRpgCharacterMotion?.emotion?.(shown?.expression,dialogueExpression(shown?.line))||dialogueExpression(shown?.line)):'neutral';
-   window.NeoRpgDiscreetAvatars?.set?.(button,id,expression,cast[id].name);
-   const paths=stagePortraitPaths(id,expression,context.sceneId);
-   const path=scenePortraitSource(id,expression,context.sceneId);
-   if(image.getAttribute('src')===path){stagePortraitRequests.delete(image);applyPersonaCStageCrop(image,id);}
-   if(image.getAttribute('src')!==path){
-    // Preserve the last rendered expression while the next one loads.
-    // A newer dialogue line cancels an older pending source.
-    swapStagePortrait(image,[path,...paths.filter(src=>src!==path&&!failedScenePortraits.has(src))],()=>{
-     image.classList.remove('expression-change');
-     image.style.display='';
-     applyPersonaCStageCrop(image,id);
-     button.querySelector('.avatar-fallback')?.remove();
-     if(!window.NeoRpgCharacterMotion?.expressionChange?.(image))image.classList.add('expression-change');
-    },()=>{
-     if(image.naturalWidth)return;
-     image.style.display='none';
-     if(!button.querySelector('.avatar-fallback')){
-      const span=document.createElement('span');span.className='avatar-fallback';
-      span.textContent=cast[id].name.split(' ').map(x=>x[0]).join('');
-      button.insertBefore(span,button.lastElementChild);
-     }
-    });
-   }
-  }
-  root.append(button);existing.delete(id);
- }
- for(const node of existing.values())node.remove();
 }
 function cleanRpgLabel(value){
  return String(value||'')
@@ -3381,73 +2970,13 @@ function cleanRpgLabel(value){
 }
 function simplifyRpgLabels(){
  if(typeof document.querySelector!=='function')return;
- for(const id of ['choices','storyEvents','situationEvents','townActivities','townEncounters','sideQuestEvents','activities']){
+ for(const id of ['choices']){
   const root=$(id);if(!root)continue;
   for(const button of root.querySelectorAll('button')){
    const walk=document.createTreeWalker(button,NodeFilter.SHOW_TEXT);
    const nodes=[];while(walk.nextNode())nodes.push(walk.currentNode);
    for(const node of nodes)node.nodeValue=cleanRpgLabel(node.nodeValue);
   }
- }
-}
-function renderRpgActions(locked,shown){
- if(typeof document.querySelector!=='function')return;
- const dock=$('rpgActionDock');if(!dock)return;
- const menuMode=shown?.presentation==='character-menu';
- if(menuMode){$('dialogue').hidden=true;dock.hidden=true;return;}
- const hasDialogue=locked||((shown?.choices?.length||0)>0)||!!(shown?.line);
- $('dialogue').hidden=!hasDialogue;
- dock.hidden=hasDialogue;
- if(hasDialogue)return;
- // The dock persists across dialogue/season updates: never throw away focused tabs
- // or the user's scroll position just to refresh event availability.
- let header=dock.querySelector('.rpg-dock-header');
- let body=dock.querySelector('.rpg-dock-items');
- if(!header||!body){
-  dock.replaceChildren();
-  header=document.createElement('div');header.className='rpg-dock-header';
-  const heading=document.createElement('strong');heading.className='rpg-dock-heading';
-  header.append(heading);
-  const tabs=document.createElement('div');tabs.className='rpg-dock-tabs';
-  for(const [id,title] of [['people','Characters'],['stories','Events'],['circuit','Circuit'],['activities','Activities']]){
-   const button=document.createElement('button');button.type='button';button.dataset.tab=id;
-   button.textContent=title;
-   button.onclick=()=>{rpgLocalTab=id;renderRpgActions(false,{speaker:'Narrator',line:'',choices:[]});};
-   tabs.append(button);
-  }
-  header.append(tabs);body=document.createElement('div');body.className='rpg-dock-items';
-  dock.append(header,body);
- }
- header.querySelector('.rpg-dock-heading').textContent='Explore '+places[state.location][0];
- for(const button of header.querySelectorAll('[data-tab]')){
-  const selected=button.dataset.tab===rpgLocalTab;
-  button.classList.toggle('active',selected);button.setAttribute('aria-pressed',String(selected));
- }
- const entries=[];
- const ids=rpgLocalTab==='people'?['people']:rpgLocalTab==='stories'?['storyEvents','situationEvents','sideQuestEvents','townEncounters']:rpgLocalTab==='circuit'?['competitiveEvents']:['townActivities','activities'];
- for(const id of ids){
-  const sources=[...($(id)?.children||[])];
-  for(let i=0;i<sources.length;i++){
-   const source=sources[i];if(source.tagName!=='BUTTON'||source.disabled)continue;
-   const text=source.querySelector('strong')?.textContent||source.textContent||'';
-   const label=text.replace(/\s*·\s*⏳[^·]*/g,'').replace(/\s*·\s*\+\d+[^·]*/g,'').trim();
-   entries.push({key:id+':'+i+':'+label,label,onClick:()=>source.click()});
-  }
- }
- if(rpgLocalTab==='activities'&&state.location==='shop'&&state.deckJourney?.starter&&!controlsLocked()){
-  entries.unshift({key:'shop:booster',label:'✦ Browse booster packs',onClick:openBoosterShop});
- }
- window.NeoRpgRenderPerf.reconcileKeyed(body,entries,
-  ()=>{const button=document.createElement('button');button.type='button';button.className='rpg-dock-action';return button;},
-  (button,item)=>{
-   if(button.textContent!==item.label)button.textContent=item.label;
-   button.onclick=item.onClick;
-   button.classList.toggle('booster-shop-entry',item.key==='shop:booster');
-  });
- if(!entries.length){
-  const p=document.createElement('p');p.className='empty-note';
-  p.textContent=rpgLocalTab==='people'?'Nobody is around right now. Try another period.':'Nothing available here right now.';
-  body.append(p);
  }
 }
 // Day 91 year-end blooper reel; state lives in the campaign save for local/cloud persistence.
@@ -3497,9 +3026,6 @@ function maybeShowYearEndFallReel(){
  controls.append(prev,label,next,close);panel.append(title,img,controls);document.body.append(panel);
  document.addEventListener('keydown',onKey,true);show();close.focus();
 }
-let pendingEntrySurprise=false;
-let pendingOverworldArrival=null;
-let arrivalGate=false;
 const phoneMessages=window.NeoRpgPhoneMessages?.create({
  state,cast,manifest:window.NeoOverworld,relationships:REL,persist,render,
  people:currentPeople,
@@ -3545,8 +3071,7 @@ function render(){
  lastRenderedLocation=state.location;
  if(previousLocation&&previousLocation!==state.location){
   window.NeoRpgAudio?.play?.('travel');
-  window.NeoRpgInterface?.onLocationChange?.();
-  const destination=state.location;
+   const destination=state.location;
   pendingOverworldArrival=destination;
   // Stop the RPG render/event pipeline until the travel wipe and chimes finish.
   if(!timeSequence.blocked&&!state.mandatoryEventState?.active){
@@ -3572,67 +3097,9 @@ function render(){
   }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
- ensureRpgLayout();
- window.NeoRpgInterface?.init?.();
  if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
- renderJourney();
- renderCollection();
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel;
- renderPlanner(locked);
- renderDailyIntention(locked);
- const receipt=state.lastDuelReceipt;
- $('duelReceipt').hidden=!receipt;
- if(receipt){
-  $('receiptTitle').textContent=receipt.outcome.toUpperCase()+' · '+receipt.name;
-  $('receiptDetails').textContent='+'+receipt.points+' circuit points · +'+receipt.credits+' credits · +'+receipt.trust+' trust'+(receipt.bonus?' (includes +'+receipt.bonus+' exhibition points)':'')+(receipt.trainingBonus?' · +'+receipt.trainingBonus+' training credits':'')+(receipt.tournamentBonus?.points?' · tournament bonus included':'')+(receipt.competitiveBonus?' · local circuit bonus included':'')+' · Time advanced one period.';
-  $('duelReceipt').classList.toggle('is-victory',receipt.outcome==='Victory');
- }
- $('whereLabel').textContent=state.location==='home'?'⌂  YOU ARE HOME':'●  YOU ARE HERE';
- // Calendar pills do not need to be recreated for every dialogue line.
- if($('timeTrack').dataset.period!==String(state.slot)){
-  $('timeTrack').dataset.period=String(state.slot);
-  $('timeTrack').replaceChildren();
-  periods.forEach((p,i)=>{const x=document.createElement('span');x.className='time-pill'+(i===state.slot?' active':i<state.slot?' past':'');x.textContent=(i===0?'☀ ':i===1?'◐ ':'☾ ')+p;$('timeTrack').append(x)});
- }
- $('day').textContent='DAY '+String(Math.min(state.day,90)).padStart(2,'0')+' / 90';
- $('period').textContent=ended?'SEASON COMPLETE':periods[state.slot].toUpperCase();
- $('chapterLabel').textContent='CHAPTER '+(state.day<=30?'I':state.day<=60?'II':'III')+' · '+(state.day<=30?'NEW FACES':state.day<=60?'RISING STAKES':'FINAL STRETCH');
- $('weekdayLabel').textContent=['MON','TUE','WED','THU','FRI','SAT','SUN'][(state.day-1)%7]+' · WEEK '+Math.ceil(Math.min(90,state.day)/7);
- $('campaignFill').style.width=Math.min(100,state.day/90*100)+'%';
- $('timeHint').textContent=state.slot===2?'Next time action starts a NEW DAY.':'Next: '+periods[state.slot+1]+' · ⏳';
- $('quickNext').textContent=state.slot===2?'☾ END DAY · ⏳':'▶ NEXT PERIOD · ⏳';
- $('quickNext').disabled=ended||locked;
- $('quickHome').disabled=locked||state.location==='home';
- const placeEntries=Object.entries(places).map(([id,[name,detail]])=>({key:id,id,name,detail}));
- window.NeoRpgRenderPerf.reconcileKeyed($('places'),placeEntries,
-  ()=>{const button=document.createElement('button');button.type='button';const status=document.createElement('span');
-   status.className='place-status';button.append(status);return button;},
-  (button,item)=>{
-   const {id,name,detail}=item;
-   const glyph={home:'⌂',shop:'♠',arcade:'✦',park:'❀',cafe:'☕',center:'♜',library:'▤'}[id];
-   const selected=id===state.location;
-   const desired=glyph+'  '+name;
-   if(button.firstChild?.nodeType===3){
-    if(button.firstChild.nodeValue!==desired)button.firstChild.nodeValue=desired;
-   }else button.prepend(document.createTextNode(desired));
-   button.className='place'+(selected?' selected':'');
-   button.disabled=locked;
-   button.setAttribute('aria-current',selected?'location':'false');
-   button.onclick=()=>travelTo(id);
-   const status=button.querySelector('.place-status');
-   const count=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,id,publicAppointments(id)).length:0;
-   const label=selected?'HERE':count?count+' HERE':'›';
-   if(status.textContent!==label)status.textContent=label;
-  });
- $('placeTitle').textContent=places[state.location][0];$('placeDetail').textContent=places[state.location][1];
- const bgFiles={home:'home.jpg',shop:state.slot===2?'card-shop-evening.png':'card-shop-day.png',arcade:'arcade.jpg',park:'park.jpg',cafe:'cafe.jpg',center:'center.jpg',library:'library.jpg'};
- // The standalone overworld owns the visible map; never load a second
- // hidden classic background or reapply its image for every interaction.
- const classicSceneMap=window.NeoRpgOverworldStandalone?'':bgFiles[state.location];
- if($('scene').dataset.mapBackground!==classicSceneMap){
-  $('scene').dataset.mapBackground=classicSceneMap;
-  $('scene').style.backgroundImage=classicSceneMap?"linear-gradient(0deg,#090b18ec 0%,#090b1860 80%),url('/rpg-assets/"+classicSceneMap+"')":'none';
- }
+ // Location artwork is rendered only by the persistent overworld iframe.
  const showingMandatory=state.mandatoryEventState?.active?MANDATORY_EVENTS.find(x=>x.id===state.mandatoryEventState.active.id):null;
  const mandatoryLine=showingMandatory?.lines?.[state.mandatoryEventState.active.index];
  const mandatoryPortrait=mandatoryLine&&cast[mandatoryLine.speaker]?mandatoryLine.speaker:(showingMandatory?.kind==='bond'?showingMandatory.characterId:null);
@@ -3648,142 +3115,39 @@ function render(){
   LIVE_SPECIAL_IDS.has(showingMandatory.id)||showingMandatory.id===LIVE_AFTER_EVENT.id);
  // Live has no portrait: her events are illustrated entirely by the scene CG.
  // Don't inherit a previously selected character's portrait either.
- const portraitId=liveCgOnly?null:mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected,portraitRoot=$('portrait');
+ const portraitId=liveCgOnly?null:mandatoryPortrait||showingSlice?.npc||showingSituation?.npc||showingStory?.npc||showingEncounter?.npc||(showingArc?'reina':null)||sideOwner||state.selected;
  activeOutfitSceneId=showingMandatory?.id||showingSlice?.id||showingSituation?.id||showingStory?.id||showingEncounter?.id||showingArc?.id||sideQuest?.id||null;
- const nextPortrait=portraitId&&cast[portraitId]?portraitId:'';
- const nextArt=nextPortrait?scenePortraitSource(nextPortrait,'neutral'):'';
- if(window.NeoRpgOverworldStandalone){
-  // The overworld displays only its own live speaker portraits. Avoid fetching
-  // a second unused classic stage portrait behind the conversation.
-  portraitRoot.dataset.npc='';
-  portraitRoot.dataset.artSrc='';
-  if(portraitRoot.childNodes.length)portraitRoot.replaceChildren();
- }else{
-  if(portraitRoot.dataset.npc!==nextPortrait||portraitRoot.dataset.artSrc!==nextArt){
-   portraitRoot.dataset.npc=nextPortrait;portraitRoot.dataset.artSrc=nextArt;
-   portraitRoot.replaceChildren();
-   if(nextPortrait)portraitRoot.append(makeAvatar(nextPortrait,'stage'));
-   else delete portraitRoot.dataset.rpgSafeId;
-  }
-  if(nextPortrait)window.NeoRpgDiscreetAvatars?.set?.(portraitRoot,nextPortrait,'neutral',cast[nextPortrait].name);
- }
- $('homeBanner').hidden=state.location!=='home'||!!portraitId;
- $('homeBanner').textContent='YOUR APARTMENT  ·  DAY '+state.day+'  ·  '+periods[state.slot]+' — Prepare your deck, review your plans or rest.';
  let shown=showingMandatory?renderMandatory():showingSlice?renderSliceOfLife():showingSituation?showSituation():showingStory?renderStory():showingEncounter?showEncounter():showingArc?showArc():state.activeSideQuest?showSideQuest():scene;
  overworldRenderedDialogue=String(shown?.line||'');
- // Narration is visually distinguished by italics, without an unnecessary speaker label.
- const isNarration=shown?.speaker==='Narrator';
- $('speaker').textContent=isNarration?'':(shown?.speaker||'');
- $('speaker').hidden=isNarration;
- $('line').textContent=shown?.line||'The town is waiting.';
- $('dialogue').classList.toggle('is-narration',isNarration);
- $('choices').replaceChildren();
- const responseActions=new Set(['mandatoryChoice','storyChoice','sliceChoice','sideChoice','arcChoice','encounterChoice','situationChoice','sideDuel','sidePause','dateBook','dateActivity','dateSlot','book','socialPlan','dateInvite','flirt','eventInvite','eventChat']);
- const isPlayerPrompt=!!shown?.choices?.some(([,action])=>responseActions.has(action.split(':')[0]));
- const promptRoot=$('playerChoicePrompt'),promptPanel=$('playerChoicePanel'),choiceList=$('choices');
- const newPlayerPrompt=!!(promptRoot?.hidden&&isPlayerPrompt);
- if(promptRoot&&promptPanel){
-  promptRoot.hidden=!isPlayerPrompt;
-  const desiredParent=isPlayerPrompt?promptPanel:$('dialogue');
-  if(choiceList.parentElement!==desiredParent)desiredParent.append(choiceList);
-  choiceList.classList.toggle('centered',isPlayerPrompt);
- }
- for(const [label,action] of shown.choices||[]){
-  const b=document.createElement('button');b.className='choice'+(action==='storyFinish'?' finish':'');b.textContent=label;
+ // Gameplay decides which actions are legal; the overworld view owns DOM
+ // construction, dialogue focus, response layout, and character menus.
+ const choiceItems=(shown?.choices||[]).map(([label,action])=>{
+  const item={label,action,finish:action==='storyFinish'};
   if(action.startsWith('storyChoice:')){
-   const event=STORY.byId(state.activeStory.id),chosen=event.choices[Number(action.split(':')[1])],bond=state.relationships[event.npc];
-   b.disabled=chosen.kind==='commit'&&!VN.commitmentReady(state,event.npc);
-   if(b.disabled)b.title='You need a stronger bond for this step.';
+   const event=state.activeStory&&STORY.byId(state.activeStory.id);
+   const chosen=event?.choices[Number(action.split(':')[1])];
+   item.disabled=!!chosen&&chosen.kind==='commit'&&!VN.commitmentReady(state,event.npc);
+   if(item.disabled)item.reason='You need a stronger bond for this step.';
   }
   if(action.startsWith('socialDo:')){
    const [,npc,activityId]=action.split(':');
-   const selection=SOCIAL.options(state,npc,currentPeople(),cast).find(x=>x.id===activityId);
-   b.disabled=!selection||!!selection.disabledReason;
-   if(b.disabled)b.title=selection?.disabledReason||'This activity is not available.';
+   const selection=SOCIAL.options(state,npc,currentPeople(),cast).find(option=>option.id===activityId);
+   item.disabled=!selection||!!selection.disabledReason;
+   if(item.disabled)item.reason=selection?.disabledReason||'This activity is not available.';
   }
   if(action.startsWith('dateBook:')){
    const [,npc,index,activityId,tone]=action.split(':');
    const target=APPOINTMENTS.proposed(state,npc,SCHEDULES)[Number(index)];
-   const option=target?DATES.choices(state,npc,target.place,activityId,SOCIAL,cast).find(t=>t.id===tone):null;
-   b.disabled=!option||!!option.disabledReason;
-   if(b.disabled)b.title=option?.disabledReason||'That meeting time is no longer available.';
+   const option=target?DATES.choices(state,npc,target.place,activityId,SOCIAL,cast).find(value=>value.id===tone):null;
+   item.disabled=!option||!!option.disabledReason;
+   if(item.disabled)item.reason=option?.disabledReason||'That meeting time is no longer available.';
   }
-  b.onclick=()=>safeAct(action);$('choices').append(b);
- }
- if(newPlayerPrompt){
-  const first=[...choiceList.children].find(b=>!b.disabled);
-  if(typeof first?.focus==='function')first.focus({preventScroll:true});
- }
- // The final line remains dismissible even though the calendar wipe locks travel.
- if((!locked||timeSequence.blocked&&!timeSequence.running)&&shown?.line&&!shown?.choices?.length){
-  const b=document.createElement('button');b.className='choice finish';b.textContent='Continue ›';
-  b.onclick=()=>closeSceneDialogue();$('choices').append(b);
- }
- // Stable keyed list updates: preserve existing avatar image nodes and focus.
- // Full replaceChildren here used to retrigger image loading during every dialogue.
- const elsewhere=[];
- for(const place of Object.keys(places)){
-  if(place==='home'||place===state.location)continue;
-  const visible=state.day<=90?SCHEDULES.peopleAt(state.day,state.slot,place,publicAppointments(place)):[];
-  for(const id of visible)if(!elsewhere.some(e=>e.id===id))elsewhere.push({id,place});
- }
- const radarItems=elsewhere.length?elsewhere.map(item=>({...item,key:'radar:'+item.id})):
-  [{key:'empty',empty:true}];
- window.NeoRpgRenderPerf.reconcileKeyed($('townRadar'),radarItems,
-  item=>{
-   if(item.empty){const p=document.createElement('p');p.className='empty-note';return p;}
-   const button=document.createElement('button');button.className='radar-person';
-   const label=document.createElement('strong'),where=document.createElement('small');
-   const avatar=document.createElement('span');avatar.className='radar-person-avatar';
-   window.NeoRpgDiscreetAvatars?.set?.(avatar,item.id,'neutral',cast[item.id].name);
-   button.append(avatar,label,where);return button;
-  },
-  (button,item)=>{
-   if(item.empty){button.textContent='No other trainers are around town this period.';return;}
-   button.disabled=locked;
-   const name=cast[item.id].name,placeName=places[item.place][0];
-   const label=button.querySelector('strong'),where=button.querySelector('small');
-   if(label.textContent!==name)label.textContent=name;
-   if(where.textContent!=='↗ '+placeName)where.textContent='↗ '+placeName;
-   button.title='Travel for free to '+placeName;
-   button.onclick=()=>travelTo(item.place);
-  });
+  return item;
+ });
+ // A finished narration may be acknowledged even while its time wipe has locked travel.
+ if((!locked||timeSequence.blocked&&!timeSequence.running)&&shown?.line&&!shown?.choices?.length)
+  choiceItems.push({label:'Continue ›',continue:true,finish:true});
  const people=currentPeople();
- const peopleItems=people.length?people.map(id=>({key:'person:'+id,id})):
-  [{key:'empty',empty:true}];
- window.NeoRpgRenderPerf.reconcileKeyed($('people'),peopleItems,
-  item=>{
-   if(item.empty){const p=document.createElement('p');p.className='empty-note';return p;}
-   const id=item.id,c=cast[id],button=document.createElement('button');
-   button.className='person';
-   const avatar=document.createElement('span');avatar.className='person-avatar';
-   avatar.dataset.initials=c.name.split(' ').map(part=>part[0]).join('').slice(0,2).toUpperCase();
-   avatar.append(makeAvatar(id));
-   window.NeoRpgDiscreetAvatars?.set?.(avatar,id,'neutral',c.name);
-   const label=document.createElement('span');label.className='person-info';
-   const name=document.createElement('strong'),sub=document.createElement('small');
-   const chapter=document.createElement('small');chapter.className='character-chapter-progress';
-   const cue=document.createElement('small');cue.className='character-reaction-hint';cue.hidden=true;
-   label.append(name,sub,chapter,cue);button.append(avatar,label);return button;
-  },
-  (button,item)=>{
-   if(item.empty){button.textContent='No regulars here at this time. Try another location or time period.';return;}
-   const id=item.id,c=cast[id],label=button.querySelector('.person-info');
-   button.className='person'+(state.selected===id?' selected':'');
-   button.disabled=locked;button.onclick=()=>selectPerson(id);
-   const name=label.querySelector('strong'),sub=label.querySelector('small'),chapter=label.querySelector('.character-chapter-progress');
-   if(name.textContent!==c.name)name.textContent=c.name;
-   if(sub.textContent!==c.style)sub.textContent=c.style;
-   const bond=BONDS.progress(state,id,BOND_PLAN);
-   const chapterText='♥ Character chapters '+bond.completed+' / '+bond.total+(state.bondTrials?.[id]?' · Personal challenge won':'');
-   if(chapter.textContent!==chapterText)chapter.textContent=chapterText;
-   const cue=label.querySelector('.character-reaction-hint');
-   const invite=!locked?availableInvitation(id,people):null;
-   const cueText=invite?(invite.kind==='appointment'?'✦ Waiting for you':'✦ Wants to talk'):
-    (!locked&&state['met_'+id]&&REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ)?'✦ Something to say':'');
-   if(cue.textContent!==cueText)cue.textContent=cueText;
-   cue.hidden=!cueText;
-  });
  const sceneScript=showingMandatory?.lines||
   (showingStory?storyDialogueLines(showingStory.id):null)||
   (showingArc?ARC.linesFor(state,showingArc.id):null)||
@@ -3796,179 +3160,64 @@ function render(){
   active:!!(showingMandatory||showingSlice||showingSituation||showingStory||showingEncounter||showingArc||sideQuest),
   script:sceneScript,remote:remoteScene,sceneId:activeOutfitSceneId,cgOnly:liveCgOnly
  });
- const characterActions=$('characterActions');
- if(characterActions){
-  const menuMode=shown?.presentation==='character-menu';
-  document.body.classList.toggle('rpg-character-choice-menu',menuMode);
-  const menuId=menuMode?shown.menuCharacter:null;
-  const selected=menuMode?(menuId&&people.includes(menuId)?menuId:null):(state.selected&&people.includes(state.selected)&&!locked?state.selected:null);
-  characterActions.classList.toggle('choice-menu',menuMode);
-  characterActions.hidden=!selected;
-  characterActions.replaceChildren();
-  if(menuMode&&selected){
-   const eyebrow=document.createElement('span');eyebrow.className='character-menu-eyebrow';eyebrow.textContent=shown.menuHeading||'CHOOSE AN OPTION';
-   const heading=document.createElement('strong');heading.className='character-menu-title';heading.textContent=cast[selected].name;
-   const description=document.createElement('p');description.className='character-menu-description';description.textContent=shown.menuDescription||'Choose an option.';
-   const list=document.createElement('div');list.className='character-menu-options';
-   characterActions.append(eyebrow,heading,description,list);
-   for(const [label,action] of shown.choices||[]){
-    const button=document.createElement('button');button.type='button';button.className='character-action-btn';button.textContent=label;button.onclick=()=>safeAct(action);
-    if(action.startsWith('socialDo:')){
-     const [,npc,activityId]=action.split(':');
-     const choice=SOCIAL.options(state,npc,currentPeople(),cast).find(x=>x.id===activityId);
-     button.disabled=!choice||!!choice.disabledReason;if(button.disabled)button.title=choice?.disabledReason||'This activity is not available.';
-    }
-    if(action.startsWith('dateBook:')){
-     const [,npc,index,activityId,tone]=action.split(':');
-     const target=APPOINTMENTS.proposed(state,npc,SCHEDULES)[Number(index)];
-     const choice=target?DATES.choices(state,npc,target.place,activityId,SOCIAL,cast).find(x=>x.id===tone):null;
-     button.disabled=!choice||!!choice.disabledReason;if(button.disabled)button.title=choice?.disabledReason||'That meeting option is no longer available.';
-    }
-    list.append(button);
-   }
-  }else if(selected){
-   const display=cast[selected].name.split(' ')[0],buttons=[
-    ['◉ Glance at',()=>glanceAt(selected),'View '+cast[selected].name+' up close'],
-    ['☏ Talk',()=>selectPerson(selected),'Talk to '+cast[selected].name],
-    ['⚔ Duel',()=>startDuel(selected),'Challenge '+cast[selected].name+' to a duel']
+ const menuMode=shown?.presentation==='character-menu';
+ const menuId=menuMode?shown.menuCharacter:null;
+ const selectedCharacter=menuMode?(menuId&&people.includes(menuId)?menuId:null):
+  (state.selected&&people.includes(state.selected)&&!locked?state.selected:null);
+ const stageMenu={mode:menuMode,characterId:selectedCharacter};
+ if(selectedCharacter){
+  stageMenu.name=cast[selectedCharacter].name;
+  if(menuMode){
+   stageMenu.heading=shown.menuHeading||'CHOOSE AN OPTION';
+   stageMenu.description=shown.menuDescription||'Choose an option.';
+   stageMenu.choices=choiceItems;
+  }else{
+   const display=cast[selectedCharacter].name.split(' ')[0];
+   stageMenu.actions=[
+    {id:'glance',label:'◉ Glance at',title:'View '+stageMenu.name+' up close'},
+    {id:'talk',label:'☏ Talk',title:'Talk to '+stageMenu.name},
+    {id:'duel',label:'⚔ Duel',title:'Challenge '+stageMenu.name+' to a duel'}
    ];
-   if(!state.hungOut?.[state.day+':'+selected]&&SOCIAL.options(state,selected,people,cast).some(a=>!a.disabledReason))
-    buttons.push(['✧ Spend time',()=>planSharedActivity(selected),'Suggest an activity together']);
-   if(APPOINTMENTS.proposed(state,selected,SCHEDULES).length)
-    buttons.push(['◷ Make plans',()=>act('dateInvite:'+selected),'Invite '+display+' to meet on another day']);
+   if(!state.hungOut?.[state.day+':'+selectedCharacter]&&
+      SOCIAL.options(state,selectedCharacter,people,cast).some(option=>!option.disabledReason))
+    stageMenu.actions.push({id:'spend',label:'✧ Spend time',title:'Suggest an activity together'});
+   if(APPOINTMENTS.proposed(state,selectedCharacter,SCHEDULES).length)
+    stageMenu.actions.push({id:'plan',label:'◷ Make plans',title:'Invite '+display+' to meet on another day'});
    if(state.deckJourney?.starter){
-    buttons.push(['⌕ Scout',()=>{
-     persist();location.assign('/rpg_deck_studio.html?scout='+encodeURIComponent(selected));
-    },'Review '+cast[selected].name+'’s usual theme deck and plan your upgrades']);
+    stageMenu.actions.push({id:'scout',label:'⌕ Scout',title:'Review '+stageMenu.name+'\u2019s usual theme deck and plan your upgrades'});
    }
-   if(PARTNER.unlocked(state,selected)&&state.deckJourney?.starter)
-    buttons.push(['▤ Deck',()=>act('partnerDeck:'+selected),'Edit '+display+'’s deck']);
-   for(const [label,action,title] of buttons){
-    const button=document.createElement('button');
-    button.type='button';button.className='character-action-btn';
-    button.textContent=label;button.title=title;button.onclick=action;
-    // Stable action ID lets the mobile layout hide Scout without changing PC.
-    button.dataset.characterAction=label.includes('Scout')?'scout':label.includes('Glance at')?'glance':label.includes('Deck')?'deck':'other';
-    characterActions.append(button);
-   }
+   if(PARTNER.unlocked(state,selectedCharacter)&&state.deckJourney?.starter)
+    stageMenu.actions.push({id:'deck',label:'▤ Deck',title:'Edit '+display+'\u2019s deck'});
   }
  }
- portraitRoot.hidden=state.location!=='home'&&(people.length>0||!!portraitId);
- $('storyEvents').replaceChildren();const stories=eligibleStories();
- for(const e of stories){
-  const b=document.createElement('button');b.className='event-btn';b.disabled=locked;b.dataset.plannerKey=e.id;b.textContent='✦  '+e.title+' · ⏳ 1 period';
-  const chapter=BOND_PLAN.byEvent[e.id];
-  const small=document.createElement('small');
-  small.textContent=cast[e.npc].name+(chapter?' · Bond chapter '+chapter.chapter+' / 4':'')+(e.evergreen?' · available until season end':' · limited-time encounter');
-  b.append(small);b.onclick=()=>startStory(e.id);$('storyEvents').append(b);
- }
- const personalEpisodes=ARC.available(state,currentPeople());
- for(const episode of personalEpisodes){
-  const b=document.createElement('button');b.className='event-btn arc-episode';b.disabled=locked;b.dataset.plannerKey=episode.id;
-  const title=document.createElement('strong');title.textContent='♜  '+episode.title+' · ⏳ 1 period';
-  const hint=document.createElement('small');hint.textContent=cast.reina.name+' · an optional rivalry chapter';
-  b.append(title,hint);b.onclick=()=>act('arc:'+episode.id);
-  $('storyEvents').append(b);
- }
- if(!stories.length&&!personalEpisodes.length){const x=document.createElement('p');x.className='empty-note';x.textContent='No special story encounter right now.';$('storyEvents').append(x);}
-
- $('situationEvents').replaceChildren();
- const moments=SITUATIONS.available(state,currentPeople());
- for(const event of moments){
-  const b=document.createElement('button');b.className='event-btn situation-event';b.dataset.plannerKey=event.id;
-  b.disabled=locked;
-  const label=document.createElement('strong');label.textContent='✧ '+event.title+' · ⏳ 1 period';
-  const hint=document.createElement('small');
-  hint.textContent=cast[event.npc].name+' · optional surprise · '+event.focusCost+' focus';
-  b.append(label,hint);b.onclick=()=>act('situation:'+event.id);
-  $('situationEvents').append(b);
- }
- if(!moments.length){
-  const note=document.createElement('p');note.className='empty-note';
-  note.textContent='No unusual moment here right now. A stronger bond and the right time may reveal one.';
-  $('situationEvents').append(note);
- }
- $('lifeStats').replaceChildren();
- const lifeGauges=[['FOCUS',state.focus,100,'Energy for town activities and outings'],['INSIGHT',state.insight,99,'6 Insight: -3 credits on themed boosters; 15 Insight: -5 credits; 10 unlocks masterclasses'],['REPUTATION',state.reputation,100,'6 Reputation unlocks paid clinics; 15 unlocks weekly sponsored boosters'],['DUEL PREP',state.preparation,3,'Each point awards 14 credits on a win or 8 on a draw/loss after a duel']];
- for(const [label,value,max,title] of lifeGauges){
-  const item=document.createElement('div');item.className='life-stat';item.title=title;
-  const row=document.createElement('div');row.className='life-stat-label';
-  const name=document.createElement('b');name.textContent=label;
-  const val=document.createElement('span');val.textContent=value+' / '+max;row.append(name,val);
-  const track=document.createElement('div');track.className='life-track';
-  const fill=document.createElement('div');fill.className='life-fill';fill.style.width=(value/max*100)+'%';track.append(fill);
-  item.append(row,track);
-  const perk=label==='INSIGHT'?state.insight>=15?'Themed boosters: -5 credits':state.insight>=6?'Themed boosters: -3 credits':'6 Insight unlocks booster savings':
-   label==='REPUTATION'?state.reputation>=15?'Sponsored vouchers unlocked':state.reputation>=6?'Paid clinics unlocked':'6 Reputation unlocks paid clinics':
-   label==='DUEL PREP'?'Next duel: '+(state.preparation?'+14 win / +8 otherwise':'no bonus queued'):'';
-  if(perk){const tip=document.createElement('small');tip.textContent=perk;item.append(tip);}
-  $('lifeStats').append(item);
- }
- $('townActivities').replaceChildren();
- for(const entry of WORLD.activitiesAt(state)){
-  const b=document.createElement('button');b.className='town-activity';b.dataset.plannerKey=entry.id;b.disabled=locked||!!entry.disabledReason;
-  const title=document.createElement('strong');title.textContent=entry.title+' · ⏳ 1 period';
-  const description=document.createElement('small');
-  const gains=Object.entries(entry.change).filter(([,v])=>v>0).map(([key,value])=>'+'+value+' '+key);
-  if(entry.voucherSet==='latest')gains.push('1 unlocked expansion booster voucher');
-  description.textContent=(entry.disabledReason?entry.disabledReason+' · ':'')+'Focus cost '+entry.focus+(entry.cost?' · '+entry.cost+' credits':'')+' · '+gains.join(' · ');
-  b.append(title,description);b.title=entry.text;b.onclick=()=>act('townActivity:'+entry.id);
-  $('townActivities').append(b);
- }
- $('sideQuestEvents').replaceChildren();
- for(const x of SIDE.available(state,currentPeople())){
-  const b=document.createElement('button');b.className='event-btn';b.dataset.plannerKey=x.quest.id;b.disabled=locked;
-  const h=document.createElement('strong');h.textContent='◆ '+x.stage.title+' · ⏳ 1 period';
-  const hint=document.createElement('small');hint.textContent=cast[x.stage.npc].name+' · '+x.quest.title;
-  b.append(h,hint);b.onclick=()=>act('sideQuest:'+x.quest.id);$('sideQuestEvents').append(b);
- }
- if(!$('sideQuestEvents').children.length){const p=document.createElement('p');p.className='empty-note';p.textContent='No side quest encounter here right now.';$('sideQuestEvents').append(p);}
- $('sideQuestJournal').replaceChildren();
- for(const info of SIDE.journal(state)){
-  const row=document.createElement('div');row.className='calendar-entry';
-  row.textContent=(info.status==='complete'?'✓ ':info.status==='missed'?'– ':'◆ ')+info.title+' · '+(info.status==='active'?info.summary.replace(/shop|cafe|park|center|arcade|library/g,m=>places[m][0]):info.summary);
-  $('sideQuestJournal').append(row);
- }
- $('townEncounters').replaceChildren();
- const encounters=WORLD.availableEncounters(state,currentPeople());
- for(const entry of encounters){
-  const b=document.createElement('button');b.className='encounter-btn';b.dataset.plannerKey=entry.id;b.disabled=locked;
-  const title=document.createElement('strong');title.textContent='✧ '+entry.title+' · ⏳ 1 period';
-  const hint=document.createElement('small');hint.textContent=(entry.npc?cast[entry.npc].name:'The neighborhood')+' · limited-time opportunity';
-  b.append(title,hint);b.onclick=()=>act('encounter:'+entry.id);$('townEncounters').append(b);
- }
- if(!encounters.length){
-  const note=document.createElement('p');note.className='empty-note';note.textContent='No special encounters here at this time.';$('townEncounters').append(note);
- }
-
- $('activities').replaceChildren();const e=scheduleEvent();
- const cups=TOURNAMENTS.available(state);
- const items=[...cups.map(c=>{const progress=TOURNAMENTS.status(state,c.id);return [c.title+' · Round '+(progress.round+1)+'/3 vs '+cast[progress.opponent].name+' · ⏳ 1 period','cup:'+c.id]}),...(e&&!TOURNAMENTS.cups.some(c=>c.day===e.day)?[[e.title+' · ⏳ 1 period · +'+e.reward+' pts if you win','event']]:[]),
- [state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period','rest'],
- ...(state.location==='home'?[['Sleep until morning · ⏳ '+(3-state.slot)+' period(s)','sleep']]:[]),
- ['Calendar · free','calendar'],['New campaign','new']];
- for(const [label,action] of items){
-  const b=document.createElement('button');b.className='activity';b.textContent=label;b.disabled=(ended&&action!=='new'&&action!=='calendar')||(locked&&action!=='calendar');b.onclick=()=>safeAct(action);$('activities').append(b);
- }
- renderBracketProgress();
- renderCompetitiveCircuit(locked);
- renderAppointments(locked);
+ const stageView=window.NeoRpgOverworldStageView;
+ if(!stageView?.render)throw Error('The overworld dialogue presenter did not load.');
+ stageView.render({
+  document,
+  model:{speech:shown,choices:choiceItems,menu:stageMenu,locked},
+  onAction:action=>safeAct(action),
+  onContinue:closeSceneDialogue,
+  onCommand:(command,id)=>{
+   if(!cast[id]||!currentPeople().includes(id))return;
+   if(command==='glance')void glanceAt(id);
+   else if(command==='talk')selectPerson(id);
+   else if(command==='duel')startDuel(id);
+   else if(command==='spend')planSharedActivity(id);
+   else if(command==='plan')act('dateInvite:'+id);
+   else if(command==='scout'&&state.deckJourney?.starter){
+    persist();location.assign('/rpg_deck_studio.html?scout='+encodeURIComponent(id));
+   }else if(command==='deck')act('partnerDeck:'+id);
+  }
+ });
  renderSeasonReport();
- $('journal').replaceChildren();const stats=document.createElement('p');stats.className='stats';stats.textContent='🏆 '+state.points+' circuit points   ·   ◈ '+state.credits+' credits';$('journal').append(stats);
- for(const e of eventCards.filter(e=>e.day>=state.day).slice(0,2)){const p=document.createElement('p');p.textContent='DAY '+e.day+' · '+e.title+' ('+periods[e.slot]+')';$('journal').append(p)}
- for(const note of state.journal.slice(0,3)){const p=document.createElement('p');p.textContent='• '+note;$('journal').append(p)}
  $('notice').textContent=conversationInProgress()?'Finish the conversation before traveling or starting another activity.':state.mandatoryEventState?.active?'Incoming story — finish this moment to continue.':state.activeSituation?'Unexpected encounter in progress — finish the scene to continue.':state.activeSideQuest?'Side quest in progress — finish the scene to continue.':state.activeStory?'Story in progress: complete this scene to continue.':state.activeArc?'A private rivalry chapter is in progress.':state.activeEncounter?'Local encounter in progress — make your decision.':state.pendingDuel?'Your duel is in progress.':'Travel & talk are free · ⏳ actions advance time';
  simplifyRpgLabels();
- refreshRpgPanels();
- renderRpgActions(locked,shown);
  window.NeoRpgCharacterMotion?.update?.({
   location:state.location,speaker:shown?.speaker||'',line:shown?.line||'',
   dialogue:$('dialogue'),speakerElement:$('speaker'),lineElement:$('line')
  });
  syncSceneCG();
  queueMicrotask(maybeShowYearEndFallReel);
- $('deckPicker').disabled=locked||ended||!!state.deckJourney;
- if($('deckPicker')?.options.length)$('deckPicker').value=state.playerDeck;
  // If another transition or mandatory scene owned the screen, resume the arrival
  // chime once it settles instead of silently losing this place entry.
  if(pendingOverworldArrival&&!arrivalGate&&!window.NeoRpgTimeTransitions?.active){
@@ -3980,21 +3229,7 @@ function render(){
  notifyOverworldRendering();
 }
 
-$('deckStudioBtn').onclick=()=>{if(!controlsLocked()&&state.deckJourney?.starter){persist();location.assign('/rpg_deck_studio.html');}};
-$('statusBtn').onclick=()=>{
- window.NeoRpgStatus.open(state,cast,BOND_PLAN,makeAvatar,disableTutorials);
- $('statusTutorialHelp').hidden=true;
- if(!state.gameplayTutorials?.disabled)tutorialEvent('status','statusTutorialHelp');
-};
 $('statusClose').onclick=()=>window.NeoRpgStatus.close();
-$('galleryBtn').onclick=openGallery;
-const moreMenu=$('rpgMoreMenu');
-moreMenu?.addEventListener('click',event=>{
- if(event.target.closest('#galleryBtn,#rpgDiscreetToggle,a[href]'))moreMenu.open=false;
-});
-document.addEventListener('pointerdown',event=>{
- if(moreMenu?.open&&!moreMenu.contains(event.target))moreMenu.open=false;
-});
 $('galleryClose').onclick=()=>$('galleryDialog').close();
 $('galleryBack').onclick=()=>{galleryCharacterPage='';$('galleryCharacter').value='';$('galleryCategory').value='cg';renderGallery();};
 $('galleryCharacter').onchange=()=>{galleryCharacterPage=$('galleryCharacter').value;renderGallery();};$('galleryCategory').onchange=renderGallery;$('galleryUnseen').onchange=renderGallery;
@@ -4003,31 +3238,26 @@ $('preDuelNext').onclick=advancePreparedDuel;
 $('preDuelStart').onclick=launchPreparedDuel;
 $('preDuelSkip').onclick=launchPreparedDuel;
 $('preDuelDialog').addEventListener('cancel',e=>{e.preventDefault();cancelPreparedDuel();});
-$('quickNext').onclick=()=>act('rest');$('quickHome').onclick=()=>act('home');$('calendarBtn').onclick=openCalendar;$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
-$('save').onclick=async()=>{persist();const cloud=window.NeoRpgCloudSave?.isSignedIn?.();const ok=await window.NeoRpgCloudSave?.syncNow();$('notice').textContent=cloud?(ok?'Cloud campaign synced.':'Cloud sync pending. Progress is cached on this device until it reconnects.'):'Campaign saved in this browser.';};
+$('calendarClose').onclick=()=>$('calendarDialog').close();$('communityClose').onclick=()=>$('communityDialog').close();
 $('tutorialDismiss').onclick=()=>{tutorialQueue.shift();displayTutorial();};
-$('dismissReceipt').onclick=()=>{state.lastDuelReceipt=null;persist();render();};
 document.addEventListener('keydown',e=>{if($('statusDialog')?.open)return;if((e.key===' '||e.code==='Space')&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(e.target?.tagName)){if(scene.dialogue&&scene.index<scene.dialogue.length-1&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeArc&&!state.activeSideQuest){e.preventDefault();act('chatNext');}else if(state.mandatoryEventState?.active?.phase==='lines'){e.preventDefault();act('mandatoryNext');}else if(state.activeStory?.phase==='lines'){e.preventDefault();act('storyNext');}else if(state.activeArc?.phase==='lines'){e.preventDefault();act('arcNext');}else if(!$('dialogue').hidden&&!state.activeSituation&&!state.mandatoryEventState?.active&&!state.activeStory&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&!state.pendingDuel&&!scene.choices?.length){e.preventDefault();closeSceneDialogue();}}});
-async function initDecks(){
+// Old pre-collection saves may still refer to a deck by ID. Validate that
+// stored ID without creating a hidden selector or second deck-building UI.
+async function verifyLegacyDeckId(){
+ if(state.deckJourney!==null)return;
  try{
-  const select=$('deckPicker');select.replaceChildren();
-  if(state.deckJourney!==null){
-   const opt=document.createElement('option');opt.value='custom';opt.textContent=state.deckJourney.starter?COLLECT.byId(state.deckJourney.starter).name+' · Your collection':'Choose your starter above';
-   select.append(opt);select.value='custom';select.disabled=true;
-   select.onchange=()=>{select.value='custom';};
-  }else{
-   const res=await fetch('/api/classic/decks');if(!res.ok)throw Error('Could not load decks');
-   const data=await res.json();for(const d of data.decks.filter(x=>x.id!=='custom')){
-    const opt=document.createElement('option');opt.value=d.id;opt.textContent=d.name;select.append(opt);
-   }
-   if([...select.options].some(o=>o.value===state.playerDeck))select.value=state.playerDeck;
-   else{select.value='blackout';state.playerDeck='blackout';}
-   select.onchange=()=>{if(controlsLocked()){select.value=state.playerDeck;return;}state.playerDeck=select.value;persist();};
+  const response=await fetch('/api/classic/decks');
+  if(!response.ok)throw Error('Could not load decks');
+  const data=await response.json();
+  const eligible=Array.isArray(data.decks)?data.decks.filter(deck=>deck?.id&&deck.id!=='custom'):[];
+  if(!eligible.some(deck=>deck.id===state.playerDeck)){
+   state.playerDeck='blackout';
+   persist();
   }
- }catch(e){$('notice').textContent='Deck list unavailable: '+e.message;}
+ }catch(error){$('notice').textContent='Deck list unavailable: '+error.message;}
 }
 window.NeoRpgAudio?.init?.();
-persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deckJourney.starter&&!state.ended&&!state.pendingDuel)showStarterChoice();if(state.deckJourney?.lastPack&&!state.deckJourney.lastPack.opened&&!state.pendingDuel)showPackReveal();if(state.pendingDuel){
+persist();render();void verifyLegacyDeckId();loadCardNames();if(state.deckJourney&&!state.deckJourney.starter&&!state.ended&&!state.pendingDuel)showStarterChoice();if(state.deckJourney?.lastPack&&!state.deckJourney.lastPack.opened&&!state.pendingDuel)showPackReveal();if(state.pendingDuel){
  if(state.pendingDuel.deckCards)sessionStorage.setItem('neoRpgDeck:'+state.pendingDuel.id,JSON.stringify(state.pendingDuel.deckCards));
  if(state.pendingDuel.customOpponentDeck)sessionStorage.setItem('neoRpgNpcDeck:'+state.pendingDuel.id,JSON.stringify(state.pendingDuel.customOpponentDeck));
  if(PRE.isReady(state.pendingDuel)){
@@ -4047,7 +3277,10 @@ persist();render();initDecks();loadCardNames();if(state.deckJourney&&!state.deck
   hadLocalSave:hadCampaignSave,
   showButton:true
  });
-
+ // Publish readiness only after all declarations, save startup, game UI and
+ // duel recovery wiring have been initialized. The overworld listener
+ // synchronously mounts and reads snapshot(), so earlier dispatch is unsafe.
+ window.dispatchEvent(new Event('neo-rpg-overworld-bridge-ready'));
 })();
 
 

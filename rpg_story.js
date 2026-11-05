@@ -277,18 +277,18 @@
  function normalize(state){
   if(!state.storyDone||typeof state.storyDone!=='object')state.storyDone={};
   if(!state.storyMissed||typeof state.storyMissed!=='object')state.storyMissed={};
+  // Relationship stories no longer expire. Restore routes missed under the old calendar.
+  for(const id of Object.keys(state.storyMissed))if(ID.has(id))delete state.storyMissed[id];
   if(!state.relationships||typeof state.relationships!=='object')state.relationships={};
   if(!('partner' in state))state.partner=null;
   if(!Array.isArray(state.partners))state.partners=state.partner?[state.partner]:[];
   else state.partners=[...new Set(state.partners.filter(id=>typeof id==='string'&&id))];
   if(!state.storyFlags||typeof state.storyFlags!=='object'||Array.isArray(state.storyFlags))state.storyFlags={};
-  // Older saves may already be beyond a bridge window or have completed the
-  // old final event. Mark only that bridge as legacy-completed; do not award
-  // new relationship points retroactively.
+  // Preserve completed legacy finales without auto-skipping still-playable bridges.
   const migrationDay=Number.isInteger(state.day)?Math.max(1,Math.min(90,state.day)):1;
   for(const [eventId,prerequisite] of Object.entries(bridgePrerequisites)){
    const bridge=ID.get(prerequisite);
-   if(bridge&&!state.storyDone[prerequisite]&&(state.storyDone[eventId]||migrationDay>bridge.end)){
+   if(bridge&&!state.storyDone[prerequisite]&&state.storyDone[eventId]){
     state.storyDone[prerequisite]={choice:0,day:migrationDay,legacy:true};
    }
   }
@@ -309,6 +309,9 @@
   }
   return state;
  }
+ // Meaningful time together is separate from authored story completion.
+ function qualityTime(state,npc){return Math.max(0,Number(state.relationshipQualityTime?.[npc])||0);}
+ function isRouteChapter(e){return /_(?:route_(?:\d+|bridge_\d+|early_\d+)|guest_\d+|bond_\d+)$/.test(e.id);}
  function qualifies(e,state,place=state.location){
   const s=normalize(state),b=s.relationships[e.npc],previous=e.prerequisite;
   const minBondScore=Number(e.minBondScore)||0;
@@ -316,19 +319,29 @@
   const bondReady=minBondScore||minBondRank
    ?REL.meets(s,e.npc,{minScore:minBondScore,minRank:minBondRank})
    :b.affection>=VN.bondNeeded(e);
-  return s.day>=e.start&&s.day<=e.end&&s.slot===e.slot&&place===e.place&&!s.storyDone[e.id]&&!s.storyMissed[e.id]&&(!previous||!!s.storyDone[previous])&&bondReady;
+  // After meeting someone, story chapters depend on bond and prerequisites,
+  // not an arbitrary day in the 90-day campaign.
+  const met=!!s['met_'+e.npc]||(e.npc==='reina'&&!!s.metReina);
+  // A fresh hangout or attended date after the previous story chapter is required.
+  const previousChapter=previous&&ID.get(previous);
+  const spentTime=!previousChapter||!isRouteChapter(e)||previousChapter.npc!==e.npc||
+   qualityTime(s,e.npc)>(Number(s.storyDone[previous]?.qualityTime)||0);
+  // One major relationship chapter per character per in-game day. The next
+  // day can unlock a new chapter once bond, quality time and story order allow.
+  // This also covers parallel chapter branches, not just direct prerequisites.
+  const chapterCooldownReady=!isRouteChapter(e)||!Object.entries(s.storyDone).some(([id,done])=>{
+   const chapter=ID.get(id);
+   return done?.day===s.day&&chapter?.npc===e.npc&&isRouteChapter(chapter);
+  });
+  return s.day>=1&&s.day<=90&&met&&s.slot===e.slot&&place===e.place&&
+   !s.storyDone[e.id]&&(!previous||!!s.storyDone[previous])&&bondReady&&spentTime&&chapterCooldownReady;
  }
  function linesFor(state,id){const e=ID.get(id);if(!e)return [];const flag=state?.storyFlags?.[e.prerequisite];const opening=e.openingByFlag?.[flag];return opening?[{...e.lines[0],text:opening},...e.lines.slice(1)]:e.lines;}
  function available(state,place=state.location){return E.filter(e=>qualifies(e,state,place));}
  function recordExpiry(state){
-  normalize(state);const missed=[];
-  for(const e of E){
-   if(e.evergreen)continue;
-   if(state.day>e.end&&!state.storyDone[e.id]&&!state.storyMissed[e.id]){
-    state.storyMissed[e.id]=true;
-    if(!e.prerequisite||state.storyDone[e.prerequisite])missed.push(e);
-   }
-  }return missed;
+  // Keep the old entry point for saves and day changes without expiring bonds.
+  normalize(state);
+  return [];
  }
  function resolve(state,eventId,choiceIndex){
   normalize(state);const e=ID.get(eventId);
@@ -336,7 +349,8 @@
   if(!qualifies(e,state))throw Error('Story event is no longer available');
   const choice=e.choices[choiceIndex];if(!choice)throw Error('Invalid story choice');
   if(choice.kind==='commit'&&!VN.commitmentReady(state,e.npc))throw Error('A deeper bond is required');
-  REL.apply(state,e.npc,choice.delta);
+  // Authored chapters reward the player with scenes, choices and outcomes,
+  // not relationship points that instantly pay for the next chapter.
   if(choice.kind==='commit'){
    if(VN.commitmentReady(state,e.npc)){
     state.partners=Array.isArray(state.partners)?state.partners:[];
@@ -353,7 +367,7 @@
   }
   if(choice.kind==='friend'||choice.flag==='friendship'){state.routeOutcomes=state.routeOutcomes||{};state.routeOutcomes[e.npc]='friendship';}
   if(choice.flag&&choice.flag!=='romance'&&choice.flag!=='friendship')state.storyFlags[e.id]=choice.flag;
-  state.storyDone[e.id]={choice:choiceIndex,day:state.day};
+  state.storyDone[e.id]={choice:choiceIndex,day:state.day,qualityTime:qualityTime(state,e.npc)};
   return {event:e,choice,partner:state.partner};
  }
  function validate(){
@@ -361,7 +375,7 @@
   for(const e of E){
    if(seen.has(e.id))faults.push('Duplicate '+e.id);seen.add(e.id);
    if(e.start>e.end||e.start<1||e.end>90||e.slot<0||e.slot>2)faults.push('Invalid window '+e.id);
-   if(e.prerequisite){const prev=ID.get(e.prerequisite);if(!prev||(!e.evergreen&&prev.end>=e.end))faults.push('Bad link '+e.id);}
+   if(e.prerequisite&&!ID.has(e.prerequisite))faults.push('Bad link '+e.id);
    if(e.choices.length<2||!e.lines.length||!e.choices.every(c=>c.label&&c.reply&&c.delta))faults.push('Incomplete '+e.id);
    if(e.lines.some(line=>!line.speaker||!line.text))faults.push('Invalid dialogue '+e.id);
   }
