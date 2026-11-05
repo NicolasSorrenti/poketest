@@ -1488,7 +1488,10 @@ function projectedAttackValue(active,defender,turnSerial=0,benchCount=null){
   // can be removed by a projected Full Heal Energy or evolution beforehand.
   const confusionChance=active.status==='Confused'?.5:1;
   const impact=(Math.min(dmg,hp)*1.05+ko*115+
-   (/Poison|Paraly|Sleep|Confus/i.test(attack.text||'')?10:0))*confusionChance;
+   (((/Poison/i.test(attack.text||'')&&!defender.poison)||
+     (/Paraly/i.test(attack.text||'')&&defender.status!=='Paralyzed')||
+     (/Sleep/i.test(attack.text||'')&&defender.status!=='Asleep')||
+     (/Confus/i.test(attack.text||'')&&defender.status!=='Confused'))?10:0))*confusionChance;
   best=Math.max(best,impact);
  }
  return best;
