@@ -2,3 +2,7 @@
 /* Anchor automatic pan inside the gallery viewport. */
 #cgViewerCanvas{position:relative}
 #cgViewerPan[aria-pressed="true"]{background:#406d99;border-color:#a7d9ff}
+
+/* Explicit gallery action for testing the automatic CG pan without replacing Fit. */
+.cg-gallery-animated-open{display:block;margin:12px auto 4px;padding:11px 18px;border:1px solid #a991d2;border-radius:10px;background:#3b2c56;color:#fff;font:700 14px system-ui;cursor:pointer}
+.cg-gallery-animated-open:hover,.cg-gallery-animated-open:focus-visible{background:#554075;outline-offset:3px}
