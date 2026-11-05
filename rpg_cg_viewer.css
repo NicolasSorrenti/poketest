@@ -6,3 +6,26 @@
 /* Explicit gallery action for testing the automatic CG pan without replacing Fit. */
 .cg-gallery-animated-open{display:block;margin:12px auto 4px;padding:11px 18px;border:1px solid #a991d2;border-radius:10px;background:#3b2c56;color:#fff;font:700 14px system-ui;cursor:pointer}
 .cg-gallery-animated-open:hover,.cg-gallery-animated-open:focus-visible{background:#554075;outline-offset:3px}
+
+/* Adjustable automatic pan controls; compact and usable on mobile. */
+.cg-pan-settings{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px 18px;padding:10px 14px;background:#192339;color:#fff;font:12px system-ui}
+.cg-pan-fields{display:flex;flex-wrap:wrap;gap:7px 12px;justify-content:center}
+.cg-pan-fields label{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.cg-pan-fields input{width:63px;box-sizing:border-box;background:#101827;border:1px solid #64748b;border-radius:6px;color:#fff;padding:5px;font:13px system-ui}
+.cg-pan-auto-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 15px;justify-content:center}
+.cg-pan-auto-row label{white-space:nowrap;display:flex;align-items:center;gap:6px;cursor:pointer}
+.cg-pan-auto-row input{accent-color:#83b9ff}
+.cg-pan-auto-row span{color:#c7d9ff;white-space:nowrap}
+.cg-pan-auto-row button{background:#293b55;color:#fff;border:1px solid #66758b;border-radius:7px;padding:5px 9px;cursor:pointer}
+#cgViewerTimingControls[hidden]{display:none!important}
+.cg-fullscreen-viewer.cg-pan-controls-visible .cg-viewer-stage{height:calc(100dvh - 112px - 112px)}
+#cgViewerTimingControls{height:112px;display:flex;align-items:center;justify-content:center;overflow-y:auto;background:#192339}
+.neo-live-cg-controls{overflow-y:auto;max-height:30dvh}
+@media(max-width:650px){
+ .cg-fullscreen-viewer.cg-pan-controls-visible .cg-viewer-stage{height:calc(100dvh - 96px - 150px)}
+ #cgViewerTimingControls{height:150px}
+ .cg-pan-settings{padding:8px;gap:8px}
+ .cg-pan-fields{gap:6px}
+ .cg-pan-fields label{font-size:11px}
+ .cg-pan-fields input{width:55px;padding:4px}
+}
