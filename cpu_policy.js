@@ -1467,6 +1467,23 @@ function score(a,o,cfg,used){
    return cfg.level>=8?(healed*1.5-lost*65+110)*style.survival:
     (p.active?.damage||0)>=20?168*style.survival:40;
   }
+  if(cfg.level===8&&(name==='Potion'||name==='Super Potion')){
+   // Trainer resolution chooses a damaged target later. Score the best public
+   // target rather than assuming the Active is the only worthwhile patient.
+   // Super Potion discards an attached Energy: a single damage counter must
+   // never justify losing an attachment just to play a Trainer.
+   const healCap=name==='Super Potion'?40:20;
+   const patients=[p.active,...p.bench].filter(u=>u&&u.damage>=10&&
+    (name!=='Super Potion'||(u.energies?.length||0)>0));
+   const best=Math.max(0,...patients.map(u=>{
+    const healed=Math.min(healCap,u.damage);
+    const survival=likelyOpponentKnockout(o,u,true)&&
+     !likelyOpponentKnockout(o,{...u,damage:u.damage-healed},true);
+    const cost=name==='Super Potion'?85:0;
+    return healed*2+(survival?110:0)-cost;
+   }));
+   return (best>0?best:-300)*style.survival;
+  }
   if(/Potion|Center|Heal/i.test(name))return (p.active?.damage||0)>=20?168*style.survival:40;
   if(name==='Switch')return p.active?.status?210*style.survival:55;
   if(/Search|Computer|Ball|Trader|Elm/i.test(name))return 130*style.setup;
