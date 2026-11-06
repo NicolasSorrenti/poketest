@@ -165,8 +165,8 @@ function effectiveCard(g,u){
  return {...mirror, id:printed.id, name:mirror.name, abilities:printed.abilities};
 }
 function unownNormal(g,side){
- const copies=g.players.flatMap(allPokemon).filter(x=>card(g,x.id).id==='neo2-50');
- return copies.length===1&&allPokemon(g.players[side]).includes(copies[0])&&CLASSIC_POWERS.enabled(g,copies[0],'[Normal]');
+ const copies=allPokemon(g.players[side]).filter(x=>card(g,x.id).id==='neo2-50');
+ return copies.length===1&&CLASSIC_POWERS.enabled(g,copies[0],'[Normal]');
 }
 function unownDarkness(g,side){
  const copies=g.players.flatMap(allPokemon).filter(x=>x.id==='neo2-47');
