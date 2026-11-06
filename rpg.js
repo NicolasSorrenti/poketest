@@ -878,15 +878,8 @@ function startRomanceVisit(id){
     scene?.line||scene?.choices?.length||timeSequence.blocked||
     arrivalGate||pendingOverworldArrival||window.NeoRpgTimeTransitions?.active)return false;
  const first=ROMANCE.isFirst(state,id);
- const lines=(first?[
-  "I'm glad you invited me. It feels different being together somewhere quiet.",
-  "Just the two of us, with nothing we have to prove to anyone.",
-  "I'd like to stay close to you for a while. Are you ready?"
- ]:[
-  "It's wonderful to be back here with you.",
-  "I was looking forward to another quiet moment together.",
-  "Shall we enjoy some time just for us?"
- ]).map(text=>({speaker:id,text}));
+ const script=ROMANCE.dialogue(id);
+ const lines=(first?script.first:script.repeat).map(text=>({speaker:id,text}));
  state.selected=id;state.romanceVisitDeferred=false;
  scene={speaker:cast[id].name,line:lines[0].text,choices:[['Continue ›','chatNext']],
   dialogue:lines,index:0,afterChoices:[['Continue ›','romanceView:'+id]],romanceNpc:id};
@@ -894,7 +887,9 @@ function startRomanceVisit(id){
 }
 function openRomanceVisit(id){
  if(state.romanceVisitShowing!==id||document.getElementById('neoRomanceVisitCG'))return;
+ const script=ROMANCE.dialogue(id),first=ROMANCE.isFirst(state,id);
  if(!ROMANCE?.open({id,name:cast[id]?.name||id,discreet:liveDiscreetEnabled(),
+  cgLines:script.barks,lineOffset:Number(state.romanceVisits?.[id]?.count)||0,
   onFinish:()=>{
    const completed=ROMANCE.complete(state,id,STORY);
    state.romanceVisitShowing=null;
@@ -903,7 +898,8 @@ function openRomanceVisit(id){
     persist();render();return;
    }
    log('Shared a private moment with '+cast[id].name+'.');
-   activityOutcome(cast[id].name,"I'm so glad we had this time together. Let's do this again soon.",null,null,[],1,'romance_visit');
+   activityOutcome(cast[id].name,script.outro[first?0:1]||script.outro[0],
+    null,null,[],1,'romance_visit');
   },
   onCancel:()=>{
    state.romanceVisitShowing=null;
