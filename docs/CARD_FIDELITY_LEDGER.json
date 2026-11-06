@@ -13986,7 +13986,11 @@
           "kind": "power",
           "index": 0,
           "name": "Energy Drain",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Energy Drain in headless_duel.js knockOuts checks damage impact, flips, handles one/multiple attacking Energy and defender-owned discard choice; KO/status ordering and Prize/promotion need runtime."
+          ],
+          "scope": "Live RPG/Classic source path only; no reducer execution or independent historical ruling confirmation"
         }
       ]
     },
@@ -14151,7 +14155,11 @@
           "kind": "power",
           "index": 0,
           "name": "Scram",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Scram in headless_duel.js knockOuts shuffles Pokémon, evolutions, Energy and attached Trainers at exactly 10 HP; simultaneous KO, status and stadium interactions need runtime."
+          ],
+          "scope": "Live RPG/Classic source path only; no reducer execution or independent historical ruling confirmation"
         }
       ]
     },
@@ -14208,7 +14216,11 @@
           "kind": "power",
           "index": 0,
           "name": "Soak Up",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Soak Up in classic_power_core.js offers 1–2 Basic Grass Energy cards from own other Pokémon, then moves selected attachments; repeat/turn locks and mixed-source decisions need runtime."
+          ],
+          "scope": "Live RPG/Classic source path only; no reducer execution or independent historical ruling confirmation"
         }
       ]
     },
@@ -14265,7 +14277,11 @@
           "kind": "power",
           "index": 0,
           "name": "Relaxing Scent",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Relaxing Scent in headless_duel.js halves attack damage after Weakness/Resistance, rounded up to 10, including hitBench; own-attacks, effects and statuses need runtime."
+          ],
+          "scope": "Live RPG/Classic source path only; no reducer execution or independent historical ruling confirmation"
         }
       ]
     },
@@ -14373,7 +14389,11 @@
           "kind": "power",
           "index": 0,
           "name": "Emerge",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Emerge in classic_power_core.js flips, optionally searches Koga's Beedrill and evolves; fixed missing deck shuffle on successful-heads search with no selected/found Beedrill in commit e528bb2. Tails, status, evolution legality and KO interactions need runtime."
+          ],
+          "scope": "Live RPG/Classic source path only; no reducer execution or independent historical ruling confirmation"
         }
       ]
     },
