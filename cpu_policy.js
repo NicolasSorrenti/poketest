@@ -291,7 +291,10 @@ function strongestUsableOpponentAttack(o,defender){
      !eligibleAttack(fromEnemy,enemy,attack,index)||
      !canPayEnergy(attack.cost||[],energyPool(enemy)))return best;
   const damage=estimatedDamage(attack,enemy,defender,o.opponent.bench.length);
-  return Math.max(best,damage>0?damage+plusPower:damage);
+  // Confusion requires a successful flip before damage resolves. Defensive
+  // retreat forecasts compare expected pressure; KO risk is scored separately.
+  const expected=damage>0?damage+plusPower:damage;
+  return Math.max(best,enemy.status==='Confused'?expected*.5:expected);
  },0);
 }
 // A printed KO is not a likely KO when the opponent must first pass
