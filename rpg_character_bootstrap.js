@@ -30,7 +30,7 @@
  "/rpg_conversations.js",
  "/rpg_legacy_scenes.js",
  "/rpg_story.js?v=story-migration-statefix-20261030",
- "/rpg_romance_visits.js?v=romance-visits-20261106",
+ "/rpg_romance_visits.js?v=akari-glasses-20261106",
  "/rpg_schedules.js",
  "/rpg_world.js",
  "/rpg_rival_arc.js",
