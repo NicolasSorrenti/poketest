@@ -30,7 +30,7 @@
  "/rpg_conversations.js",
  "/rpg_legacy_scenes.js",
  "/rpg_story.js?v=story-migration-statefix-20261030",
- "/rpg_romance_visits.js?v=akari-glasses-20261106",
+ "/rpg_romance_visits.js?v=romance-dialogue-20261106",
  "/rpg_schedules.js",
  "/rpg_world.js",
  "/rpg_rival_arc.js",
@@ -90,7 +90,7 @@
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=romance-visits-20261106"
+ "/rpg.js?v=romance-dialogue-20261106"
 ];
   function registry(packs){
     // Normalize the authenticated/API roster too (not just the generated file).
