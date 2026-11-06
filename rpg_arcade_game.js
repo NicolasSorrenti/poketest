@@ -19,6 +19,7 @@ const CSS=String.raw`
 .nc-progress-text{font-size:12px;font-weight:900;font-variant-numeric:tabular-nums;color:#eed6ff;white-space:nowrap}
 .nc-stage{width:100%;position:relative;aspect-ratio:1.88;border:1px solid #d060ff80;background:#090b23;border-radius:12px;overflow:hidden;box-shadow:0 0 28px #bd44ee33,inset 0 0 30px #0009}
 .nc-stage canvas.nc-canvas{width:100%;height:100%;display:block}
+.nc-stage canvas.nc-note-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:4}
 .nc-mask.nc-daisy .nc-cabinet{border-color:#ff70d5;box-shadow:0 0 60px #e33be555}
 .nc-mask.nc-daisy .nc-logo{color:#ffa1eb}.nc-mask.nc-daisy .nc-title{color:#fff0fd;text-shadow:0 0 17px #fb47d9}
 .nc-mask.nc-daisy .nc-stage{background:radial-gradient(circle at 60% 45%,#522266,#0d0926 75%)}
@@ -55,7 +56,8 @@ const CSS=String.raw`
 @media(prefers-reduced-motion:reduce){.nc-eval{transition:none}}
 `;
 const PATTERN=[0,1,2,1,0,2,1,0,1,2,0,1,2,0,2,1,0,1,2,1,0,2,0,1];
-const STEP=610,DAISY_STEP=60000/136,LEAD=1700,TRAVEL=1600,WINDOW=190,DURATION=LEAD+(PATTERN.length-1)*STEP+WINDOW+200;
+const STEP=610,DAISY_STEP=60000/136,LEAD=1700,TRAVEL=1600,WINDOW=190,REPEATS=10;
+const LONG_PATTERN=Array.from({length:REPEATS},()=>PATTERN).flat();
 const COLORS=['#40dafa','#ffbd55','#ff55cb'];
 let active=null;
 function open(options={}){
@@ -63,26 +65,26 @@ function open(options={}){
  if(!document.getElementById('neo-circuit-v2-style')){const st=document.createElement('style');st.id='neo-circuit-v2-style';st.textContent=CSS;document.head.append(st);}
  const isDaisy=String(options.characterId||options.id||options.name||'').toLowerCase().includes('daisy');
  const host=document.createElement('section');host.className='nc-mask'+(isDaisy?' nc-daisy':'');host.setAttribute('role','dialog');host.setAttribute('aria-modal','true');host.setAttribute('aria-label',isDaisy?'Daisy Dance Battle rhythm game':'Neon Circuit arcade rhythm game');
- host.innerHTML='<div class="nc-cabinet"><header class="nc-bar"><div class="nc-logo">◈ &nbsp; PIXEL PALACE / NEON CIRCUIT</div><button class="nc-close" type="button">EXIT ×</button></header><div class="nc-layout"><div class="nc-main"><div class="nc-heading"><div><span class="nc-overline">ARCADE RUSH · RHYTHM CHALLENGE</span><h1 class="nc-title">NEON CIRCUIT</h1><div class="nc-sub">Playing against <span class="nc-rival"></span></div></div><span class="nc-progress-text">0:00 / 0:16</span></div><div class="nc-stage"><canvas class="nc-canvas" aria-label="Three-lane rhythm track"></canvas><div class="nc-dance-actor"><canvas class="nc-actor-canvas" aria-label="Daisy rhythmic animation"></canvas></div><div class="nc-dance-hud"><span class="nc-dance-tag">♫ DAISY · DANCE BATTLE</span><div class="nc-dance-fever"><div class="nc-fever-fill"></div></div></div><div class="nc-dance-comment" aria-live="polite">Come on, keep up! ♥</div><div class="nc-eval"></div><div class="nc-overlay"><div class="nc-overlay-inner"><div class="nc-chip">PIXEL PALACE · ARCADE RUSH</div><h2>BEAT THE CIRCUIT</h2><p>Hit notes as they meet the glowing line. Press <b>A / S / D</b> or tap the three colored buttons. Build a combo and beat your rival’s score.</p><button type="button" class="nc-action nc-start">START CHALLENGE</button><button type="button" class="nc-action nc-secondary nc-cancel">NOT NOW</button></div></div></div><div class="nc-pads"><button class="nc-pad" data-lane="0" style="--c:#40dafa" type="button">A · LEFT</button><button class="nc-pad" data-lane="1" style="--c:#ffbd55" type="button">S · CENTER</button><button class="nc-pad" data-lane="2" style="--c:#ff55cb" type="button">D · RIGHT</button></div></div><aside class="nc-side"><div class="nc-stat"><small>SCORE</small><strong class="nc-score">000000</strong></div><div class="nc-stat"><small>COMBO</small><strong class="nc-combo">× 0</strong></div><div class="nc-stat"><small>ACCURACY</small><strong class="nc-accuracy">100%</strong></div></aside></div><footer class="nc-foot"><span>⌨ A · S · D &nbsp; / &nbsp; TAP</span><div class="nc-meter"><div class="nc-meter-fill"></div></div><span>ESC TO EXIT</span></footer></div>';
+ host.innerHTML='<div class="nc-cabinet"><header class="nc-bar"><div class="nc-logo">◈ &nbsp; PIXEL PALACE / NEON CIRCUIT</div><button class="nc-close" type="button">EXIT ×</button></header><div class="nc-layout"><div class="nc-main"><div class="nc-heading"><div><span class="nc-overline">ARCADE RUSH · RHYTHM CHALLENGE</span><h1 class="nc-title">NEON CIRCUIT</h1><div class="nc-sub">Playing against <span class="nc-rival"></span></div></div><span class="nc-progress-text">0:00 / 0:16</span></div><div class="nc-stage"><canvas class="nc-canvas" aria-label="Three-lane rhythm track"></canvas><canvas class="nc-note-canvas" aria-hidden="true"></canvas><div class="nc-dance-actor"><canvas class="nc-actor-canvas" aria-label="Daisy rhythmic animation"></canvas></div><div class="nc-dance-hud"><span class="nc-dance-tag">♫ DAISY · DANCE BATTLE</span><div class="nc-dance-fever"><div class="nc-fever-fill"></div></div></div><div class="nc-dance-comment" aria-live="polite">Come on, keep up! ♥</div><div class="nc-eval"></div><div class="nc-overlay"><div class="nc-overlay-inner"><div class="nc-chip">PIXEL PALACE · ARCADE RUSH</div><h2>BEAT THE CIRCUIT</h2><p>Hit notes as they meet the glowing line. Press <b>A / S / D</b> or tap the three colored buttons. Build a combo and beat your rival’s score.</p><button type="button" class="nc-action nc-start">START CHALLENGE</button><button type="button" class="nc-action nc-secondary nc-cancel">NOT NOW</button></div></div></div><div class="nc-pads"><button class="nc-pad" data-lane="0" style="--c:#40dafa" type="button">A · LEFT</button><button class="nc-pad" data-lane="1" style="--c:#ffbd55" type="button">S · CENTER</button><button class="nc-pad" data-lane="2" style="--c:#ff55cb" type="button">D · RIGHT</button></div></div><aside class="nc-side"><div class="nc-stat"><small>SCORE</small><strong class="nc-score">000000</strong></div><div class="nc-stat"><small>COMBO</small><strong class="nc-combo">× 0</strong></div><div class="nc-stat"><small>ACCURACY</small><strong class="nc-accuracy">100%</strong></div></aside></div><footer class="nc-foot"><span>⌨ A · S · D &nbsp; / &nbsp; TAP</span><div class="nc-meter"><div class="nc-meter-fill"></div></div><span>ESC TO EXIT</span></footer></div>';
  if(isDaisy){
   host.innerHTML=host.innerHTML.replace('PIXEL PALACE / NEON CIRCUIT','PIXEL PALACE / DANCE BATTLE').replace('NEON CIRCUIT</h1>','DANCE BATTLE</h1>').replace('ARCADE RUSH · RHYTHM CHALLENGE','DAISY · ELECTRIC HEART · DANCE CHALLENGE').replace('BEAT THE CIRCUIT','DANCE WITH DAISY').replace('NEON CIRCUIT · RUN COMPLETE','DANCE BATTLE · FINISHED');
  }
  document.body.append(host);
  const $=q=>host.querySelector(q),$$=q=>Array.from(host.querySelectorAll(q));
  $('.nc-rival').textContent=options.name||'your rival';
- const canvas=$('.nc-canvas'),ctx=canvas.getContext('2d');
- if(!ctx){host.remove();return false;}
+ const canvas=$('.nc-canvas'),ctx=canvas.getContext('2d'),notesCanvas=$('.nc-note-canvas'),notesCtx=notesCanvas.getContext('2d');
+ if(!ctx||!notesCtx){host.remove();return false;}
  const previous=document.activeElement;
- const session={host,frame:0,playing:false,finished:false,start:0,notes:PATTERN.map((lane,i)=>({lane,at:LEAD+i*(isDaisy?DAISY_STEP:STEP),done:false})),duration:LEAD+(PATTERN.length-1)*(isDaisy?DAISY_STEP:STEP)+WINDOW+200,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],fxUntil:0,feedbackTimer:0,lastTime:0};
+ const session={host,frame:0,playing:false,finished:false,start:0,notes:LONG_PATTERN.map((lane,i)=>({lane,at:LEAD+i*(isDaisy?DAISY_STEP:STEP),done:false})),duration:LEAD+(LONG_PATTERN.length-1)*(isDaisy?DAISY_STEP:STEP)+WINDOW+200,fever:0,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],fxUntil:0,feedbackTimer:0,lastTime:0};
  active=session;
  const dancer=isDaisy?setupDaisyActor($('.nc-actor-canvas')):null;
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
- function resetCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(2,root.devicePixelRatio||1);const w=Math.max(1,Math.floor(r.width*dpr)),h=Math.max(1,Math.floor(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}ctx.setTransform(w/800,0,0,h/445,0,0);}
+ function resetCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(2,root.devicePixelRatio||1);const w=Math.max(1,Math.floor(r.width*dpr)),h=Math.max(1,Math.floor(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}if(notesCanvas.width!==w||notesCanvas.height!==h){notesCanvas.width=w;notesCanvas.height=h;}ctx.setTransform(w/800,0,0,h/445,0,0);notesCtx.setTransform(w/800,0,0,h/445,0,0);}
  const project=(lane,p)=>{const y=73+Math.pow(Math.max(0,Math.min(1,p)),1.27)*304;const width=110+Math.pow(p,1.1)*474;const center=400;const left=center-width/2;return{x:left+width*(lane+.5)/3,y,w:width/3};};
  function glowLine(x1,y1,x2,y2,color,width=2){ctx.save();ctx.strokeStyle=color;ctx.shadowColor=color;ctx.shadowBlur=15;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();}
  function scene(time){
   resetCanvas();
-  if(dancer){const fever=Math.min(1,session.quality/PATTERN.length*1.28/100);dancer.render(time||0,fever);}
+  if(dancer)dancer.render(time||0,session.fever/100);
   const bg=ctx.createLinearGradient(0,0,0,445);bg.addColorStop(0,'#08102b');bg.addColorStop(.7,'#170d36');bg.addColorStop(1,'#070b24');ctx.fillStyle=bg;ctx.fillRect(0,0,800,445);
   // Arcade room: atmospheric neon signs and cabinet silhouettes behind the lane.
   ctx.fillStyle='#160d38';for(let i=0;i<10;i++){const x=i*94-30;ctx.fillRect(x,80+(i%3)*15,60,240);ctx.fillStyle='#2d164a';ctx.fillRect(x+8,97+(i%3)*15,44,70);ctx.fillStyle='#170e34';}
@@ -101,28 +103,54 @@ function open(options={}){
   for(let i=0;i<=3;i++){glowLine(345+i*110/3,horizon,108+i*584/3,base,['#34dffe','#a052f2','#f59a5e','#f44bc7'][i],i===0||i===3?3:2);}
   for(let j=0;j<9;j++){const p=(j/9+((time||0)*.00009)%1)%1;const y=73+p*p*304;const w=110+p*474;glowLine(400-w/2,y,400+w/2,y,'#928eff30',1);}
   const lineY=377;glowLine(156,lineY,644,lineY,'#ffffff',5);
-  for(const n of session.notes){if(n.done)continue;const p=1-(n.at-(time||0))/TRAVEL;if(p<0||p>1.08)continue;const pos=project(n.lane,p),w=Math.max(14,pos.w*.72),h=Math.max(7,11+20*p),col=COLORS[n.lane];ctx.save();ctx.shadowColor=col;ctx.shadowBlur=18+12*p;ctx.fillStyle=col;RG(pos.x-w/2,pos.y-h/2,w,h,5);ctx.fill();ctx.strokeStyle='#fffc';ctx.lineWidth=1.5;ctx.stroke();ctx.restore();}
+  if(!isDaisy){const renderCtx=ctx;
+  for(const n of session.notes){if(n.done)continue;const p=1-(n.at-(time||0))/TRAVEL;if(p<0||p>1.08)continue;const pos=project(n.lane,p),w=Math.max(14,pos.w*.72),h=Math.max(7,11+20*p),col=COLORS[n.lane];renderCtx.save();renderCtx.shadowColor=col;renderCtx.shadowBlur=18+12*p;renderCtx.fillStyle=col;RG(pos.x-w/2,pos.y-h/2,w,h,5);renderCtx.fill();renderCtx.strokeStyle='#fffc';renderCtx.lineWidth=1.5;renderCtx.stroke();renderCtx.restore();}
   // Projected hit zone and hardware symbols.
-  for(let lane=0;lane<3;lane++){const p=project(lane,1),x=p.x;ctx.save();ctx.fillStyle='#13102bcc';ctx.strokeStyle=COLORS[lane];ctx.shadowColor=COLORS[lane];ctx.shadowBlur=22;ctx.lineWidth=3;RG(x-29,390,58,44,10);ctx.fill();ctx.stroke();ctx.fillStyle='#fff';ctx.font='900 24px system-ui';ctx.textAlign='center';ctx.fillText('ASD'[lane],x,419);ctx.restore();}
+  for(let lane=0;lane<3;lane++){const p=project(lane,1),x=p.x;renderCtx.save();renderCtx.fillStyle='#13102bcc';renderCtx.strokeStyle=COLORS[lane];renderCtx.shadowColor=COLORS[lane];renderCtx.shadowBlur=22;renderCtx.lineWidth=3;RG(x-29,390,58,44,10);renderCtx.fill();renderCtx.stroke();renderCtx.fillStyle='#fff';renderCtx.font='900 24px system-ui';renderCtx.textAlign='center';renderCtx.fillText('ASD'[lane],x,419);renderCtx.restore();}
+  }
   for(const particle of session.particles){const life=(performance.now()-particle.born)/particle.duration;if(life>=1)continue;ctx.save();ctx.globalAlpha=1-life;ctx.fillStyle=particle.color;ctx.shadowColor=particle.color;ctx.shadowBlur=14;ctx.beginPath();ctx.arc(particle.x+particle.vx*life,particle.y+particle.vy*life,particle.radius*(1-life*.7),0,Math.PI*2);ctx.fill();ctx.restore();}
+  renderNoteOverlay(time||0);
  }
+ function renderNoteOverlay(time){
+  notesCtx.clearRect(0,0,800,445);
+  if(!isDaisy)return;
+  const renderCtx=notesCtx;
+  for(const n of session.notes){
+   if(n.done)continue;
+   const p=1-(n.at-time)/TRAVEL;
+   if(p<0||p>1.08)continue;
+   const pos=project(n.lane,p),w=Math.max(14,pos.w*.72),h=Math.max(7,11+20*p),col=COLORS[n.lane];
+   renderCtx.save();renderCtx.shadowColor=col;renderCtx.shadowBlur=18+12*p;renderCtx.fillStyle=col;
+   RGOverlay(renderCtx,pos.x-w/2,pos.y-h/2,w,h,5);renderCtx.fill();renderCtx.strokeStyle='#fffc';renderCtx.lineWidth=1.5;renderCtx.stroke();renderCtx.restore();
+  }
+  renderCtx.save();renderCtx.strokeStyle='#ffffff';renderCtx.shadowColor='#ff66cf';renderCtx.shadowBlur=20;renderCtx.lineWidth=5;
+  renderCtx.beginPath();renderCtx.moveTo(156,377);renderCtx.lineTo(644,377);renderCtx.stroke();renderCtx.restore();
+  for(let lane=0;lane<3;lane++){
+   const p=project(lane,1),x=p.x;
+   renderCtx.save();renderCtx.fillStyle='#13102bcc';renderCtx.strokeStyle=COLORS[lane];renderCtx.shadowColor=COLORS[lane];
+   renderCtx.shadowBlur=22;renderCtx.lineWidth=3;
+   RGOverlay(renderCtx,x-29,390,58,44,10);renderCtx.fill();renderCtx.stroke();
+   renderCtx.fillStyle='#fff';renderCtx.font='900 24px system-ui';renderCtx.textAlign='center';renderCtx.fillText('ASD'[lane],x,419);renderCtx.restore();
+  }
+ }
+ function RGOverlay(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r);}
  function cleanup(cancel){if(active!==session)return;if(dancer)dancer.dispose();cancelAnimationFrame(session.frame);clearTimeout(session.feedbackTimer);document.removeEventListener('keydown',keydown,true);root.removeEventListener('resize',resize);host.remove();active=null;if(previous?.isConnected&&previous.focus)previous.focus({preventScroll:true});if(cancel)options.onCancel?.();}
- function hud(){if(isDaisy){const fever=Math.min(100,(session.quality/PATTERN.length)*1.28);$('.nc-fever-fill').style.width=fever+'%';}$('.nc-score').textContent=String(session.score).padStart(6,'0');$('.nc-combo').textContent='× '+session.combo;$('.nc-accuracy').textContent=(session.hits+session.misses?Math.round(session.quality/(session.hits+session.misses)):100)+'%';}
+ function hud(){if(isDaisy){$('.nc-fever-fill').style.width=session.fever+'%';}$('.nc-score').textContent=String(session.score).padStart(6,'0');$('.nc-combo').textContent='× '+session.combo;$('.nc-accuracy').textContent=(session.hits+session.misses?Math.round(session.quality/(session.hits+session.misses)):100)+'%';}
  function feedback(message,good=true,lane=1){const x=$('.nc-eval');x.textContent=message;x.style.color=good?'#ffe7a0':'#ff7cbb';x.style.opacity='1';clearTimeout(session.feedbackTimer);session.feedbackTimer=setTimeout(()=>{if(host.isConnected)x.style.opacity='0';},330);if(isDaisy&&good){$('.nc-dance-comment').textContent=session.combo>=12?'You really can dance! ♥':session.combo>=5?'That’s the rhythm! Keep going!':'Nice move!';}else if(isDaisy&&!good){$('.nc-dance-comment').textContent='You’ve got this — follow my lead!';}if(good){const pos=project(lane,1);for(let i=0;i<15;i++){const a=Math.PI*2*i/15;session.particles.push({x:pos.x,y:377,vx:Math.cos(a)*(28+(i%3)*17),vy:Math.sin(a)*(25+(i%4)*12),born:performance.now(),duration:410+(i%3)*110,color:COLORS[lane],radius:2+(i%3)});}session.particles=session.particles.slice(-100);}}
  function press(lane){if(!session.playing)return;const elapsed=performance.now()-session.start;let target=null,closest=Infinity;for(const n of session.notes){const d=Math.abs(n.at-elapsed);if(!n.done&&n.lane===lane&&d<closest){closest=d;target=n;}}
  const pad=$$('.nc-pad')[lane];pad.classList.add('nc-lit');setTimeout(()=>{if(pad.isConnected)pad.classList.remove('nc-lit');},110);
- if(!target||closest>WINDOW){feedback('OFF BEAT',false,lane);return;}target.done=true;session.hits++;session.combo++;session.best=Math.max(session.best,session.combo);const pts=closest<75?100:closest<135?75:45;session.quality+=pts;session.score+=(pts===100?1000:pts===75?650:350)+Math.min(500,session.combo*20);feedback(pts===100?'PERFECT ✦':pts===75?'GREAT!':'GOOD',true,lane);hud();}
+ if(!target||closest>WINDOW){feedback('OFF BEAT',false,lane);return;}target.done=true;session.hits++;session.combo++;session.fever=Math.min(100,session.fever+5);session.best=Math.max(session.best,session.combo);const pts=closest<75?100:closest<135?75:45;session.quality+=pts;session.score+=(pts===100?1000:pts===75?650:350)+Math.min(500,session.combo*20);feedback(pts===100?'PERFECT ✦':pts===75?'GREAT!':'GOOD',true,lane);hud();}
  function keydown(e){if(active!==session)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cleanup(true);return;}if(e.repeat||!session.playing)return;const key=e.key.length===1?e.key.toLowerCase():e.key;const lane={a:0,s:1,d:2,ArrowLeft:0,ArrowDown:1,ArrowRight:2}[key];if(lane!==undefined){e.preventDefault();e.stopPropagation();press(lane);}}
  function resize(){if(active===session&&!session.playing)scene(0);}
  document.addEventListener('keydown',keydown,true);root.addEventListener('resize',resize);
  $$('.nc-pad').forEach(p=>p.addEventListener('pointerdown',e=>{e.preventDefault();press(Number(p.dataset.lane));}));
  $('.nc-close').addEventListener('click',()=>cleanup(true));$('.nc-cancel').addEventListener('click',()=>cleanup(true));
- function finish(){session.playing=false;session.finished=true;cancelAnimationFrame(session.frame);const accuracy=Math.round(session.quality/PATTERN.length),grade=accuracy>=93?'S':accuracy>=80?'A':accuracy>=65?'B':accuracy>=45?'C':'D',win=session.score>=15500;const result={game:'arcade_highscore',score:session.score,accuracy,bestCombo:session.best,grade,win};
+ function finish(){session.playing=false;session.finished=true;cancelAnimationFrame(session.frame);const accuracy=Math.round(session.quality/session.notes.length),grade=accuracy>=93?'S':accuracy>=80?'A':accuracy>=65?'B':accuracy>=45?'C':'D',win=session.score>=155000;const result={game:'arcade_highscore',score:session.score,accuracy,bestCombo:session.best,grade,win};
  $('.nc-overlay').hidden=false;$('.nc-overlay').innerHTML='<div class="nc-overlay-inner"><div class="nc-chip">NEON CIRCUIT · RUN COMPLETE</div><h2>'+(win?'NEW HIGH SCORE!':'CHALLENGE COMPLETE')+'</h2><div class="nc-grade">'+grade+'</div><div class="nc-resultscore">'+String(session.score).padStart(6,'0')+'</div><p>Accuracy <b>'+accuracy+'%</b> · Max Combo <b>'+session.best+'×</b><br>'+(win?'You beat the arcade target!':'Your rival keeps the record for now.')+'</p><button type="button" class="nc-action nc-claim">SEE CHARACTER REACTION</button></div>';
  $('.nc-claim').addEventListener('click',()=>{if(active!==session)return;cleanup(false);options.onComplete(result);},{once:true});$('.nc-claim').focus();}
- function frame(now){if(!session.playing||active!==session)return;const elapsed=now-session.start;for(const n of session.notes){if(!n.done&&elapsed>n.at+WINDOW){n.done=true;session.combo=0;session.misses++;feedback('MISS',false,n.lane);hud();}}
+ function frame(now){if(!session.playing||active!==session)return;const elapsed=now-session.start;for(const n of session.notes){if(!n.done&&elapsed>n.at+WINDOW){n.done=true;session.combo=0;session.fever=Math.max(0,session.fever-25);session.misses++;feedback('MISS',false,n.lane);hud();}}
  scene(elapsed);session.particles=session.particles.filter(p=>now-p.born<p.duration);
- $('.nc-meter-fill').style.width=Math.min(100,elapsed/session.duration*100)+'%';const secs=Math.min(Math.ceil(session.duration/1000),Math.floor(elapsed/1000));$('.nc-progress-text').textContent='0:'+String(secs).padStart(2,'0')+' / 0:'+String(Math.ceil(session.duration/1000)).padStart(2,'0');
+ $('.nc-meter-fill').style.width=Math.min(100,elapsed/session.duration*100)+'%';const clock=ms=>{const x=Math.floor(ms/1000);return Math.floor(x/60)+':'+String(x%60).padStart(2,'0');};$('.nc-progress-text').textContent=clock(Math.min(elapsed,session.duration))+' / '+clock(session.duration);
  if(elapsed>=session.duration){finish();return;}session.frame=requestAnimationFrame(frame);}
  $('.nc-start').addEventListener('click',()=>{if(session.playing||session.finished)return;session.playing=true;$('.nc-overlay').hidden=true;session.start=performance.now();session.frame=requestAnimationFrame(frame);hud();},{once:true});
  scene(0);$('.nc-start').focus();return true;
@@ -144,8 +172,8 @@ function open(options={}){
    sc.drawImage(img,0,0,img.naturalWidth,img.naturalHeight*.72,0,0,W,H);
    original=sc.getImageData(0,0,W,H);ready=true;
   };
-  img.onerror=()=>{if(!disposed&&!img.src.includes('neutral.png'))img.src='/rpg-assets/characters/daisy/expressionsv2/neutral.png';};
-  img.src='/rpg-assets/characters/daisy/idle.png';
+  img.onerror=()=>{if(!disposed&&!img.src.includes('/idle.png'))img.src='/rpg-assets/characters/daisy/idle.png';};
+  img.src='/rpg-assets/characters/daisy/dance-portrait.webp';
   const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const mask=(nx,ny,z)=>{const r=Math.hypot((nx-z.x)/z.rx,(ny-z.y)/z.ry);return r>=1?0:(1-smooth(Math.max(0,(r-.45)/.55)))**2;};
   function render(ms,fever=0){
