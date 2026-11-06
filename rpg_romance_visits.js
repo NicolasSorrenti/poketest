@@ -124,7 +124,7 @@
     viewport.style.height=(width*img.naturalHeight/img.naturalWidth/2)+'px';
     pan=panApi.attach(viewport,img,panApi.defaults);
     img.hidden=false;
-    message.hidden=true;
+    message.style.display='none';
     finish.disabled=false;
    };
    img.onerror=()=>{
