@@ -53,7 +53,7 @@
  "/rpg_cg_scene.js?v=lyla-route7-two-stage-20261102-image-ready",
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
- "/rpg_arcade_game.js?v=arcade-long-freeplay-daisy-local-20261106",
+ "/rpg_arcade_game.js?v=daisy-portrait-local-warp-20261106",
  "/rpg_planned_dates.js",
  "/rpg_preduel.js?v=restore-original-attacks-20261102",
  "/rpg_situations.js",
@@ -90,7 +90,7 @@
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=live-deck-sync-20261106"
+ "/rpg.js?v=arcade-outcome-continue-20261106"
 ];
   function registry(packs){
     // Normalize the authenticated/API roster too (not just the generated file).
