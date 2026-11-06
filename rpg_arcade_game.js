@@ -64,7 +64,7 @@ const CSS=String.raw`
 .nc-daisy .nc-main{min-height:0;min-width:0;display:flex;flex-direction:column}
 .nc-daisy .nc-heading{min-height:83px;flex:0 0 auto;align-items:center;margin:0 0 8px;gap:10px}
 .nc-daisy .nc-overline{color:#ffd5f3;font-size:10px;letter-spacing:.12em}
-.nc-daisy .nc-title{font-size:clamp(29px,3.6vw,55px);color:#ff9de9;font-style:italic;font-weight:1000;text-shadow:0 3px 0 #972789,0 0 17px #eb52c577;letter-spacing:-.055em}
+.nc-mask.nc-daisy .nc-title{font-size:clamp(29px,3.6vw,55px);color:#ff9de9;font-style:italic;font-weight:1000;text-shadow:0 3px 0 #972789,0 0 17px #eb52c577;letter-spacing:-.055em}
 .nc-daisy .nc-sub{font-size:11px;color:#ccaed7}
 .nc-daisy .nc-track-meta{min-width:0;width:min(350px,44%);padding:10px 13px;border:1px solid #d779cd9e;border-radius:13px;background:#32153fd9}
 .nc-daisy .nc-song-title{display:block;font-weight:900;font-style:italic;color:#fff;font-size:clamp(13px,1.6vw,19px)}
@@ -292,7 +292,7 @@ function open(options={}){
  $$('.nc-pad').forEach(p=>p.addEventListener('pointerdown',e=>{e.preventDefault();press(Number(p.dataset.lane));}));
  $('.nc-close').addEventListener('click',()=>cleanup(true));$('.nc-cancel').addEventListener('click',()=>cleanup(true));
  function finish(){session.playing=false;session.finished=true;session.audio?.stop();cancelAnimationFrame(session.frame);const accuracy=Math.round(session.quality/session.notes.length),grade=accuracy>=93?'S':accuracy>=80?'A':accuracy>=65?'B':accuracy>=45?'C':'D',win=session.score>=155000;const result={game:'arcade_highscore',score:session.score,accuracy,bestCombo:session.best,grade,win};
- $('.nc-overlay').hidden=false;$('.nc-overlay').innerHTML='<div class="nc-overlay-inner"><div class="nc-chip">'+(isDaisy?'DANCE BATTLE · SHOW COMPLETE':'NEON CIRCUIT · RUN COMPLETE')+'</div><h2>'+(win?'NEW HIGH SCORE!':'CHALLENGE COMPLETE')+'</h2><div class="nc-grade">'+grade+'</div><div class="nc-resultscore">'+String(session.score).padStart(6,'0')+'</div><p>Accuracy <b>'+accuracy+'%</b> · Max Combo <b>'+session.best+'×</b><br>'+(win?'You beat the arcade target!':'Your rival keeps the record for now.')+'</p><button type="button" class="nc-action nc-claim">SEE CHARACTER REACTION</button></div>';
+ $('.nc-overlay').hidden=false;$('.nc-overlay').innerHTML='<div class="nc-overlay-inner"><div class="nc-chip">'+(isDaisy?'DANCE BATTLE · SHOW COMPLETE':'NEON CIRCUIT · RUN COMPLETE')+'</div><h2>'+(win?'NEW HIGH SCORE!':'CHALLENGE COMPLETE')+'</h2><div class="nc-grade">'+grade+'</div><div class="nc-resultscore">'+String(session.score).padStart(6,'0')+'</div><p>Accuracy <b>'+accuracy+'%</b> · Max Combo <b>'+session.best+'×</b><br>'+(win?'You beat the arcade target!':'Your rival keeps the record for now.')+'</p><button type="button" class="nc-action nc-claim">'+(options.freePlay?'BACK TO PIXEL PALACE':'SEE CHARACTER REACTION')+'</button></div>';
  $('.nc-claim').addEventListener('click',()=>{if(active!==session)return;cleanup(false);options.onComplete(result);},{once:true});$('.nc-claim').focus();}
  function frame(now){if(!session.playing||active!==session)return;const elapsed=now-session.start;for(const n of session.notes){if(!n.done&&elapsed>n.at+WINDOW){n.done=true;session.combo=0;session.fever=Math.max(0,session.fever-25);session.misses++;feedback('MISS',false,n.lane);hud();}}
  scene(elapsed);session.particles=session.particles.filter(p=>now-p.born<p.duration);
