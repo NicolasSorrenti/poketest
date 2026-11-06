@@ -60,6 +60,47 @@ const STEP=610,DAISY_STEP=60000/136,LEAD=1700,TRAVEL=1600,WINDOW=190,REPEATS=10;
 const LONG_PATTERN=Array.from({length:REPEATS},()=>PATTERN).flat();
 const COLORS=['#40dafa','#ffbd55','#ff55cb'];
 let active=null;
+// Original, programmatic four-beat backing track. No external music assets.
+function startArcadeAudio(bpm,leadMs){
+ const AudioContextClass=root.AudioContext||root.webkitAudioContext;
+ if(!AudioContextClass)return null;
+ let ac,clock=null,step=0,next=0,stopped=false;
+ try{ac=new AudioContextClass();ac.resume().catch(()=>{});}catch(_){return null;}
+ const master=ac.createGain();master.gain.value=.15;master.connect(ac.destination);
+ const noise=ac.createBuffer(1,Math.floor(ac.sampleRate*.16),ac.sampleRate);
+ const samples=noise.getChannelData(0);for(let i=0;i<samples.length;i++)samples[i]=Math.random()*2-1;
+ const tone=(when,freq,duration,wave,volume,endFreq)=>{
+  const osc=ac.createOscillator(),env=ac.createGain();osc.type=wave;osc.frequency.setValueAtTime(freq,when);
+  if(endFreq)osc.frequency.exponentialRampToValueAtTime(Math.max(1,endFreq),when+duration);
+  env.gain.setValueAtTime(.0001,when);env.gain.exponentialRampToValueAtTime(volume,when+.006);
+  env.gain.exponentialRampToValueAtTime(.0001,when+duration);
+  osc.connect(env);env.connect(master);osc.start(when);osc.stop(when+duration+.02);
+ };
+ const percussion=(when,volume,filterFreq,decay)=>{
+  const src=ac.createBufferSource(),filter=ac.createBiquadFilter(),gain=ac.createGain();
+  src.buffer=noise;filter.type='highpass';filter.frequency.value=filterFreq;
+  gain.gain.setValueAtTime(volume,when);gain.gain.exponentialRampToValueAtTime(.0001,when+decay);
+  src.connect(filter);filter.connect(gain);gain.connect(master);src.start(when);src.stop(when+decay+.008);
+ };
+ const beatSeconds=60/bpm;
+ next=ac.currentTime+leadMs/1000;
+ const bass=[82.41,82.41,110,82.41,98,98,123.47,73.42];
+ function schedule(){
+  if(stopped)return;
+  while(next<ac.currentTime+.22){
+   const beat=step%8,section=step%4;
+   if(section===0||section===2)tone(next,155,.17,'sine',.8,45);
+   if(section===1||section===3)percussion(next,.18,1350,.115);
+   for(let subdivision=0;subdivision<2;subdivision++)
+    percussion(next+subdivision*beatSeconds/2,.045,6200,.035);
+   tone(next,bass[beat],beatSeconds*.56,'sawtooth',.06);
+   if(beat===7)tone(next+beatSeconds*.5,164.81,.14,'triangle',.055);
+   next+=beatSeconds;step++;
+  }
+ }
+ schedule();clock=setInterval(schedule,45);
+ return {stop(){if(stopped)return;stopped=true;clearInterval(clock);master.gain.setTargetAtTime(.0001,ac.currentTime,.05);setTimeout(()=>ac.close().catch(()=>{}),220);}};
+}
 function open(options={}){
  if(active||typeof options.onComplete!=='function')return false;
  if(!document.getElementById('neo-circuit-v2-style')){const st=document.createElement('style');st.id='neo-circuit-v2-style';st.textContent=CSS;document.head.append(st);}
@@ -75,7 +116,7 @@ function open(options={}){
  const canvas=$('.nc-canvas'),ctx=canvas.getContext('2d'),notesCanvas=$('.nc-note-canvas'),notesCtx=notesCanvas.getContext('2d');
  if(!ctx||!notesCtx){host.remove();return false;}
  const previous=document.activeElement;
- const session={host,frame:0,playing:false,finished:false,start:0,notes:LONG_PATTERN.map((lane,i)=>({lane,at:LEAD+i*(isDaisy?DAISY_STEP:STEP),done:false})),duration:LEAD+(LONG_PATTERN.length-1)*(isDaisy?DAISY_STEP:STEP)+WINDOW+200,fever:0,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],fxUntil:0,feedbackTimer:0,lastTime:0};
+ const session={host,frame:0,playing:false,finished:false,audio:null,start:0,notes:LONG_PATTERN.map((lane,i)=>({lane,at:LEAD+i*(isDaisy?DAISY_STEP:STEP),done:false})),duration:LEAD+(LONG_PATTERN.length-1)*(isDaisy?DAISY_STEP:STEP)+WINDOW+200,fever:0,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],fxUntil:0,feedbackTimer:0,lastTime:0};
  active=session;
  const dancer=isDaisy?setupDaisyActor($('.nc-actor-canvas')):null;
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
@@ -134,7 +175,7 @@ function open(options={}){
   }
  }
  function RGOverlay(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r);}
- function cleanup(cancel){if(active!==session)return;if(dancer)dancer.dispose();cancelAnimationFrame(session.frame);clearTimeout(session.feedbackTimer);document.removeEventListener('keydown',keydown,true);root.removeEventListener('resize',resize);host.remove();active=null;if(previous?.isConnected&&previous.focus)previous.focus({preventScroll:true});if(cancel)options.onCancel?.();}
+ function cleanup(cancel){if(active!==session)return;session.audio?.stop();if(dancer)dancer.dispose();cancelAnimationFrame(session.frame);clearTimeout(session.feedbackTimer);document.removeEventListener('keydown',keydown,true);root.removeEventListener('resize',resize);host.remove();active=null;if(previous?.isConnected&&previous.focus)previous.focus({preventScroll:true});if(cancel)options.onCancel?.();}
  function hud(){if(isDaisy){$('.nc-fever-fill').style.width=session.fever+'%';}$('.nc-score').textContent=String(session.score).padStart(6,'0');$('.nc-combo').textContent='× '+session.combo;$('.nc-accuracy').textContent=(session.hits+session.misses?Math.round(session.quality/(session.hits+session.misses)):100)+'%';}
  function feedback(message,good=true,lane=1){const x=$('.nc-eval');x.textContent=message;x.style.color=good?'#ffe7a0':'#ff7cbb';x.style.opacity='1';clearTimeout(session.feedbackTimer);session.feedbackTimer=setTimeout(()=>{if(host.isConnected)x.style.opacity='0';},330);if(isDaisy&&good){$('.nc-dance-comment').textContent=session.combo>=12?'You really can dance! ♥':session.combo>=5?'That’s the rhythm! Keep going!':'Nice move!';}else if(isDaisy&&!good){$('.nc-dance-comment').textContent='You’ve got this — follow my lead!';}if(good){const pos=project(lane,1);for(let i=0;i<15;i++){const a=Math.PI*2*i/15;session.particles.push({x:pos.x,y:377,vx:Math.cos(a)*(28+(i%3)*17),vy:Math.sin(a)*(25+(i%4)*12),born:performance.now(),duration:410+(i%3)*110,color:COLORS[lane],radius:2+(i%3)});}session.particles=session.particles.slice(-100);}}
  function press(lane){if(!session.playing)return;const elapsed=performance.now()-session.start;let target=null,closest=Infinity;for(const n of session.notes){const d=Math.abs(n.at-elapsed);if(!n.done&&n.lane===lane&&d<closest){closest=d;target=n;}}
@@ -145,14 +186,14 @@ function open(options={}){
  document.addEventListener('keydown',keydown,true);root.addEventListener('resize',resize);
  $$('.nc-pad').forEach(p=>p.addEventListener('pointerdown',e=>{e.preventDefault();press(Number(p.dataset.lane));}));
  $('.nc-close').addEventListener('click',()=>cleanup(true));$('.nc-cancel').addEventListener('click',()=>cleanup(true));
- function finish(){session.playing=false;session.finished=true;cancelAnimationFrame(session.frame);const accuracy=Math.round(session.quality/session.notes.length),grade=accuracy>=93?'S':accuracy>=80?'A':accuracy>=65?'B':accuracy>=45?'C':'D',win=session.score>=155000;const result={game:'arcade_highscore',score:session.score,accuracy,bestCombo:session.best,grade,win};
+ function finish(){session.playing=false;session.finished=true;session.audio?.stop();cancelAnimationFrame(session.frame);const accuracy=Math.round(session.quality/session.notes.length),grade=accuracy>=93?'S':accuracy>=80?'A':accuracy>=65?'B':accuracy>=45?'C':'D',win=session.score>=155000;const result={game:'arcade_highscore',score:session.score,accuracy,bestCombo:session.best,grade,win};
  $('.nc-overlay').hidden=false;$('.nc-overlay').innerHTML='<div class="nc-overlay-inner"><div class="nc-chip">NEON CIRCUIT · RUN COMPLETE</div><h2>'+(win?'NEW HIGH SCORE!':'CHALLENGE COMPLETE')+'</h2><div class="nc-grade">'+grade+'</div><div class="nc-resultscore">'+String(session.score).padStart(6,'0')+'</div><p>Accuracy <b>'+accuracy+'%</b> · Max Combo <b>'+session.best+'×</b><br>'+(win?'You beat the arcade target!':'Your rival keeps the record for now.')+'</p><button type="button" class="nc-action nc-claim">SEE CHARACTER REACTION</button></div>';
  $('.nc-claim').addEventListener('click',()=>{if(active!==session)return;cleanup(false);options.onComplete(result);},{once:true});$('.nc-claim').focus();}
  function frame(now){if(!session.playing||active!==session)return;const elapsed=now-session.start;for(const n of session.notes){if(!n.done&&elapsed>n.at+WINDOW){n.done=true;session.combo=0;session.fever=Math.max(0,session.fever-25);session.misses++;feedback('MISS',false,n.lane);hud();}}
  scene(elapsed);session.particles=session.particles.filter(p=>now-p.born<p.duration);
  $('.nc-meter-fill').style.width=Math.min(100,elapsed/session.duration*100)+'%';const clock=ms=>{const x=Math.floor(ms/1000);return Math.floor(x/60)+':'+String(x%60).padStart(2,'0');};$('.nc-progress-text').textContent=clock(Math.min(elapsed,session.duration))+' / '+clock(session.duration);
  if(elapsed>=session.duration){finish();return;}session.frame=requestAnimationFrame(frame);}
- $('.nc-start').addEventListener('click',()=>{if(session.playing||session.finished)return;session.playing=true;$('.nc-overlay').hidden=true;session.start=performance.now();session.frame=requestAnimationFrame(frame);hud();},{once:true});
+ $('.nc-start').addEventListener('click',()=>{if(session.playing||session.finished)return;session.playing=true;$('.nc-overlay').hidden=true;session.start=performance.now();session.audio=startArcadeAudio(isDaisy?136:60000/STEP,LEAD);session.frame=requestAnimationFrame(frame);hud();},{once:true});
  scene(0);$('.nc-start').focus();return true;
 }
 // A bounded, continuous inverse-warp on the *existing* Daisy sprite.
@@ -169,7 +210,7 @@ function open(options={}){
    if(disposed)return;
    sc.clearRect(0,0,W,H);
    // Original RPG art; portrait crop favors the face and upper body.
-   sc.drawImage(img,0,0,img.naturalWidth,img.naturalHeight,0,0,W,H);
+   sc.drawImage(img,0,0,img.naturalWidth,img.naturalHeight,6,9,W-12,H-18);
    original=sc.getImageData(0,0,W,H);ready=true;
   };
   img.onerror=()=>{if(!disposed&&!img.src.includes('/idle.png'))img.src='/rpg-assets/characters/daisy/idle.png';};
