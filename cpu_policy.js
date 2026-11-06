@@ -286,7 +286,9 @@ function strongestUsableOpponentAttack(o,defender){
  const moves=enemy.effectiveAttacks||card(enemy.id)?.attacks||[];
  const plusPower=livePlusPowerBonus(o,'opponent');
  return moves.reduce((best,attack,index)=>{
-  if(!eligibleAttack(fromEnemy,enemy,attack,index)||
+  // Bench-target attacks do not threaten the defending Active.
+  if(ATTACK.compile(attack)?.kind==='bench-target'||
+     !eligibleAttack(fromEnemy,enemy,attack,index)||
      !canPayEnergy(attack.cost||[],energyPool(enemy)))return best;
   const damage=estimatedDamage(attack,enemy,defender,o.opponent.bench.length);
   return Math.max(best,damage>0?damage+plusPower:damage);
@@ -1545,7 +1547,9 @@ function projectedAttackValue(active,defender,turnSerial=0,benchCount=null){
  let best=0;
  for(let i=0;i<attacks.length;i++){
   const attack=attacks[i];
-  if(!ATTACK.compile(attack)||!canPayEnergy(attack.cost||[],pool))continue;
+  // Forecast Active damage only: Bench-target attacks cannot hit it.
+  const program=ATTACK.compile(attack);
+  if(!program||program.kind==='bench-target'||!canPayEnergy(attack.cost||[],pool))continue;
   // A once-used Gym attack is permanently unavailable; unlike cooldowns,
   // advancing the forecast turn cannot make this attack legal again.
   if(active.gymAttackOnce?.includes(i))continue;
