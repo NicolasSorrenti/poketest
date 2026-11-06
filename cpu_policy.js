@@ -102,6 +102,7 @@ function observation(game,side){
  return {phase:view.phase,turn:view.turn,round:view.round,turnSerial:game.turnSerial,over:view.over,
   classicRules,self,opponent,stadium:view.stadium,
   pendingTrainerTarget:selectedIndex('target'),pendingTrainerSource:selectedIndex('source'),
+  pendingTrainerName:ownedPlan?card(ownedPlan.cardId)?.name:null,
   decision:view.pendingDecision,setupReady:!!game.setupReady[side],mulliganBonus:view.mulliganBonus};
 }
 const card=id=>CATALOG.get(id);
@@ -610,6 +611,23 @@ function choiceValue(option,decision,o,cfg){
   const n=Number(id.split(':')[1]),own=/your|friendly|own|promot|receiv|retreat/i.test(ctx)&&!/opponent|opposing|enemy/i.test(ctx);
   const target=slotUnit(own?o.self:o.opponent,n);
   if(!target)return 0;
+  // The Classic Trainer prompt is shared by many cards ("Choose one of your
+  // Pokémon"). Use the CPU-owned pending Trainer name to select the patient,
+  // rather than letting the generic setup scorer heal an undamaged attacker.
+  if(cfg?.level===8&&/^slot:/.test(id)&&
+     (o.pendingTrainerName==='Potion'||o.pendingTrainerName==='Super Potion')&&
+     /Choose one of your Pokémon/i.test(ctx)){
+   const cap=o.pendingTrainerName==='Super Potion'?40:20;
+   const healed=Math.min(cap,target.damage||0);
+   if(healed<=0)return -500;
+   const saved=n===-1&&likelyOpponentKnockout(o,target,true)&&
+    !likelyOpponentKnockout(o,{...target,damage:target.damage-healed},true);
+   // A Super Potion discards Energy after choosing the patient. Preserve
+   // valuable attachments by preferring a rescue over cosmetic healing.
+   const energyCost=o.pendingTrainerName==='Super Potion'?
+    Math.max(0,energyValue(target,(target.energies||[])[0]||''))*.35:0;
+   return healed*2+(saved?150:0)-energyCost;
+  }
   if(cfg?.level>=3&&/^slot:/.test(id)&&/^Choose opposing Pokémon$/i.test(ctx))
    return energyDenialValue(target,o.self.active,n===-1,
      n===-1?o.opponent.bench.length:Math.max(0,o.opponent.bench.length-1));
