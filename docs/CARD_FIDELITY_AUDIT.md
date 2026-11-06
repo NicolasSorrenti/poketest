@@ -1331,3 +1331,16 @@ Exactly five: **neo4-7 Dark Houndoom, neo4-8 Dark Porygon2, neo4-12 Light Arcani
 - **neo4-15 Light Togetic / Gift — PARTIAL:** No named on-play handler found. Scenario: evolve from hand; opponent searches a Pokémon Tool or declines, player independently searches or declines; verify both deck shuffles, Tool visibility, zero targets, full hand and same-turn attack availability.
 
 No confirmed reducer-executed gameplay fix; no tests/CI/new PR/Apex modifications. Ledger: **1 verified, 491 partial, 631 unreviewed**; **1,122 not fully verified**.
+
+
+## 2026-11-06 — five Neo Destiny printings (source-only)
+
+Current live route: RPG bridge `rpg_duel_bridge.js` hands off to the Classic duel service `classic_local_service.js`, which calls `headless_duel.js`; reducer imports `classic_power_core.js`, `attack_effects_core.js`, and `special_conditions_core.js`. No legacy reducer counted. GitHub connector provides no Node execution runtime: **zero reducer scenarios executed**. All five printings remain **PARTIAL**. Imported TCGdex card text was inspected; independent card-image/errata/historical-ruling confirmation is incomplete.
+
+- `neo4-18` Dark Magcargo — Hot Plate is PASSIVE and the hand-to-Bench action calls `benched`. Confirmed defect: `neo92BenchFromDiscard` also called `benched`, inflicting Hot Plate damage on a Pokémon put on Bench from discard by Guiding Flame rather than from hand. Removed this incorrect hook in commit `eb09ef58`. Ball of Flame optional Fire discard, opposing Bench target, and KO/Prize decisions remain unexecuted. Recheck Hot Plate on both sides' hand placements, Baby/Basic eligibility, Special Condition suppression, simultaneous Minefield damage, KO and Prize flow.
+- `neo4-20` Dark Slowking — Cunning is ACTIVATED and registered once per turn; source flips, privately reveals top opposing deck card on heads and optionally shuffles opponent deck. Simulate heads/tails, empty deck, decline/accept shuffle, turn ownership and Mind Shock ignoring Weakness/Resistance.
+- `neo4-25` Light Machamp — Tag Team is ONPLAY; implementation heals current Active by 30 and switches evolved Bench Machamp Active. Imported wording is malformed, so printed text and precise trigger/target must be independently checked before any behavioral patch. Simulate Bench evolution, damaged Active, no damage, Special Conditions, switching, KO/promotion and Beatdown bonus coin.
+- `neo4-27` Unown [G] — [Give] is not in the activated registry; printed catalogue requires G-I-V-E on Bench, coin heads, Basic Energy deck search, attachment to own Pokémon and shuffle. Simulate complete/incomplete letters, tails, empty deck, full Bench, target selection and turn ownership. Hidden Power not executed.
+- `neo4-28` Unown [H] — [Help] is ACTIVATED, verifies H-E-L-P on Bench and shuffles hand into deck before drawing the same count. Simulate hand of 0/multiple cards, deck exhaustion, duplicate letters, Special Conditions, redraw and once-per-turn restrictions. Hidden Power not executed.
+
+No tests, test scripts, workflows, CI gates or new PRs were created. Apex code left unchanged. Ledger after this pass: 1 fully verified, 496 partial, 626 unreviewed; **1,122 not fully verified**.
