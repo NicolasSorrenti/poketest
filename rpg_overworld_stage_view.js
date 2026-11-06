@@ -42,7 +42,7 @@
    button.textContent=item.label;
    button.disabled=!!item.disabled;
    if(item.reason)button.title=item.reason;
-   button.onclick=()=>item.continue?onContinue?.():onAction?.(item.action);
+   button.onclick=()=>item.continue||item.action==='activityContinue'?onContinue?.():onAction?.(item.action);
    choices.append(button);
   }
   if(newPrompt){
