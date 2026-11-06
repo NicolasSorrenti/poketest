@@ -9697,13 +9697,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Gnaw",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live-engine source-only review: cards/base5.json -> attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js, via classic_local_service.js and rpg_duel_bridge.js. Gnaw 20 and Hyper Fang 50 coin-failure; review coin-failure compile and attack turn finish, including Confusion and damage prevention. No reducer execution or independently adjudicated historical ruling."
+          ],
+          "scope": "Gnaw 20 and Hyper Fang 50 coin-failure; review coin-failure compile and attack turn finish, including Confusion and damage prevention."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hyper Fang",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live-engine source-only review: cards/base5.json -> attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js, via classic_local_service.js and rpg_duel_bridge.js. Gnaw 20 and Hyper Fang 50 coin-failure; review coin-failure compile and attack turn finish, including Confusion and damage prevention. No reducer execution or independently adjudicated historical ruling."
+          ],
+          "scope": "Gnaw 20 and Hyper Fang 50 coin-failure; review coin-failure compile and attack turn finish, including Confusion and damage prevention."
         }
       ]
     },
@@ -9716,13 +9724,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Dig Under",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live-engine source-only review: cards/base5.json -> attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js, via classic_local_service.js and rpg_duel_bridge.js. Dig Under selects opposing Active or Bench, 10 without Weakness/Resistance; target-any path adds damage directly, requiring investigation of active protection and damage modifiers. No reducer execution or independently adjudicated historical ruling."
+          ],
+          "scope": "Dig Under selects opposing Active or Bench, 10 without Weakness/Resistance; target-any path adds damage directly, requiring investigation of active protection and damage modifiers."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live-engine source-only review: cards/base5.json -> attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js, via classic_local_service.js and rpg_duel_bridge.js. Dig Under selects opposing Active or Bench, 10 without Weakness/Resistance; target-any path adds damage directly, requiring investigation of active protection and damage modifiers. No reducer execution or independently adjudicated historical ruling."
+          ],
+          "scope": "Dig Under selects opposing Active or Bench, 10 without Weakness/Resistance; target-any path adds damage directly, requiring investigation of active protection and damage modifiers."
         }
       ]
     },
@@ -9735,7 +9751,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Wrap",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live-engine source-only review: cards/base5.json -> attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js, via classic_local_service.js and rpg_duel_bridge.js. Wrap 10 with heads Paralysis; coin-status compiler and status application reviewed, KO/turn and status blocking pending. No reducer execution or independently adjudicated historical ruling."
+          ],
+          "scope": "Wrap 10 with heads Paralysis; coin-status compiler and status application reviewed, KO/turn and status blocking pending."
         }
       ]
     },
@@ -9773,13 +9793,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live-engine source-only review: cards/base5.json -> attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js, via classic_local_service.js and rpg_duel_bridge.js. Sand-attack 10 and next-turn attack-prevention coin; attackPenalty stored on defender and checked before Confusion, switching/expiry and costs pending. No reducer execution or independently adjudicated historical ruling."
+          ],
+          "scope": "Sand-attack 10 and next-turn attack-prevention coin; attackPenalty stored on defender and checked before Confusion, switching/expiry and costs pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Sand-attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live-engine source-only review: cards/base5.json -> attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js, via classic_local_service.js and rpg_duel_bridge.js. Sand-attack 10 and next-turn attack-prevention coin; attackPenalty stored on defender and checked before Confusion, switching/expiry and costs pending. No reducer execution or independently adjudicated historical ruling."
+          ],
+          "scope": "Sand-attack 10 and next-turn attack-prevention coin; attackPenalty stored on defender and checked before Confusion, switching/expiry and costs pending."
         }
       ]
     },
@@ -9838,13 +9866,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live-engine source-only review: cards/base5.json -> attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js, via classic_local_service.js and rpg_duel_bridge.js. Tackle 10 and Poison Gas 20 with heads Poison; coin-status path inspected, prevention, KO and between-turn Poison pending. No reducer execution or independently adjudicated historical ruling."
+          ],
+          "scope": "Tackle 10 and Poison Gas 20 with heads Poison; coin-status path inspected, prevention, KO and between-turn Poison pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Poison Gas",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-05 live-engine source-only review: cards/base5.json -> attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js, via classic_local_service.js and rpg_duel_bridge.js. Tackle 10 and Poison Gas 20 with heads Poison; coin-status path inspected, prevention, KO and between-turn Poison pending. No reducer execution or independently adjudicated historical ruling."
+          ],
+          "scope": "Tackle 10 and Poison Gas 20 with heads Poison; coin-status path inspected, prevention, KO and between-turn Poison pending."
         }
       ]
     },
