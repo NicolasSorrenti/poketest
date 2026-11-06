@@ -31,6 +31,7 @@ const CSS=String.raw`
 .nc-dance-tag{font-size:11px;font-weight:900;letter-spacing:.09em;color:#fff;background:#35133dcc;border:1px solid #f487e0;padding:7px 10px;border-radius:40px;box-shadow:0 0 12px #fb54d766}
 .nc-dance-fever{height:10px;width:24%;min-width:55px;max-width:158px;border-radius:20px;background:#201132;border:1px solid #d9a3f8;overflow:hidden;box-shadow:0 0 12px #aa54ff80}
 .nc-dance-fever>div{height:100%;width:0;background:linear-gradient(90deg,#ff61c8,#ffcb59);transition:width .15s}
+.nc-daisy-import{display:inline-block;cursor:pointer;margin:6px 8px;padding:9px 12px;background:#531c64;border:1px solid #e98dec;border-radius:10px;font-size:12px;font-weight:900;color:#fff;text-align:center}.nc-daisy-import-status{font-size:11px;color:#d9bbeb;margin:2px auto 9px;max-width:360px}
 .nc-dance-comment{position:absolute;bottom:13px;right:10px;z-index:3;max-width:42%;padding:7px 12px;border-radius:12px;border:1px solid #f683e8;background:#230e3edc;color:#fce6ff;font-size:11px;font-weight:700;line-height:1.3;text-shadow:0 1px 3px #000;box-shadow:0 0 15px #ea4cdd44;pointer-events:none;display:none}
 .nc-daisy .nc-dance-comment{display:block}
 .nc-daisy .nc-eval{z-index:4;top:48%}
@@ -121,6 +122,29 @@ function open(options={}){
  const asClock=ms=>{const n=Math.floor(ms/1000);return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
  $('.nc-progress-text').textContent='0:00 / '+asClock(session.duration);
  const dancer=isDaisy?setupDaisyActor($('.nc-actor-canvas')):null;
+ if(isDaisy){
+  const begin=$('.nc-start'),pick=document.createElement('label'),upload=document.createElement('input');
+  pick.className='nc-daisy-import';pick.textContent='✦ USAR MI IMAGEN DE DAISY';
+  pick.title='Elegí el PNG de Daisy. Se guarda únicamente en este navegador.';
+  upload.type='file';upload.accept='image/png,image/webp,image/jpeg';upload.style.display='none';
+  pick.append(upload);begin.before(pick);
+  const status=document.createElement('div');status.className='nc-daisy-import-status';
+  status.textContent='Podés cargar tu PNG de Daisy para usarlo en este Dance Battle.';pick.after(status);
+  upload.addEventListener('change',()=>{
+   const file=upload.files?.[0];if(!file)return;
+   const temp=URL.createObjectURL(file),img=new Image();
+   img.onload=()=>{try{
+    const maxWidth=768,scale=Math.min(1,maxWidth/img.naturalWidth),c=document.createElement('canvas');
+    c.width=Math.max(1,Math.round(img.naturalWidth*scale));c.height=Math.max(1,Math.round(img.naturalHeight*scale));
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    const value=c.toDataURL('image/webp',.82);
+    try{localStorage.setItem('neo-daisy-dance-portrait',value);}catch(_){}
+    dancer?.setSource(value);status.textContent='✓ PNG de Daisy cargado para esta partida.';
+   }catch(_){status.textContent='No se pudo preparar la imagen.';}finally{URL.revokeObjectURL(temp);}};
+   img.onerror=()=>{URL.revokeObjectURL(temp);status.textContent='No se pudo abrir el archivo.';};img.src=temp;
+  });
+ }
+
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
  function resetCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(2,root.devicePixelRatio||1);const w=Math.max(1,Math.floor(r.width*dpr)),h=Math.max(1,Math.floor(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}if(notesCanvas.width!==w||notesCanvas.height!==h){notesCanvas.width=w;notesCanvas.height=h;}ctx.setTransform(w/800,0,0,h/445,0,0);notesCtx.setTransform(w/800,0,0,h/445,0,0);}
  const project=(lane,p)=>{const y=73+Math.pow(Math.max(0,Math.min(1,p)),1.27)*304;const width=110+Math.pow(p,1.1)*474;const center=400;const left=center-width/2;return{x:left+width*(lane+.5)/3,y,w:width/3};};
@@ -216,7 +240,8 @@ function open(options={}){
    original=sc.getImageData(0,0,W,H);ready=true;
   };
   img.onerror=()=>{if(!disposed&&!img.src.includes('/idle.png'))img.src='/rpg-assets/characters/daisy/idle.png';};
-  img.src='/rpg-assets/characters/daisy/dance-portrait.webp';
+  let storedPortrait=null;try{storedPortrait=localStorage.getItem('neo-daisy-dance-portrait');}catch(_){}
+  img.src=storedPortrait||'/rpg-assets/characters/daisy/dance-portrait.webp';
   const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const mask=(nx,ny,z)=>{const r=Math.hypot((nx-z.x)/z.rx,(ny-z.y)/z.ry);return r>=1?0:(1-smooth(Math.max(0,(r-.45)/.55)))**2;};
   function render(ms,fever=0){
@@ -246,7 +271,7 @@ function open(options={}){
    const tilt=Math.sin(phase)*.018;
    c.save();c.translate(W/2,H*.54+bounce);c.rotate(tilt);c.drawImage(out,-W/2,-H*.54,W,H);c.restore();
   }
-  return {render,dispose(){disposed=true;img.onload=img.onerror=null;}};
+  return {render,setSource(value){ready=false;last=-Infinity;img.src=value;},dispose(){disposed=true;img.onload=img.onerror=null;}};
  }
  root.NeoRpgArcadeGame=Object.freeze({open,isOpen:()=>!!active});
 })(window);
