@@ -619,7 +619,11 @@ function choiceValue(option,decision,o,cfg){
      /Choose one of your Pokémon/i.test(ctx)){
    const cap=o.pendingTrainerName==='Super Potion'?40:20;
    const healed=Math.min(cap,target.damage||0);
-   if(healed<=0)return -500;
+   // Super Potion must discard an attached Energy from its chosen patient.
+   // Match trainerOpportunity() and the play-card scorer: a damaged but
+   // Energy-free Bench Pokémon cannot be the recipient of this effect.
+   if(healed<=0||(o.pendingTrainerName==='Super Potion'&&
+      !(target.energies||[]).length))return -500;
    const saved=n===-1&&likelyOpponentKnockout(o,target,true)&&
     !likelyOpponentKnockout(o,{...target,damage:target.damage-healed},true);
    // A Super Potion discards Energy after choosing the patient. Preserve
