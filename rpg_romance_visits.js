@@ -435,6 +435,146 @@
   barks:["Ah…","This is lovely.","Yes…","I'm happy we're here.","Stay a little longer."],
   outro:["I'm really glad we shared that moment.","I'd love another evening like this."]
  });
+ // Movement tempo per subtitle, 0 = slow and 1 = fast.
+ // Each character has their own five-beat rhythm to fit their dialogue.
+ const tempoProfiles=Object.freeze({
+ "akari": [
+  0.2,
+  0.58,
+  0.37,
+  0.85,
+  0.55
+ ],
+ "barb": [
+  0.9,
+  0.88,
+  0.3,
+  1,
+  0.85
+ ],
+ "camila": [
+  0.22,
+  0.18,
+  0.66,
+  0.78,
+  0.35
+ ],
+ "daisy": [
+  0.78,
+  0.62,
+  1,
+  0.57,
+  0.7
+ ],
+ "elena": [
+  0.08,
+  0.47,
+  0.24,
+  0.39,
+  0.1
+ ],
+ "hana": [
+  0.75,
+  0.6,
+  0.84,
+  0.55,
+  0.1
+ ],
+ "iris": [
+  0.56,
+  0.52,
+  0.16,
+  0.58,
+  0.05
+ ],
+ "jicy": [
+  0.88,
+  0.65,
+  0.16,
+  0.92,
+  0.13
+ ],
+ "jinx": [
+  0.92,
+  0.83,
+  0.7,
+  1,
+  0.42
+ ],
+ "kaede": [
+  0.19,
+  0.65,
+  0.4,
+  0.72,
+  0.32
+ ],
+ "laca": [
+  0.95,
+  0.87,
+  1,
+  0.42,
+  0.2
+ ],
+ "lyla": [
+  0.03,
+  0.08,
+  0.56,
+  0.66,
+  0.16
+ ],
+ "marina": [
+  0.02,
+  0.35,
+  0.09,
+  0.43,
+  0
+ ],
+ "reina": [
+  0.86,
+  0.78,
+  0.53,
+  1,
+  0.65
+ ],
+ "rina": [
+  0.82,
+  0.5,
+  0.62,
+  0.93,
+  0.5
+ ],
+ "shiori": [
+  0,
+  0.05,
+  0.18,
+  0.35,
+  0
+ ],
+ "sierra": [
+  0.35,
+  0.55,
+  0.47,
+  0.3,
+  0.12
+ ],
+ "yuna": [
+  1,
+  0.84,
+  1,
+  0.97,
+  0.91
+ ]
+});
+ const slowTimings=Object.freeze({bottomHold:400,moveUp:300,topHold:200,moveDown:300});
+ const fastTimings=Object.freeze({bottomHold:150,moveUp:100,topHold:50,moveDown:100});
+ function timingFor(id,index=0){
+  const beats=tempoProfiles[id]||[0.3,0.5,0.8,0.45,0.2];
+  const speed=Math.max(0,Math.min(1,Number(beats[(Math.abs(Math.trunc(index))||0)%beats.length])||0));
+  const result={visibleHeightPercent:50,easing:'ease-in-out'};
+  for(const key of ['bottomHold','moveUp','topHold','moveDown'])
+   result[key]=Math.round(slowTimings[key]+(fastTimings[key]-slowTimings[key])*speed);
+  return result;
+ }
  function dialogue(id){return visitDialogue[id]||defaultDialogue;}
  const known=new Set(characters);
  const cooldownDays=5;
@@ -541,6 +681,9 @@
     if(closed)return;
     subtitleIndex=(subtitleIndex+1)%lines.length;
     subtitle.textContent=lines[subtitleIndex];
+    // Retiming follows the displayed line, with smooth phase-preserving
+    // changes instead of restarting the image movement each time.
+    pan?.smoothUpdateConfig?.(timingFor(id,subtitleIndex),550);
    },2400);
   }
   function close(done){
@@ -564,7 +707,7 @@
       window.innerHeight*.72*2*img.naturalWidth/img.naturalHeight));
     viewport.style.width=width+'px';
     viewport.style.height=(width*img.naturalHeight/img.naturalWidth/2)+'px';
-    pan=panApi.attach(viewport,img,panApi.defaults);
+    pan=panApi.attach(viewport,img,timingFor(id,subtitleIndex));
     img.hidden=false;
     message.style.display='none';
     finish.disabled=false;
@@ -580,5 +723,5 @@
   return true;
  }
  return Object.freeze({characters,cooldownDays,chapterId,eligible,ready,pending,offerable,
-  isFirst,accept,complete,nextDay,path,dialogue,open});
+  isFirst,accept,complete,nextDay,path,dialogue,timingFor,open});
 });
