@@ -227,7 +227,12 @@ function knockoutChance(attack,attacker,defender,benchCount=null,damageBonus=0){
  const hp=hpRemaining(defender);
  if(hp<=0)return 0;
  // PlusPower applies after Weakness/Resistance, but only to positive damage.
- const program=ATTACK.compile(attack),kill=raw=>{
+ // Bench-target attacks do not knock out the defending Active. Treating
+ // their printed damage as an Active KO distorts PlusPower, attachment,
+ // retreat and Prize-race decisions that all consult this probability.
+ const program=ATTACK.compile(attack);
+ if(program?.kind==='bench-target')return 0;
+ const kill=raw=>{
   const dealt=damageAfterType(raw,attacker,defender);
   return dealt>0&&dealt+damageBonus>=hp;
  };
