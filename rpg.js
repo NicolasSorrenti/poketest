@@ -3,6 +3,7 @@
 const $=id=>document.getElementById(id),KEY='neoHarborRpgV1',STORY=window.NeoHarborStory,SCHEDULES=window.NeoRpgSchedules,WORLD=window.NeoRpgWorld,ARC=window.NeoRpgRivalArc,TOURNAMENTS=window.NeoRpgTournaments,COMPETE=window.NeoRpgCompetitiveLoop,BRIDGE=window.NeoRpgDuelBridge;
 const PACK=window.NeoRpgNarrativePack,SIDE=window.NeoRpgSideQuests,EPILOGUE=window.NeoRpgEpilogue,APPOINTMENTS=window.NeoRpgAppointments,INTENTIONS=window.NeoRpgIntentions,CG=window.NeoRpgCGGallery,PLANNER=window.NeoRpgDailyPlanner,SOCIAL=window.NeoRpgSocialActivities,DATES=window.NeoRpgPlannedDates,PRE=window.NeoRpgPreDuel,SITUATIONS=window.NeoRpgSituations,SLICE=window.NeoRpgSliceOfLife,JOURNEY=window.NeoRpgSeasonJourney,COLLECT=window.NeoRpgCollection,RPGD=window.NeoRpgDialogue,BONDS=window.NeoRpgBondRewards,PARTNER=window.NeoRpgPartnerDecks,VN=window.NeoRpgConversations;
 const TOURNAMENT_STORY=window.NeoRpgTournamentStory||null;
+const ROMANCE=window.NeoRpgRomanceVisits||null;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
 const LIVE_NEW=window.NeoRpgLiveEverydayEvents||{events:[],art:{},followups:{},artAt:()=>null,finalArt:()=>null,fallback:()=>null,byId:()=>null};
@@ -148,7 +149,12 @@ function finishStory(){
   recordCG('story_milestone',id,{eventId:e.id});
   if(chapterReward)log('Bond chapter '+chapterReward.chapter+' gift from '+cast[id].name+': '+chapterReward.label+'.');
  }catch(err){window.NeoRpgErrorReport?.capture(err,{source:'optional-story-effects',action:'storyFinish'});console.error('RPG optional story effects failed',err);}
- advance();state.selected=id;persist();closeSceneDialogue();
+ advance();state.selected=id;persist();
+ // The lover's first home invitation follows their final authored chapter.
+ if(ROMANCE?.offerable(state,id,STORY)&&ROMANCE.isFirst(state,id)){
+  showRomanceOffer(id);
+  timeSequence.flush();
+ }else closeSceneDialogue();
  if(chapterReward)$('notice').textContent='★ Chapter gift: '+chapterReward.label;
 }
 
@@ -236,7 +242,7 @@ function timeFlash(change,onDone=()=>{}){
  return true;
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},partner:null,partners:[],activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,phoneMessages:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},romanceVisits:{},romanceVisitPending:null,romanceVisitShowing:null,partner:null,partners:[],activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,phoneMessages:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
 function tournamentDayCup(){return TOURNAMENTS.cups.find(c=>c.day===state.day)||null;}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
@@ -256,6 +262,9 @@ if(!state.pendingDuel?.id||!cast[state.pendingDuel?.npc])state.pendingDuel=null;
 if(state.pendingDuel)PRE.hydrate(state.pendingDuel);
 for(const id of Object.keys(cast)){if(!state.bonds[id])state.bonds[id]={affection:0,trust:0,duels:0};}
 STORY.normalize(state);
+if(!state.romanceVisits||typeof state.romanceVisits!=='object'||Array.isArray(state.romanceVisits))state.romanceVisits={};
+if(state.romanceVisitPending&&!ROMANCE?.eligible(state,state.romanceVisitPending,STORY))state.romanceVisitPending=null;
+if(state.romanceVisitShowing&&!ROMANCE?.eligible(state,state.romanceVisitShowing,STORY))state.romanceVisitShowing=null;
  MEM?.hydrate(state);
 // The player's childhood friend begins with pre-existing trust, never automatic romance.
 if(cast.laca&&!state.flags.lacaChildhoodFriendInitialized){
@@ -850,6 +859,59 @@ for(const plan of missedAppointments)log('You missed your planned meet-up with '
 queueMandatory();if(state.day===beforeDay)arriveForScheduledPlan();persist();
 if(!suppressTimeFlash&&timeSequence.queue({beforeDay,beforeSlot,afterDay:state.day,afterSlot:state.slot,source:transitionSource}))timeSequence.flush();}
 function say(speaker,line,choices=[]){scene={speaker,line,choices};state.scene=scene;persist();render();}
+function showRomanceOffer(id){
+ if(!ROMANCE?.offerable(state,id,STORY)||!cast[id])return false;
+ const first=ROMANCE.isFirst(state,id);
+ scene={speaker:cast[id].name,
+  line:first?
+   "We've grown so close. Would you like to spend some time alone together at your apartment?":
+   "I loved our last evening together. Would you like me to visit your apartment again?",
+  choices:[["Yes, let's go to my apartment",'romanceAccept:'+id],
+   ['Maybe another time','romanceLater:'+id]],romanceOffer:id};
+ state.scene=scene;state.selected=id;persist();render();return true;
+}
+function startRomanceVisit(id){
+ if(!ROMANCE?.ready(state,id,STORY)||!cast[id]||state.location!=='home'||
+    state.romanceVisitShowing||state.pendingDuel||state.mandatoryEventState?.active||
+    state.activeStory||state.activeSliceOfLife||state.activeSituation||
+    state.activeSideQuest||state.activeArc||state.activeEncounter||
+    scene?.line||scene?.choices?.length||timeSequence.blocked||
+    arrivalGate||pendingOverworldArrival||window.NeoRpgTimeTransitions?.active)return false;
+ const first=ROMANCE.isFirst(state,id);
+ const lines=(first?[
+  "I'm glad you invited me. It feels different being together somewhere quiet.",
+  "Just the two of us, with nothing we have to prove to anyone.",
+  "I'd like to stay close to you for a while. Are you ready?"
+ ]:[
+  "It's wonderful to be back here with you.",
+  "I was looking forward to another quiet moment together.",
+  "Shall we enjoy some time just for us?"
+ ]).map(text=>({speaker:id,text}));
+ state.selected=id;
+ scene={speaker:cast[id].name,line:lines[0].text,choices:[['Continue ›','chatNext']],
+  dialogue:lines,index:0,afterChoices:[['Continue ›','romanceView:'+id]],romanceNpc:id};
+ state.scene=scene;persist();render();return true;
+}
+function openRomanceVisit(id){
+ if(state.romanceVisitShowing!==id||document.getElementById('neoRomanceVisitCG'))return;
+ if(!ROMANCE?.open({id,name:cast[id]?.name||id,discreet:liveDiscreetEnabled(),
+  onFinish:()=>{
+   if(!ROMANCE.complete(state,id,STORY))return;
+   state.romanceVisitShowing=null;
+   log('Shared a private moment with '+cast[id].name+'.');
+   activityOutcome(cast[id].name,"I'm so glad we had this time together. Let's do this again soon.",null,null,[],1,'romance_visit');
+  },
+  onCancel:()=>{
+   state.romanceVisitShowing=null;
+   scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;
+   persist();render();
+  }
+ })){
+  state.romanceVisitShowing=null;
+  say(cast[id]?.name||'Narrator','The private CG viewer is unavailable. You can try again later.',
+   [['Close','close']]);
+ }
+}
 function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null,creditBond=false){
  if(!Array.isArray(lines)||!lines.length)return;
  const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
