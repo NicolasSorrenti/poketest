@@ -1912,7 +1912,7 @@ function act(action,confirmedInvitationHandoff=false){
       const previous=state.arcadeRecords[id];
       state.arcadeRecords[id]={score:Math.max(previous?.score||0,result.score),lastScore:result.score,
        grade:result.grade,accuracy:result.accuracy,lastDay:state.day,win:result.win};
-      log('Played Neon Circuit with '+cast[id].name+': '+result.score+' points ('+result.grade+').');
+      log('Played '+(id==='daisy'?'Dance Battle':'Neon Circuit')+' with '+cast[id].name+': '+result.score+' points ('+result.grade+').');
       recordIntention('hangout');
       const memories=recordCG('hangout',id);
       const reaction=result.win?
