@@ -1001,7 +1001,16 @@ function finishActivityOutcome(){
   // If the time-wipe owns the next frame it will render after the wipe;
   // otherwise remove the old activity dialogue immediately.
   if(!timeSequence.blocked)render();
-  else notifyOverworldRendering();
+  else{
+   // On mobile, a suspended/replaced wipe can leave the old receipt on screen
+   // although the clock was already saved. Retry the queued visual handoff.
+   notifyOverworldRendering();
+   setTimeout(()=>{
+    if(scene?.activityAdvance||state.scene?.activityAdvance)return;
+    if(timeSequence.blocked&&!timeSequence.running)timeSequence.flush();
+    if(!timeSequence.blocked&&!arrivalGate)render();
+   },1600);
+  }
  }
  return true;
 }
@@ -1719,6 +1728,9 @@ function safeAct(action){
 }
 function act(action,confirmedInvitationHandoff=false){
  const [type,id,part]=action.split(':');
+ // Activity receipts must remain dismissible even when a mandatory gate or
+ // restored cloud scene is temporarily active; no reward is granted twice.
+ if(type==='activityContinue'&&(scene?.activityAdvance||state.scene?.activityAdvance))return finishActivityOutcome();
  const cupToday=tournamentDayCup();
  const activeScene=!!(state.activeSliceOfLife||state.activeStory||state.activeSideQuest||
   state.activeSituation||state.activeEncounter||state.activeArc);
