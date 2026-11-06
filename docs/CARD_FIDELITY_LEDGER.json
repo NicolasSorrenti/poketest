@@ -9820,13 +9820,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Bite",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: cards/base5.json printed-text import, attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js via classic_local_service.js and rpg_duel_bridge.js. Bite flat 10 and Poison Sting 20 with heads Poison; inspect coin/status and damage flow, Energy payment and opponent Active KO. No Node reducer execution; historical rulings/image verification pending."
+          ],
+          "scope": "Bite flat 10 and Poison Sting 20 with heads Poison; inspect coin/status and damage flow, Energy payment and opponent Active KO."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Poison Sting",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: cards/base5.json printed-text import, attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js via classic_local_service.js and rpg_duel_bridge.js. Bite flat 10 and Poison Sting 20 with heads Poison; inspect coin/status and damage flow, Energy payment and opponent Active KO. No Node reducer execution; historical rulings/image verification pending."
+          ],
+          "scope": "Bite flat 10 and Poison Sting 20 with heads Poison; inspect coin/status and damage flow, Energy payment and opponent Active KO."
         }
       ]
     },
@@ -9893,13 +9901,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: cards/base5.json printed-text import, attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js via classic_local_service.js and rpg_duel_bridge.js. Punch 20 for two Colorless and Kick 30 for Fighting plus two Colorless; inspect typed cost, Weakness/Resistance, attack selection and KO. No Node reducer execution; historical rulings/image verification pending."
+          ],
+          "scope": "Punch 20 for two Colorless and Kick 30 for Fighting plus two Colorless; inspect typed cost, Weakness/Resistance, attack selection and KO."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: cards/base5.json printed-text import, attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js via classic_local_service.js and rpg_duel_bridge.js. Punch 20 for two Colorless and Kick 30 for Fighting plus two Colorless; inspect typed cost, Weakness/Resistance, attack selection and KO. No Node reducer execution; historical rulings/image verification pending."
+          ],
+          "scope": "Punch 20 for two Colorless and Kick 30 for Fighting plus two Colorless; inspect typed cost, Weakness/Resistance, attack selection and KO."
         }
       ]
     },
@@ -9970,7 +9986,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Coin Hurl",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: cards/base5.json printed-text import, attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js via classic_local_service.js and rpg_duel_bridge.js. Coin Hurl chooses opponent Active or Bench before flipping; heads deals 20 ignoring Weakness/Resistance but not other effects, tails zero. Current target-any-coin compiler/roll exists; inspect target protection, damage prevention, KO and Prize path. No Node reducer execution; historical rulings/image verification pending."
+          ],
+          "scope": "Coin Hurl chooses opponent Active or Bench before flipping; heads deals 20 ignoring Weakness/Resistance but not other effects, tails zero. Current target-any-coin compiler/roll exists; inspect target protection, damage prevention, KO and Prize path."
         }
       ]
     },
@@ -9983,13 +10003,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Sleep Powder",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: cards/base5.json printed-text import, attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js via classic_local_service.js and rpg_duel_bridge.js. Sleep Powder and Poisonpowder are zero-damage attacks imposing Asleep/Poisoned unconditionally; inspect status overwrite, blockers, checkup, Energy costs and turn ownership. No Node reducer execution; historical rulings/image verification pending."
+          ],
+          "scope": "Sleep Powder and Poisonpowder are zero-damage attacks imposing Asleep/Poisoned unconditionally; inspect status overwrite, blockers, checkup, Energy costs and turn ownership."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Poisonpowder",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: cards/base5.json printed-text import, attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js via classic_local_service.js and rpg_duel_bridge.js. Sleep Powder and Poisonpowder are zero-damage attacks imposing Asleep/Poisoned unconditionally; inspect status overwrite, blockers, checkup, Energy costs and turn ownership. No Node reducer execution; historical rulings/image verification pending."
+          ],
+          "scope": "Sleep Powder and Poisonpowder are zero-damage attacks imposing Asleep/Poisoned unconditionally; inspect status overwrite, blockers, checkup, Energy costs and turn ownership."
         }
       ]
     },
@@ -10108,7 +10136,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Shell Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: cards/base5.json printed-text import, attack_effects_core.js -> classic_attack_extensions.js -> headless_duel.js via classic_local_service.js and rpg_duel_bridge.js. Shell Attack 20 for two Colorless; inspect attack availability, typed Energy substitution, Weakness/Resistance, damage shields, KO and promotion. No Node reducer execution; historical rulings/image verification pending."
+          ],
+          "scope": "Shell Attack 20 for two Colorless; inspect attack availability, typed Energy substitution, Weakness/Resistance, damage shields, KO and promotion."
         }
       ]
     },
