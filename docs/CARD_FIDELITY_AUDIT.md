@@ -1067,3 +1067,16 @@ Exactly **base5-51 Dark Raticate**, **base5-52 Diglett**, **base5-53 Dratini**, 
 - **base5-58**: Tackle 10; Poison Gas 20, heads Poison. Coin-status compiler exists. Need poison timing, protection, simultaneous KO and turn ownership.
 
 Imported TCGdex text checked in cards/base5.json; independent printed-image, errata and historical ruling comparison **outstanding**. Realistic scenarios were designed but **not executed**. No confirmed gameplay fix; do not treat handler existence as verification. PRs #440/#507 previously reported merged, open audit PR search found none; other old PRs involving tests remain untouched. Recent tournament/Apex commits preserved. Ledger **1 verified, 393 partial, 729 unreviewed**, 1122 not fully verified.
+
+
+## 2026-11-06 — Five Team Rocket printings, current engine, source-only
+
+Current route inspected: RPG `rpg_duel_bridge.js` integrates with the authoritative local service `classic_local_service.js`; the service imports `createGame/reduce/CATALOG` from `headless_duel.js`. The reducer compiles current attacks through `attack_effects_core.js` and `classic_attack_extensions.js`. Legacy engine excluded. Recent main commits inspected; #440 and #507 confirmed merged; no relevant open audit PR found. Apex changes untouched. Imported `cards/base5.json` text checked against the compiler and reducer; independently authenticated card images and historical rulings still pending.
+
+- **base5-56 Ekans — PARTIAL:** Bite costs one Colorless and deals 10; Poison Sting costs two Grass, deals 20 and poisons on heads. Source paths: flat and coin-status compiler, reducer attack resolution. Scenarios still to execute: heads/tails, Poison timing, protected Defending Pokémon, typed Energy and knockout/promotion.
+- **base5-59 Machop — PARTIAL:** Punch 20 for two Colorless; Kick 30 for Fighting plus two Colorless. Flat attack compiler and active reducer available. Scenarios pending: correct typed cost, Weakness/Resistance, disabled attack, damage protection and Prize/promotion.
+- **base5-62 Meowth — PARTIAL:** Coin Hurl: choose opposing Active or Bench, heads 20, tails zero, ignore Weakness/Resistance but not other post-W/R effects. Specific `target-any-coin` compiler and roll exist in `classic_attack_extensions.js`; `headless_duel.js` handles target selection. Investigate shield/prevention bypass and Active versus Bench damage paths (related to Dig Under concern), KO/Prize resolution, and whether a tails result leaves turn ownership correct.
+- **base5-63 Oddish — PARTIAL:** Sleep Powder and Poisonpowder are zero-damage status attacks, unconditional Asleep and Poisoned respectively. `attack_effects_core.js` supports status with blank numeric damage. Pending status override, immunity, checkup, attack cost and turn flow.
+- **base5-68 Squirtle — PARTIAL:** Shell Attack costs two Colorless and deals 20. Flat compiler and reducer source reviewed; typed substitution, damage modifiers, shield, KO, Prize and promotion pending.
+
+**Validation:** Direct GitHub source inspection only; no executable Node checkout available through connector, so zero reducer scenarios executed. No tests, CI, workflows or new PRs added. No gameplay change made without a confirmed defect. All five remain PARTIAL. Ledger after this batch: 1 verified, 398 partial, 724 unreviewed; **1,122 not fully verified**.
