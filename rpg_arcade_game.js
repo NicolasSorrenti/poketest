@@ -122,28 +122,6 @@ function open(options={}){
  const asClock=ms=>{const n=Math.floor(ms/1000);return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
  $('.nc-progress-text').textContent='0:00 / '+asClock(session.duration);
  const dancer=isDaisy?setupDaisyActor($('.nc-actor-canvas')):null;
- if(isDaisy){
-  const begin=$('.nc-start'),pick=document.createElement('label'),upload=document.createElement('input');
-  pick.className='nc-daisy-import';pick.textContent='✦ USAR MI IMAGEN DE DAISY';
-  pick.title='Elegí el PNG de Daisy. Se guarda únicamente en este navegador.';
-  upload.type='file';upload.accept='image/png,image/webp,image/jpeg';upload.style.display='none';
-  pick.append(upload);begin.before(pick);
-  const status=document.createElement('div');status.className='nc-daisy-import-status';
-  status.textContent='Podés cargar tu PNG de Daisy para usarlo en este Dance Battle.';pick.after(status);
-  upload.addEventListener('change',()=>{
-   const file=upload.files?.[0];if(!file)return;
-   const temp=URL.createObjectURL(file),img=new Image();
-   img.onload=()=>{try{
-    const maxWidth=768,scale=Math.min(1,maxWidth/img.naturalWidth),c=document.createElement('canvas');
-    c.width=Math.max(1,Math.round(img.naturalWidth*scale));c.height=Math.max(1,Math.round(img.naturalHeight*scale));
-    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-    const value=c.toDataURL('image/webp',.82);
-    try{localStorage.setItem('neo-daisy-dance-portrait',value);}catch(_){}
-    dancer?.setSource(value);status.textContent='✓ PNG de Daisy cargado para esta partida.';
-   }catch(_){status.textContent='No se pudo preparar la imagen.';}finally{URL.revokeObjectURL(temp);}};
-   img.onerror=()=>{URL.revokeObjectURL(temp);status.textContent='No se pudo abrir el archivo.';};img.src=temp;
-  });
- }
 
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
  function resetCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(2,root.devicePixelRatio||1);const w=Math.max(1,Math.floor(r.width*dpr)),h=Math.max(1,Math.floor(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}if(notesCanvas.width!==w||notesCanvas.height!==h){notesCanvas.width=w;notesCanvas.height=h;}ctx.setTransform(w/800,0,0,h/445,0,0);notesCtx.setTransform(w/800,0,0,h/445,0,0);}
@@ -240,8 +218,9 @@ function open(options={}){
    original=sc.getImageData(0,0,W,H);ready=true;
   };
   img.onerror=()=>{if(!disposed&&!img.src.includes('/portraits/primary.png'))img.src='/rpg-assets/characters/daisy/portraits/primary.png';};
-  let storedPortrait=null;try{storedPortrait=localStorage.getItem('neo-daisy-dance-portrait');}catch(_){}
-  img.src=storedPortrait||'/rpg-assets/characters/daisy/portraits/primary.png';
+  // Always use the repo's canonical Daisy portrait. Older locally imported
+  // sprites must never silently override this approved game artwork.
+  img.src='/rpg-assets/characters/daisy/portraits/primary.png';
   const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const mask=(nx,ny,z)=>{const r=Math.hypot((nx-z.x)/z.rx,(ny-z.y)/z.ry);return r>=1?0:(1-smooth(Math.max(0,(r-.45)/.55)))**2;};
   function render(ms,fever=0){
