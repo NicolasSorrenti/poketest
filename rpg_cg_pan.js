@@ -14,10 +14,26 @@
  }
  function attach(frame,img,configuration){
   let cfg=normalize(configuration);
-  let animation=null,active=true;
+  let animation=null,active=true,tempoFrame=null,geometry=null;
+  function stopTempo(){
+   if(tempoFrame!==null&&typeof cancelAnimationFrame==='function')cancelAnimationFrame(tempoFrame);
+   tempoFrame=null;
+  }
+  function keyframes(config,bottom,top){
+   const duration=config.bottomHold+config.moveUp+config.topHold+config.moveDown;
+   const a=config.bottomHold/duration,b=(config.bottomHold+config.moveUp)/duration;
+   const c=(config.bottomHold+config.moveUp+config.topHold)/duration;
+   return [
+    {transform:'translateY('+bottom+'px)',offset:0,easing:'linear'},
+    {transform:'translateY('+bottom+'px)',offset:a,easing:config.easing},
+    {transform:'translateY('+top+'px)',offset:b,easing:'linear'},
+    {transform:'translateY('+top+'px)',offset:c,easing:config.easing},
+    {transform:'translateY('+bottom+'px)',offset:1}
+   ];
+  }
   const previous={width:img.style.width,height:img.style.height,maxWidth:img.style.maxWidth,maxHeight:img.style.maxHeight,objectFit:img.style.objectFit,top:img.style.top,left:img.style.left,transform:img.style.transform,transformOrigin:img.style.transformOrigin};
   const originalPosition=img.style.position;
-  function stop(){if(animation){animation.cancel();animation=null;}}
+  function stop(){stopTempo();geometry=null;if(animation){animation.cancel();animation=null;}}
   function layout(){
    if(!active)return;
    stop();
@@ -51,21 +67,58 @@
    const bottom=offset-overflow,top=offset;
    const duration=cfg.bottomHold+cfg.moveUp+cfg.topHold+cfg.moveDown;
    if(!duration){img.style.transform='translateY('+bottom+'px)';return;}
-   const a=cfg.bottomHold/duration,b=(cfg.bottomHold+cfg.moveUp)/duration,c=(cfg.bottomHold+cfg.moveUp+cfg.topHold)/duration;
    img.style.transform='translateY('+bottom+'px)';
-   animation=img.animate([
-    {transform:'translateY('+bottom+'px)',offset:0,easing:'linear'},
-    {transform:'translateY('+bottom+'px)',offset:a,easing:cfg.easing},
-    {transform:'translateY('+top+'px)',offset:b,easing:'linear'},
-    {transform:'translateY('+top+'px)',offset:c,easing:cfg.easing},
-    {transform:'translateY('+bottom+'px)',offset:1}
-   ],{duration,iterations:Infinity,fill:'both'});
+   geometry={bottom,top};
+   animation=img.animate(keyframes(cfg,bottom,top),{duration,iterations:Infinity,fill:'both'});
   }
   const observer=typeof ResizeObserver==='function'?new ResizeObserver(layout):null;
   observer?.observe(frame);
   img.addEventListener('load',layout);
   layout();
-  return {refresh:layout,updateConfig(next){cfg=normalize(next);layout();},dispose(){
+  // Retiming an existing native animation preserves its cycle phase, so
+  // subtitle-driven tempo changes never snap the image back to the bottom.
+  // The four hold/move values reach their exact target timings after the glide.
+  function smoothUpdateConfig(next,transitionMs=600){
+   const target=normalize(next);
+   if(!active)return;
+   stopTempo();
+   const effect=animation?.effect;
+   if(!animation||!geometry||typeof requestAnimationFrame!=='function'||
+      typeof effect?.setKeyframes!=='function'||typeof effect?.updateTiming!=='function'){
+    cfg=target;layout();return;
+   }
+   const from=cfg;
+   const numeric=['bottomHold','moveUp','topHold','moveDown'];
+   const start=performance.now();
+   const period=Math.max(0,Number(transitionMs)||0);
+   const animateTempo=now=>{
+    if(!active||!animation||!geometry){tempoFrame=null;return;}
+    const progress=period?Math.min(1,Math.max(0,(now-start)/period)):1;
+    const mix=progress*progress*(3-2*progress);
+    const current={...target};
+    for(const key of numeric)current[key]=from[key]+(target[key]-from[key])*mix;
+    const previousDuration=cfg.bottomHold+cfg.moveUp+cfg.topHold+cfg.moveDown;
+    const nextDuration=current.bottomHold+current.moveUp+current.topHold+current.moveDown;
+    if(previousDuration<=0||nextDuration<=0){cfg=target;layout();return;}
+    // Keep the current position within the active animation iteration.
+    // Changing keyframe offsets gradually also blends the relative hold times.
+    const elapsed=Number(animation.currentTime)||0;
+    const phase=((elapsed%previousDuration)+previousDuration)%previousDuration/previousDuration;
+    try{
+     animation.effect.setKeyframes(keyframes(current,geometry.bottom,geometry.top));
+     animation.effect.updateTiming({duration:nextDuration});
+     animation.currentTime=phase*nextDuration;
+    }catch(error){
+     cfg=target;layout();return;
+    }
+    cfg=current;
+    if(progress<1)tempoFrame=requestAnimationFrame(animateTempo);
+    else{cfg=target;tempoFrame=null;}
+   };
+   tempoFrame=requestAnimationFrame(animateTempo);
+  }
+  return {refresh:layout,updateConfig(next){cfg=normalize(next);layout();},
+   smoothUpdateConfig,dispose(){
    if(!active)return;active=false;stop();observer?.disconnect();img.removeEventListener('load',layout);
    for(const [key,value] of Object.entries(previous))img.style[key]=value;
    img.style.position=originalPosition;
