@@ -11358,7 +11358,11 @@
           "kind": "power",
           "index": 0,
           "name": "Bench Guard",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Live reducer queues optional defender-owned 10-damage redirection after Benched Pokémon attack damage; decision handler transfers counter to Benched Brock's Rhydon. Source-only: simultaneous targets, KO, prize/promotions, prevention ordering and turn owner not executed."
+          ],
+          "scope": "Current live engine source inspection only; no reducer execution or independent printed/ruling certification."
         }
       ]
     },
@@ -11415,7 +11419,11 @@
           "kind": "power",
           "index": 0,
           "name": "Pollen Defense",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Live reducer checks active Vileplume after damage and flips for Confusion; enabled() exempts Pollen Defense from special-condition lock. Source-only: fatal damage, retaliatory Confusion, suppression and timing not executed."
+          ],
+          "scope": "Current live engine source inspection only; no reducer execution or independent printed/ruling certification."
         }
       ]
     },
@@ -11472,7 +11480,11 @@
           "kind": "power",
           "index": 0,
           "name": "Energy Charge",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Active-only activated power selects own donor Pokémon and attached Lightning Energy; transfers to Magneton; not in once-per-turn list. Source-only: repeated transfers, no donors, special conditions and attack availability not executed."
+          ],
+          "scope": "Current live engine source inspection only; no reducer execution or independent printed/ruling certification."
         }
       ]
     },
@@ -11510,7 +11522,11 @@
           "kind": "power",
           "index": 0,
           "name": "Flee",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Live reducer offers defender-owned optional Bench choice after damage, preserves damage and switches before further effects. Source-only: damage/KO timing, status, simultaneous effects and turn ownership not executed."
+          ],
+          "scope": "Current live engine source inspection only; no reducer execution or independent printed/ruling certification."
         }
       ]
     },
@@ -11548,7 +11564,11 @@
           "kind": "power",
           "index": 0,
           "name": "Rebirth",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Live KO handler offers optional return-to-hand after KO and discard; power disabled by special conditions; awardKnockoutPrize still occurs. Source-only: Active/Bench KO, promotion, Prize choice, attachment disposal and opponent turn not executed."
+          ],
+          "scope": "Current live engine source inspection only; no reducer execution or independent printed/ruling certification."
         }
       ]
     },
