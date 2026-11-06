@@ -6307,13 +6307,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Meditate",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_power_core.js registers Invisible Wall passive; headless_duel.js prevents damage >=30 after Weakness/Resistance. Check exactly 30, 20, statuses, effects after prevention and damage modifiers; no reducer execution."
+          ],
+          "scope": "Live reducer source review only; no runtime execution or independent historical ruling verification."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Invisible Wall",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_power_core.js registers Invisible Wall passive; headless_duel.js prevents damage >=30 after Weakness/Resistance. Check exactly 30, 20, statuses, effects after prevention and damage modifiers; no reducer execution."
+          ],
+          "scope": "Live reducer source review only; no runtime execution or independent historical ruling verification."
         }
       ]
     },
@@ -6383,13 +6391,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Venom Powder",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_power_core.js Shift selects non-Colorless type from other Pokemon in play; headless_duel.js effectiveCard uses shiftType. Check one-use, status lock, changed type in Weakness/Resistance and Bench persistence; no reducer execution."
+          ],
+          "scope": "Live reducer source review only; no runtime execution or independent historical ruling verification."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Shift",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_power_core.js Shift selects non-Colorless type from other Pokemon in play; headless_duel.js effectiveCard uses shiftType. Check one-use, status lock, changed type in Weakness/Resistance and Bench persistence; no reducer execution."
+          ],
+          "scope": "Live reducer source review only; no runtime execution or independent historical ruling verification."
         }
       ]
     },
@@ -6515,13 +6531,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Rage",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: headless_duel.js retreatCost counts enabled Benched Retreat Aid copies and reduces retreat units. Check stacking, status locks, zero floor and interaction with Sticky Goo; no reducer execution."
+          ],
+          "scope": "Live reducer source review only; no runtime execution or independent historical ruling verification."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Retreat Aid",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: headless_duel.js retreatCost counts enabled Benched Retreat Aid copies and reduces retreat units. Check stacking, status locks, zero floor and interaction with Sticky Goo; no reducer execution."
+          ],
+          "scope": "Live reducer source review only; no runtime execution or independent historical ruling verification."
         }
       ]
     },
@@ -10195,7 +10219,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_trainer_core.js resolves Here Comes Team Rocket! by setting g.prizesFaceUp=true. Check both players' prize visibility, new/replaced prizes and end-of-game persistence; no reducer execution."
+          ],
+          "scope": "Live reducer source review only; no runtime execution or independent historical ruling verification."
         }
       ]
     },
@@ -10206,7 +10234,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_trainer_core.js prompts for an opposing Trainer in hand and shuffles chosen card into opposing deck. Check zero Trainer, hidden-hand disclosure, selection and shuffle; no reducer execution."
+          ],
+          "scope": "Live reducer source review only; no runtime execution or independent historical ruling verification."
         }
       ]
     },
