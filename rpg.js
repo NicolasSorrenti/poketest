@@ -242,7 +242,7 @@ function timeFlash(change,onDone=()=>{}){
  return true;
 }
 
-function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},romanceVisits:{},romanceVisitPending:null,romanceVisitShowing:null,partner:null,partners:[],activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,phoneMessages:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
+function defaults(){return {sideQuests:{},activeSideQuest:null,day:1,slot:0,location:'home',visitedLocations:{home:true},metReina:false,reinaTrust:0,reinaDuels:0,results:[],flags:{intro:false},journal:['The 90-day season begins.'],pendingDuel:null,bonds:{},talked:{},hungOut:{},eventsDone:{},points:0,credits:80,playerDeck:'blackout',selected:null,ended:false,storyDone:{},storyMissed:{},relationships:{},routeOutcomes:{},romanceVisits:{},romanceVisitPending:null,romanceVisitShowing:null,romanceVisitDeferred:false,partner:null,partners:[],activeStory:null,activeEncounter:null,activeArc:null,arcFlags:{},arcOutcomes:{},activityDone:{},encountersDone:{},focus:75,insight:0,reputation:0,preparation:0,lastDuelReceipt:null,tournaments:{},campaignHistory:[],ngPlus:0,appointments:[],appointmentSeq:0,scene:null,socialHistory:{},situationDone:{},activeSituation:null,sliceOfLifeDone:{},sliceOfLifeLastDay:0,activeSliceOfLife:null,deckJourney:null,competitive:null,npcReactivity:null,community:null,phoneMessages:null,consequences:null,mandatoryEventState:null,playmatGifts:{},playmatSelected:'aurora',gameplayTutorials:{disabled:false,seen:{}}}}
 function tournamentDayCup(){return TOURNAMENTS.cups.find(c=>c.day===state.day)||null;}
 const hadCampaignSave=!!localStorage.getItem(KEY);
 let state;try{state=JSON.parse(localStorage.getItem(KEY))||defaults();if(!Number.isInteger(state.day)||state.day<1||state.day>91)throw Error('Invalid save');}catch{state=defaults()}
@@ -887,7 +887,7 @@ function startRomanceVisit(id){
   "I was looking forward to another quiet moment together.",
   "Shall we enjoy some time just for us?"
  ]).map(text=>({speaker:id,text}));
- state.selected=id;
+ state.selected=id;state.romanceVisitDeferred=false;
  scene={speaker:cast[id].name,line:lines[0].text,choices:[['Continue ›','chatNext']],
   dialogue:lines,index:0,afterChoices:[['Continue ›','romanceView:'+id]],romanceNpc:id};
  state.scene=scene;persist();render();return true;
@@ -903,6 +903,7 @@ function openRomanceVisit(id){
   },
   onCancel:()=>{
    state.romanceVisitShowing=null;
+   state.romanceVisitDeferred=true;
    scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;
    persist();render();
   }
@@ -1730,6 +1731,7 @@ function act(action,confirmedInvitationHandoff=false){
  }
  if(type==='romanceAccept'){
   if(scene.romanceOffer!==id||!ROMANCE?.accept(state,id,STORY))return;
+  state.romanceVisitDeferred=false;
   scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;
   state.selected=null;persist();
   if(state.location==='home')return startRomanceVisit(id);
@@ -3358,7 +3360,7 @@ function render(){
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
  // Accepted invitations begin after travel and any mandatory apartment scene.
- if(state.location==='home'&&state.romanceVisitPending&&!state.romanceVisitShowing&&
+ if(state.location==='home'&&state.romanceVisitPending&&!state.romanceVisitShowing&&!state.romanceVisitDeferred&&
     ROMANCE?.pending(state,state.romanceVisitPending,STORY)&&
     !state.mandatoryEventState?.active&&!state.activeStory&&!state.activeSliceOfLife&&
     !state.activeSituation&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&
