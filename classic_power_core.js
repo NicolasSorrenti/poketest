@@ -73,8 +73,11 @@ function powerPlan(g,plan,h){
  if(requiredUnown&&!requiredUnown.split('').every(letter=>
    p.bench.some(x=>card(x.id).name==='Unown ['+letter+']')))
   throw Error(name+' requires Unown '+requiredUnown.split('').join(', ')+' on the Bench');
- if(name==='[Find]'&&choose('deck',indices(p.deck,c=>c.supertype==='Trainer','deck'),
-    '[Find]: search your deck for a Trainer card'))return;
+ if(name==='[Find]'&&!have(plan,'deck')){
+  const options=indices(p.deck,c=>c.supertype==='Trainer','deck');
+  if(options.length){if(choose('deck',options,'[Find]: optionally search your deck for a Trainer card',{min:0,max:1,optional:true}))return;}
+  else d.deck=[];
+ }
  if(name==='[Join]'&&choose('deck',indices(p.deck,c=>c.supertype==='Pokémon','deck'),
     '[Join]: search your deck for a Pokémon card'))return;
  if(name==='Special Delivery'){
@@ -349,10 +352,12 @@ function doPower(g,plan,h){
    break;
   }
   case '[Find]':case '[Join]':{
-   const picked=take(p.deck,[s('deck')])[0];
-   p.hand.push(picked);
+   if(selected(plan,'deck').length){
+    const picked=take(p.deck,[s('deck')])[0];
+    p.hand.push(picked);
+    h.log(g,card(u.id).name+' showed '+card(picked).name+' from a deck search.');
+   }
    p.deck=h.shuffle(g,p.deck);
-   h.log(g,card(u.id).name+' showed '+card(picked).name+' from a deck search.');
    break;
   }
   case '[Help]':{
