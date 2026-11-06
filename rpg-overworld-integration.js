@@ -342,7 +342,7 @@
     }
     menuButton.onclick=()=>{closeSheet();menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));};
     // Developer-only preview of character CG artwork. Never alters campaign state.
-    const sneezeParodyCharacters=['barb','camila','daisy','elena','hana','iris','jicy','jinx','kaede','laca','live','luna','lyla','marina','mia','reina','rina','shiori','sierra','sol','yuna'];
+    const sneezeParodyCharacters=['akari','barb','camila','daisy','elena','hana','iris','jicy','jinx','kaede','laca','live','luna','lyla','marina','mia','reina','rina','shiori','sierra','sol','yuna'];
     function showAnimatedCgTest(){
       if(!window.NeoRpgCGPan){showNotice('Animated CG viewer is not loaded. Refresh the page.');return;}
       let dialog=document.getElementById('neoAnimatedCgTest');
@@ -394,7 +394,7 @@
           dialog._cgPan?.dispose();dialog._cgPan=null;
           footer.textContent='Loading '+characterSelect.selectedOptions[0].textContent+'…';
           img.removeAttribute('src');
-          img.src='/rpg-assets/characters/'+characterSelect.value+'/events/final/'+characterSelect.value+'_sneeze_parody.png';
+          img.src='/rpg-assets/characters/'+characterSelect.value+'/events/final/'+(characterSelect.value==='akari'?'akari_glasses_parody.png':characterSelect.value+'_sneeze_parody.png');
         });
         document.body.append(dialog);
         dialog.addEventListener('close',()=>{
@@ -429,7 +429,7 @@
       const characterSelect=dialog.querySelector('.neo-cg-test-character');
       dialog.querySelector('p').textContent='Adjust the timings manually or enable Auto mode: 3 seconds per stage.';
       dialog.showModal();
-      img.src='/rpg-assets/characters/'+characterSelect.value+'/events/final/'+characterSelect.value+'_sneeze_parody.png';
+      img.src='/rpg-assets/characters/'+characterSelect.value+'/events/final/'+(characterSelect.value==='akari'?'akari_glasses_parody.png':characterSelect.value+'_sneeze_parody.png');
     }
     const menuItems=[
       ['▣ Deck Studio',showDeck],
