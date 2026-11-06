@@ -1398,6 +1398,11 @@ function score(a,o,cfg,used){
    const damaged=[p.active,...p.bench].filter(u=>u&&u.damage>=10);
    const healed=damaged.reduce((n,u)=>n+u.damage,0);
    const lost=damaged.reduce((n,u)=>n+(u.energies?.length||0),0);
+   // Pokémon Center removes damage counters but discards every Energy on
+   // each healed Pokémon. With no damaged Pokémon it does literally nothing;
+   // preserve the Trainer rather than awarding a free-looking 110 points.
+   // This guard is Apex-only to preserve calibrated lower-level behavior.
+   if(cfg.level===8&&healed===0)return -500;
    return cfg.level>=8?(healed*1.5-lost*65+110)*style.survival:
     (p.active?.damage||0)>=20?168*style.survival:40;
   }
