@@ -305,7 +305,7 @@
   const dependencies={
     NeoRpgRelationships:'apply',NeoRpgEncounterDirector:'select',
     NeoRpgAkariBarbFitting:'event',NeoRpgCrossCharacterEvents:'events',NeoRpgSliceOfLife:'byId',
-    NeoHarborStory:'resolve',NeoRpgEventInvites:'dialogue',
+    NeoHarborStory:'resolve',NeoRpgRomanceVisits:'eligible',NeoRpgEventInvites:'dialogue',
     NeoRpgCGGallery:'record',NeoRpgTimeCoordinator:'conflicts'
   };
   for(const [globalName,method] of Object.entries(dependencies)){
