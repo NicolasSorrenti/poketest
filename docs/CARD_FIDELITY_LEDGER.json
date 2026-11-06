@@ -19547,7 +19547,11 @@
           "kind": "power",
           "index": 0,
           "name": "Magma Pool",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only audit: Source-only: classic_power_core.js movedToBench transfers the first printed Fire Energy after headless_duel.js retreat; no equivalent movedToBench call found for other Active-to-Bench switches. Check retreat-cost discard exclusion, opponent-induced switches, forced promotions, status locks, and destination ownership."
+          ],
+          "scope": "Source-only inspection; no reducer execution, no independent print/errata/ruling certification."
         }
       ]
     },
@@ -19584,7 +19588,11 @@
         {
           "kind": "power",
           "index": 0,
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only audit: Source-only: cards/neo3.json has blank Power name/text; cannot establish effect fidelity without independent printed-card identification. Sleep Pinchers coin and Sleep handling also unexecuted."
+          ],
+          "scope": "Source-only inspection; no reducer execution, no independent print/errata/ruling certification."
         }
       ]
     },
@@ -19660,7 +19668,11 @@
           "kind": "power",
           "index": 0,
           "name": "[Bear]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only audit: Source-only: activated in classic_power_core.js, exempt from Special Condition lock, selects damaged own Unown and moves exactly 10 damage to Unown B; 10-HP-left prohibition checked before choice. Need execution of KO bounds, repeat usage and selection."
+          ],
+          "scope": "Source-only inspection; no reducer execution, no independent print/errata/ruling certification."
         }
       ]
     },
@@ -19679,7 +19691,11 @@
           "kind": "power",
           "index": 0,
           "name": "[Yield]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only audit: Source-only: activated in classic_power_core.js, exempt from Special Condition lock; coin heads searches printed Psychic Energy and chooses own Unown recipient, then shuffles; tails skips search. Need execute both outcomes, empty deck, no eligible target, turn ownership."
+          ],
+          "scope": "Source-only inspection; no reducer execution, no independent print/errata/ruling certification."
         }
       ]
     },
@@ -19870,7 +19886,11 @@
           "kind": "power",
           "index": 0,
           "name": "Hard Shell",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only audit: Source-only: no named Hard Shell reader in classic_power_core.js, headless_duel.js or attack_effects_core.js; probable missing 40-or-less damage reduction to 10 after Weakness/Resistance, including self attacks and status locks. Need inspect generic damage pipeline and execute."
+          ],
+          "scope": "Source-only inspection; no reducer execution, no independent print/errata/ruling certification."
         }
       ]
     },
