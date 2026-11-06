@@ -82,7 +82,7 @@ function open(options={}){
  function glowLine(x1,y1,x2,y2,color,width=2){ctx.save();ctx.strokeStyle=color;ctx.shadowColor=color;ctx.shadowBlur=15;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();}
  function scene(time){
   resetCanvas();
-  if(dancer)dancer.render(time||0);
+  if(dancer){const fever=Math.min(1,session.quality/PATTERN.length*1.28/100);dancer.render(time||0,fever);}
   const bg=ctx.createLinearGradient(0,0,0,445);bg.addColorStop(0,'#08102b');bg.addColorStop(.7,'#170d36');bg.addColorStop(1,'#070b24');ctx.fillStyle=bg;ctx.fillRect(0,0,800,445);
   // Arcade room: atmospheric neon signs and cabinet silhouettes behind the lane.
   ctx.fillStyle='#160d38';for(let i=0;i<10;i++){const x=i*94-30;ctx.fillRect(x,80+(i%3)*15,60,240);ctx.fillStyle='#2d164a';ctx.fillRect(x+8,97+(i%3)*15,44,70);ctx.fillStyle='#170e34';}
@@ -148,7 +148,7 @@ function open(options={}){
   img.src='/rpg-assets/characters/daisy/idle.png';
   const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const mask=(nx,ny,z)=>{const r=Math.hypot((nx-z.x)/z.rx,(ny-z.y)/z.ry);return r>=1?0:(1-smooth(Math.max(0,(r-.45)/.55)))**2;};
-  function render(ms){
+  function render(ms,fever=0){
    if(!ready||disposed||ms-last<75)return;last=ms;
    const phase=ms*.001*136/60*Math.PI*.93;
    const data=oc.createImageData(W,H),dst=data.data,sp=original.data;
@@ -165,7 +165,11 @@ function open(options={}){
    }}
    oc.putImageData(data,0,0);
    c.clearRect(0,0,W,H);
-   const bounce=Math.sin(2*phase)*.21*13;
+   // Fever builds the vertical dance energy; the viewport stays fixed at the approved waist-up crop.
+   // Keep the movement bounded in sprite pixels so the face remains inside the camera at max Fever.
+   const feverLevel=Math.max(0,Math.min(1,fever));
+   const bounceAmplitude=2.7+5.5*feverLevel;
+   const bounce=Math.sin(2*phase)*bounceAmplitude;
    const tilt=Math.sin(phase)*.018;
    c.save();c.translate(W/2,H*.54+bounce);c.rotate(tilt);c.drawImage(out,-W/2,-H*.54,W,H);c.restore();
   }
