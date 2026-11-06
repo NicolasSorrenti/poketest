@@ -3139,6 +3139,14 @@ function tournamentNarrativeView(){
   state.tournamentNarrative[cup.id]=record;
  }
  if(!Array.isArray(record.seen))record.seen=[];
+ // Old saves may already be halfway through the tournament when this wake-up
+ // chapter is installed. Never replay the morning after the opening ceremony.
+ if(!record.seen.includes('wakeup')&&(
+  record.seen.includes('arrival')||
+  ['arrival','round-0','round-1','round-2','closing'].includes(record.active?.key)||
+  progress.round>0||progress.state!=='open')){
+  record.seen.unshift('wakeup');persist();
+ }
  if(!Array.isArray(record.guests)){
   record.guests=TOURNAMENT_STORY.supporters(state,cast,cup,REL);
   persist();
