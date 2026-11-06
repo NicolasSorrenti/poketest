@@ -2010,8 +2010,18 @@ function act(action,confirmedInvitationHandoff=false){
   persist();
   const context=REACT.reaction(state,id,c,cast,COMMUNITY,CONSEQ);
   const memory=!context?MEM?.offer(state,id):null;
-  const casual=!context&&!memory?ordinaryTalk(id,c,{present:currentPeople()}):null;
-  return sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||[],context?.id||null,null,memory,casual?.record,true);
+  // Shared-activity follow-ups sit below authored memories and reactivity.
+  // Show each outing callback at most once; never pay relationship rewards again.
+  const social=!context&&!memory?SOCIAL.memoryConversation?.(state,id,cast):null;
+  const socialSeen=!!(social&&state.socialTalkSeen?.[social.id]);
+  const callback=social&&!socialSeen?social:null;
+  if(callback){
+   state.socialTalkSeen=state.socialTalkSeen||{};
+   state.socialTalkSeen[callback.id]=true;
+   persist();
+  }
+  const casual=!context&&!memory&&!callback?ordinaryTalk(id,c,{present:currentPeople()}):null;
+  return sayConversation(context?.lines||memory?.lines||callback?.lines||casual?.lines,memory?.choices||[],context?.id||null,null,memory,casual?.record,true);
  }
  if(type==='flirt'){
   state.talked['flirt:'+key]=true;
