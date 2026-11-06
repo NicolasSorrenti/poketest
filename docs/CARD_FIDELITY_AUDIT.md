@@ -1210,3 +1210,17 @@ Traced current authority: Classic UI/session in `classic_local_service.js`, RPG 
 - `neo1-18` **Fire Boost** — `classic_power_core.js` ONPLAY offers optional activation, coin, up-to-four Basic Fire Energy from deck and shuffle on heads. Source-only partial: decline, tails, empty deck, multi-select, evolution timing, energy count, Flame Wheel discard and KO unexecuted.
 
 Scenario backlog: (1) Herbal Scent evolve Meganium with damaged Grass on both sides, heads/tails, decline, status and KO; (2) Wild Growth one/two Grass Energy with Grass/non-Grass recipients, attack eligibility, Power suppression and retreat; (3) Mind Games opponent Trainer cost and hand/deck changes, multiple Slowking, heads/tails, decline, and turn ownership; (4) Fire Recharge heads/tails, one-per-turn, discard/target selection and attacks; (5) Fire Boost decline/tails/heads, zero-to-four Energy, shuffle and Flame Wheel. Three probable missing-Power registrations require complete generic-path and historical-ruling confirmation before gameplay patch. No tests, test scripts, CI, new PRs, legacy or Apex edits. Fossil Lapras Water Gun rule unchanged.
+
+## 2026-11-06 — Neo Genesis / Neo Discovery Powers (source-only)
+
+Live authority traced: RPG `rpg_duel_bridge.js` (UI/result integration), `classic_local_service.js` (session authority importing `headless_duel.js`), `headless_duel.js` (transactional reducer and attack/turn/KO flow), and `classic_power_core.js` (activated/passive Power registry). No legacy engine considered. Recent Apex CPU changes left untouched. Exactly five distinct printings:
+
+| Printing | Current-engine source evidence | Still required |
+| --- | --- | --- |
+| neo1-22 Elekid — Playful Punch | `classic_power_core.js` flips, applies 20 with damage calculation, resolves direct KOs and conditionally finishes turn | Both coin outcomes, KO promotion/Prize pending decisions, turn ownership and status lock |
+| neo1-38 Lanturn — Hydroelectric Power | `headless_duel.js` offers Floodlight boost and counts attached Water Energy; `classic_power_core.js` registers passive | Lightning cost paid with mixed Energy, Water surplus, paralysis, disabled status and damage modifiers |
+| neo1-42 Noctowl — Glaring Gaze | `classic_power_core.js` heads reveal to private log, Trainer choice and deck shuffle; once-per-turn | Tails, multiple/zero Trainers, hidden-info authorization, deck empty and disabled status |
+| neo2-2 Forretress — Spikes | `headless_duel.js` compares Bench-to-Active transitions and adds 10 per enabled opposing Forretress | Retreat, Trainer/attack switch, KO promotion, multiple sources, lethal entry while a decision is pending |
+| neo2-8 Politoed — Frog Song | `headless_duel.js` checks positive damage, enabled Power and more than three Poliwag-family Pokémon across both players | Doubleslap 0/1/2 heads, exactly 3 versus 4, weakness/resistance, KO and status lock |
+
+Source-only PARTIAL for all five: no executable repository checkout/dependency tree was available from the direct GitHub connector; **zero reducer scenarios executed**. Imported TCGdex catalogue text was read, but independent printed-image/errata and historical-ruling comparison remains outstanding. No confirmed gameplay defect in these five warranted a code change; possible multi-step turn/KO sequencing remains a high-priority execution gap. No tests, scripts, CI, or new PRs added.
