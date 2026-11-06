@@ -1514,7 +1514,10 @@ function score(a,o,cfg,used){
     (name!=='Super Potion'||(u.energies?.length||0)>0));
    const best=Math.max(0,...patients.map(u=>{
     const healed=Math.min(healCap,u.damage);
-    const survival=likelyOpponentKnockout(o,u,true)&&
+    // The opponent's ordinary attacks target our Active, not an arbitrary
+    // Benched patient. A hypothetical Bench KO must not inflate healing
+    // priority or cause Apex to spend a Trainer on imaginary pressure.
+    const survival=u===p.active&&likelyOpponentKnockout(o,u,true)&&
      !likelyOpponentKnockout(o,{...u,damage:u.damage-healed},true);
     const cost=name==='Super Potion'?85:0;
     return healed*2+(survival?110:0)-cost;
