@@ -1054,3 +1054,16 @@ Exactly **base5-60 Magnemite**, **base5-65 Psyduck**, **base5-67 Slowpoke**, **b
 - **base5-78**: Goop Gas Attack sets `powerBlankUntil=turnSerial+2`; `classic_power_core.js` checks `powerBlankUntil>turnSerial` for normal Powers, with explicit Toxic Gas handling. Pending: ongoing versus activated Powers, both players, turn-serial expiry, interactions with Toxic Gas and promotion.
 
 Printed text compared with imported TCGdex `cards/base5.json`; independent original print images, official errata and historical rulings **not yet certified**. GitHub-only connector access did not supply a Node runtime or executable checkout, so all scenarios above are **planned, not executed**. No test files, scripts, suites, commands, workflows or gates were introduced. Open audit PR search found none; #440 and #507 were previously reported merged. Recount: **1 verified, 388 partial, 734 unreviewed**, leaving **1,122 not fully verified**.
+
+
+## 2026-11-05 — five Team Rocket printings (source-only; no tests)
+
+Exactly **base5-51 Dark Raticate**, **base5-52 Diglett**, **base5-53 Dratini**, **base5-55 Eevee**, **base5-58 Koffing** reviewed; all **PARTIAL**. Current UI's ClassicLocalService imports createGame/reduce from headless_duel.js, while rpg_duel_bridge.js mediates RPG duel results. The authoritative headless_duel.js imports attack_effects_core.js, whose Classic compiler delegates to classic_attack_extensions.js. Legacy engine excluded. No Node reducer execution available from the GitHub connector; no tests/CI or new PRs created.
+
+- **base5-51**: Gnaw is 20 for two Colorless; Hyper Fang is 50 for three Colorless, with tails doing nothing. Coin-failure and turn advancement path source-inspected; verify both flips, Energy cost, and shields in runtime.
+- **base5-52**: Dig Under chooses opposing Active or Benched Pokémon for 10 without Weakness/Resistance; Scratch 20. The target-any compiler emits targetDamage, and headless_duel.js line ~2456 directly increments Active target.damage (Bench uses hitBench). **Potential prevention/modifier bypass** requires investigation before a code change; inspect active protection, prevention, KO and Prize handling, and after-W/R effects.
+- **base5-53**: Wrap does 10 with heads Paralysis, tails normal damage. The coin-status alias compiler and status pipeline exist. Need both outcomes, prevention, KO and status restrictions.
+- **base5-55**: Tackle 10; Sand-attack 10 imposes next-turn failure coin on the Defending Pokémon. classic_attack_extensions.js emits attackPenalty; headless_duel.js records expiry turnSerial+2 and checks penalty before Confusion. Need verify switching, evolution, cost payment, expiry and turn ownership.
+- **base5-58**: Tackle 10; Poison Gas 20, heads Poison. Coin-status compiler exists. Need poison timing, protection, simultaneous KO and turn ownership.
+
+Imported TCGdex text checked in cards/base5.json; independent printed-image, errata and historical ruling comparison **outstanding**. Realistic scenarios were designed but **not executed**. No confirmed gameplay fix; do not treat handler existence as verification. PRs #440/#507 previously reported merged, open audit PR search found none; other old PRs involving tests remain untouched. Recent tournament/Apex commits preserved. Ledger **1 verified, 393 partial, 729 unreviewed**, 1122 not fully verified.
