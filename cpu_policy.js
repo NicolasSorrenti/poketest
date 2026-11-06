@@ -653,8 +653,25 @@ function choiceValue(option,decision,o,cfg){
     cardName:card(active.id)?.name||''});
    if(attachable){
     if(!o.self.energyUsed&&o.opponent.active){
-     const before=strongestAffordableAttack(active,o.opponent.active,o.self.bench.length);
-     const after=damageAfterAttachment(active,candidateId,o.opponent.active,o.self.bench.length);
+     // Search scoring must measure a *legal Active-target attack*, not a
+     // payable Bench-only attack or a move blocked by Sleep/Amnesia.
+     // Evaluate the candidate after its immediate attachment effects.
+     const activePressure=unit=>{
+      if(['Asleep','Paralyzed'].includes(unit.status))return 0;
+      const pool=energyPool(unit);
+      return (unit.effectiveAttacks||card(unit.id)?.attacks||[])
+       .reduce((best,attack,index)=>eligibleAttack(o,unit,attack,index)&&
+        ATTACK.compile(attack)?.kind!=='bench-target'&&
+        canPayEnergy(attack.cost||[],pool)?
+        Math.max(best,estimatedDamage(attack,unit,o.opponent.active,o.self.bench.length)*
+         (unit.status==='Confused'?.5:1)):best,0);
+     };
+     const afterUnit={...active,energies:[...(active.energies||[]),candidateId],
+      ...(candidate.name==='Full Heal Energy'?{status:null,poison:false}:{}),
+      ...(candidate.name==='Potion Energy'?{damage:Math.max(0,(active.damage||0)-10)}:{}),
+      ...(candidate.name==='Rainbow Energy'?{damage:(active.damage||0)+10}:{})};
+     const before=activePressure(active);
+     const after=activePressure(afterUnit);
      if(before===0&&after>0)return 1000+after;
      if(after>before)return 450+after;
     }
