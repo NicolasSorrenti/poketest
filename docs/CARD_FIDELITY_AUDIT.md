@@ -1106,3 +1106,16 @@ Traced live `classic_local_service.js` import of `headless_duel.js` createGame/r
 - **base5-82 — PARTIAL:** Potion Energy: headless_duel.js attach_energy heals 10 damage on attachment and energy pool grants one Colorless. Check hand-only trigger, zero-damage host, damaged Active/Bench, attachment limits, modifiers and turn ownership. Scenario not executed; source-only.
 
 No confirmed gameplay defect, gameplay change, tests, CI, workflows or new PRs. Direct ledger update only; Apex untouched. Total: 408 partial, 715 unreviewed, 0 fully verified by effect status; **1,123 not fully verified**. Future execution should prioritize Rainbow Energy self-KO and Prize/promotion and The Boss's Way zero-match searches.
+
+
+## 2026-11-06 — five-printing source-only review
+
+Live path: `classic_local_service.js` imports `headless_duel.js` and current effect modules; `rpg_duel_bridge.js` handles UI duel receipts and does not implement card rules. Legacy engine excluded. Five IDs: base5-71, base5-72, base4-27, base4-31, base4-37. All **PARTIAL**, no reducer execution (direct GitHub connector does not expose a Node checkout), no independent historical ruling verification. Printed text sourced from `cards/base4.json` and `cards/base5.json` (TCGdex imports), not independent errata proof.
+
+- `base5-71`: Source-only: classic_trainer_core.js resolves Here Comes Team Rocket! by setting g.prizesFaceUp=true. Check both players' prize visibility, new/replaced prizes and end-of-game persistence; no reducer execution.
+- `base5-72`: Source-only: classic_trainer_core.js prompts for an opposing Trainer in hand and shuffles chosen card into opposing deck. Check zero Trainer, hidden-hand disclosure, selection and shuffle; no reducer execution.
+- `base4-27`: Source-only: classic_power_core.js registers Invisible Wall passive; headless_duel.js prevents damage >=30 after Weakness/Resistance. Check exactly 30, 20, statuses, effects after prevention and damage modifiers; no reducer execution.
+- `base4-31`: Source-only: classic_power_core.js Shift selects non-Colorless type from other Pokemon in play; headless_duel.js effectiveCard uses shiftType. Check one-use, status lock, changed type in Weakness/Resistance and Bench persistence; no reducer execution.
+- `base4-37`: Source-only: headless_duel.js retreatCost counts enabled Benched Retreat Aid copies and reduces retreat units. Check stacking, status locks, zero floor and interaction with Sticky Goo; no reducer execution.
+
+No confirmed defect, no gameplay change, no test infrastructure introduced. Additional checks: coin outcomes, energy payment, choices, KOs, promotions, prizes and turn ownership remain pending where applicable.
