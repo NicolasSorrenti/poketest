@@ -341,7 +341,8 @@
       audioSettingsPanel.hidden=false;
     }
     menuButton.onclick=()=>{closeSheet();menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));};
-    // Developer-only preview of the Live event artwork. Never alters campaign state.
+    // Developer-only preview of character CG artwork. Never alters campaign state.
+    const sneezeParodyCharacters=['barb','camila','daisy','elena','hana','iris','jicy','jinx','kaede','laca','live','luna','lyla','marina','mia','reina','rina','shiori','sierra','sol','yuna'];
     function showAnimatedCgTest(){
       if(!window.NeoRpgCGPan){showNotice('Animated CG viewer is not loaded. Refresh the page.');return;}
       let dialog=document.getElementById('neoAnimatedCgTest');
@@ -353,7 +354,7 @@
         const top=document.createElement('div');
         top.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;background:#252039';
         const title=document.createElement('strong');
-        title.textContent='TEST · Live CG · Automatic Pan';
+        title.textContent='TEST · Character CG · Automatic Pan';
         const close=document.createElement('button');
         close.type='button';close.textContent='✕ Close';
         close.style.cssText='background:#3c3055;color:white;border:1px solid #b38bb8;border-radius:8px;padding:7px 12px;cursor:pointer';
@@ -363,7 +364,7 @@
         viewport.className='neo-cg-test-viewport';
         viewport.style.cssText='position:relative;overflow:hidden;margin:auto;width:100%;height:50dvh;background:#080810;isolation:isolate';
         const img=document.createElement('img');
-        img.alt='Live event CG animation test';
+        img.alt='Character CG animation test';
         img.draggable=false;
         img.style.cssText='position:absolute;left:0;top:0;width:100%;height:auto;max-width:none;max-height:none;display:block;pointer-events:none';
         viewport.append(img);
@@ -372,7 +373,29 @@
         footer.style.cssText='font:12px system-ui;color:#d3c6e4;text-align:center;margin:0;padding:12px';
         const controlsHost=document.createElement('div');
         controlsHost.className='neo-live-cg-controls';
-        dialog.append(top,viewport,controlsHost,footer);
+        const characterLabel=document.createElement('label');
+        characterLabel.style.cssText='display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 16px;color:#e8d9f3;font:600 13px system-ui';
+        const characterText=document.createElement('span');
+        characterText.textContent='Character';
+        const characterSelect=document.createElement('select');
+        characterSelect.className='neo-cg-test-character';
+        characterSelect.setAttribute('aria-label','Character to preview');
+        characterSelect.style.cssText='background:#2e2541;color:white;border:1px solid #b38bb8;border-radius:8px;padding:8px 12px;min-width:170px;font:inherit';
+        for(const name of sneezeParodyCharacters){
+          const option=document.createElement('option');
+          option.value=name;
+          option.textContent=name.charAt(0).toUpperCase()+name.slice(1);
+          characterSelect.append(option);
+        }
+        characterSelect.value='live';
+        characterLabel.append(characterText,characterSelect);
+        dialog.append(top,viewport,controlsHost,characterLabel,footer);
+        characterSelect.addEventListener('change',()=>{
+          dialog._cgPan?.dispose();dialog._cgPan=null;
+          footer.textContent='Loading '+characterSelect.selectedOptions[0].textContent+'…';
+          img.removeAttribute('src');
+          img.src='/rpg-assets/characters/'+characterSelect.value+'/events/final/'+characterSelect.value+'_sneeze_parody.png';
+        });
         document.body.append(dialog);
         dialog.addEventListener('close',()=>{
           dialog._cgControls?.dispose();dialog._cgControls=null;
@@ -396,17 +419,22 @@
         const width=Math.max(1,Math.min(maxWidth,maxHeight*2*img.naturalWidth/img.naturalHeight));
         viewport.style.width=width+'px';
         viewport.style.height=(width*img.naturalHeight/img.naturalWidth/2)+'px';
+        dialog._cgPan?.dispose();
         dialog._cgPan=window.NeoRpgCGPan.attach(viewport,img,dialog._cgControls.getConfig());
+        dialog.querySelector('p').textContent='Adjust the timings manually or enable Auto mode: 3 seconds per stage.';
       };
-      img.onerror=()=>{dialog.querySelector('p').textContent='Could not load Live event artwork. Check the asset path.';};
+      img.onerror=()=>{
+        dialog.querySelector('p').textContent='Could not load '+dialog.querySelector('.neo-cg-test-character').value+' parody CG. Check the asset path.';
+      };
+      const characterSelect=dialog.querySelector('.neo-cg-test-character');
       dialog.querySelector('p').textContent='Adjust the timings manually or enable Auto mode: 3 seconds per stage.';
       dialog.showModal();
-      img.src='/rpg-assets/characters/live/events/2live_confy_scene2.jpg';
+      img.src='/rpg-assets/characters/'+characterSelect.value+'/events/final/'+characterSelect.value+'_sneeze_parody.png';
     }
     const menuItems=[
       ['▣ Deck Studio',showDeck],
       ['▧ CG Gallery',()=>bridge()?.openGallery?.()],
-      ['▶ Test Animated CG (Live)',showAnimatedCgTest],
+      ['▶ Test Animated CG',showAnimatedCgTest],
       ['♥ Status & Relationships',()=>bridge()?.openStatus?.()],
       ['▦ Calendar',()=>bridge()?.openCalendar?.()],
       ['🏆 Circuit & Tournaments',()=>showEvents('circuit')],
