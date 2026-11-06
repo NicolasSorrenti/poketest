@@ -299,20 +299,27 @@ if(MANDATORY)MANDATORY.hydrate(state,MANDATORY_EVENTS);
 const persist=()=>{localStorage.setItem(KEY,JSON.stringify(state));window.NeoRpgCloudSave?.onLocalSave();};
 // Deck Studio is embedded in an iframe in the new overworld. Its localStorage
 // writes do not update this page's in-memory campaign object automatically.
-function syncDeckStudioSave(){
+// Apply Deck Studio changes to the running campaign synchronously. The iframe
+// must never replace the rest of the campaign with its earlier page snapshot.
+function applyDeckStudioSave(update){
  if(!state.deckJourney?.starter||state.pendingDuel)return false;
- let saved;
- try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{return false;}
- if(saved?.deckJourney?.starter!==state.deckJourney.starter||
-    saved.day!==state.day||saved.slot!==state.slot||
-    (saved.pendingDuel?.id||null)!==(state.pendingDuel?.id||null))return false;
- const edited=saved.deckJourney;
+ const edited=update?.deckJourney;
+ if(!edited||edited.starter!==state.deckJourney.starter||
+    update.day!==state.day||update.slot!==state.slot||
+    (update.pendingDuel?.id||null)!==(state.pendingDuel?.id||null))return false;
  if(!COLLECT.check(edited.deck,edited.owned).valid)return false;
- state.deckJourney=edited;
- if(saved.deckStrategy)state.deckStrategy=saved.deckStrategy;
- if(saved.gameplayTutorials)state.gameplayTutorials=saved.gameplayTutorials;
+ state.deckJourney=structuredClone(edited);
+ if(update.deckStrategy)state.deckStrategy=structuredClone(update.deckStrategy);
+ if(update.gameplayTutorials)state.gameplayTutorials=structuredClone(update.gameplayTutorials);
+ persist(); // Make the selected deck authoritative before another RPG action.
  return true;
 }
+function syncDeckStudioSave(){
+ let saved;
+ try{saved=JSON.parse(localStorage.getItem(KEY)||'null');}catch{return false;}
+ return applyDeckStudioSave(saved);
+}
+window.NeoRpgApplyDeckStudioSave=applyDeckStudioSave;
 window.NeoRpgSyncDeckStudio=syncDeckStudioSave;
 const log=t=>{state.journal.unshift(t);state.journal=state.journal.slice(0,25)};
 // Recover chapter gifts earned during the reward-free build, without paying
@@ -2443,7 +2450,8 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
 window.addEventListener('message',ev=>{
  if(ev.data?.type==='neo-rpg-deck-studio-updated'){
   const frame=document.querySelector('#neoOverworldDeckPanel iframe');
-  if(ev.origin===location.origin&&ev.source===frame?.contentWindow)syncDeckStudioSave();
+  if(ev.origin===location.origin&&ev.source===frame?.contentWindow)
+   (ev.data.save?applyDeckStudioSave(ev.data.save):syncDeckStudioSave());
   return;
  }
  const duel=state.pendingDuel;
