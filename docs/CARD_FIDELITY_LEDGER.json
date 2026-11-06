@@ -18907,7 +18907,10 @@
           "kind": "power",
           "index": 0,
           "name": "Softboiled",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Softboiled absent from classic_power_core ONPLAY/ACTIVATED/PASSIVE and no name or printing ID in headless_duel.js. Evolution into previously damaged Chansey should offer optional flip and heal 80/40 (capped at damage); cannot confirm runtime. TCGdex imported text only; independent ruling verification pending."
+          ]
         }
       ]
     },
@@ -18926,7 +18929,10 @@
           "kind": "power",
           "index": 0,
           "name": "Time Travel",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Time Travel absent from current Power registry and no name/printing ID in headless_duel.js. Opponent attack lethal KO should flip; heads shuffle Celebi plus attachments into owner's deck without Prize, tails normal KO/Prize, status locks. Runtime and independent rulings pending."
+          ]
         }
       ]
     },
@@ -18981,7 +18987,10 @@
           "kind": "power",
           "index": 0,
           "name": "Howl",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Howl absent from current ONPLAY registry and no name/printing ID in headless_duel.js. Play Basic from hand, optionally mill up to 5, assign milled Fire Energy to Fire Pokemon, then end turn; deck short/full target scenarios unresolved. Runtime and independent rulings pending."
+          ]
         }
       ]
     },
@@ -19063,7 +19072,10 @@
           "kind": "power",
           "index": 0,
           "name": "Electromagnetic Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Electromagnetic Power absent from ACTIVATED registry and no name/printing ID in headless_duel.js. Repeated transfer among Magnemite/Magneton/Dark Magneton with status locks and turn preservation unresolved. Runtime and independent rulings pending."
+          ]
         }
       ]
     },
@@ -19101,7 +19113,10 @@
           "kind": "power",
           "index": 0,
           "name": "Energy Converter",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Energy Converter absent from ACTIVATED registry and no name/printing ID in headless_duel.js. Once/turn Basic Energy type override and reversion on status or end turn unresolved. Runtime and independent rulings pending."
+          ]
         }
       ]
     },
