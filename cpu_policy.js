@@ -1325,13 +1325,20 @@ function score(a,o,cfg,used){
   // Bench-target attacks hit a chosen Benched Pokémon, not the Active.
   // Never award phantom Active damage or Prize urgency for those attacks.
   const benchTarget=cfg.level===8&&ATTACK.compile(attack)?.kind==='bench-target';
+  // Compiled Bench-target damage is separate from the attack's Active
+  // damage field. The reducer does not apply Weakness/Resistance to these
+  // Bench hits; estimating printed Active damage here undervalues them.
+  const benchProgram=benchTarget?ATTACK.compile(attack):null;
+  const benchHit=benchProgram?
+   (benchProgram.energyBenchMultiplier!==undefined?
+    Math.max(0,(p.active.energies||[]).length)*benchProgram.energyBenchMultiplier:
+    Math.max(0,benchProgram.benchDamage||0)):0;
   const benchDamage=benchTarget?Math.max(0,...q.bench.map(unit=>
-   Math.min(hpRemaining(unit),estimatedDamage(attack,p.active,unit,p.bench.length)))):0;
-  // Bench-target attacks can claim a Prize from the Bench, even though they
-  // cannot knock out the Active. Reward a visible finishing opportunity
-  // separately from the Active KO calculation below.
+   Math.min(hpRemaining(unit),benchHit))):0;
+  // A Bench-target attack can earn a Prize without harming the Active.
+  // Count the actual Bench damage, not the printed Active damage (often 0).
   const benchKoOpportunity=benchTarget&&q.bench.some(unit=>
-   hpRemaining(unit)>0&&estimatedDamage(attack,p.active,unit,p.bench.length)>=hpRemaining(unit));
+   hpRemaining(unit)>0&&benchHit>=hpRemaining(unit));
   const damage=benchTarget?0:estimatedDamage(attack,p.active,q.active,p.bench.length),hp=hpRemaining(q.active);
   // The printed Recover attack discards attached Energy to heal its user.
   // At full HP it has no benefit. Cover all historical Recover users
