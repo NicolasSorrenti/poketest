@@ -1267,3 +1267,15 @@ Manual battle-state sequences to execute when an actual Node checkout is availab
 - **neo3-12 Energy Converter:** Change one Basic Energy type, use it for typed attack cost, confirm once-per-turn limit, end-turn restoration and immediate restoration on Porygon2 becoming Asleep/Confused/Paralyzed.
 
 **Execution blocker:** Direct GitHub file access provides no runnable checked-out repository with its modules. Zero `headless_duel.js` reducer sequences were executed. No game-source fix was made because complete interactions and historical rulings remain unconfirmed. No tests, test scripts, CI, PRs, or Apex files were added or modified.
+
+## 2026-11-06 — five Neo Revelation printings (source-only)
+
+Current engine traced from RPG `rpg_duel_bridge.js` into `classic_local_service.js` and `headless_duel.js`, which imports `classic_power_core.js` and `attack_effects_core.js`. The five imported card definitions were read from `cards/neo3.json`. Exact Power/attack names were not found in the inspected current effect modules; generic mechanisms still require exhaustive confirmation. This is not proof of absent behavior. No Node repository checkout was available through the direct GitHub connector, so **zero reducer sequences executed**. All effects remain **partial**, with historical rulings and printed/errata confirmation outstanding.
+
+- **neo3-4 Crobat:** Triggered Poison after opponent attaches Energy to the Defending Pokémon next turn, including switched targets; Cross Attack 0–4 heads, Confusion at 2+ heads, damage and KO/Prize sequencing.
+- **neo3-9 Jumpluff:** Evolutionary Spore choose multiple Hoppip/Skiploom, individually search/evolve, resolve unavailable evolution and shuffle; Solarbeam Energy payment/damage.
+- **neo3-14 Suicune:** Crystal Body block attack effects other than damage, including status locks and switching; Aurora Wave 0/1/2 heads and promotion after KO.
+- **neo3-15 Aerodactyl:** Prehistoric Memory both players' evolution stacks and typed costs, Aerodactyl Special Conditions; Fly heads/tails, protection expiration and turn ownership.
+- **neo3-17 Entei:** Legendary Body Active-only Trainer immunity, attached-Trainer removal, Stadium exceptions and Special Conditions; Mega Flame two discards on double tails and KO timing. TCGdex catalogue text contains duplicated wording requiring printed-card verification.
+
+No gameplay patch without confirmed cross-module behavior; no tests, CI, PRs, or Apex changes.
