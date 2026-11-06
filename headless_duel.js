@@ -2416,7 +2416,8 @@ function resolveAttack(g,side,index,chosenBench,energyPicks,extra={}){
   const id=p.discard.splice(roll.neo92BenchFromDiscard,1)[0];
   if(!id||p.bench.length>=5||!isBasicPokemon(card(g,id)))fail('Guiding Flame Bench card invalid');
   const entrant=unit(id,g.round);p.bench.push(entrant);
-  if(isClassicRules(g))CLASSIC_POWERS.benched(g,side,entrant,classicHelpers());
+  // Hot Plate triggers only for Baby/Basic Pokémon benched from hand,
+  // not for a Pokémon recovered from the discard by Guiding Flame.
  }
  if(roll.healAllSelf)u.damage=0;
  if(roll.discardEnemyEnergy&&f.active.energies.length&&!f.active.attachedTrainers.some(t=>card(g,t.id).name==="Brock's Protection")){const k=extra.neo92EnemyEnergy??extra.enemyEnergyIndex??0;const discarded=f.active.energies.splice(k,1)[0];f.discard.push(discarded);log(g,`${c.name} discarded ${card(g,discarded).name} from ${card(g,f.active.id).name}.`);}
