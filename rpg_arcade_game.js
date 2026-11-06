@@ -23,7 +23,7 @@ const CSS=String.raw`
 .nc-mask.nc-daisy .nc-cabinet{border-color:#ff70d5;box-shadow:0 0 60px #e33be555}
 .nc-mask.nc-daisy .nc-logo{color:#ffa1eb}.nc-mask.nc-daisy .nc-title{color:#fff0fd;text-shadow:0 0 17px #fb47d9}
 .nc-mask.nc-daisy .nc-stage{background:radial-gradient(circle at 60% 45%,#522266,#0d0926 75%)}
-.nc-dance-actor{position:absolute;z-index:2;left:32%;top:0;width:40%;height:100%;pointer-events:none;display:none;filter:drop-shadow(0 0 22px #ef56dc75);overflow:hidden}
+.nc-dance-actor{position:absolute;z-index:2;left:34.5%;top:5%;width:31%;height:88%;pointer-events:none;display:none;filter:drop-shadow(0 0 22px #ef56dc75);overflow:hidden}
 .nc-daisy .nc-dance-actor{display:block}
 .nc-dance-actor canvas{position:absolute;inset:0;width:100%;height:100%}
 .nc-dance-hud{position:absolute;z-index:3;left:12px;right:12px;top:11px;display:none;align-items:center;justify-content:space-between;pointer-events:none;gap:8px}
@@ -35,7 +35,7 @@ const CSS=String.raw`
 .nc-dance-comment{position:absolute;bottom:13px;right:10px;z-index:3;max-width:42%;padding:7px 12px;border-radius:12px;border:1px solid #f683e8;background:#230e3edc;color:#fce6ff;font-size:11px;font-weight:700;line-height:1.3;text-shadow:0 1px 3px #000;box-shadow:0 0 15px #ea4cdd44;pointer-events:none;display:none}
 .nc-daisy .nc-dance-comment{display:block}
 .nc-daisy .nc-eval{z-index:4;top:48%}
-@media(max-width:700px){.nc-dance-actor{left:27%;width:53%;top:7%;height:83%}.nc-dance-comment{bottom:55px;font-size:10px;max-width:49%}.nc-dance-tag{font-size:9px}}
+@media(max-width:700px){.nc-dance-actor{left:25%;width:50%;top:8%;height:81%}.nc-dance-comment{bottom:55px;font-size:10px;max-width:49%}.nc-dance-tag{font-size:9px}}
 .nc-eval{position:absolute;left:0;right:0;top:53%;text-align:center;font-size:clamp(22px,4vw,40px);font-weight:1000;font-style:italic;color:#fff5b1;text-shadow:0 0 10px #ff45db,3px 3px #a12fe2;pointer-events:none;opacity:0;transition:opacity .13s}
 .nc-side{display:flex;flex-direction:column;gap:10px;padding-top:24px}
 .nc-stat{padding:15px 10px;text-align:center;background:linear-gradient(125deg,#1c1746,#140f2e);border:2px solid #c23bff;border-radius:11px;box-shadow:0 0 19px #ca52fb3b,inset 0 0 14px #bc47ff15}
@@ -230,7 +230,7 @@ function open(options={}){
   const src=document.createElement('canvas'),sc=src.getContext('2d',{willReadFrequently:true});
   const out=document.createElement('canvas'),oc=out.getContext('2d');
   const img=new Image();let original=null,ready=false,last=-Infinity,disposed=false;
-  const W=210,H=290;
+  const W=210,H=280;
   canvas.width=W;canvas.height=H;src.width=out.width=W;src.height=out.height=H;
   img.onload=()=>{
    if(disposed)return;
@@ -245,17 +245,18 @@ function open(options={}){
   const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const mask=(nx,ny,z)=>{const r=Math.hypot((nx-z.x)/z.rx,(ny-z.y)/z.ry);return r>=1?0:(1-smooth(Math.max(0,(r-.45)/.55)))**2;};
   function render(ms,fever=0){
-   if(!ready||disposed||ms-last<75)return;last=ms;
+   if(!ready||disposed||ms-last<45)return;last=ms;
    const phase=ms*.001*136/60*Math.PI*.93;
    const data=oc.createImageData(W,H),dst=data.data,sp=original.data;
    // Centers calibrated against the approved Daisy chest-zone reference.
    // With the new portrait (full image, not cropped), the region is below the face.
-   const L={x:.365,y:.60,rx:.205,ry:.145},R={x:.645,y:.60,rx:.195,ry:.145};
+   const L={x:.383,y:.602,rx:.178,ry:.13},R={x:.607,y:.602,rx:.178,ry:.13};
    const bp=Math.sin(2*phase-.5),pL=Math.sin(2*phase-.4),pR=Math.sin(2*phase-.68);
    for(let y=0;y<H;y++){const ny=(y+.5)/H;for(let x=0;x<W;x++){
     const nx=(x+.5)/W,wl=mask(nx,ny,L),wr=mask(nx,ny,R);
-    const dx=.012*4*bp*(wl*(nx-L.x)/L.rx+wr*(nx-R.x)/R.rx);
-    const dy=.005*(wl*pL+wr*pR)+.004*bp*(wl*(ny-L.y)/L.ry+wr*(ny-R.y)/R.ry);
+    // Continuous inverse warp, confined to the two marked upper-torso zones.
+    const dx=.018*4*bp*(wl*(nx-L.x)/L.rx+wr*(nx-R.x)/R.rx);
+    const dy=.012*(wl*pL+wr*pR)+.008*bp*(wl*(ny-L.y)/L.ry+wr*(ny-R.y)/R.ry);
     const sx=Math.max(0,Math.min(W-1,(nx-dx)*W)),sy=Math.max(0,Math.min(H-1,(ny-dy)*H));
     const x0=Math.floor(sx),y0=Math.floor(sy),x1=Math.min(W-1,x0+1),y1=Math.min(H-1,y0+1);
     const tx=sx-x0,ty=sy-y0,i=(y*W+x)*4;
