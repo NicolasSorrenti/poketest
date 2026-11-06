@@ -3358,8 +3358,8 @@ function render(){
   }
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
- if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
- // Accepted invitations begin after travel and any mandatory apartment scene.
+ // Accepted invitations begin as soon as apartment arrival finishes. An
+ // already-active mandatory scene finishes first; new ones can queue afterward.
  if(state.location==='home'&&state.romanceVisitPending&&!state.romanceVisitShowing&&!state.romanceVisitDeferred&&
     ROMANCE?.pending(state,state.romanceVisitPending,STORY)&&
     !state.mandatoryEventState?.active&&!state.activeStory&&!state.activeSliceOfLife&&
@@ -3369,6 +3369,7 @@ function render(){
     !tournamentDayCup()){
   if(startRomanceVisit(state.romanceVisitPending))return;
  }
+ if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel||!!tournamentDayCup();
  // Location artwork is rendered only by the persistent overworld iframe.
  const showingMandatory=state.mandatoryEventState?.active?MANDATORY_EVENTS.find(x=>x.id===state.mandatoryEventState.active.id):null;
