@@ -896,8 +896,12 @@ function openRomanceVisit(id){
  if(state.romanceVisitShowing!==id||document.getElementById('neoRomanceVisitCG'))return;
  if(!ROMANCE?.open({id,name:cast[id]?.name||id,discreet:liveDiscreetEnabled(),
   onFinish:()=>{
-   if(!ROMANCE.complete(state,id,STORY))return;
+   const completed=ROMANCE.complete(state,id,STORY);
    state.romanceVisitShowing=null;
+   if(!completed){
+    scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;
+    persist();render();return;
+   }
    log('Shared a private moment with '+cast[id].name+'.');
    activityOutcome(cast[id].name,"I'm so glad we had this time together. Let's do this again soon.",null,null,[],1,'romance_visit');
   },
@@ -1742,7 +1746,7 @@ function act(action,confirmedInvitationHandoff=false){
   return closeSceneDialogue();
  }
  if(type==='romanceView'){
-  if(scene.romanceNpc!==id||state.location!=='home'||!ROMANCE?.ready(state,id,STORY))return;
+  if(scene.romanceNpc!==id||state.location!=='home'||!ROMANCE?.ready(state,id,STORY)||!confirmTimeAdvance())return;
   state.romanceVisitShowing=id;
   scene={speaker:cast[id].name,line:'',choices:[],romanceNpc:id};
   state.scene=scene;persist();render();
