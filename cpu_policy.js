@@ -873,7 +873,11 @@ function opponentResponseBonus(action,o,cfg){
   strongestAffordableAttack(next,q.active,p.bench.length);
  if(!replacement)return 0; // Do not flee into a passive Bench that cannot defend itself.
  const lostEnergy=Math.min(attacker.energies?.length||0,(card(attacker.id)?.retreatCost||[]).length);
- const advantage=Math.max(0,replacement-strongestAffordableAttack(attacker,q.active,p.bench.length))*.25;
+ const current=cfg.level===8?projectedAttackValue(attacker,q.active,o.turnSerial,p.bench.length):
+   strongestAffordableAttack(attacker,q.active,p.bench.length);
+  // Compare like-for-like legal Active pressure. Printed Bench-only damage
+  // must not erase the tactical gain from retreating to a ready attacker.
+  const advantage=Math.max(0,replacement-current)*.25;
  return Math.max(0,270+advantage-lostEnergy*22)*cfg.style.survival;
 }
 function knockoutTempoBonus(a,o,cfg){
