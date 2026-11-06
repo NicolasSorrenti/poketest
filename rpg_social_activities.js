@@ -81,32 +81,33 @@
  });
  // Extends existing social profiles for the wider cast; no parallel relationship state.
  const additionalProfiles=Object.freeze({
-  jun:{favorites:["strategy","community"],neutral:[],dislikes:["playful"]},
-  teo:{favorites:["competitive","playful"],neutral:[],dislikes:["quiet"]},
-  iris:{favorites:["creative","quiet"],neutral:[],dislikes:["competitive"]},
-  elio:{favorites:["adventure","community"],neutral:[],dislikes:["quiet"]},
-  alma:{favorites:["quiet","collection"],neutral:[],dislikes:["competitive"]},
-  nereo:{favorites:["strategy","adventure"],neutral:[],dislikes:["creative"]},
-  barb:{favorites:["playful","community"],neutral:[],dislikes:["competitive"]},
-  laca:{favorites:["creative","adventure"],neutral:[],dislikes:["strategy"]},
-  rina:{favorites:["competitive","creative"],neutral:[],dislikes:["quiet"]},
-  sol:{favorites:["strategy","quiet"],neutral:[],dislikes:["playful"]},
-  jinx:{favorites:["playful","competitive"],neutral:[],dislikes:["quiet"]},
-  luna:{favorites:["quiet","adventure"],neutral:[],dislikes:["competitive"]},
-  elena:{favorites:["creative","community"],neutral:[],dislikes:["competitive"]},
-  sierra:{favorites:["adventure","competitive"],neutral:[],dislikes:["quiet"]},
-  live:{favorites:["community","quiet"],neutral:[],dislikes:["competitive"]},
-  mia:{favorites:["playful","community"],neutral:[],dislikes:["strategy"]}
+  jun:{favorites:["strategy","community"],neutral:[],dislikes:["playful"],voice:["Jun starts sketching a better strategy before you have finished explaining.","Jun enjoys the company and keeps the conversation thoughtful.","Jun tries something different, even if it takes practice.","Jun smiles politely, but the silliness is not really his thing."]},
+  teo:{favorites:["competitive","playful"],neutral:[],dislikes:["quiet"],voice:["Teo cheers and immediately asks for a rematch.","Teo relaxes and swaps stories between rounds.","Teo leaps into the unfamiliar challenge.","Teo struggles to sit still and suggests a livelier outing."]},
+  iris:{favorites:["creative","quiet"],neutral:[],dislikes:["competitive"],voice:["Iris compares your ideas with obvious delight.","Iris seems perfectly content sharing a quiet moment.","Iris approaches the activity with curiosity.","Iris admits that a scoreboard makes her nervous."]},
+  elio:{favorites:["adventure","community"],neutral:[],dislikes:["quiet"],voice:["Elio looks around with the excitement of discovering something new.","Elio makes sure you both feel included.","Elio is willing to try anything once.","Elio would rather be exploring than sitting still."]},
+  alma:{favorites:["quiet","collection"],neutral:[],dislikes:["competitive"],voice:["Alma notices a small detail you had missed.","Alma takes her time and listens carefully.","Alma gives the unfamiliar activity some thought.","Alma would rather enjoy the moment than compete."]},
+  nereo:{favorites:["strategy","adventure"],neutral:[],dislikes:["creative"],voice:["Nereo starts exploring all the possible approaches.","Nereo trades stories while you take a break.","Nereo is curious about the new activity.","Nereo admits he is more comfortable planning than crafting."]},
+  barb:{favorites:["playful","community"],neutral:[],dislikes:["competitive"],voice:["Barb laughs and makes sure everyone is having fun.","Barb relaxes, pleased to have your company.","Barb gives the new idea an enthusiastic try.","Barb waves away the score and suggests a less serious game."]},
+  laca:{favorites:["creative","adventure"],neutral:[],dislikes:["strategy"],voice:["Laca immediately imagines another creative twist.","Laca smiles at the unexpected company.","Laca joins in with growing confidence.","Laca jokes that deck theory sounds too much like homework."]},
+  rina:{favorites:["competitive","creative"],neutral:[],dislikes:["quiet"],voice:["Rina celebrates the challenge and asks for another round.","Rina enjoys comparing impressions with you.","Rina is interested enough to try something new.","Rina has trouble hiding how restless she feels."]},
+  sol:{favorites:["strategy","quiet"],neutral:[],dislikes:["playful"],voice:["Sol follows the idea to a surprisingly clever conclusion.","Sol appreciates the chance for a calm conversation.","Sol tries the unfamiliar activity patiently.","Sol cannot quite see the fun in all the jokes."]},
+  jinx:{favorites:["playful","competitive"],neutral:[],dislikes:["quiet"],voice:["Jinx makes the whole challenge into a running joke.","Jinx grins at you across the table.","Jinx dives into the strange new activity.","Jinx gets restless and asks when the action starts."]},
+  luna:{favorites:["quiet","adventure"],neutral:[],dislikes:["competitive"],voice:["Luna enjoys finding a peaceful place together.","Luna shares a quiet thought with you.","Luna is glad to try something different.","Luna would rather relax than keep score."]},
+  elena:{favorites:["creative","community"],neutral:[],dislikes:["competitive"],voice:["Elena proudly compares what the two of you made.","Elena makes the moment feel welcoming.","Elena tries the new plan with good humor.","Elena finds the competition less fun than the company."]},
+  sierra:{favorites:["adventure","competitive"],neutral:[],dislikes:["quiet"],voice:["Sierra rises to the challenge immediately.","Sierra shares a story from an earlier outing.","Sierra takes the unfamiliar challenge in stride.","Sierra suggests something with more movement next time."]},
+  live:{favorites:["community","quiet"],neutral:[],dislikes:["competitive"],voice:["Live smiles warmly when she can help someone.","Live seems perfectly at ease in your company.","Live cheerfully tries something unexpected.","Live insists it is more fun when nobody has to lose."]},
+  mia:{favorites:["playful","community"],neutral:[],dislikes:["strategy"],voice:["Mia finds a joke that makes both of you laugh.","Mia seems glad you made time for her.","Mia throws herself into the new idea.","Mia teases you about turning a relaxing day into a lecture."]}
  });
  const tags=new Set(activities.map(x=>x.tag));
  const places=new Set(activities.map(x=>x.place));
  const clamp=(v,max)=>Math.max(0,Math.min(max,Number.isFinite(v)?v:0));
  function profile(id,cast={}){
   const x=cast?.[id]?.socialProfile||defaults[id]||additionalProfiles[id]||null;
+  const legacyDislikes={hana:['competitive'],reina:['creative'],shiori:['competitive'],yuna:['quiet'],akari:['playful'],camila:['competitive'],marina:['competitive'],kaede:['quiet'],daisy:['quiet'],jicy:['competitive'],lyla:['playful']};
   if(!x)return {favorites:[],neutral:[],dislikes:[],voice:['That was a good way to spend time together.','You share a comfortable conversation.','You both find something to laugh about.']};
   const distinct=a=>Array.isArray(a)?[...new Set(a.filter(t=>tags.has(t)))].slice(0,4):[];
   const favorites=distinct(x.favorites),neutral=distinct(x.neutral).filter(t=>!favorites.includes(t));
-  const dislikes=distinct(x.dislikes).filter(t=>!favorites.includes(t)&&!neutral.includes(t));
+  const dislikes=distinct(x.dislikes||legacyDislikes[id]).filter(t=>!favorites.includes(t)&&!neutral.includes(t));
   const fallback=['That was a good way to spend time together.','You share a comfortable conversation.','You both find something to laugh about.','That is not my favorite kind of activity, but I appreciate the invitation.'];
   const voice=fallback.map((line,i)=>typeof x.voice?.[i]==='string'&&x.voice[i]?x.voice[i]:line);
   return {favorites,neutral,dislikes,voice};
@@ -207,7 +208,7 @@
   }
   for(const [id,p] of Object.entries({...defaults,...additionalProfiles})){
    if(p.favorites.length<2||!p.favorites.every(x=>tags.has(x))||!p.neutral.every(x=>tags.has(x))
-     ||p.favorites.some(x=>p.neutral.includes(x))||p.voice.length!==3)errors.push('Invalid profile '+id);
+     ||p.favorites.some(x=>p.neutral.includes(x))||!Array.isArray(p.voice)||p.voice.length<3)errors.push('Invalid profile '+id);
   }
   return errors;
  }
