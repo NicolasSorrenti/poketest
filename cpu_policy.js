@@ -636,6 +636,21 @@ function choiceValue(option,decision,o,cfg){
    return energyDenialValue(target,o.self.active,n===-1,
      n===-1?o.opponent.bench.length:Math.max(0,o.opponent.bench.length-1));
   if(/promot|retreat|switch.*your/i.test(ctx)){
+   // Apex promotion choices must score attacks that can actually hit the
+   // opposing Active. Printed Bench-only damage and disabled Gym moves are
+   // not immediate pressure; likewise a Confused opponent is not a certain KO.
+   if(cfg?.level===8&&o.opponent.active){
+    const pressure=projectedAttackValue(target,o.opponent.active,o.turnSerial,
+     Math.max(0,o.self.bench.length-1));
+    const threatened=likelyOpponentKnockout(o,target,true);
+    const enemyHp=hpRemaining(o.opponent.active);
+    const ko=(target.effectiveAttacks||card(target.id)?.attacks||[]).reduce((best,attack,index)=>
+     eligibleAttack({...o,self:{...o.self,active:target}},target,attack,index)?
+      Math.max(best,knockoutChance(attack,target,o.opponent.active,
+       Math.max(0,o.self.bench.length-1))*(target.status==='Confused'?.5:1)):best,0);
+    return setupValue(target)*.35+pressure*1.6+hpRemaining(target)*.4+
+     (enemyHp>0?ko*125:0)+(threatened?-85:42);
+   }
    const damage=strongestAffordableAttack(target,o.opponent.active,
      Math.max(0,o.self.bench.length-1));
    const incoming=strongestAffordableAttack(o.opponent.active,target,o.opponent.bench.length);
