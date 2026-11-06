@@ -107,7 +107,8 @@ const LIVE_SPECIAL_ART={
  live_glance_talk_two:'/rpg-assets/characters/live/events/live_couch_sweater _2.png',
  live_glance_next_morning:'/rpg-assets/characters/live/events/live_confy_scene.jpg'
 };
-const LIVE_FINAL_ART_2='/rpg-assets/characters/live/events/live_confy_scene2.jpg';
+const LIVE_FINAL_ART_2='/rpg-assets/characters/live/events/live_confy_scene2.png';
+const LIVE_REPEAT_FINAL_ART_2='/rpg-assets/characters/live/events/2live_confy_scene2.jpg';
 const LIVE_AFTER_ART='/rpg-assets/characters/live/events/live_after.png';
 
 const LIVE_LYLA_PHOTO_EVENT={id:'live_lyla_photo_sighting',title:'A Familiar Face',kind:'season',priority:98,earliestDay:1,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{dayGte:1},lines:[
@@ -168,5 +169,5 @@ const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kin
 ],choices:[{label:'Leave now',reply:"I'll be here if you need anything."}]};
 const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundry','live_getting_ready','live_workout_break'].map(name=>'/rpg-assets/characters/live/events/'+name+'.png');
 
-window.NeoRpgLiveCampaignContent=Object.freeze({LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
+window.NeoRpgLiveCampaignContent=Object.freeze({LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
 })();
