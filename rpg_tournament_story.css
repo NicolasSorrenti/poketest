@@ -92,3 +92,28 @@
  font:900 clamp(19px,3vw,32px) 'Barlow Condensed',sans-serif;letter-spacing:.11em;
  background:linear-gradient(135deg,#30527b,#1b2545 55%,#71445c);
  box-shadow:0 15px 35px #0008,inset 0 0 0 4px #17182e}
+
+/* Canonical Live tournament wake-up CG, approved for all three tournament mornings.
+   The full-size illustration is kept as scene artwork, not a portrait on the map. */
+.neo-cup-story[data-phase="wakeup"][data-discreet="off"] .neo-cup-story__backdrop{
+ background-image:
+  linear-gradient(180deg,rgba(9,12,28,.09) 0%,rgba(9,12,28,.02) 65%,rgba(9,12,28,.32) 100%),
+  url('/rpg-assets/characters/live/events/live_tournament_morning.webp');
+ background-size:cover;
+ background-position:center center;
+ background-repeat:no-repeat;
+}
+.neo-cup-story[data-phase="wakeup"][data-discreet="off"] .neo-cup-story__spotlights,
+.neo-cup-story[data-phase="wakeup"][data-discreet="off"] .neo-cup-story__actors{
+ display:none;
+}
+.neo-cup-story[data-phase="wakeup"][data-discreet="off"] .neo-cup-story__headline{
+ visibility:hidden;
+}
+@media(min-width:780px){
+ .neo-cup-story[data-phase="wakeup"][data-discreet="off"] .neo-cup-story__dialogue{
+  width:min(700px,calc(100vw - 24px));
+  margin-right:max(16px,env(safe-area-inset-right));
+  margin-left:auto;
+ }
+}

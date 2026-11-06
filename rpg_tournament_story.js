@@ -232,6 +232,9 @@
   const doc=typeof document==='undefined'?null:document;
   if(!doc?.body||!cup)return false;
   mount(doc);overlay.hidden=false;overlay.dataset.cup=cup.id;overlay.dataset.phase=phase;
+  // Discreet Mode must not display or fetch the character illustration.
+  overlay.dataset.discreet=(doc.documentElement?.dataset?.rpgDiscreet==='on'||
+   (typeof window!=='undefined'&&window.NeoRpgDiscreet?.isEnabled?.()===true))?'on':'off';
   const round=Math.min(3,Math.max(0,(progress?.round||0)+1));
   heading.textContent=phase==='wakeup'?'Tournament Morning':phase==='countdown'?'Tournament Approaching':cup.title;
   subheading.textContent=phase==='wakeup'?'LIVE · AT HOME · DAY '+cup.day:
