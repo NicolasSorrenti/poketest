@@ -1057,6 +1057,7 @@ function overworldOpportunities(){
  const circuit=[
   {kind:'community',id:'board',label:'▦ Community Board · standings, rivalries & club news',disabled:locked}
  ];
+ if(state.location==='arcade')circuit.unshift({kind:'arcadeFreePlay',id:'daisy',label:'♫ Dance Battle · Daisy · FREE PLAY',description:'Play the complete rhythm challenge whenever you want. No time, credits or rewards.',disabled:locked});
  const consequence=CONSEQ.opportunities(state)[0];
  if(consequence)circuit.push({kind:'consequence',id:String(consequence.id),
   label:(state.location==='center'?'↗ Reflect on your match with ':'↗ Visit the Center to reflect on ')+
@@ -1120,6 +1121,10 @@ function runOverworldOpportunity(kind,id){
   .flatMap(section=>groups[section]||[]).find(item=>
    item.kind===kind&&String(item.id)===String(id)&&!item.disabled);
  if(!found)return false;
+ if(kind==='arcadeFreePlay'){
+  if(!window.NeoRpgArcadeGame?.open)return false;
+  return window.NeoRpgArcadeGame.open({name:'Daisy',characterId:'daisy',freePlay:true,onCancel:()=>{},onComplete:()=>{}});
+ }
  if(kind==='story')startStory(found.id);
  else if(kind==='arc')act('arc:'+found.id);
  else if(kind==='situation')act('situation:'+found.id);
