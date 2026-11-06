@@ -11788,13 +11788,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Razor Leaf",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Fragrance Trap: classic_power_core begin flips and prompts opponent Bench selection on heads; answer swaps Active and clears moved Pokémon conditions. Pending: zero-Bench, status locks, once-per-turn, opponent-owned selection and KO/promotion flow."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Fragrance Trap",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Fragrance Trap: classic_power_core begin flips and prompts opponent Bench selection on heads; answer swaps Active and clears moved Pokémon conditions. Pending: zero-Bench, status locks, once-per-turn, opponent-owned selection and KO/promotion flow."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         }
       ]
     },
@@ -11845,13 +11853,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Triple Cannon",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Shell Armor: headless_duel attack damage branch reduces 10 after damage modifiers; Bench damage branch also reduces 10. Printed 'may' is not represented by a defender decision; optionality and interaction order need correction/review. Triple Cannon three-flip attack path not executed."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Shell Armor",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Shell Armor: headless_duel attack damage branch reduces 10 after damage modifiers; Bench damage branch also reduces 10. Printed 'may' is not represented by a defender decision; optionality and interaction order need correction/review. Triple Cannon three-flip attack path not executed."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         }
       ]
     },
@@ -11909,13 +11925,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Collapse",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Restless Sleep: classic_power_core enabled even during status; headless_duel checks prior defender Asleep and adds 20 to attacker after attack damage. Pending: simultaneous KO, Prize ownership, attack prevention and Collapse self-Sleep."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Restless Sleep",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Restless Sleep: classic_power_core enabled even during status; headless_duel checks prior defender Asleep and adds 20 to attacker after attack damage. Pending: simultaneous KO, Prize ownership, attack prevention and Collapse self-Sleep."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         }
       ]
     },
@@ -12074,13 +12098,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Tail Strike",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Strange Barrier: headless_duel Active defender damage branch limits 20+ Basic attack damage to 10; condition locks via enabled. Pending: Basic self-damage, Bench hits, weakness/resistance order, attacks ignoring effects."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Strange Barrier",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Strange Barrier: headless_duel Active defender damage branch limits 20+ Basic attack damage to 10; condition locks via enabled. Pending: Basic self-damage, Bench hits, weakness/resistance order, attacks ignoring effects."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         }
       ]
     },
@@ -12169,13 +12201,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Poisonpowder",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Photosynthesis: headless_duel attackPool converts each attached Energy card to one Grass; retreatUnits treats cards as one unit; enabled exempts status locks. Pending: special Energy providing multiple units, attack cost/retreat legality, evolution/Power suppression and status."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Photosynthesis",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live-source review: Photosynthesis: headless_duel attackPool converts each attached Energy card to one Grass; retreatUnits treats cards as one unit; enabled exempts status locks. Pending: special Energy providing multiple units, attack cost/retreat legality, evolution/Power suppression and status."
+          ],
+          "scope": "Source-only cross-module inspection; no reducer execution or independent historical ruling confirmation."
         }
       ]
     },
