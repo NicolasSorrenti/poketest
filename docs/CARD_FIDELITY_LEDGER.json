@@ -21308,13 +21308,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only live-engine review: Active-only retreat-attempt coin and damage counter, including switch-versus-retreat, Weakness/Resistance ambiguity, KO before retreat, promotion and turn ownership. Current path rpg_duel_bridge.js → classic_local_service.js → headless_duel.js → classic_power_core.js / attack_effects_core.js; no Node reducer execution; independent printed text, errata and historical rulings pending."
+          ],
+          "scope": "Active-only retreat-attempt coin and damage counter, including switch-versus-retreat, Weakness/Resistance ambiguity, KO before retreat, promotion and turn ownership"
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Chase]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only live-engine review: Active-only retreat-attempt coin and damage counter, including switch-versus-retreat, Weakness/Resistance ambiguity, KO before retreat, promotion and turn ownership. Current path rpg_duel_bridge.js → classic_local_service.js → headless_duel.js → classic_power_core.js / attack_effects_core.js; no Node reducer execution; independent printed text, errata and historical rulings pending."
+          ],
+          "scope": "Active-only retreat-attempt coin and damage counter, including switch-versus-retreat, Weakness/Resistance ambiguity, KO before retreat, promotion and turn ownership"
         }
       ]
     },
@@ -21327,12 +21335,20 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only live-engine review: Missing name/text in cards/neo4.json; cannot certify Power without printed reference, including its activation and timing. Current path rpg_duel_bridge.js → classic_local_service.js → headless_duel.js → classic_power_core.js / attack_effects_core.js; no Node reducer execution; independent printed text, errata and historical rulings pending."
+          ],
+          "scope": "Missing name/text in cards/neo4.json; cannot certify Power without printed reference, including its activation and timing"
         },
         {
           "kind": "power",
           "index": 0,
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only live-engine review: Missing name/text in cards/neo4.json; cannot certify Power without printed reference, including its activation and timing. Current path rpg_duel_bridge.js → classic_local_service.js → headless_duel.js → classic_power_core.js / attack_effects_core.js; no Node reducer execution; independent printed text, errata and historical rulings pending."
+          ],
+          "scope": "Missing name/text in cards/neo4.json; cannot certify Power without printed reference, including its activation and timing"
         }
       ]
     },
@@ -21345,13 +21361,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only live-engine review: Once-per-turn coin and all-Unown attack protection on next opposing turn; duplicate Q limit, Special Conditions exemption, KO and turn expiration. Current path rpg_duel_bridge.js → classic_local_service.js → headless_duel.js → classic_power_core.js / attack_effects_core.js; no Node reducer execution; independent printed text, errata and historical rulings pending."
+          ],
+          "scope": "Once-per-turn coin and all-Unown attack protection on next opposing turn; duplicate Q limit, Special Conditions exemption, KO and turn expiration"
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Quicken]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only live-engine review: Once-per-turn coin and all-Unown attack protection on next opposing turn; duplicate Q limit, Special Conditions exemption, KO and turn expiration. Current path rpg_duel_bridge.js → classic_local_service.js → headless_duel.js → classic_power_core.js / attack_effects_core.js; no Node reducer execution; independent printed text, errata and historical rulings pending."
+          ],
+          "scope": "Once-per-turn coin and all-Unown attack protection on next opposing turn; duplicate Q limit, Special Conditions exemption, KO and turn expiration"
         }
       ]
     },
@@ -21364,13 +21388,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only live-engine review: Benched-only zero Energy retreat for own Unown; changing Bench, multiple Z, Special Conditions, paid retreat and turn ownership. Current path rpg_duel_bridge.js → classic_local_service.js → headless_duel.js → classic_power_core.js / attack_effects_core.js; no Node reducer execution; independent printed text, errata and historical rulings pending."
+          ],
+          "scope": "Benched-only zero Energy retreat for own Unown; changing Bench, multiple Z, Special Conditions, paid retreat and turn ownership"
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Zoom]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only live-engine review: Benched-only zero Energy retreat for own Unown; changing Bench, multiple Z, Special Conditions, paid retreat and turn ownership. Current path rpg_duel_bridge.js → classic_local_service.js → headless_duel.js → classic_power_core.js / attack_effects_core.js; no Node reducer execution; independent printed text, errata and historical rulings pending."
+          ],
+          "scope": "Benched-only zero Energy retreat for own Unown; changing Bench, multiple Z, Special Conditions, paid retreat and turn ownership"
         }
       ]
     },
@@ -21383,7 +21415,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Smokescreen",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only live-engine review: Attack penalty on defending Pokémon's next turn, tails prevention, heads continuation, status/attack costs, switch clearing and expiration. Current path rpg_duel_bridge.js → classic_local_service.js → headless_duel.js → classic_power_core.js / attack_effects_core.js; no Node reducer execution; independent printed text, errata and historical rulings pending."
+          ],
+          "scope": "Attack penalty on defending Pokémon's next turn, tails prevention, heads continuation, status/attack costs, switch clearing and expiration"
         }
       ]
     },
