@@ -79,16 +79,37 @@
     'Lyla stays longer than she planned, comfortable enough not to fill every silence.',
     'Lyla gives the unfamiliar activity a dry comment, then admits it was not a waste of time.']}
  });
+ // Extends existing social profiles for the wider cast; no parallel relationship state.
+ const additionalProfiles=Object.freeze({
+  jun:{favorites:["strategy","community"],neutral:[],dislikes:["playful"]},
+  teo:{favorites:["competitive","playful"],neutral:[],dislikes:["quiet"]},
+  iris:{favorites:["creative","quiet"],neutral:[],dislikes:["competitive"]},
+  elio:{favorites:["adventure","community"],neutral:[],dislikes:["quiet"]},
+  alma:{favorites:["quiet","collection"],neutral:[],dislikes:["competitive"]},
+  nereo:{favorites:["strategy","adventure"],neutral:[],dislikes:["creative"]},
+  barb:{favorites:["playful","community"],neutral:[],dislikes:["competitive"]},
+  laca:{favorites:["creative","adventure"],neutral:[],dislikes:["strategy"]},
+  rina:{favorites:["competitive","creative"],neutral:[],dislikes:["quiet"]},
+  sol:{favorites:["strategy","quiet"],neutral:[],dislikes:["playful"]},
+  jinx:{favorites:["playful","competitive"],neutral:[],dislikes:["quiet"]},
+  luna:{favorites:["quiet","adventure"],neutral:[],dislikes:["competitive"]},
+  elena:{favorites:["creative","community"],neutral:[],dislikes:["competitive"]},
+  sierra:{favorites:["adventure","competitive"],neutral:[],dislikes:["quiet"]},
+  live:{favorites:["community","quiet"],neutral:[],dislikes:["competitive"]},
+  mia:{favorites:["playful","community"],neutral:[],dislikes:["strategy"]}
+ });
  const tags=new Set(activities.map(x=>x.tag));
  const places=new Set(activities.map(x=>x.place));
  const clamp=(v,max)=>Math.max(0,Math.min(max,Number.isFinite(v)?v:0));
  function profile(id,cast={}){
-  const x=cast?.[id]?.socialProfile||defaults[id]||null;
-  if(!x)return {favorites:[],neutral:[],voice:['That was a good way to spend time together.','You share a comfortable conversation.','You both find something to laugh about.']};
+  const x=cast?.[id]?.socialProfile||defaults[id]||additionalProfiles[id]||null;
+  if(!x)return {favorites:[],neutral:[],dislikes:[],voice:['That was a good way to spend time together.','You share a comfortable conversation.','You both find something to laugh about.']};
   const distinct=a=>Array.isArray(a)?[...new Set(a.filter(t=>tags.has(t)))].slice(0,4):[];
-  return {favorites:distinct(x.favorites),neutral:distinct(x.neutral),
-   voice:Array.isArray(x.voice)&&x.voice.length===3&&x.voice.every(t=>typeof t==='string'&&t.length>0)?x.voice:
-    ['That was a good way to spend time together.','You share a comfortable conversation.','You both find something to laugh about.']};
+  const favorites=distinct(x.favorites),neutral=distinct(x.neutral).filter(t=>!favorites.includes(t));
+  const dislikes=distinct(x.dislikes).filter(t=>!favorites.includes(t)&&!neutral.includes(t));
+  const fallback=['That was a good way to spend time together.','You share a comfortable conversation.','You both find something to laugh about.','That is not my favorite kind of activity, but I appreciate the invitation.'];
+  const voice=fallback.map((line,i)=>typeof x.voice?.[i]==='string'&&x.voice[i]?x.voice[i]:line);
+  return {favorites,neutral,dislikes,voice};
  }
  function hydrate(s){
   if(!s||typeof s!=='object')throw Error('Invalid campaign state');
@@ -106,7 +127,7 @@
  }
  function affinity(npc,tag,cast={}){
   const p=profile(npc,cast);
-  return p.favorites.includes(tag)?'favorite':p.neutral.includes(tag)?'neutral':'unfamiliar';
+  return p.favorites.includes(tag)?'favorite':p.dislikes.includes(tag)?'disliked':p.neutral.includes(tag)?'neutral':'unfamiliar';
  }
  // Pure projection: can show hints from past saves without changing any saved data.
  function learnedLikes(s,npc,cast={}){
@@ -146,7 +167,7 @@
   // helps prevent one repetitive route from outperforming all others.
   const affinityBoost=rating==='favorite'&&!repeated;
   const affection=rating==='favorite'?(repeated?1:2):1;
-  const trust=rating==='unfamiliar'||repeated?0:1;
+  const trust=rating==='unfamiliar'||rating==='disliked'||repeated?0:1;
   const respect=a.tone==='rivalry'?(affinityBoost?2:1):0;
   const insight=affinityBoost&&!repeated&&a.tone==='rivalry'?1:0;
   s.focus=clamp((s.focus||0)-a.focus,100);
@@ -159,10 +180,22 @@
   s.hungOut[s.day+':'+npc]=true;
   const likedTags=Array.isArray(previous?.likedTags)?previous.likedTags.filter(t=>tags.has(t)):[];
   if(rating==='favorite'&&!likedTags.includes(a.tag))likedTags.push(a.tag);
-  s.socialHistory[npc]={lastDay:s.day,lastTag:a.tag,lastActivity:a.id,count:(previous?.count||0)+1,likedTags};
+  s.socialHistory[npc]={lastDay:s.day,lastTag:a.tag,lastActivity:a.id,count:(previous?.count||0)+1,likedTags,lastRating:rating};
   return {npc,activityId:a.id,title:a.title,affinity:rating,repeated,tag:a.tag,tone:a.tone,
    affection,trust,respect,insight,focusCost:a.focus,creditCost:a.credits,
-   line:(moments[a.id]||'You share a moment away from the tournament rush.')+' '+profile(npc,cast).voice[rating==='favorite'&&!repeated?0:rating==='unfamiliar'?2:1]};
+   line:(moments[a.id]||'You share a moment away from the tournament rush.')+' '+profile(npc,cast).voice[rating==='favorite'&&!repeated?0:rating==='disliked'?3:rating==='unfamiliar'?2:1]};
+ }
+ // Pure, save-safe remembered outing dialogue. Never awards additional stats.
+ function memoryConversation(s,npc,cast={}){
+  const h=s?.socialHistory?.[npc];
+  if(!h||!Number.isInteger(s?.day)||s.day<=h.lastDay||s.day-h.lastDay>3)return null;
+  const title=ids.get(h.lastActivity)?.title||'our last outing';
+  const p=profile(npc,cast),fav=h.lastRating==='favorite',disliked=h.lastRating==='disliked';
+  return {id:'social-memory:'+npc+':'+h.lastDay+':'+h.lastActivity,lines:[
+   {speaker:npc,text:'I was thinking about '+title.toLowerCase()+' the other day.'},
+   {speaker:'Protagonist',text:'What did you think of it?'},
+   {speaker:npc,text:(fav?'I had a wonderful time. You remembered what I like. ':disliked?'It was not really my kind of outing, but I liked having you there. ':'It was good spending time together. ')+p.voice[fav?0:disliked?3:1]}
+  ]};
  }
  function validate(){
   const errors=[],seen=new Set();
@@ -172,11 +205,11 @@
    if(!places.has(a.place)||!tags.has(a.tag)||!['friendship','rivalry'].includes(a.tone)
     ||!Number.isInteger(a.focus)||a.focus<0||!Number.isInteger(a.credits)||a.credits<0||!a.detail)errors.push('Invalid '+a.id);
   }
-  for(const [id,p] of Object.entries(defaults)){
+  for(const [id,p] of Object.entries({...defaults,...additionalProfiles})){
    if(p.favorites.length<2||!p.favorites.every(x=>tags.has(x))||!p.neutral.every(x=>tags.has(x))
      ||p.favorites.some(x=>p.neutral.includes(x))||p.voice.length!==3)errors.push('Invalid profile '+id);
   }
   return errors;
  }
- return Object.freeze({activities,defaults,profile,options,complete,hydrate,affinity,learnedLikes,validate});
+ return Object.freeze({activities,defaults,additionalProfiles,profile,options,complete,hydrate,affinity,learnedLikes,memoryConversation,validate});
 });
