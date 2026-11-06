@@ -58,6 +58,26 @@
     cloudButton.onclick=()=>document.getElementById('cloudSaveButton')?.click();
     headerActions.append(cloudButton,chibiButton,menuButton);
     toolbar.append(title,headerActions);overlay.append(toolbar,frame,note);document.body.append(overlay);
+    // An arcade cabinet is a location action, never an NPC social activity:
+    // players can launch reward-free Dance Battle even when Daisy is absent.
+    const danceButton=document.createElement('button');
+    danceButton.id='neoOverworldDanceFreePlay';
+    danceButton.type='button';danceButton.hidden=true;
+    danceButton.textContent='♫ DANCE BATTLE · FREE PLAY';
+    danceButton.title='Play Daisy Dance Battle anytime at Pixel Palace — no time, credits or rewards';
+    danceButton.setAttribute('aria-label','Play Daisy Dance Battle for free');
+    danceButton.style.cssText='position:absolute;top:73px;left:50%;transform:translateX(-50%);z-index:8;max-width:calc(100vw - 24px);padding:11px 17px;min-height:44px;border:1px solid #ff91dd;border-radius:28px;background:linear-gradient(115deg,#782b9c,#be2b89);color:#fff;font:900 13px system-ui;letter-spacing:.035em;box-shadow:0 4px 22px #db45d680;cursor:pointer;white-space:nowrap';
+    danceButton.onclick=()=>{
+      const current=bridge()?.snapshot?.();
+      if(!current||current.location!=='arcade'||current.locked||current.storyActive){
+        showNotice('Finish the current dialogue before playing Dance Battle.');
+        return;
+      }
+      if(!bridge()?.runOpportunity?.('arcadeFreePlay','daisy')){
+        showNotice('Dance Battle is unavailable. Please reload the arcade.');
+      }
+    };
+    overlay.append(danceButton);
     function syncNpcIndicators(force=false){
       const data=bridge()?.snapshot?.();
       if(!data||!frame.contentWindow||frame.getAttribute('src')==='about:blank')return;
@@ -1647,6 +1667,7 @@
       const dayText='Day '+data.day+' · '+(['Morning','Afternoon','Evening'][data.slot]||'');
       if(locationName.textContent!==name)locationName.textContent=name;
       if(dayLabel.textContent!==dayText)dayLabel.textContent=dayText;
+      danceButton.hidden=data.location!=='arcade'||!!data.locked||!!data.storyActive||!!data.arriving;
       next.disabled=data.locked;travelToggle.disabled=data.locked;
       if(data.locked&&expandedSheet)closeSheet();
       const people=data.people.map(id=>{
