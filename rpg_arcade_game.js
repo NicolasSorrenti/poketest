@@ -239,9 +239,9 @@ function open(options={}){
    sc.drawImage(img,0,0,img.naturalWidth,img.naturalHeight,6,9,W-12,H-18);
    original=sc.getImageData(0,0,W,H);ready=true;
   };
-  img.onerror=()=>{if(!disposed&&!img.src.includes('/idle.png'))img.src='/rpg-assets/characters/daisy/idle.png';};
+  img.onerror=()=>{if(!disposed&&!img.src.includes('/portraits/primary.png'))img.src='/rpg-assets/characters/daisy/portraits/primary.png';};
   let storedPortrait=null;try{storedPortrait=localStorage.getItem('neo-daisy-dance-portrait');}catch(_){}
-  img.src=storedPortrait||'/rpg-assets/characters/daisy/dance-portrait.webp';
+  img.src=storedPortrait||'/rpg-assets/characters/daisy/portraits/primary.png';
   const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const mask=(nx,ny,z)=>{const r=Math.hypot((nx-z.x)/z.rx,(ny-z.y)/z.ry);return r>=1?0:(1-smooth(Math.max(0,(r-.45)/.55)))**2;};
   function render(ms,fever=0){
