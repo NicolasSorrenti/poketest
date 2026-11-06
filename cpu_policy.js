@@ -1327,6 +1327,11 @@ function score(a,o,cfg,used){
   const benchTarget=cfg.level===8&&ATTACK.compile(attack)?.kind==='bench-target';
   const benchDamage=benchTarget?Math.max(0,...q.bench.map(unit=>
    Math.min(hpRemaining(unit),estimatedDamage(attack,p.active,unit,p.bench.length)))):0;
+  // Bench-target attacks can claim a Prize from the Bench, even though they
+  // cannot knock out the Active. Reward a visible finishing opportunity
+  // separately from the Active KO calculation below.
+  const benchKoOpportunity=benchTarget&&q.bench.some(unit=>
+   hpRemaining(unit)>0&&estimatedDamage(attack,p.active,unit,p.bench.length)>=hpRemaining(unit));
   const damage=benchTarget?0:estimatedDamage(attack,p.active,q.active,p.bench.length),hp=hpRemaining(q.active);
   // The printed Recover attack discards attached Energy to heal its user.
   // At full HP it has no benefit. Cover all historical Recover users
@@ -1394,7 +1399,9 @@ function score(a,o,cfg,used){
   // abandoning the only Active to self-KO can outright lose the match.
   const selfLoss=cfg.level>=4?selfKnockout*
    (p.bench.length===0?240:100)*(1-koChance*.8)*style.survival:0;
-  return 150+direct*.9+(benchTarget?benchDamage*.55:0)+135*koChance+riskPreference+statusValue-fixedCost-selfLoss-idleLockPenalty;
+  return 150+direct*.9+(benchTarget?benchDamage*.55:0)+
+   (benchKoOpportunity?95*confusionChance:0)+135*koChance+
+   riskPreference+statusValue-fixedCost-selfLoss-idleLockPenalty;
  }
  if(type==='play_trainer'){
   const name=card(p.hand[v.handIndex])?.name||'';
