@@ -1394,6 +1394,7 @@ function score(a,o,cfg,used){
   const damagingAlternative=(p.active.effectiveAttacks||card(p.active.id)?.attacks||[])
    .some((other,index)=>index!==v.attackIndex&&
     eligibleAttack(o,p.active,other,index)&&
+    ATTACK.compile(other)?.kind!=='bench-target'&&
     estimatedDamage(other,p.active,q.active,p.bench.length)>0);
   const repeatedLock=retreatLock&&damage===0&&damagingAlternative&&
    (q.active?.retreatLocked||q.active?.cannotRetreat||q.active?.meanLook||
