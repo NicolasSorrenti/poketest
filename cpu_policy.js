@@ -1324,7 +1324,7 @@ function score(a,o,cfg,used){
   // cannot add another independent condition to an already afflicted Active.
   // Preserve the existing approximate status score for lower difficulties.
   const attackText=attack?.text||'';
-  const statusValue=(cfg.level===8?
+  const statusValue=(cfg.level===8&&benchTarget?0:cfg.level===8?
    ((/Poison/i.test(attackText)&&!q.active.poison)||
     (/Paraly/i.test(attackText)&&q.active.status!=='Paralyzed')||
     (/Sleep/i.test(attackText)&&q.active.status!=='Asleep')||
