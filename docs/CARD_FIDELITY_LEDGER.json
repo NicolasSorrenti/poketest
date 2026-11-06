@@ -16090,7 +16090,11 @@
           "kind": "power",
           "index": 0,
           "name": "Playful Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_power_core.js Playful Punch flips, applies 20 via calculateDamage, calls knockOuts and finishTurn only if no pending decision. Scenario: Bench Elekid uses Power, heads KOs opponent Active, opponent Prize/promotion decision and turn ownership; tails ends turn; status locks. No reducer execution or independent historical-ruling verification."
+          ],
+          "scope": "Source-only inspection; realistic battle sequences specified but not executed"
         }
       ]
     },
@@ -16388,7 +16392,11 @@
           "kind": "power",
           "index": 0,
           "name": "Hydroelectric Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: headless_duel.js Floodlight offers optional hydro boost and counts printed Water Energy attached; classic_power_core.js passive registry and enabled status check. Scenario: 2 Lightning payment plus 0/1/3 Water cards, status lock, heads paralysis, weakness/resistance, attack turn completion. No reducer execution or independent historical-ruling verification."
+          ],
+          "scope": "Source-only inspection; realistic battle sequences specified but not executed"
         }
       ]
     },
@@ -16458,7 +16466,11 @@
           "kind": "power",
           "index": 0,
           "name": "Glaring Gaze",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_power_core.js heads reveals opponent hand privately, selects Trainer and shuffles selected card into opponent deck; once-per-turn activated registry. Scenario: heads with two Trainers, heads without Trainer, tails, opponent deck empty, status lock, hidden information. No reducer execution or independent historical-ruling verification."
+          ],
+          "scope": "Source-only inspection; realistic battle sequences specified but not executed"
         }
       ]
     },
@@ -17551,7 +17563,11 @@
           "kind": "power",
           "index": 0,
           "name": "Spikes",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: headless_duel.js reduce post-action compares prior Bench to newly Active during original turn owner's turn; opposing enabled Forretress instances place 10 damage each and call knockOuts when no pending decision. Scenario: retreat, Gust, KO promotion, Rapid Spin switching, two Forretress, status locks, lethal promotion and Prize/turn handling. No reducer execution or independent historical-ruling verification."
+          ],
+          "scope": "Source-only inspection; realistic battle sequences specified but not executed"
         }
       ]
     },
@@ -17668,7 +17684,11 @@
           "kind": "power",
           "index": 0,
           "name": "Frog Song",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: headless_duel.js applies +40 to Politoed damage only if positive and >3 Poliwag-family Pokémon in play across both players, via enabled Power. Scenario: 0/1/2 heads on Doubleslap, exactly three versus four family Pokémon, zero-damage, weakness/resistance, status locks, KO/Prize. No reducer execution or independent historical-ruling verification."
+          ],
+          "scope": "Source-only inspection; realistic battle sequences specified but not executed"
         }
       ]
     },
