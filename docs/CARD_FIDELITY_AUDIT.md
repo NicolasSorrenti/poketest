@@ -1251,3 +1251,19 @@ Exactly five not-fully-verified printings inspected:
 - `neo2-60` Omanyte — Revive Fossil: same activation pipeline; targets Stage 1 Omanyte/Kabuto/Aerodactyl. Sequence: heads with multiple legal choices, empty deck targets, decline, tails, status lock and full Bench; follow-up evolution/KO/Prize. PARTIAL.
 
 Evidence is source inspection of the current reducer and imported catalogue only; no checkout was available through direct GitHub connector, so **zero reducer scenarios executed**. Imported TCGdex text is not independent printed-card/errata/historical-ruling verification. In particular the imported Unown M Power is blank, and whether fossil revival shuffles after tails needs historical ruling review. No tests, test files, scripts, CI workflows or new PRs created. Ledger after this pass: 1 verified, 462 partial, 660 unreviewed (1,122 not fully verified).
+
+## 2026-11-06 — Neo Revelation five-Power source review (current RPG reducer)
+
+Reviewed exactly five distinct printings: **neo3-2 Blissey / Softboiled**, **neo3-3 Celebi / Time Travel**, **neo3-6 Entei / Howl**, **neo3-10 Magneton / Electromagnetic Power**, **neo3-12 Porygon2 / Energy Converter**. All five are **PARTIAL**, not fully verified. Imported TCGdex text in `cards/neo3.json` was read; independent printed/errata and historical-ruling comparison is still outstanding.
+
+Live authority: `rpg_duel_bridge.js` is UI integration; `classic_local_service.js` imports `createGame/reduce` from `headless_duel.js`; that reducer imports `classic_power_core.js` and invokes its `played`, `begin`, `attached`, and `answer` routes. The five named Powers do not occur in the current `classic_power_core.js` ACTIVATED/ONPLAY/PASSIVE registries, nor as names or printing IDs in `headless_duel.js`. This establishes **unregistered current-engine Power paths**, not full proof that every generic interaction fails. Legacy engine excluded.
+
+Manual battle-state sequences to execute when an actual Node checkout is available:
+
+- **neo3-2 Softboiled:** Evolve damaged Chansey into Blissey, decline optional flip, then independently force heads/tails; verify 80/40 HP healing capped at existing damage, no turn advance, no Prize.
+- **neo3-3 Time Travel:** Opponent attacks Active Celebi for lethal damage with attached Energy and a replacement Benched Pokémon. Heads should shuffle Celebi and attachments, trigger promotion, and award no Prize; tails should KO normally and award Prize. Repeat with Asleep/Confused/Paralyzed Celebi and simultaneous damage.
+- **neo3-6 Howl:** Bench Entei from hand with 5-card deck containing Fire Energy, optional decline vs activate, choose multiple Fire Pokémon attachment targets, handle deck under five cards, verify ending player's turn only on activation.
+- **neo3-10 Electromagnetic Power:** With multiple Magnemite, Magneton, Dark Magneton and distinct Energy attachments, repeatedly move one Energy at a time between different eligible Pokémon, verify no turn consumption and status restrictions.
+- **neo3-12 Energy Converter:** Change one Basic Energy type, use it for typed attack cost, confirm once-per-turn limit, end-turn restoration and immediate restoration on Porygon2 becoming Asleep/Confused/Paralyzed.
+
+**Execution blocker:** Direct GitHub file access provides no runnable checked-out repository with its modules. Zero `headless_duel.js` reducer sequences were executed. No game-source fix was made because complete interactions and historical rulings remain unconfirmed. No tests, test scripts, CI, PRs, or Apex files were added or modified.
