@@ -169,7 +169,7 @@ function open(options={}){
    if(disposed)return;
    sc.clearRect(0,0,W,H);
    // Original RPG art; portrait crop favors the face and upper body.
-   sc.drawImage(img,0,0,img.naturalWidth,img.naturalHeight*.72,0,0,W,H);
+   sc.drawImage(img,0,0,img.naturalWidth,img.naturalHeight,0,0,W,H);
    original=sc.getImageData(0,0,W,H);ready=true;
   };
   img.onerror=()=>{if(!disposed&&!img.src.includes('/idle.png'))img.src='/rpg-assets/characters/daisy/idle.png';};
@@ -180,11 +180,13 @@ function open(options={}){
    if(!ready||disposed||ms-last<75)return;last=ms;
    const phase=ms*.001*136/60*Math.PI*.93;
    const data=oc.createImageData(W,H),dst=data.data,sp=original.data;
-   const L={x:.44,y:.46,rx:.17,ry:.14},R={x:.60,y:.46,rx:.17,ry:.14};
+   // Centers calibrated against the approved Daisy chest-zone reference.
+   // With the new portrait (full image, not cropped), the region is below the face.
+   const L={x:.365,y:.60,rx:.205,ry:.145},R={x:.645,y:.60,rx:.195,ry:.145};
    const bp=Math.sin(2*phase-.5),pL=Math.sin(2*phase-.4),pR=Math.sin(2*phase-.68);
    for(let y=0;y<H;y++){const ny=(y+.5)/H;for(let x=0;x<W;x++){
     const nx=(x+.5)/W,wl=mask(nx,ny,L),wr=mask(nx,ny,R);
-    const dx=.014*4*bp*(wl*(nx-L.x)/L.rx+wr*(nx-R.x)/R.rx);
+    const dx=.012*4*bp*(wl*(nx-L.x)/L.rx+wr*(nx-R.x)/R.rx);
     const dy=.005*(wl*pL+wr*pR)+.004*bp*(wl*(ny-L.y)/L.ry+wr*(ny-R.y)/R.ry);
     const sx=Math.max(0,Math.min(W-1,(nx-dx)*W)),sy=Math.max(0,Math.min(H-1,(ny-dy)*H));
     const x0=Math.floor(sx),y0=Math.floor(sy),x1=Math.min(W-1,x0+1),y1=Math.min(H-1,y0+1);
