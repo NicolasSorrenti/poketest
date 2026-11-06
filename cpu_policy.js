@@ -1472,7 +1472,8 @@ function score(a,o,cfg,used){
   const legalPressure=(unit)=>{
    const moves=unit.effectiveAttacks||card(unit.id)?.attacks||[];
    return moves.reduce((best,attack,index)=>
-    eligibleAttack(o,unit,attack,index)?
+    eligibleAttack(o,unit,attack,index)&&
+    ATTACK.compile(attack)?.kind!=='bench-target'?
      Math.max(best,estimatedDamage(attack,unit,q.active,p.bench.length)*
       (unit.status==='Confused'?.5:1)):best,0);
   };
