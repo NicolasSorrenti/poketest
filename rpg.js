@@ -3357,6 +3357,16 @@ function render(){
  }
  window.NeoRpgAudio?.setScene?.(state.location,state.slot);
  if(!arrivalGate&&!pendingOverworldArrival)maybeStartMandatory();
+ // Accepted invitations begin after travel and any mandatory apartment scene.
+ if(state.location==='home'&&state.romanceVisitPending&&!state.romanceVisitShowing&&
+    ROMANCE?.pending(state,state.romanceVisitPending,STORY)&&
+    !state.mandatoryEventState?.active&&!state.activeStory&&!state.activeSliceOfLife&&
+    !state.activeSituation&&!state.activeEncounter&&!state.activeArc&&!state.activeSideQuest&&
+    !state.pendingDuel&&!timeSequence.blocked&&!arrivalGate&&!pendingOverworldArrival&&
+    !window.NeoRpgTimeTransitions?.active&&!scene?.line&&!scene?.choices?.length&&
+    !tournamentDayCup()){
+  if(startRomanceVisit(state.romanceVisitPending))return;
+ }
  const ended=state.day>90,locked=timeSequence.blocked||!!state.activeSliceOfLife||!!state.mandatoryEventState?.active||!!state.activeSituation||!!state.activeStory||!!state.activeEncounter||!!state.activeArc||!!state.activeSideQuest||!!state.pendingDuel||!!tournamentDayCup();
  // Location artwork is rendered only by the persistent overworld iframe.
  const showingMandatory=state.mandatoryEventState?.active?MANDATORY_EVENTS.find(x=>x.id===state.mandatoryEventState.active.id):null;
@@ -3452,6 +3462,9 @@ function render(){
     stageMenu.actions.push({id:'spend',label:'✧ Spend time',title:'Suggest an activity together'});
    if(APPOINTMENTS.proposed(state,selectedCharacter,SCHEDULES).length)
     stageMenu.actions.push({id:'plan',label:'◷ Make plans',title:'Invite '+display+' to meet on another day'});
+   if(ROMANCE?.offerable(state,selectedCharacter,STORY))
+    stageMenu.actions.push({id:'romance',label:ROMANCE.isFirst(state,selectedCharacter)?
+     '♥ Private invitation':'♥ Invite home',title:'Spend a private moment with '+stageMenu.name});
    if(state.deckJourney?.starter){
     stageMenu.actions.push({id:'scout',label:'⌕ Scout',title:'Review '+stageMenu.name+'\u2019s usual theme deck and plan your upgrades'});
    }
@@ -3473,6 +3486,7 @@ function render(){
    else if(command==='duel')startDuel(id);
    else if(command==='spend')planSharedActivity(id);
    else if(command==='plan')act('dateInvite:'+id);
+   else if(command==='romance')act('romanceOffer:'+id);
    else if(command==='scout'&&state.deckJourney?.starter){
     persist();location.assign('/rpg_deck_studio.html?scout='+encodeURIComponent(id));
    }else if(command==='deck')act('partnerDeck:'+id);
@@ -3489,6 +3503,9 @@ function render(){
  tournamentNarrativeView();
  tournamentCountdownView();
  queueMicrotask(maybeShowYearEndFallReel);
+ // Recover an interrupted CG after refresh, without consuming the visit.
+ if(state.romanceVisitShowing&&!timeSequence.blocked&&!arrivalGate&&!pendingOverworldArrival)
+  queueMicrotask(()=>openRomanceVisit(state.romanceVisitShowing));
  // If another transition or mandatory scene owned the screen, resume the arrival
  // chime once it settles instead of silently losing this place entry.
  if(pendingOverworldArrival&&!arrivalGate&&!window.NeoRpgTimeTransitions?.active){
