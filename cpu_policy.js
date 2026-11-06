@@ -1242,8 +1242,16 @@ function score(a,o,cfg,used){
   const apexAfterUnit={...unit,energies:[...(unit.energies||[]),attachmentId],
    ...(counterChange?{damage:Math.max(0,(unit.damage||0)+counterChange)}:{}),
    ...(attachmentName==='Full Heal Energy'?{status:null,poison:false}:{})};
-  const immediateImprovement=cfg.level===8&&v.slot===-1?
-   Math.max(0,apexImmediateDamage(apexAfterUnit)-apexImmediateDamage(unit)):
+  // Bench development is future Active pressure, not printed damage against
+  // today's defender. A Bench-only move must not outscore a genuine attack
+  // unlock simply because its printed damage is larger.
+  const benchReadinessImprovement=cfg.level===8&&v.slot!==-1?
+   Math.max(0,projectedAttackValue(apexAfterUnit,q.active,o.turnSerial,p.bench.length)-
+    projectedAttackValue(unit,q.active,o.turnSerial,p.bench.length)):0;
+  const immediateImprovement=cfg.level===8?
+   (v.slot===-1?
+    Math.max(0,apexImmediateDamage(apexAfterUnit)-apexImmediateDamage(unit)):
+    benchReadinessImprovement):
    Math.max(0,after-before);
   const improvement=immediateImprovement;
   // A Benched Pokémon cannot attack this turn. Its Energy readiness is
