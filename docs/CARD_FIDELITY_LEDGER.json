@@ -20759,13 +20759,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: [Want] absent from classic_power_core ACTIVATED and headless_duel named handlers; four-Unown Bench condition, coin and discard-to-hand recovery unexecuted. Printed text compared only to imported cards/neo4.json; independent errata/rulings not established."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Want]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: [Want] absent from classic_power_core ACTIVATED and headless_duel named handlers; four-Unown Bench condition, coin and discard-to-hand recovery unexecuted. Printed text compared only to imported cards/neo4.json; independent errata/rulings not established."
+          ]
         }
       ]
     },
@@ -20778,13 +20784,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: [XXXXX] absent from classic_power_core PASSIVE and headless_duel named handlers; repeated coin flips, cumulative Hidden Power damage and duplicate restriction unexecuted. Printed text compared only to imported cards/neo4.json; independent errata/rulings not established."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[XXXXX]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: [XXXXX] absent from classic_power_core PASSIVE and headless_duel named handlers; repeated coin flips, cumulative Hidden Power damage and duplicate restriction unexecuted. Printed text compared only to imported cards/neo4.json; independent errata/rulings not established."
+          ]
         }
       ]
     },
@@ -20816,7 +20828,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Clamping Jaw",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Clamping Jaw absent from named attack handlers; retreat lock, attack coin, Bench reset and turn expiry unexecuted. Printed text compared only to imported cards/neo4.json; independent errata/rulings not established."
+          ]
         }
       ]
     },
@@ -20886,13 +20901,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Call Back",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: headless_duel theme call-back branch offers opponent-discard Basic selection, but Baby eligibility, opponent Bench capacity, one damage counter, KO and full decision flow unexecuted. Printed text compared only to imported cards/neo4.json; independent errata/rulings not established."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Surround",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: headless_duel theme call-back branch offers opponent-discard Basic selection, but Baby eligibility, opponent Bench capacity, one damage counter, KO and full decision flow unexecuted. Printed text compared only to imported cards/neo4.json; independent errata/rulings not established."
+          ]
         }
       ]
     },
@@ -20918,13 +20939,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Rock Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Rock Tackle and Explosive Evolution absent from named attack handlers; self damage, next-turn restriction, multi-target damage, deck evolution and shuffle unexecuted. Printed text compared only to imported cards/neo4.json; independent errata/rulings not established."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Explosive Evolution",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Rock Tackle and Explosive Evolution absent from named attack handlers; self damage, next-turn restriction, multi-target damage, deck evolution and shuffle unexecuted. Printed text compared only to imported cards/neo4.json; independent errata/rulings not established."
+          ]
         }
       ]
     },
