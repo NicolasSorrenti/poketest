@@ -17796,7 +17796,11 @@
           "kind": "power",
           "index": 0,
           "name": "Anger",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: headless_duel.js Hidden Power adds 10 per damage counter on first enabled Unown A. Pending duplicate owner, bench damage and suppression scenarios; no reducer execution."
+          ],
+          "scope": "Current-engine source inspection only; no executable reducer scenarios; independent printed/errata/ruling verification pending."
         }
       ]
     },
@@ -18443,7 +18447,11 @@
         {
           "kind": "power",
           "index": 0,
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: imported neo2-49 card ability has no name or text; printed identity/errata must be independently checked. No Power effect certified."
+          ],
+          "scope": "Current-engine source inspection only; no executable reducer scenarios; independent printed/errata/ruling verification pending."
         }
       ]
     },
@@ -18462,7 +18470,11 @@
           "kind": "power",
           "index": 0,
           "name": "[Normal]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: headless_duel.js unownNormal checks own Unown N duplicates and reduces Colorless attack damage to Active/Bench by 30. Fixed cross-player duplicate counting in d8f60d0; status/KO and damage interactions unexecuted."
+          ],
+          "scope": "Current-engine source inspection only; no executable reducer scenarios; independent printed/errata/ruling verification pending."
         }
       ]
     },
@@ -18562,7 +18574,11 @@
           "kind": "power",
           "index": 0,
           "name": "Revive Friends",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_power_core.js Revive Friends flips coin, offers optional Kabuto deck choice, benches as Basic unit and shuffles on heads. Verify tails shuffle ruling, target/bench capacity and KO/prize sequences."
+          ],
+          "scope": "Current-engine source inspection only; no executable reducer scenarios; independent printed/errata/ruling verification pending."
         }
       ]
     },
@@ -18620,7 +18636,11 @@
           "kind": "power",
           "index": 0,
           "name": "Revive Fossil",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_power_core.js Revive Fossil flips coin, selects Stage 1 Omanyte/Kabuto/Aerodactyl, benches as Basic unit, shuffles on heads. Verify tails shuffle ruling and card eligibility."
+          ],
+          "scope": "Current-engine source inspection only; no executable reducer scenarios; independent printed/errata/ruling verification pending."
         }
       ]
     },
