@@ -1896,6 +1896,42 @@ function act(action,confirmedInvitationHandoff=false){
  if(type==='socialPlan')return planSharedActivity(id);
  if(type==='socialDo'){
   if(!cast[id]||!currentPeople().includes(id))return;
+  // Interactive arcade challenge: finish first; never charge time or currency on cancel.
+  if(part==='arcade_highscore'){
+   const available=SOCIAL.options(state,id,currentPeople(),cast).find(x=>x.id===part&&!x.disabledReason);
+   if(!available)return sayCharacterChoiceMenu(id,'SPEND TIME','This game is not available right now.',sharedActivityChoices(id));
+   if(!window.NeoRpgArcadeGame?.open)return sayCharacterChoiceMenu(id,'SPEND TIME','The arcade cabinet is temporarily unavailable.',sharedActivityChoices(id));
+   if(!confirmTimeAdvance())return;
+   window.NeoRpgArcadeGame.open({
+    name:cast[id].name,
+    onCancel:()=>{},
+    onComplete:result=>{
+     try{
+      // Check eligibility again after the minigame, before any campaign mutation.
+      if(!SOCIAL.options(state,id,currentPeople(),cast).some(x=>x.id===part&&!x.disabledReason))
+       throw Error('The shared activity is no longer available.');
+      const before=activityBalance(id);
+      const outcome=SOCIAL.complete(state,id,part,currentPeople(),cast);
+      state.arcadeRecords=state.arcadeRecords||{};
+      const previous=state.arcadeRecords[id];
+      state.arcadeRecords[id]={score:Math.max(previous?.score||0,result.score),lastScore:result.score,
+       grade:result.grade,accuracy:result.accuracy,lastDay:state.day,win:result.win};
+      log('Played Neon Circuit with '+cast[id].name+': '+result.score+' points ('+result.grade+').');
+      recordIntention('hangout');
+      const memories=recordCG('hangout',id);
+      const reaction=result.win?
+       'You beat the house target with '+result.score+' points! '+cast[id].name+' congratulates you.':
+       'You scored '+result.score+' points. '+cast[id].name+' smiles and suggests another try next time.';
+      activityOutcome(cast[id].name,reaction+' '+outcome.line,before,id);
+      showCGMoment(memories[0]);
+     }catch(err){
+      window.NeoRpgErrorReport?.capture?.(err,{source:'arcade-minigame',action:'complete'});
+      sayCharacterChoiceMenu(id,'SPEND TIME',err.message,sharedActivityChoices(id));
+     }
+    }
+   });
+   return;
+  }
   try{
    const available=SOCIAL.options(state,id,currentPeople(),cast).find(x=>x.id===part&&!x.disabledReason);
    if(available&&!confirmTimeAdvance())return;
