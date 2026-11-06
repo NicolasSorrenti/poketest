@@ -440,7 +440,12 @@ function doPower(g,plan,h){
   case 'Gather Fire':u.energies.push(...take(donor('source').energies,[s('energy')]));break;
   case 'Energy Burn':u.energyBurnUntil=g.turnSerial+1;break;
   case 'Energy Charge':{const from=donor('source');u.energies.push(...take(from.energies,[s('energy')]));break;}
-  case 'Emerge':if(d.roll&&selected(plan,'evolution').length){u.under.unshift(u.id);u.id=take(p.deck,[s('evolution')])[0];u.playedTurn=g.round;STATUS.clearConditions(u);h.clearBenchEffects(u);p.deck=h.shuffle(g,p.deck);}break;
+  case 'Emerge':{
+   if(d.roll&&selected(plan,'evolution').length){u.under.unshift(u.id);u.id=take(p.deck,[s('evolution')])[0];u.playedTurn=g.round;STATUS.clearConditions(u);h.clearBenchEffects(u);}
+   // The printed Power shuffles after the search even when no Beedrill is chosen or found.
+   if(d.roll)p.deck=h.shuffle(g,p.deck);
+   break;
+  }
   case 'Call the Boss':if(selected(plan,'trainer').length){p.hand.push(...take(p.deck,[s('trainer')]));p.deck=h.shuffle(g,p.deck);}break;
   case 'Damage Swap':case 'Strange Behavior':case 'Curse':{
    const who=name==='Curse'?f:p,source=pokemon(who,s('source')),target=name==='Strange Behavior'?u:pokemon(who,s('target'));
