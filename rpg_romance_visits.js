@@ -8,7 +8,7 @@
  // Only women whose final parody CG is present in the live repository. Live has
  // her own event system; male characters can join when their routes/art are ready.
  const characters=Object.freeze([
-  'barb','camila','daisy','elena','hana','iris','jicy','jinx','kaede',
+  'akari','barb','camila','daisy','elena','hana','iris','jicy','jinx','kaede',
   'laca','lyla','marina','reina','rina','shiori','sierra','yuna'
  ]);
  const known=new Set(characters);
@@ -62,7 +62,7 @@
   return true;
  }
  function path(id){
-  return known.has(id)?'/rpg-assets/characters/'+id+'/events/final/'+id+'_sneeze_parody.png':null;
+  return known.has(id)?'/rpg-assets/characters/'+id+'/events/final/'+(id==='akari'?'akari_glasses_parody.png':id+'_sneeze_parody.png'):null;
  }
  function open({id,name,discreet=false,onFinish,onCancel}){
   const source=path(id),panApi=typeof window!=='undefined'?window.NeoRpgCGPan:null;
