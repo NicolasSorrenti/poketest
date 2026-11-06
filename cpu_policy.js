@@ -1204,7 +1204,8 @@ function score(a,o,cfg,used){
   const apexImmediateDamage=active=>{
    if(!active||!q.active)return 0;
    return (active.effectiveAttacks||card(active.id)?.attacks||[])
-    .reduce((best,attack,index)=>eligibleAttack(o,active,attack,index)?
+    .reduce((best,attack,index)=>eligibleAttack(o,active,attack,index)&&
+     ATTACK.compile(attack)?.kind!=='bench-target'?
      Math.max(best,estimatedDamage(attack,active,q.active,p.bench.length)*
       (active.status==='Confused'?.5:1)):best,0);
   };
