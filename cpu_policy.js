@@ -1413,10 +1413,13 @@ function score(a,o,cfg,used){
    // Energy payment alone does not make an attack usable. Apex should not
    // spend PlusPower for an imaginary KO while the Active is Asleep,
    // Paralyzed, Amnesia-locked or barred from repeating a Gym attack.
-   // Use only the publicly legal attack set; preserve lower-level scoring.
+   // Use only the publicly legal attack set and exclude Bench-target moves:
+   // PlusPower's Active damage bonus cannot create a Prize against the Active
+   // from a move that targets only the Bench. Preserve lower-level scoring.
    const damage=cfg.level===8?
     (p.active?.effectiveAttacks||card(p.active?.id)?.attacks||[]).reduce((best,attack,index)=>
-     eligibleAttack(o,p.active,attack,index)?
+     eligibleAttack(o,p.active,attack,index)&&
+     ATTACK.compile(attack)?.kind!=='bench-target'?
       Math.max(best,estimatedDamage(attack,p.active,q.active,p.bench.length)):best,0):
     strongestAffordableAttack(p.active,q.active,p.bench.length);
    // Existing unexpired PlusPower cards already add 10 damage apiece
