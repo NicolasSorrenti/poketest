@@ -435,7 +435,7 @@ function maybeStartMandatory(){
  if(MANDATORY.hydrate(state,MANDATORY_EVENTS).active)return;
  if(timeSequence.blocked||window.NeoRpgTimeTransitions?.active)return;
  // Existing scripted dialogue, character choices, galleries, duel preparation and starter selection remain authoritative.
- if(state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
+ if(state.romanceVisitShowing||state.activeSliceOfLife||scene.line||scene.choices?.length||state.deckJourney&&!state.deckJourney.starter
     ||$('preDuelDialog')?.open||$('galleryDialog')?.open||$('calendarDialog')?.open)return;
  // This aftermath is a forced CG-only scene and must start only after the
  // intimate scene's clock wipe has completely finished. Its pending flag is
@@ -1357,10 +1357,25 @@ window.NeoRpgOverworldBridge=Object.freeze({
   items.push({id:'rest',title:state.location==='home'?'Rest at home · ⏳ 1 period':'Wait one period · ⏳ 1 period',disabled:locked||ended});
   if(state.location==='home')
    items.push({id:'sleep',title:'Sleep until morning · ⏳ '+(3-state.slot)+' period(s)',disabled:locked||ended});
+  if(state.location==='home'&&ROMANCE){
+   for(const id of ROMANCE.characters){
+    if(!cast[id]||!ROMANCE.ready(state,id,STORY)||
+       (ROMANCE.isFirst(state,id)&&!ROMANCE.pending(state,id,STORY)))continue;
+    items.push({id:'romanceVisit:'+id,
+     title:(ROMANCE.isFirst(state,id)?'♥ Welcome ':'♥ Invite ')+cast[id].name+' over · ⏳ 1 period',
+     disabled:locked||ended});
+   }
+  }
   return items;
  },
  activity(id){
   if(overworldControlsLocked()||state.day>90)return false;
+  if(id.startsWith('romanceVisit:')){
+   const npc=id.slice('romanceVisit:'.length);
+   if(state.location!=='home'||!cast[npc]||!ROMANCE?.ready(state,npc,STORY)||
+      (ROMANCE.isFirst(state,npc)&&!ROMANCE.pending(state,npc,STORY)))return false;
+   return startRomanceVisit(npc);
+  }
   if(id==='boosterShop'){
    if(state.location!=='shop'||!state.deckJourney?.starter)return false;
    openBoosterShop();return true;
@@ -1708,6 +1723,29 @@ function act(action,confirmedInvitationHandoff=false){
  if(state.activeSliceOfLife){
   if(type==='sliceChoice'&&SLICE.choose(state,Number(id))){persist();render();return;}
   if(type==='sliceNext')return nextSliceOfLife();return;
+ }
+ if(type==='romanceOffer'){
+  if(!cast[id]||!currentPeople().includes(id)||controlsLocked())return;
+  return showRomanceOffer(id);
+ }
+ if(type==='romanceAccept'){
+  if(scene.romanceOffer!==id||!ROMANCE?.accept(state,id,STORY))return;
+  scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;
+  state.selected=null;persist();
+  if(state.location==='home')return startRomanceVisit(id);
+  return travelTo('home',{intro:false});
+ }
+ if(type==='romanceLater'){
+  if(scene.romanceOffer!==id)return;
+  return closeSceneDialogue();
+ }
+ if(type==='romanceView'){
+  if(scene.romanceNpc!==id||state.location!=='home'||!ROMANCE?.ready(state,id,STORY))return;
+  state.romanceVisitShowing=id;
+  scene={speaker:cast[id].name,line:'',choices:[],romanceNpc:id};
+  state.scene=scene;persist();render();
+  queueMicrotask(()=>openRomanceVisit(id));
+  return;
  }
  if(type==='activityContinue')return finishActivityOutcome();
  if(type==='chatNext')return advanceConversation();
@@ -2062,7 +2100,7 @@ function controlsLocked({allowStarterIntro=false}={}){
  return timeSequence.blocked||state.day>90||
   (conversationInProgress()&&!initialStarterIntro)||
   !!state.activeSliceOfLife||!!state.mandatoryEventState?.active||
-  !!state.pendingDuel||!!state.activeSituation||!!state.activeStory||
+  !!state.pendingDuel||!!state.romanceVisitShowing||!!state.activeSituation||!!state.activeStory||
   !!state.activeSideQuest||!!state.activeArc||!!state.activeEncounter||!!tournamentDayCup();
 }
 function showStarterChoice(){
