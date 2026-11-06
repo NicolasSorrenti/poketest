@@ -13597,13 +13597,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Intimidate",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Intimidate: catalogue 50-HP-or-less defender attack lock; no named handler found in live headless_duel.js, attack_effects_core.js or classic_attack_extensions.js. Tumbling Attack heads/tails and lock expiry need reducer execution. Possible missing lock; not confirmed."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Tumbling Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Intimidate: catalogue 50-HP-or-less defender attack lock; no named handler found in live headless_duel.js, attack_effects_core.js or classic_attack_extensions.js. Tumbling Attack heads/tails and lock expiry need reducer execution. Possible missing lock; not confirmed."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         }
       ]
     },
@@ -13658,13 +13666,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Giant Growth",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Giant Growth: headless_duel.js sets gymGiantGrowth on successful attack roll, maxHP uses 80, Pound base becomes 30 and bench transition clears flag. Coin outcomes, damage threshold KO and promotion unexecuted."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Pound",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Giant Growth: headless_duel.js sets gymGiantGrowth on successful attack roll, maxHP uses 80, Pound base becomes 30 and bench transition clears flag. Coin outcomes, damage threshold KO and promotion unexecuted."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         }
       ]
     },
@@ -13782,13 +13798,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Mega Burn",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Psylink: effectiveCard in headless_duel.js appends attacks of other in-play Psychic Pokémon while CLASSIC_POWERS.enabled; copied costs/discards, duplicate attacks, status lock, copied attack availability unexecuted."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Psylink",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Psylink: effectiveCard in headless_duel.js appends attacks of other in-play Psychic Pokémon while CLASSIC_POWERS.enabled; copied costs/discards, duplicate attacks, status lock, copied attack availability unexecuted."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         }
       ]
     },
@@ -13845,13 +13869,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Burn Up",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Healing Fire: headless_duel.js Fire Energy attachment removes 10 when CLASSIC_POWERS.enabled. Source uses exact Fire Energy name; Rainbow Energy, status lock, KO and attachment ordering unexecuted."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Healing Fire",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Healing Fire: headless_duel.js Fire Energy attachment removes 10 when CLASSIC_POWERS.enabled. Source uses exact Fire Energy name; Rainbow Energy, status lock, KO and attachment ordering unexecuted."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         }
       ]
     },
@@ -13864,13 +13896,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Lie Low",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Lie Low: headless_duel.js records gymLieLowSerial, but no consumer found in inspected headless_duel.js or current attack effect modules. Earthdrill printed prerequisite also has no named guard found. Potential missing shield and attack gating; requires full generic-path confirmation."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Earthdrill",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 live source-only inspection; zero reducer executions; independent printed/errata/historical-ruling review pending. Lie Low: headless_duel.js records gymLieLowSerial, but no consumer found in inspected headless_duel.js or current attack effect modules. Earthdrill printed prerequisite also has no named guard found. Potential missing shield and attack gating; requires full generic-path confirmation."
+          ],
+          "scope": "Current reducer and effect-module path inspected; full coin, Energy, decision, KO, Prize, promotion and turn scenarios not executed."
         }
       ]
     },
