@@ -54,12 +54,88 @@ const CSS=String.raw`
 .nc-resultscore{font-size:clamp(32px,5vw,56px);font-weight:1000;color:#ff95f0;font-variant-numeric:tabular-nums}
 .nc-detail{font-size:12px;color:#bdb5db}
 @media(max-width:700px){.nc-layout{grid-template-columns:1fr;padding:4px 9px 0;gap:0}.nc-side{flex-direction:row;padding-top:10px;gap:6px}.nc-stat{flex:1;padding:8px 3px;border-width:1px}.nc-stat strong{font-size:clamp(17px,4.5vw,25px)}.nc-stat small{font-size:9px}.nc-stage{aspect-ratio:1.2}.nc-bar{padding:8px 12px 3px}.nc-title{font-size:32px}.nc-foot{padding:6px 11px 10px}.nc-overlay{padding:9px}.nc-overlay p{font-size:12px}}
+
+/* Daisy: center-stage 4-direction timing line. All overrides are scoped. */
+.nc-daisy.nc-mask{padding:5px;background:radial-gradient(circle,#341149,#070719 75%);overflow:hidden}
+.nc-daisy .nc-cabinet{width:min(1530px,100%);height:calc(100dvh - 10px);max-height:calc(100dvh - 10px);display:flex;flex-direction:column;border:1px solid #f477d9;border-radius:17px;overflow:hidden;background:linear-gradient(130deg,#220d37,#0a091d 65%)}
+.nc-daisy .nc-bar{flex:0 0 auto;padding:9px 17px;background:#200e2cb8;border-bottom:1px solid #f263cf55}
+.nc-daisy .nc-logo{font-size:clamp(11px,1.2vw,16px);color:#ffadee}
+.nc-daisy .nc-layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(172px,20vw,265px);gap:12px;padding:9px 15px 0}
+.nc-daisy .nc-main{min-height:0;min-width:0;display:flex;flex-direction:column}
+.nc-daisy .nc-heading{min-height:83px;flex:0 0 auto;align-items:center;margin:0 0 8px;gap:10px}
+.nc-daisy .nc-overline{color:#ffd5f3;font-size:10px;letter-spacing:.12em}
+.nc-daisy .nc-title{font-size:clamp(29px,3.6vw,55px);color:#ff9de9;font-style:italic;font-weight:1000;text-shadow:0 3px 0 #972789,0 0 17px #eb52c577;letter-spacing:-.055em}
+.nc-daisy .nc-sub{font-size:11px;color:#ccaed7}
+.nc-daisy .nc-track-meta{min-width:0;width:min(350px,44%);padding:10px 13px;border:1px solid #d779cd9e;border-radius:13px;background:#32153fd9}
+.nc-daisy .nc-song-title{display:block;font-weight:900;font-style:italic;color:#fff;font-size:clamp(13px,1.6vw,19px)}
+.nc-daisy .nc-song-sub{display:block;color:#e3aada;font-size:10px;margin:3px 0 8px}
+.nc-daisy .nc-track-progress{display:flex;align-items:center;gap:9px}
+.nc-daisy .nc-track-progress .nc-meter{height:8px;min-width:15px;border:1px solid #ac5cae}
+.nc-daisy .nc-progress-text{font-size:10px}
+.nc-daisy .nc-stage{flex:1;min-height:220px;aspect-ratio:auto;background:#12091f;border:1px solid #cb70ce78}
+.nc-daisy .nc-stage canvas.nc-canvas{position:absolute;inset:0;width:100%;height:100%}
+.nc-daisy .nc-stage canvas.nc-note-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
+.nc-daisy .nc-dance-actor{display:block;position:absolute;z-index:2;left:23%;top:0;width:54%;height:98%;filter:drop-shadow(0 0 22px #eb58c87f);pointer-events:none}
+.nc-daisy .nc-dance-actor canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.nc-daisy .nc-dance-comment{position:absolute;display:flex;flex-direction:column;z-index:6;left:2%;top:47%;bottom:auto;right:auto;min-width:115px;max-width:27%;padding:11px 12px;border:1px solid #f7a6e8;border-radius:16px;background:#310b40d9;color:#fff;font-size:clamp(10px,1.1vw,14px);line-height:1.3}
+.nc-daisy .nc-dance-comment small{font-size:10px;color:#ff9edd;font-weight:900}
+.nc-daisy .nc-eval{z-index:6;top:58%}
+.nc-daisy .nc-side{min-width:0;padding-top:89px;gap:10px}
+.nc-daisy .nc-stat{padding:12px 7px;border:1px solid #bf63c2;background:#220e37e8;border-radius:13px}
+.nc-daisy .nc-stat small{color:#f8c9f4;font-size:10px}
+.nc-daisy .nc-stat strong{font-size:clamp(22px,3vw,43px);color:#fff;line-height:1.15}
+.nc-daisy .nc-stat:nth-child(2){border-color:#ffa074}
+.nc-daisy .nc-stat:nth-child(2) strong{color:#ffb877}
+.nc-daisy .nc-stat:nth-child(3){border-color:#a980ff}
+.nc-daisy .nc-fever-stat{border-color:#ff62cb}
+.nc-daisy .nc-fever-stat strong{color:#ff9bd9;font-size:clamp(15px,1.8vw,23px)}
+.nc-daisy .nc-fever-track{height:10px;margin-top:9px;border:1px solid #a44cb5;border-radius:20px;background:#140d20;overflow:hidden}
+.nc-daisy .nc-fever-fill{display:block;width:0;height:100%;background:linear-gradient(90deg,#fa50bc,#ffe481);transition:width .15s}
+.nc-daisy .nc-pads{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;flex:0 0 auto;margin:8px 0 3px}
+.nc-daisy .nc-pad{min-width:0;padding:7px 2px;font-size:clamp(12px,1.5vw,19px);border-radius:11px;min-height:49px}
+.nc-daisy .nc-pad .nc-key{font-size:clamp(18px,2vw,26px);margin-right:5px}
+.nc-daisy .nc-foot{flex:0 0 auto;padding:7px 15px 9px;border-top:1px solid #c847ae45}
+.nc-daisy .nc-foot .nc-meter{display:none}
+.nc-daisy .nc-overlay{background:linear-gradient(140deg,#170c29f4,#270a40f0)}
+@media(max-width:780px){
+ .nc-daisy.nc-mask{padding:0}
+ .nc-daisy .nc-cabinet{width:100%;height:100dvh;max-height:100dvh;border-radius:0;overflow-y:auto}
+ .nc-daisy .nc-bar{padding:7px 10px}
+ .nc-daisy .nc-layout{min-height:550px;display:flex;flex-direction:column;gap:3px;padding:4px 6px 0}
+ .nc-daisy .nc-main{flex:1;min-height:0}
+ .nc-daisy .nc-heading{min-height:64px;margin-bottom:4px}
+ .nc-daisy .nc-title{font-size:clamp(22px,5.4vw,38px)}
+ .nc-daisy .nc-overline{font-size:9px}
+ .nc-daisy .nc-sub{font-size:9px}
+ .nc-daisy .nc-track-meta{width:44%;padding:6px 7px}
+ .nc-daisy .nc-song-title{font-size:12px}
+ .nc-daisy .nc-song-sub{font-size:9px;margin:2px 0 4px}
+ .nc-daisy .nc-progress-text{font-size:9px}
+ .nc-daisy .nc-stage{flex:1;min-height:330px}
+ .nc-daisy .nc-dance-actor{left:13%;width:74%;height:95%}
+ .nc-daisy .nc-dance-comment{left:1%;top:50%;max-width:33%;min-width:0;padding:7px;font-size:10px}
+ .nc-daisy .nc-dance-comment small{font-size:9px}
+ .nc-daisy .nc-side{order:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:3px 0}
+ .nc-daisy .nc-stat{min-width:0;padding:6px 2px;border-radius:9px}
+ .nc-daisy .nc-stat small{font-size:8px;letter-spacing:0}
+ .nc-daisy .nc-stat strong{font-size:clamp(13px,3.6vw,22px)}
+ .nc-daisy .nc-fever-stat strong{font-size:13px}
+ .nc-daisy .nc-fever-track{height:6px;margin-top:4px}
+ .nc-daisy .nc-pads{gap:5px;margin:5px 0}
+ .nc-daisy .nc-pad{min-height:52px;font-size:11px}
+ .nc-daisy .nc-pad .nc-key{font-size:21px}
+ .nc-daisy .nc-foot{font-size:10px;padding:5px 8px}
+}
+@media(max-width:410px) and (max-height:750px){.nc-daisy .nc-layout{min-height:475px}.nc-daisy .nc-stage{min-height:285px}}
+
 @media(prefers-reduced-motion:reduce){.nc-eval{transition:none}}
 `;
 const PATTERN=[0,1,2,1,0,2,1,0,1,2,0,1,2,0,2,1,0,1,2,1,0,2,0,1];
 const STEP=610,DAISY_STEP=60000/136,LEAD=1700,TRAVEL=1600,WINDOW=190,REPEATS=10;
 const LONG_PATTERN=Array.from({length:REPEATS},()=>PATTERN).flat();
-const COLORS=['#40dafa','#ffbd55','#ff55cb'];
+const DAISY_PATTERN=[0,1,2,3,1,0,3,2,0,2,1,3,2,1,0,3,0,3,1,2,3,1,2,0];
+const LONG_DAISY_PATTERN=Array.from({length:REPEATS},()=>DAISY_PATTERN).flat();
+const COLORS=['#ff68c8','#b688ff','#ff68c8','#b688ff'];
 let active=null;
 // Original, programmatic four-beat backing track. No external music assets.
 function startArcadeAudio(bpm,leadMs){
@@ -108,16 +184,15 @@ function open(options={}){
  const isDaisy=String(options.characterId||options.id||options.name||'').toLowerCase().includes('daisy');
  const host=document.createElement('section');host.className='nc-mask'+(isDaisy?' nc-daisy':'');host.setAttribute('role','dialog');host.setAttribute('aria-modal','true');host.setAttribute('aria-label',isDaisy?'Daisy Dance Battle rhythm game':'Neon Circuit arcade rhythm game');
  host.innerHTML='<div class="nc-cabinet"><header class="nc-bar"><div class="nc-logo">◈ &nbsp; PIXEL PALACE / NEON CIRCUIT</div><button class="nc-close" type="button">EXIT ×</button></header><div class="nc-layout"><div class="nc-main"><div class="nc-heading"><div><span class="nc-overline">ARCADE RUSH · RHYTHM CHALLENGE</span><h1 class="nc-title">NEON CIRCUIT</h1><div class="nc-sub">Playing against <span class="nc-rival"></span></div></div><span class="nc-progress-text">0:00 / 0:16</span></div><div class="nc-stage"><canvas class="nc-canvas" aria-label="Three-lane rhythm track"></canvas><canvas class="nc-note-canvas" aria-hidden="true"></canvas><div class="nc-dance-actor"><canvas class="nc-actor-canvas" aria-label="Daisy rhythmic animation"></canvas></div><div class="nc-dance-hud"><span class="nc-dance-tag">♫ DAISY · DANCE BATTLE</span><div class="nc-dance-fever"><div class="nc-fever-fill"></div></div></div><div class="nc-dance-comment" aria-live="polite">Come on, keep up! ♥</div><div class="nc-eval"></div><div class="nc-overlay"><div class="nc-overlay-inner"><div class="nc-chip">PIXEL PALACE · ARCADE RUSH</div><h2>BEAT THE CIRCUIT</h2><p>Hit notes as they meet the glowing line. Press <b>A / S / D</b> or tap the three colored buttons. Build a combo and beat your rival’s score.</p><button type="button" class="nc-action nc-start">START CHALLENGE</button><button type="button" class="nc-action nc-secondary nc-cancel">NOT NOW</button></div></div></div><div class="nc-pads"><button class="nc-pad" data-lane="0" style="--c:#40dafa" type="button">A · LEFT</button><button class="nc-pad" data-lane="1" style="--c:#ffbd55" type="button">S · CENTER</button><button class="nc-pad" data-lane="2" style="--c:#ff55cb" type="button">D · RIGHT</button></div></div><aside class="nc-side"><div class="nc-stat"><small>SCORE</small><strong class="nc-score">000000</strong></div><div class="nc-stat"><small>COMBO</small><strong class="nc-combo">× 0</strong></div><div class="nc-stat"><small>ACCURACY</small><strong class="nc-accuracy">100%</strong></div></aside></div><footer class="nc-foot"><span>⌨ A · S · D &nbsp; / &nbsp; TAP</span><div class="nc-meter"><div class="nc-meter-fill"></div></div><span>ESC TO EXIT</span></footer></div>';
- if(isDaisy){
-  host.innerHTML=host.innerHTML.replace('PIXEL PALACE / NEON CIRCUIT','PIXEL PALACE / DANCE BATTLE').replace('NEON CIRCUIT</h1>','DANCE BATTLE</h1>').replace('ARCADE RUSH · RHYTHM CHALLENGE','DAISY · ELECTRIC HEART · DANCE CHALLENGE').replace('BEAT THE CIRCUIT','DANCE WITH DAISY').replace('NEON CIRCUIT · RUN COMPLETE','DANCE BATTLE · FINISHED');
- }
+ if(isDaisy)host.innerHTML="<div class=\"nc-cabinet\"><header class=\"nc-bar\"><div class=\"nc-logo\">◈ NEO CAMPUS &nbsp; / &nbsp; ♥ PIXEL PALACE</div><button class=\"nc-close\" type=\"button\">EXIT ×</button></header>\n<div class=\"nc-layout\"><main class=\"nc-main\"><div class=\"nc-heading\"><div><span class=\"nc-overline\">✦ DAISY / PIXEL PALACE</span><h1 class=\"nc-title\">DANCE BATTLE ♡</h1><div class=\"nc-sub\">RHYTHM MINI-GAME · CENTER STAGE</div></div><div class=\"nc-track-meta\"><strong class=\"nc-song-title\">♫ Electric Heart</strong><small class=\"nc-song-sub\">Daisy · 136 BPM</small><div class=\"nc-track-progress\"><div class=\"nc-meter\"><div class=\"nc-meter-fill\"></div></div><span class=\"nc-progress-text\">0:00 / 1:47</span></div></div></div>\n<div class=\"nc-stage\"><canvas class=\"nc-canvas\" aria-label=\"Neon dance stage\"></canvas><div class=\"nc-dance-actor\"><canvas class=\"nc-actor-canvas\" aria-label=\"Daisy dancing\"></canvas></div><div class=\"nc-dance-comment\"><small>DAISY ♡</small><span class=\"nc-dance-comment-text\">Nice! Keep that rhythm! ♥</span></div><canvas class=\"nc-note-canvas\" aria-label=\"Horizontal rhythm timing line\"></canvas><div class=\"nc-eval\"></div><div class=\"nc-overlay\"><div class=\"nc-overlay-inner\"><div class=\"nc-chip\">♫ ELECTRIC HEART · 136 BPM</div><h2>DANCE WITH DAISY</h2><p>Hit each arrow when its note reaches the glowing ring: <b>A ← / W ↑ / D → / S ↓</b>. Or tap the four buttons below. Keep a combo to build FEVER!</p><button class=\"nc-action nc-start\" type=\"button\">START DANCE BATTLE</button><button class=\"nc-action nc-secondary nc-cancel\" type=\"button\">NOT NOW</button></div></div></div>\n<div class=\"nc-pads\" aria-label=\"Dance controls\"><button class=\"nc-pad\" data-lane=\"0\" style=\"--c:#ff68c8\" type=\"button\"><span class=\"nc-key\">←</span>A</button><button class=\"nc-pad\" data-lane=\"1\" style=\"--c:#b688ff\" type=\"button\"><span class=\"nc-key\">↑</span>W</button><button class=\"nc-pad\" data-lane=\"2\" style=\"--c:#ff68c8\" type=\"button\"><span class=\"nc-key\">→</span>D</button><button class=\"nc-pad\" data-lane=\"3\" style=\"--c:#b688ff\" type=\"button\"><span class=\"nc-key\">↓</span>S</button></div></main>\n<aside class=\"nc-side\"><div class=\"nc-stat\"><small>SCORE</small><strong class=\"nc-score\">000000</strong></div><div class=\"nc-stat\"><small>COMBO</small><strong class=\"nc-combo\">× 0</strong></div><div class=\"nc-stat\"><small>ACCURACY</small><strong class=\"nc-accuracy\">100%</strong></div><div class=\"nc-stat nc-fever-stat\"><small>🔥 FEVER</small><strong class=\"nc-fever-value\">0%</strong><div class=\"nc-fever-track\"><div class=\"nc-fever-fill\"></div></div></div></aside></div>\n<footer class=\"nc-foot\"><span>INPUT · ← A &nbsp; ↑ W &nbsp; → D &nbsp; ↓ S / TAP</span><div class=\"nc-meter\"><div class=\"nc-meter-fill\"></div></div><span>ESC TO EXIT</span></footer></div>";
+
  document.body.append(host);
  const $=q=>host.querySelector(q),$$=q=>Array.from(host.querySelectorAll(q));
  $('.nc-rival').textContent=options.name||'your rival';
  const canvas=$('.nc-canvas'),ctx=canvas.getContext('2d'),notesCanvas=$('.nc-note-canvas'),notesCtx=notesCanvas.getContext('2d');
  if(!ctx||!notesCtx){host.remove();return false;}
  const previous=document.activeElement;
- const session={host,frame:0,playing:false,finished:false,audio:null,start:0,notes:LONG_PATTERN.map((lane,i)=>({lane,at:LEAD+i*(isDaisy?DAISY_STEP:STEP),done:false})),duration:LEAD+(LONG_PATTERN.length-1)*(isDaisy?DAISY_STEP:STEP)+WINDOW+200,fever:0,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],fxUntil:0,feedbackTimer:0,lastTime:0};
+ const session={host,frame:0,playing:false,finished:false,audio:null,start:0,notes:(isDaisy?LONG_DAISY_PATTERN:LONG_PATTERN).map((lane,i)=>({lane,at:LEAD+i*(isDaisy?DAISY_STEP:STEP),done:false})),duration:LEAD+((isDaisy?LONG_DAISY_PATTERN:LONG_PATTERN).length-1)*(isDaisy?DAISY_STEP:STEP)+WINDOW+200,fever:0,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],fxUntil:0,feedbackTimer:0,lastTime:0};
  active=session;
  const asClock=ms=>{const n=Math.floor(ms/1000);return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
  $('.nc-progress-text').textContent='0:00 / '+asClock(session.duration);
@@ -125,11 +200,36 @@ function open(options={}){
 
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
  function resetCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(2,root.devicePixelRatio||1);const w=Math.max(1,Math.floor(r.width*dpr)),h=Math.max(1,Math.floor(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}if(notesCanvas.width!==w||notesCanvas.height!==h){notesCanvas.width=w;notesCanvas.height=h;}ctx.setTransform(w/800,0,0,h/445,0,0);notesCtx.setTransform(w/800,0,0,h/445,0,0);}
- const project=(lane,p)=>{const y=73+Math.pow(Math.max(0,Math.min(1,p)),1.27)*304;const width=110+Math.pow(p,1.1)*474;const center=400;const left=center-width/2;return{x:left+width*(lane+.5)/3,y,w:width/3};};
+ const project=(lane,p)=>{if(isDaisy)return{x:[148,316,484,652][lane]||148,y:346,w:68};const y=73+Math.pow(Math.max(0,Math.min(1,p)),1.27)*304;const width=110+Math.pow(p,1.1)*474;const center=400;const left=center-width/2;return{x:left+width*(lane+.5)/3,y,w:width/3};};
  function glowLine(x1,y1,x2,y2,color,width=2){ctx.save();ctx.strokeStyle=color;ctx.shadowColor=color;ctx.shadowBlur=15;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();}
+
+ function drawDaisyStage(time){
+  const t=time*.001, bg=ctx.createLinearGradient(0,0,0,445);
+  bg.addColorStop(0,'#200d33');bg.addColorStop(.55,'#3c1249');bg.addColorStop(1,'#11071c');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,800,445);
+  for(let i=0;i<7;i++){const x=55+i*112,g=ctx.createLinearGradient(x,0,x+45,350);g.addColorStop(0,i%2?'#cf4bfc3c':'#ff7bc639');g.addColorStop(1,'#f73cb000');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(x-7,0);ctx.lineTo(x+13,0);ctx.lineTo(x+129,339);ctx.lineTo(x-125,339);ctx.fill();}
+  ctx.save();ctx.shadowColor='#f945c4';ctx.shadowBlur=23;ctx.fillStyle='#f59be3';ctx.font='italic 900 35px system-ui';ctx.fillText('PIXEL',25,91);ctx.font='italic 900 35px system-ui';ctx.fillText('PALACE',25,126);ctx.restore();
+  ctx.fillStyle='#f782d3';ctx.font='26px system-ui';ctx.fillText('♡',35,159);
+  for(let side=0;side<2;side++)for(let col=0;col<9;col++){const count=2+Math.floor(4*Math.abs(Math.sin(t*2+col*.7+side)));for(let j=0;j<count;j++){const x=side?672+col*13:26+col*13;ctx.fillStyle=(col+j)%2?'#fa55d16b':'#975bfb6b';ctx.fillRect(x,252-j*12,8,8);}}
+  ctx.fillStyle='#14091ecc';ctx.fillRect(0,292,800,153);
+  for(let i=0;i<40;i++){const x=i*21,y=307+i%5*5;ctx.fillStyle=i%3?'#100919':'#1c0e2a';ctx.beginPath();ctx.arc(x,y,8+i%3,0,Math.PI*2);ctx.fill();ctx.fillRect(x-9,y+4,18,46);}
+  ctx.fillStyle='#2b0c408c';ctx.fillRect(0,347,800,98);
+  for(let i=0;i<9;i++){const y=357+i*12;ctx.strokeStyle='#e248cb33';ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(800,y);ctx.stroke();}
+  for(let i=-9;i<=9;i++){ctx.strokeStyle='#ed49d529';ctx.beginPath();ctx.moveTo(400+i*24,345);ctx.lineTo(400+i*135,445);ctx.stroke();}
+  const glow=ctx.createRadialGradient(400,170,20,400,170,300);glow.addColorStop(0,'#ff72dd22');glow.addColorStop(1,'#ff72dd00');ctx.fillStyle=glow;ctx.fillRect(0,0,800,445);
+ }
+ function drawDaisyNotes(time){
+  const c=notesCtx,y=346,xs=[148,316,484,652],glyph=['←','↑','→','↓'];
+  c.clearRect(0,0,800,445);
+  c.save();c.shadowColor='#f75bd8';c.shadowBlur=18;c.strokeStyle='#ffe0ff';c.lineWidth=4;c.beginPath();c.moveTo(34,y);c.lineTo(766,y);c.stroke();c.restore();
+  for(let lane=0;lane<4;lane++){const x=xs[lane];c.save();c.shadowColor=COLORS[lane];c.shadowBlur=20;c.fillStyle='#280d37e8';c.strokeStyle=COLORS[lane];c.lineWidth=4;c.beginPath();c.arc(x,y,33,0,Math.PI*2);c.fill();c.stroke();c.textBaseline='middle';c.textAlign='center';c.fillStyle='#fff';c.font='900 33px system-ui';c.fillText(glyph[lane],x,y-1);c.restore();}
+  for(const n of session.notes){if(n.done)continue;const p=1-(n.at-time)/TRAVEL;if(p<0||p>1.02)continue;const target=xs[n.lane],from=n.lane<2?-50:850,x=from+(target-from)*Math.min(1,p),py=y+Math.sin(Math.PI*p)*(n.lane%2?-25:25);c.save();c.globalAlpha=.45+.55*Math.min(1,p*2);c.shadowColor=COLORS[n.lane];c.shadowBlur=20;c.fillStyle=COLORS[n.lane];c.strokeStyle='#fff9';c.lineWidth=3;c.beginPath();c.arc(x,py,20+8*p,0,Math.PI*2);c.fill();c.stroke();c.textBaseline='middle';c.textAlign='center';c.fillStyle='#2a1138';c.font='900 '+Math.round(24+6*p)+'px system-ui';c.fillText(glyph[n.lane],x,py);c.restore();}
+ }
+
  function scene(time){
   resetCanvas();
   if(dancer)dancer.render(time||0,session.fever/100);
+  if(isDaisy){drawDaisyStage(time||0);drawDaisyNotes(time||0);return;}
   const bg=ctx.createLinearGradient(0,0,0,445);bg.addColorStop(0,'#08102b');bg.addColorStop(.7,'#170d36');bg.addColorStop(1,'#070b24');ctx.fillStyle=bg;ctx.fillRect(0,0,800,445);
   // Arcade room: atmospheric neon signs and cabinet silhouettes behind the lane.
   ctx.fillStyle='#160d38';for(let i=0;i<10;i++){const x=i*94-30;ctx.fillRect(x,80+(i%3)*15,60,240);ctx.fillStyle='#2d164a';ctx.fillRect(x+8,97+(i%3)*15,44,70);ctx.fillStyle='#170e34';}
@@ -180,12 +280,12 @@ function open(options={}){
  }
  function RGOverlay(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r);}
  function cleanup(cancel){if(active!==session)return;session.audio?.stop();if(dancer)dancer.dispose();cancelAnimationFrame(session.frame);clearTimeout(session.feedbackTimer);document.removeEventListener('keydown',keydown,true);root.removeEventListener('resize',resize);host.remove();active=null;if(previous?.isConnected&&previous.focus)previous.focus({preventScroll:true});if(cancel)options.onCancel?.();}
- function hud(){if(isDaisy){$('.nc-fever-fill').style.width=session.fever+'%';}$('.nc-score').textContent=String(session.score).padStart(6,'0');$('.nc-combo').textContent='× '+session.combo;$('.nc-accuracy').textContent=(session.hits+session.misses?Math.round(session.quality/(session.hits+session.misses)):100)+'%';}
- function feedback(message,good=true,lane=1){const x=$('.nc-eval');x.textContent=message;x.style.color=good?'#ffe7a0':'#ff7cbb';x.style.opacity='1';clearTimeout(session.feedbackTimer);session.feedbackTimer=setTimeout(()=>{if(host.isConnected)x.style.opacity='0';},330);if(isDaisy&&good){$('.nc-dance-comment').textContent=session.combo>=12?'You really can dance! ♥':session.combo>=5?'That’s the rhythm! Keep going!':'Nice move!';}else if(isDaisy&&!good){$('.nc-dance-comment').textContent='You’ve got this — follow my lead!';}if(good){const pos=project(lane,1);for(let i=0;i<15;i++){const a=Math.PI*2*i/15;session.particles.push({x:pos.x,y:377,vx:Math.cos(a)*(28+(i%3)*17),vy:Math.sin(a)*(25+(i%4)*12),born:performance.now(),duration:410+(i%3)*110,color:COLORS[lane],radius:2+(i%3)});}session.particles=session.particles.slice(-100);}}
+ function hud(){if(isDaisy){$('.nc-fever-fill').style.width=session.fever+'%';$('.nc-fever-value').textContent=session.fever+'%';}$('.nc-score').textContent=String(session.score).padStart(6,'0');$('.nc-combo').textContent='× '+session.combo;$('.nc-accuracy').textContent=(session.hits+session.misses?Math.round(session.quality/(session.hits+session.misses)):100)+'%';}
+ function feedback(message,good=true,lane=1){const x=$('.nc-eval');x.textContent=message;x.style.color=good?'#ffe7a0':'#ff7cbb';x.style.opacity='1';clearTimeout(session.feedbackTimer);session.feedbackTimer=setTimeout(()=>{if(host.isConnected)x.style.opacity='0';},330);if(isDaisy&&good){$('.nc-dance-comment-text').textContent=session.combo>=12?'You really can dance! ♥':session.combo>=5?'That’s the rhythm! Keep going!':'Nice move!';}else if(isDaisy&&!good){$('.nc-dance-comment').textContent='You’ve got this — follow my lead!';}if(good){const pos=project(lane,1);for(let i=0;i<15;i++){const a=Math.PI*2*i/15;session.particles.push({x:pos.x,y:377,vx:Math.cos(a)*(28+(i%3)*17),vy:Math.sin(a)*(25+(i%4)*12),born:performance.now(),duration:410+(i%3)*110,color:COLORS[lane],radius:2+(i%3)});}session.particles=session.particles.slice(-100);}}
  function press(lane){if(!session.playing)return;const elapsed=performance.now()-session.start;let target=null,closest=Infinity;for(const n of session.notes){const d=Math.abs(n.at-elapsed);if(!n.done&&n.lane===lane&&d<closest){closest=d;target=n;}}
  const pad=$$('.nc-pad')[lane];pad.classList.add('nc-lit');setTimeout(()=>{if(pad.isConnected)pad.classList.remove('nc-lit');},110);
  if(!target||closest>WINDOW){feedback('OFF BEAT',false,lane);return;}target.done=true;session.hits++;session.combo++;session.fever=Math.min(100,session.fever+5);session.best=Math.max(session.best,session.combo);const pts=closest<75?100:closest<135?75:45;session.quality+=pts;session.score+=(pts===100?1000:pts===75?650:350)+Math.min(500,session.combo*20);feedback(pts===100?'PERFECT ✦':pts===75?'GREAT!':'GOOD',true,lane);hud();}
- function keydown(e){if(active!==session)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cleanup(true);return;}if(e.repeat||!session.playing)return;const key=e.key.length===1?e.key.toLowerCase():e.key;const lane={a:0,s:1,d:2,ArrowLeft:0,ArrowDown:1,ArrowRight:2}[key];if(lane!==undefined){e.preventDefault();e.stopPropagation();press(lane);}}
+ function keydown(e){if(active!==session)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cleanup(true);return;}if(e.repeat||!session.playing)return;const key=e.key.length===1?e.key.toLowerCase():e.key;const lane=(isDaisy?{a:0,w:1,d:2,s:3,ArrowLeft:0,ArrowUp:1,ArrowRight:2,ArrowDown:3}:{a:0,s:1,d:2,ArrowLeft:0,ArrowDown:1,ArrowRight:2})[key];if(lane!==undefined){e.preventDefault();e.stopPropagation();press(lane);}}
  function resize(){if(active===session&&!session.playing)scene(0);}
  document.addEventListener('keydown',keydown,true);root.addEventListener('resize',resize);
  $$('.nc-pad').forEach(p=>p.addEventListener('pointerdown',e=>{e.preventDefault();press(Number(p.dataset.lane));}));
@@ -214,7 +314,8 @@ function open(options={}){
    if(disposed)return;
    sc.clearRect(0,0,W,H);
    // Original RPG art; portrait crop favors the face and upper body.
-   sc.drawImage(img,0,0,img.naturalWidth,img.naturalHeight,6,9,W-12,H-18);
+   const cropH=img.naturalHeight*.90,cropW=Math.min(img.naturalWidth,cropH*W/H);
+   sc.drawImage(img,(img.naturalWidth-cropW)/2,0,cropW,cropH,0,0,W,H);
    original=sc.getImageData(0,0,W,H);ready=true;
   };
   img.onerror=()=>{if(!disposed&&!img.src.includes('/portraits/primary.png'))img.src='/rpg-assets/characters/daisy/portraits/primary.png';};
@@ -226,12 +327,12 @@ function open(options={}){
   function render(ms,fever=0){
    if(!ready||disposed||ms-last<45)return;last=ms;
    const phase=ms*.001*136/60*Math.PI*.93;
-   const data=oc.createImageData(W,H),dst=data.data,sp=original.data;
+   const data=new ImageData(new Uint8ClampedArray(original.data),W,H),dst=data.data,sp=original.data;
    // Centers calibrated against the approved Daisy chest-zone reference.
    // With the new portrait (full image, not cropped), the region is below the face.
-   const L={x:.383,y:.602,rx:.178,ry:.13},R={x:.607,y:.602,rx:.178,ry:.13};
+   const L={x:.372,y:.61,rx:.185,ry:.145},R={x:.626,y:.61,rx:.185,ry:.145};
    const bp=Math.sin(2*phase-.5),pL=Math.sin(2*phase-.4),pR=Math.sin(2*phase-.68);
-   for(let y=0;y<H;y++){const ny=(y+.5)/H;for(let x=0;x<W;x++){
+   for(let y=Math.floor(H*.42);y<Math.ceil(H*.78);y++){const ny=(y+.5)/H;for(let x=Math.floor(W*.16);x<Math.ceil(W*.84);x++){
     const nx=(x+.5)/W,wl=mask(nx,ny,L),wr=mask(nx,ny,R);
     // Continuous inverse warp, confined to the two marked upper-torso zones.
     const dx=.018*4*bp*(wl*(nx-L.x)/L.rx+wr*(nx-R.x)/R.rx);
