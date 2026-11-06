@@ -1143,8 +1143,12 @@ function benchMatchupValue(pokemonId,o){
   return isEnergy(energy)&&legalAttachment({card:energy,unit:candidate,
    energyUsed:o.self.energyUsed,round:o.round,cardName:ownCard?.name||''});
  });
+ // A prospective backup must threaten the opposing Active, not merely
+ // unlock printed damage that targets the Bench. Use the legal Active-pressure
+ // forecast already used by Apex's attachment and retreat decisions.
  const immediate=handEnergies.reduce((best,id)=>
-  Math.max(best,damageAfterAttachment(candidate,id,enemy,o.self.bench.length)),0);
+  Math.max(best,projectedAttackValue({...candidate,energies:[id]},enemy,
+   o.turnSerial,o.self.bench.length)),0);
  const weakType=(ownCard?.weaknesses||[]).some(w=>
   (card(enemy.id)?.types||[]).includes(w.type));
  return (canBeKnockedOut?-175:0)+(weakType?-45:0)+
