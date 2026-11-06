@@ -20511,13 +20511,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Ball of Flame",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Hot Plate registered PASSIVE; hand-to-Bench hook in headless_duel invokes benched. Found incorrect discard-to-Bench trigger via Guiding Flame and removed it in eb09ef58. Ball of Flame target/discard/damage not reducer-executed."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Hot Plate",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Hot Plate registered PASSIVE; hand-to-Bench hook in headless_duel invokes benched. Found incorrect discard-to-Bench trigger via Guiding Flame and removed it in eb09ef58. Ball of Flame target/discard/damage not reducer-executed."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         }
       ]
     },
@@ -20549,13 +20557,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Mind Shock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Cunning registered ACTIVATED, flips coin, privately logs opponent top deck and offers optional shuffle on heads; Mind Shock damage path not reducer-executed."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Cunning",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Cunning registered ACTIVATED, flips coin, privately logs opponent top deck and offers optional shuffle on heads; Mind Shock damage path not reducer-executed."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         }
       ]
     },
@@ -20644,13 +20660,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Beatdown",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Tag Team registered ONPLAY; handler heals 30 from current Active then switches with evolved Light Machamp. Imported TCGdex wording is malformed; authoritative printed card check required before certifying semantics."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Tag Team",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Tag Team registered ONPLAY; handler heals 30 from current Active then switches with evolved Light Machamp. Imported TCGdex wording is malformed; authoritative printed card check required before certifying semantics."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         }
       ]
     },
@@ -20681,13 +20705,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: [Give] absent from ACTIVATED registry despite printed G-I-V-E Bench requirement and coin-dependent basic Energy attachment. Hidden Power not reducer-executed."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Give]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: [Give] absent from ACTIVATED registry despite printed G-I-V-E Bench requirement and coin-dependent basic Energy attachment. Hidden Power not reducer-executed."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         }
       ]
     },
@@ -20700,13 +20732,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: [Help] registered ACTIVATED, checks H-E-L-P on Bench and shuffles hand into deck then redraws same count; draw exhaustion and turn state not reducer-executed."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Help]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: [Help] registered ACTIVATED, checks H-E-L-P on Bench and shuffles hand into deck then redraws same count; draw exhaustion and turn state not reducer-executed."
+          ],
+          "scope": "Current-engine source inspection only; no Node reducer execution or independent complete errata/ruling validation."
         }
       ]
     },
