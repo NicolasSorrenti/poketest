@@ -1119,3 +1119,16 @@ Live path: `classic_local_service.js` imports `headless_duel.js` and current eff
 - `base4-37`: Source-only: headless_duel.js retreatCost counts enabled Benched Retreat Aid copies and reduces retreat units. Check stacking, status locks, zero floor and interaction with Sticky Goo; no reducer execution.
 
 No confirmed defect, no gameplay change, no test infrastructure introduced. Additional checks: coin outcomes, energy payment, choices, KOs, promotions, prizes and turn ownership remain pending where applicable.
+
+
+## 2026-11-06 — five Gym Heroes Power printings (source-only)
+
+Entry path: `classic_local_service.js` calls `headless_duel.js` reducer; `rpg_duel_bridge.js` handles RPG duel result integration; live Powers are in `classic_power_core.js` and reducer damage/KO decision handlers. No legacy engine counted. TCGdex-imported `cards/gym1.json` text used as preliminary card reference; independent printed errata/historical rulings not yet verified. No executable Node checkout was provided by GitHub connector, so zero scenarios were executed and no runtime fidelity is claimed.
+
+- `gym1-2` **Brock's Rhydon — Bench Guard**: Live reducer queues optional defender-owned 10-damage redirection after Benched Pokémon attack damage; decision handler transfers counter to Benched Brock's Rhydon. Source-only: simultaneous targets, KO, prize/promotions, prevention ordering and turn owner not executed.
+- `gym1-5` **Erika's Vileplume — Pollen Defense**: Live reducer checks active Vileplume after damage and flips for Confusion; enabled() exempts Pollen Defense from special-condition lock. Source-only: fatal damage, retaliatory Confusion, suppression and timing not executed.
+- `gym1-8` **Lt. Surge's Magneton — Energy Charge**: Active-only activated power selects own donor Pokémon and attached Lightning Energy; transfers to Magneton; not in once-per-turn list. Source-only: repeated transfers, no donors, special conditions and attack availability not executed.
+- `gym1-10` **Misty's Tentacruel — Flee**: Live reducer offers defender-owned optional Bench choice after damage, preserves damage and switches before further effects. Source-only: damage/KO timing, status, simultaneous effects and turn ownership not executed.
+- `gym1-12` **Rocket's Moltres — Rebirth**: Live KO handler offers optional return-to-hand after KO and discard; power disabled by special conditions; awardKnockoutPrize still occurs. Source-only: Active/Bench KO, promotion, Prize choice, attachment disposal and opponent turn not executed.
+
+All five Power effects remain **PARTIAL**. No gameplay defect confirmed sufficiently for a code change; no tests, scripts, workflows, PRs, or Apex changes introduced.
