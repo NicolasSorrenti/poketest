@@ -1080,3 +1080,16 @@ Current route inspected: RPG `rpg_duel_bridge.js` integrates with the authoritat
 - **base5-68 Squirtle — PARTIAL:** Shell Attack costs two Colorless and deals 20. Flat compiler and reducer source reviewed; typed substitution, damage modifiers, shield, KO, Prize and promotion pending.
 
 **Validation:** Direct GitHub source inspection only; no executable Node checkout available through connector, so zero reducer scenarios executed. No tests, CI, workflows or new PRs added. No gameplay change made without a confirmed defect. All five remain PARTIAL. Ledger after this batch: 1 verified, 398 partial, 724 unreviewed; **1,122 not fully verified**.
+
+
+## 2026-11-06 — Five Team Rocket Trainer/Energy printings (source-only)
+
+Current entrypoint: `classic_local_service.js` imports `createGame/reduce` from `headless_duel.js`; `rpg_duel_bridge.js` handles RPG duel result integration, not card rules. The active reducer delegates Trainer decisions to `classic_trainer_core.js`, and resolves Special Energy in `headless_duel.js`. Legacy engine excluded. Latest main includes Apex Bench-target scoring changes; left intact. #440/#507 previously merged; open audit PR search found no relevant new audit PR. Imported TCGdex text from `cards/base5.json` compared; printed images, errata and historical rulings still unverified.
+
+- **base5-75 Digger — PARTIAL:** Alternating coin-flip loop damages the Active of the player who first flips tails for 10 and calls KO resolution. Source uses a 2048-flip safety cap. Scenarios: immediate tails, opponent tails, multiple heads, self/opponent KO, Prize/promotion and turn ownership.
+- **base5-76 Imposter Oak's Revenge — PARTIAL:** One other hand card cost; opponent hand shuffled into deck, then draws four. Scenarios: empty opponent hand, fewer than four cards available, discarded-cost indexing, hidden information, cancellation and deck-out.
+- **base5-77 Nightly Garbage Run — PARTIAL:** Selects 1–3 Pokémon/basic Energy from discard, returns to shuffled deck. Scenarios: mixed eligible/ineligible cards, duplicates, empty discard, choice cancellation and public reveal. Imported text says 'up to 3'; whether selecting zero is legal needs ruling verification (source requires at least one).
+- **base5-79 Sleep! — PARTIAL:** Heads applies Asleep to opposing Active, tails no status. Scenarios: both flips, status replacement, protection, checkup and turn ownership.
+- **base5-81 Full Heal Energy — PARTIAL:** Attachment clears conditions; provides one Colorless. Scenarios: each of Sleep, Confusion, Paralysis and Poison, attached status restrictions, Energy costs, special Energy discard and turn ownership.
+
+No executable repository Node runtime was provided by the GitHub connector, so **zero reducer sequences executed**; all findings are **source-only PARTIAL**, not certification. No confirmed source defect fixed, no tests/CI/new PRs introduced. Ledger records now: **403 partial, 720 unreviewed, 0 fully verified by effect-status calculation**, 1,123 not fully verified. Earlier summaries reported one verified; the current JSON has no effect with status `verified`, so that figure cannot be substantiated from the ledger.
