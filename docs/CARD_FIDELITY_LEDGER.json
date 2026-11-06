@@ -14488,7 +14488,11 @@
           "kind": "power",
           "index": 0,
           "name": "Shock Blast",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current headless_duel.js knockOuts checks damaged defending Active's lastAttackImpact, flips and adds 20 damage to both Actives on tails. Printed text in cards/gym2.json requires activation even on KO and through Sleep/Confusion/Paralysis. Source-only PARTIAL; pending lethal hit, simultaneous KOs, secondary damage, Prize/promotion and turn ownership."
+          ],
+          "scope": "Current live-engine source inspection only; reducer not executed, independent printed/errata/historical rulings incomplete."
         }
       ]
     },
@@ -15265,7 +15269,11 @@
           "kind": "power",
           "index": 0,
           "name": "Gaseous Form",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current maxHP counts attached cards named Psychic Energy and adds 10 HP each while CLASSIC_POWERS.enabled; enabled exempts Gaseous Form from status locks. Printed text in cards/gym2.json checked. Source-only PARTIAL; pending special Energy, attach/discard at lethal threshold, evolution, KO/Prize/promotion."
+          ],
+          "scope": "Current live-engine source inspection only; reducer not executed, independent printed/errata/historical rulings incomplete."
         }
       ]
     },
@@ -15736,7 +15744,11 @@
           "kind": "power",
           "index": 0,
           "name": "Berserk",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current classic_power_core.js ONPLAY Berserk flips once, discards up to five top cards from opponent deck on heads or own deck on tails. TCGdex-imported neo1 text checked. Source-only PARTIAL; pending short decks, hand evolution, deck exhaustion, post-evolution attack and turn ownership."
+          ],
+          "scope": "Current live-engine source inspection only; reducer not executed, independent printed/errata/historical rulings incomplete."
         }
       ]
     },
@@ -15755,7 +15767,11 @@
           "kind": "power",
           "index": 0,
           "name": "Downpour",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Current classic_power_core.js repeatable manual Power selects and discards Water Energy from hand; status gating via healthy and blocked. Printed neo1 text has an import typo; independent card image and errata required. Source-only PARTIAL; pending repeated activations, Water vs special Energy, Riptide damage/shuffle, status and decisions."
+          ],
+          "scope": "Current live-engine source inspection only; reducer not executed, independent printed/errata/historical rulings incomplete."
         }
       ]
     },
@@ -15774,7 +15790,11 @@
           "kind": "power",
           "index": 0,
           "name": "Final Blow",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Printed neo1 text permits optional Megahorn base damage 120 at <=20 remaining HP while not status-locked. No named Final Blow reader found in inspected headless_duel.js/classic_power_core.js/classic_attack_extensions.js, although generic dispatch may exist. Potential missing behavior, not confirmed. Source-only PARTIAL; pending opt-in/out, coin outcomes, Weakness, damage threshold, KO/Prize and turn ownership."
+          ],
+          "scope": "Current live-engine source inspection only; reducer not executed, independent printed/errata/historical rulings incomplete."
         }
       ]
     },
