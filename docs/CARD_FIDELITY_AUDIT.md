@@ -1093,3 +1093,16 @@ Current entrypoint: `classic_local_service.js` imports `createGame/reduce` from 
 - **base5-81 Full Heal Energy — PARTIAL:** Attachment clears conditions; provides one Colorless. Scenarios: each of Sleep, Confusion, Paralysis and Poison, attached status restrictions, Energy costs, special Energy discard and turn ownership.
 
 No executable repository Node runtime was provided by the GitHub connector, so **zero reducer sequences executed**; all findings are **source-only PARTIAL**, not certification. No confirmed source defect fixed, no tests/CI/new PRs introduced. Ledger records now: **403 partial, 720 unreviewed, 0 fully verified by effect-status calculation**, 1,123 not fully verified. Earlier summaries reported one verified; the current JSON has no effect with status `verified`, so that figure cannot be substantiated from the ledger.
+
+
+## 2026-11-06 — Five Team Rocket printings, current engine (source-only)
+
+Traced live `classic_local_service.js` import of `headless_duel.js` createGame/reduce, with RPG result bridge `rpg_duel_bridge.js`, through current `attack_effects_core.js`, `classic_attack_extensions.js` and `classic_trainer_core.js`. Legacy engine excluded. Inspected recent Apex commit e58adff5 and other main commits; preserved them. Open audit PR search found none; prior #440/#507 reported merged. Compared imported TCGdex `cards/base5.json` card text to source handlers; independent card image, errata and historical rulings are outstanding. No executable Node checkout was provided by the GitHub connector; **zero reducer scenarios executed**, all five **PARTIAL**.
+
+- **base5-69 — PARTIAL:** One Lightning Energy, 20 damage. Flat-attack compiler and active reducer must be followed through cost, Weakness/Resistance, shield, KO, Prize and turn ownership. Scenario not executed; source-only.
+- **base5-70 — PARTIAL:** Ram: one Colorless for 10; Bite: Grass plus Colorless for 20. Distinct cost checks, normal attack damage, modifiers, KO and promotion still require reducer execution. Scenario not executed; source-only.
+- **base5-73 — PARTIAL:** The Boss's Way: current classic_trainer_core.js stages deck choice filtered by Pokémon name starting 'Dark ', transfers selected card to hand and shuffles deck. Check Evolution-only eligibility, zero-match search, reveal to opponent, decision cancellation, shuffle and turn ownership. Scenario not executed; source-only.
+- **base5-80 — PARTIAL:** Rainbow Energy: headless_duel.js attach_energy adds 10 damage and checks direct KO; energy pool uses Any, distinct from basic Energy outside play. Check KO/promotion/Prize, on-attachment Power callbacks, Energy cost and damage-prevention interactions. Scenario not executed; source-only.
+- **base5-82 — PARTIAL:** Potion Energy: headless_duel.js attach_energy heals 10 damage on attachment and energy pool grants one Colorless. Check hand-only trigger, zero-damage host, damaged Active/Bench, attachment limits, modifiers and turn ownership. Scenario not executed; source-only.
+
+No confirmed gameplay defect, gameplay change, tests, CI, workflows or new PRs. Direct ledger update only; Apex untouched. Total: 408 partial, 715 unreviewed, 0 fully verified by effect status; **1,123 not fully verified**. Future execution should prioritize Rainbow Energy self-KO and Prize/promotion and The Boss's Way zero-match searches.
