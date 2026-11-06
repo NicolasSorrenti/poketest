@@ -10233,7 +10233,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only current reducer: Digger: classic_trainer_core.js alternating coin owner loop (up to 2048 flips), 10 direct damage to the tails player's Active and knockOuts('checkup'); inspect heads chains, self/opponent KO, promotions, Prize ownership and unusual no-active states. Imported TCGdex text compared; historical rulings unverified."
+          ],
+          "scope": "Source review only; scenarios designed but not executed. Printed-image, historical-ruling and end-to-end verification outstanding."
         }
       ]
     },
@@ -10244,7 +10248,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only current reducer: Imposter Oak's Revenge: choose/discard one OTHER hand card as cost; opponent hand shuffled into deck and four drawn. Source path classic_trainer_core.js prompt/cost/resolution; check empty opponent hand/deck, deck-out, private information and cancellation. Imported TCGdex text compared; historical rulings unverified."
+          ],
+          "scope": "Source review only; scenarios designed but not executed. Printed-image, historical-ruling and end-to-end verification outstanding."
         }
       ]
     },
@@ -10255,7 +10263,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only current reducer: Nightly Garbage Run: classic_trainer_core.js selects 1–3 discard Pokémon or basic Energy and shuffles into own deck. Imported text says 'up to 3'; zero-choice legality and revealing selected cards to opponent need independent ruling/UI review. Check mixed cards, duplicates, no eligible cards, shuffle and deck-out. Historical rulings unverified."
+          ],
+          "scope": "Source review only; scenarios designed but not executed. Printed-image, historical-ruling and end-to-end verification outstanding."
         }
       ]
     },
@@ -10283,7 +10295,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only current reducer: Sleep!: classic_trainer_core.js flips then applies Asleep to opponent Active on heads. Inspect heads/tails, existing status, protection, between-turn recovery, and turn ownership. Imported TCGdex text compared; historical rulings unverified."
+          ],
+          "scope": "Source review only; scenarios designed but not executed. Printed-image, historical-ruling and end-to-end verification outstanding."
         }
       ]
     },
@@ -10305,7 +10321,11 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 source-only current reducer: Full Heal Energy: headless_duel.js attach_energy clears status on recipient; energy pool maps it to one Colorless; verify attachment while status-locked, Poison/Sleep/Confusion/Paralysis removal, special Energy classification, and switching/turn ownership. Imported TCGdex text compared; historical rulings unverified."
+          ],
+          "scope": "Source review only; scenarios designed but not executed. Printed-image, historical-ruling and end-to-end verification outstanding."
         }
       ]
     },
