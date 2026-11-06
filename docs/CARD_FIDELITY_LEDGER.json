@@ -19147,7 +19147,11 @@
           "kind": "power",
           "index": 0,
           "name": "Lightning Burst",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Lightning Burst absent from current classic_power_core.js registries/attached hook and headless_duel.js named effect paths. Attach Lightning Energy from hand to Active/Benched Raikou with opponent Bench (1/multiple/empty); opponent must choose forced Active switch without ending attacher's turn. Verify status locks and subsequent attack/KO. Zero reducer executions; independent print/errata/ruling check pending."
+          ],
+          "scope": "Current live RPG/Classic reducer source-only Power path inspection; not runtime verified"
         }
       ]
     },
@@ -19318,7 +19322,11 @@
           "kind": "power",
           "index": 0,
           "name": "Legendary Body",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Legendary Body absent from current Power registry and named reducer paths. Active Raikou must resist non-Stadium Trainer effects targeting itself/attached Energy and discard attached Trainers, even under Special Conditions; Bench/Active transitions and Stadium exemption pending. Imported catalogue repeats 'other than Trainer cards' erroneously; authoritative wording pending. Zero executions."
+          ],
+          "scope": "Current live RPG/Classic reducer source-only Power path inspection; not runtime verified"
         }
       ]
     },
@@ -19394,7 +19402,11 @@
           "kind": "power",
           "index": 0,
           "name": "Mimic",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Mimic absent from current Power registry and named reducer paths. Active Sudowoodo should expose opposing Active attacks and exact Energy costs, update on opposing switch, revert under Asleep/Confused/Paralyzed; test attack effects, coin flips, KOs, promotions and turn ownership. Zero executions; historical ruling pending."
+          ],
+          "scope": "Current live RPG/Classic reducer source-only Power path inspection; not runtime verified"
         }
       ]
     },
@@ -19413,7 +19425,11 @@
           "kind": "power",
           "index": 0,
           "name": "Legendary Body",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Legendary Body absent from current Power registry and named reducer paths. Active Suicune must resist non-Stadium Trainer effects and discard attached Trainers even with status; Crystal Wave heads 40 vs tails 30 then opponent-selected switch after damage, KO ordering and turn ownership pending. Imported duplicated wording needs printed comparison. Zero executions."
+          ],
+          "scope": "Current live RPG/Classic reducer source-only Power path inspection; not runtime verified"
         }
       ]
     },
@@ -19508,7 +19524,11 @@
           "kind": "power",
           "index": 0,
           "name": "Submerge",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Submerge registered as ACTIVATED in classic_power_core.js; handler sets submergeUntil=g.turnSerial+1; headless_duel.js effectiveCard changes type to Water while enabled, including status-lock fallback. Verify once-per-turn activation, weakness/type, status cancellation, expiry and Blinding Light heads/tails. Zero reducer executions; print/errata/rulings pending."
+          ],
+          "scope": "Current live RPG/Classic reducer source-only Power path inspection; not runtime verified"
         }
       ]
     },
