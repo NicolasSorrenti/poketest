@@ -1318,3 +1318,16 @@ Scope: exactly **neo3-58 Unown [K], neo4-1 Dark Ampharos, neo4-2 Dark Crobat, ne
 - **neo4-6 Dark Gengar / Deep Sleep — PARTIAL:** All sleeping Pokémon need two end-of-turn flips; either tails means still asleep. `headless_duel.js` calls `STATUS.checkup` with one coin callback; no Deep Sleep named handling in current reducer. Sequence: both players have sleeping Active Pokémon; outcomes HH/HT/TH/TT, Dark Gengar on either Bench/Active, status-disable Dark Gengar, KO/promotion and turn progression. No execution.
 
 All five have source-level potential missing effects, **not executed defects**. No gameplay fix, tests, CI, new PR, or Apex changes. Ledger after this pass: **1 fully verified, 486 partial, 636 unreviewed** (1,122 not fully verified).
+
+
+## 2026-11-06 — Five Neo Destiny printings (source-only, current engine)
+
+Exactly five: **neo4-7 Dark Houndoom, neo4-8 Dark Porygon2, neo4-12 Light Arcanine, neo4-14 Light Dragonite, neo4-15 Light Togetic**. All **PARTIAL**. Current authority path: RPG UI integration `rpg_duel_bridge.js` → Classic local session `classic_local_service.js` → `headless_duel.js` reducer → `classic_power_core.js` and `attack_effects_core.js`. No legacy engine counted. Imported `cards/neo4.json` compared with the active named handlers, but printed errata/historical rulings were not independently established. GitHub connector provided source, not an executable Node checkout: **zero reducer scenarios executed**.
+
+- **neo4-7 Dark Houndoom / Eerie Howl + Dark Fire — PARTIAL:** Neither attack name found in named current attack/reducer paths. Scenario: opponent has a Basic and Baby in hand, bench one slot free; Eerie Howl selects one, puts it on opponent Bench and switches it Active; repeat with full Bench and no eligible cards. Dark Fire: no Darkness attached versus one Darkness attached plus other Energy; check mandatory discard, 30+20+10 bonus, Weakness/Resistance, knockout, Prize and promotion.
+- **neo4-8 Dark Porygon2 / Spatial Distortion — PARTIAL:** No named active Power handler found. Scenario: heads with a Stadium in discard and another Stadium in play, choose discarded Stadium and replace existing one; tails, empty discard, Sleep lock, repeat-use restriction and same-turn attack.
+- **neo4-12 Light Arcanine / Drive Off — PARTIAL:** No named active Power handler found. Scenario: opponent chooses between two Benched Pokémon, switching while Light Arcanine is Active; check no Bench, Asleep/Confused/Paralyzed, switching Light Arcanine to Bench, repeated use and same-turn attack.
+- **neo4-14 Light Dragonite / Miraculous Wind — PARTIAL:** No named passive handler found. Scenario: Rainbow/Darkness/Metal/Special Energy on both sides while Light Dragonite Active, compare provided Colorless and suppression of special effects; repeat while Benched and while Asleep/Confused/Paralyzed, verify recalculation of attack costs and damage.
+- **neo4-15 Light Togetic / Gift — PARTIAL:** No named on-play handler found. Scenario: evolve from hand; opponent searches a Pokémon Tool or declines, player independently searches or declines; verify both deck shuffles, Tool visibility, zero targets, full hand and same-turn attack availability.
+
+No confirmed reducer-executed gameplay fix; no tests/CI/new PR/Apex modifications. Ledger: **1 verified, 491 partial, 631 unreviewed**; **1,122 not fully verified**.
