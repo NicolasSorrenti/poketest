@@ -986,14 +986,23 @@ function activityOutcome(speaker,description,before=null,npc=null,bonus=[],perio
  state.scene=scene;persist();render();
 }
 function finishActivityOutcome(){
- if(!scene?.activityAdvance)return false;
- const {periods:n,source}=scene.activityAdvance;
+ // A cloud/local rehydrate can restore the saved receipt after the in-memory
+ // scene reference changed. Keep Continue operable without charging again.
+ const saved=state.scene?.activityAdvance;
+ const receipt=scene?.activityAdvance||saved;
+ if(!receipt)return false;
+ const n=Math.max(1,Math.min(3,Number(receipt.periods)||1));
+ const source=String(receipt.source||'activity');
  state.scene=scene={speaker:'Narrator',line:'',choices:[]};
  state.sceneCgId=null;
  persist();
- advance(n,source);
- // Keep headless clients working when the transition module is absent.
- if(!timeSequence.blocked)render();
+ try{advance(n,source);}
+ finally{
+  // If the time-wipe owns the next frame it will render after the wipe;
+  // otherwise remove the old activity dialogue immediately.
+  if(!timeSequence.blocked)render();
+  else notifyOverworldRendering();
+ }
  return true;
 }
 function closeSceneDialogue(){
