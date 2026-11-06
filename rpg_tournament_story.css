@@ -75,3 +75,20 @@
  .neo-cup-story__button{flex:1 1 auto;padding:11px 8px;font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){.neo-cup-story__actor{animation:none!important;transition:none!important}}
+
+/* Bedroom morning presentation. A story-specific CG can replace this later. */
+.neo-cup-story[data-phase="wakeup"] .neo-cup-story__backdrop,
+.neo-cup-story[data-phase="countdown"] .neo-cup-story__backdrop{
+ background:radial-gradient(ellipse at 78% 18%,#f8c7997e,transparent 51%),
+ linear-gradient(145deg,#463044 1%,#293044 58%,#18162d)}
+.neo-cup-story[data-phase="wakeup"] .neo-cup-story__spotlights,
+.neo-cup-story[data-phase="countdown"] .neo-cup-story__spotlights{opacity:.18}
+.neo-cup-story[data-phase="wakeup"] .neo-cup-story__crowd,
+.neo-cup-story[data-phase="countdown"] .neo-cup-story__crowd{display:none}
+.neo-cup-story[data-phase="wakeup"] .neo-cup-story__actors::after{
+ content:"DECK";position:absolute;left:50%;bottom:20%;transform:translateX(-50%) rotate(-6deg);
+ width:clamp(100px,19vw,190px);height:clamp(70px,12vw,125px);display:grid;place-items:center;
+ border:4px solid #e6cbaa;border-radius:15px;color:#ffeef8;
+ font:900 clamp(19px,3vw,32px) 'Barlow Condensed',sans-serif;letter-spacing:.11em;
+ background:linear-gradient(135deg,#30527b,#1b2545 55%,#71445c);
+ box-shadow:0 15px 35px #0008,inset 0 0 0 4px #17182e}

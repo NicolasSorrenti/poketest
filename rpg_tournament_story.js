@@ -87,7 +87,40 @@
   const established=Array.isArray(guests)?guests.filter(id=>cast[id]):[];
   const fallback={neighborhood:'elio',regional:'alma',championship:'nereo'}[cup.id];
   const guestAt=i=>established[i]||null;
-  if(key==='arrival'){
+  if(key==='wakeup'){
+   // Live returns the player's EXISTING deck box; this is not a card reward.
+   const variants={
+    neighborhood:[
+     'You wake to a gentle knock. The curtains are still drawn, but morning light is creeping in.',
+     'Morning, sleepyhead! It is the Neighborhood Cup today. You do not want to be late.',
+     'Live places your familiar deck box on the bedside table, right within reach.',
+     'Here, I brought your deck. You left it out after practicing last night, so I made sure it was safe.',
+     'You remembered?',
+     'Of course. I know how much this means to you. Have something to eat, all right? And good luck.',
+     'You take the deck from Live. The first tournament of the season is waiting.'
+    ],
+    regional:[
+     'A soft knock draws you out of sleep. Someone opens the bedroom door.',
+     'Rise and shine. The Regional Qualifier is today, remember?',
+     'Live sets your deck box on the bedside table and gently slides it toward you.',
+     'I brought this. You checked your deck three times yesterday, so I know you would want it close.',
+     'You really have been paying attention.',
+     'How could I not? You have worked so hard. Whatever happens, I am proud of you.',
+     'You take your deck and get ready to face the regional crowd.'
+    ],
+    championship:[
+     'The last morning of the season begins with a familiar voice outside your bedroom.',
+     'Hey, honey. Time to wake up. Today is the championship!',
+     'Live comes in holding your deck box carefully in both hands, then offers it to you.',
+     'Here. Your deck. I kept it ready for you. I know this is your big day.',
+     'Ninety days. I cannot believe it is here already.',
+     'I can. I saw how much you put into every one of them. Go play your best, and remember I will be cheering for you.',
+     'You take the deck from Live. Your last tournament morning has begun.'
+    ]
+   };
+   const speakers=['Narrator','Live','Narrator','Live','You','Live','Narrator'];
+   (variants[cup.id]||[]).forEach((text,index)=>push(speakers[index],text));
+  }else if(key==='arrival'){
    push('Narrator',details.opening);
    push('Announcer',details.announcer);
    push('You','So this is what all those days of practice were leading up to.');
@@ -121,6 +154,23 @@
    push('Narrator',details.closing+' Your friends wait by the exit, ready to talk about everything that happened.');
   }
   return out;
+ }
+ function countdown(state,cups){
+  if(!state||!Number.isInteger(state.day)||!Array.isArray(cups))return null;
+  const cup=cups.find(c=>c.day>state.day&&c.day-state.day<=3);
+  return cup?{cup,daysLeft:cup.day-state.day}:null;
+ }
+ function countdownLines(cup,days){
+  const voices={
+   3:'I saw the announcement on the calendar. Three days until the tournament! You might want to look over your deck before then.',
+   2:'Only two days until '+cup.title+'. It is a good time to adjust your deck if you need to. You have been practicing so much!',
+   1:'The tournament is tomorrow! Get some rest tonight. I promise I will help you remember your deck in the morning.'
+  };
+  return [
+   {speaker:'Narrator',text:'You hear Live call to you as you start your morning. The tournament date is getting close.'},
+   {speaker:'Live',text:voices[days]},
+   {speaker:'Narrator',text:'The '+cup.title+' begins on Day '+cup.day+'. You still have time to prepare.'}
+  ];
  }
  let overlay=null,actors=null,buttons=null,heading=null,subheading=null,speaker=null,copy=null;
  function element(doc,tag,className){const el=doc.createElement(tag);el.className=className;return el;}
@@ -177,14 +227,16 @@
   }
   for(const node of actors.children)node.classList.toggle('is-speaking',node.dataset.id===focused);
  }
- function show({cup,mode='scene',script=[],index=0,progress=null,cast={},portraits,
+ function show({cup,mode='scene',phase='arena',script=[],index=0,progress=null,cast={},portraits,
   onNext=()=>{},onDeck=()=>{},onPlay=()=>{},onEnd=()=>{}}={}){
   const doc=typeof document==='undefined'?null:document;
   if(!doc?.body||!cup)return false;
-  mount(doc);overlay.hidden=false;overlay.dataset.cup=cup.id;
+  mount(doc);overlay.hidden=false;overlay.dataset.cup=cup.id;overlay.dataset.phase=phase;
   const round=Math.min(3,Math.max(0,(progress?.round||0)+1));
-  heading.textContent=cup.title;
-  subheading.textContent=(backgrounds[cup.id]||'Official circuit')+
+  heading.textContent=phase==='wakeup'?'Tournament Morning':phase==='countdown'?'Tournament Approaching':cup.title;
+  subheading.textContent=phase==='wakeup'?'LIVE · AT HOME · DAY '+cup.day:
+   phase==='countdown'?'LIVE · TOURNAMENT COUNTDOWN · DAY '+cup.day:
+   (backgrounds[cup.id]||'Official circuit')+
    (mode==='lobby'?' · ROUND '+round+' / 3':mode==='scene'?' · STORY EVENT':' · MATCH RESULT');
   const item=script[Math.max(0,Math.min(index,script.length-1))]||null;
   buttons.replaceChildren();
@@ -222,5 +274,5 @@
   }
   return true;
  }
- return Object.freeze({supporters,lines,show,hide});
+ return Object.freeze({supporters,lines,countdown,countdownLines,show,hide});
 });

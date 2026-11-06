@@ -3078,10 +3078,13 @@ const phoneMessages=window.NeoRpgPhoneMessages?.create({
  discreet:()=>window.NeoRpgDiscreet?.isEnabled?.(),
  avatars:window.NeoRpgDiscreetAvatars,
  canShow:()=>!controlsLocked()&&!arrivalGate&&!pendingOverworldArrival&&!window.NeoRpgTimeTransitions?.active&&
+  !document.querySelector('.neo-cup-story:not([hidden])')&&
   !document.querySelector('dialog[open]:not(#phoneMessageDialog)')
 });
 async function finishOverworldArrival(destination){
  if(state.location!==destination)return;
+ // Cup mornings are entirely handled by the VN; no chimes or map encounters.
+ if(tournamentDayCup()){pendingEntrySurprise=false;return;}
  arrivalGate=true;
  try{
   hanaEncounterKey='entry:'+ ++hanaEncounterSerial;
@@ -3140,10 +3143,11 @@ function tournamentNarrativeView(){
   record.guests=TOURNAMENT_STORY.supporters(state,cast,cup,REL);
   persist();
  }
- if(record.active&&!['arrival','round-0','round-1','round-2','closing'].includes(record.active.key))
+ if(record.active&&!['wakeup','arrival','round-0','round-1','round-2','closing'].includes(record.active.key))
   record.active=null;
  if(!record.active){
-  const key=!record.seen.includes('arrival')?'arrival':
+  const key=!record.seen.includes('wakeup')?'wakeup':
+   !record.seen.includes('arrival')?'arrival':
    progress.state==='open'&&!record.seen.includes('round-'+progress.round)?'round-'+progress.round:
    progress.state!=='open'&&!record.seen.includes('closing')?'closing':null;
   if(key){record.active={key,index:0};persist();}
@@ -3153,7 +3157,7 @@ function tournamentNarrativeView(){
   const script=TOURNAMENT_STORY.lines(cup,active.key,progress,record.guests,cast,REL,state);
   if(!script.length){record.seen.push(active.key);record.active=null;persist();return;}
   const index=Math.min(script.length-1,Math.max(0,active.index||0));
-  TOURNAMENT_STORY.show({cup,mode:'scene',script,index,progress,cast,
+  TOURNAMENT_STORY.show({cup,mode:'scene',phase:active.key==='wakeup'?'wakeup':'arena',script,index,progress,cast,
    portraits:(id,expression)=>stagePortraitPaths(id,expression),
    onNext:()=>{
     if(state.tournamentNarrative?.[cup.id]?.active!==active)return;
@@ -3171,6 +3175,43 @@ function tournamentNarrativeView(){
    onPlay:()=>safeAct('cup:'+cup.id),
    onEnd:()=>safeAct('tournamentEnd')});
  }
+}
+// An acknowledged reminder stays acknowledged across reloads and cloud sync.
+// It does not advance the game clock or alter relationship statistics.
+function tournamentCountdownView(){
+ if(!TOURNAMENT_STORY||tournamentDayCup())return;
+ const upcoming=TOURNAMENT_STORY.countdown(state,TOURNAMENTS.cups);
+ const key=upcoming?upcoming.cup.id+':'+state.day:null;
+ if(!upcoming||state.tournamentCountdownSeen?.[key]||
+  timeSequence.blocked||window.NeoRpgTimeTransitions?.active||
+  arrivalGate||pendingOverworldArrival||state.pendingDuel||
+  scene?.line||scene?.choices?.length||
+  state.mandatoryEventState?.active||state.activeSliceOfLife||state.activeSituation||
+  state.activeStory||state.activeEncounter||state.activeArc||state.activeSideQuest||
+  $('starterDialog')?.open||$('preDuelDialog')?.open||
+  $('galleryDialog')?.open||$('calendarDialog')?.open||
+  $('deckEditDialog')?.open){
+  TOURNAMENT_STORY.hide();return;
+ }
+ let active=state.tournamentCountdownActive;
+ if(!active||active.key!==key){
+  active=state.tournamentCountdownActive={key,index:0};
+  persist();
+ }
+ const script=TOURNAMENT_STORY.countdownLines(upcoming.cup,upcoming.daysLeft);
+ const index=Math.min(script.length-1,Math.max(0,active.index||0));
+ TOURNAMENT_STORY.show({cup:upcoming.cup,mode:'scene',phase:'countdown',script,index,cast:{},
+  onNext:()=>{
+   if(state.tournamentCountdownActive!==active)return;
+   if(active.index<script.length-1)active.index++;
+   else{
+    state.tournamentCountdownSeen=state.tournamentCountdownSeen||{};
+    state.tournamentCountdownSeen[key]=true;
+    state.tournamentCountdownActive=null;
+    TOURNAMENT_STORY.hide();
+   }
+   persist();render();
+  }});
 }
 function render(){
  // Keep the outgoing DOM intact until the calendar wipe fully covers it; then swap
@@ -3338,6 +3379,7 @@ function render(){
  });
  syncSceneCG();
  tournamentNarrativeView();
+ tournamentCountdownView();
  queueMicrotask(maybeShowYearEndFallReel);
  // If another transition or mandatory scene owned the screen, resume the arrival
  // chime once it settles instead of silently losing this place entry.
