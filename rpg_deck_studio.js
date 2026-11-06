@@ -6,9 +6,27 @@
   Core=window.NeoRpgCollection,Builder=window.CubeDeckBuilder,Plan=window.NeoRpgStrategy;
  let state,builder,notice='',catalog=[],allCards=[],index=new Map(),scouts={},requestId=0;
  const persist=()=>{
-  localStorage.setItem(KEY,JSON.stringify(state));
-  // Notify the live RPG parent before its next action can overwrite this deck.
-  if(window.parent!==window)window.parent.postMessage({type:'neo-rpg-deck-studio-updated'},location.origin);
+  const changes={day:state.day,slot:state.slot,pendingDuel:state.pendingDuel,
+   deckJourney:state.deckJourney,deckStrategy:state.deckStrategy,
+   gameplayTutorials:state.gameplayTutorials};
+  // The embedded editor shares an origin with the overworld. Apply changes to
+  // its live state *synchronously*, before a closing click or duel can race it.
+  if(window.parent!==window){
+   try{if(window.parent.NeoRpgApplyDeckStudioSave?.(changes))return;}
+   catch(error){console.warn('Deck Studio parent synchronization failed',error);}
+  }
+  // Standalone editor/fallback: merge only editor-owned fields. Never write
+  // the iframe's stale day, relationships, credits or other campaign fields.
+  let latest;
+  try{latest=JSON.parse(localStorage.getItem(KEY)||'null');}catch{}
+  if(!latest||latest.deckJourney?.starter!==state.deckJourney?.starter||
+     latest.day!==state.day||latest.slot!==state.slot||latest.pendingDuel)
+   throw Error('The RPG campaign changed while Deck Studio was open. Reopen the editor to protect your save.');
+  latest.deckJourney=state.deckJourney;
+  if(state.deckStrategy)latest.deckStrategy=state.deckStrategy;
+  if(state.gameplayTutorials)latest.gameplayTutorials=state.gameplayTutorials;
+  localStorage.setItem(KEY,JSON.stringify(latest));
+  if(window.parent!==window)window.parent.postMessage({type:'neo-rpg-deck-studio-updated',save:changes},location.origin);
   window.NeoRpgCloudSave?.onLocalSave();
  };
  const owned=()=>state.deckJourney.owned,draft=()=>Core.draft(state);
