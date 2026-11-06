@@ -547,8 +547,17 @@ function energyRemovalChoiceValue(unit,defender,energyIndex,enemy,benchCount=nul
 // public cards, and presently affordable attacks; it never samples deck draws.
 function rainDanceTargetValue(unit,waterId,enemy,benchCount=null){
  if(!unit||!enemy||!waterId)return -100;
- const before=strongestAffordableAttack(unit,enemy,benchCount);
- const after=damageAfterAttachment(unit,waterId,enemy,benchCount);
+ // Rain Dance can unlock Bench-only attacks, but those attacks do not
+ // damage the defending Active or earn an Active-knockout bonus.
+ const activePressure=host=>{
+  const pool=energyPool(host);
+  return (host.effectiveAttacks||card(host.id)?.attacks||[]).reduce((best,attack)=>
+   ATTACK.compile(attack)?.kind!=='bench-target'&&
+   canPayEnergy(attack.cost||[],pool)?
+    Math.max(best,estimatedDamage(attack,host,enemy,benchCount)):best,0);
+ };
+ const before=activePressure(unit);
+ const after=activePressure({...unit,energies:[...(unit.energies||[]),waterId]});
  const increase=Math.max(0,after-before);
  const ko=before<hpRemaining(enemy)&&after>=hpRemaining(enemy)&&after>0;
  const prep=Math.max(0,energyValue(unit,waterId));
