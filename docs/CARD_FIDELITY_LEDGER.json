@@ -15864,7 +15864,11 @@
           "kind": "power",
           "index": 0,
           "name": "Herbal Scent",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "On-evolution optional coin/heal of all Grass Pokémon on both sides. `classic_power_core.js` ONPLAY lacks Herbal Scent; `played()` only dispatches registered names. No matching current reducer reader found. Source-only potential missing Power; needs independent printed/errata/ruling comparison and live execution."
+          ],
+          "scope": "Current-engine source path inspected only; no reducer execution, independent printed image/errata or historical ruling certification."
         }
       ]
     },
@@ -15883,7 +15887,11 @@
           "kind": "power",
           "index": 0,
           "name": "Wild Growth",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Continuous doubling of attached Grass Energy on own Grass Pokémon. `classic_power_core.js` PASSIVE lacks Wild Growth and `headless_duel.js` has no named reader; typed-cost calculation may have a generic path still to exclude. Source-only potential missing Power; needs energy-cost and status suppression execution."
+          ],
+          "scope": "Current-engine source path inspected only; no reducer execution, independent printed image/errata or historical ruling certification."
         }
       ]
     },
@@ -15934,7 +15942,11 @@
           "kind": "power",
           "index": 0,
           "name": "Mind Games",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Optional response when opponent plays Trainer: heads nullifies Trainer and puts it on top of opponent deck. Not registered in `classic_power_core.js` PASSIVE/ACTIVATED/ONPLAY and no named reader in `headless_duel.js`. Source-only potential missing reaction; Trainer cost, multiple Slowking, turn ownership unexecuted."
+          ],
+          "scope": "Current-engine source path inspected only; no reducer execution, independent printed image/errata or historical ruling certification."
         }
       ]
     },
@@ -15991,7 +16003,11 @@
           "kind": "power",
           "index": 0,
           "name": "Fire Recharge",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "`classic_power_core.js` ACTIVATED supports coin then discard Fire Energy choice and Fire Pokémon target; moves Energy from discard on heads. Source-only partial: one-per-turn, repeated attempt after tails, status lock, target ownership, decision sequencing, attack availability unexecuted."
+          ],
+          "scope": "Current-engine source path inspected only; no reducer execution, independent printed image/errata or historical ruling certification."
         }
       ]
     },
@@ -16014,7 +16030,11 @@
           "kind": "power",
           "index": 0,
           "name": "Fire Boost",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "`classic_power_core.js` ONPLAY offers optional activation, coin, up-to-four Basic Fire Energy from deck and shuffle on heads. Source-only partial: decline, tails, empty deck, multi-select, evolution timing, energy count, Flame Wheel discard and KO unexecuted."
+          ],
+          "scope": "Current-engine source path inspected only; no reducer execution, independent printed image/errata or historical ruling certification."
         }
       ]
     },
