@@ -18945,13 +18945,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Triggered Poison",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Triggered Poison: next-turn Energy attachment to the same Defending Pokémon, status timing, switching, and Cross Attack four coin outcomes/Confusion; no named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Cross Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Triggered Poison: next-turn Energy attachment to the same Defending Pokémon, status timing, switching, and Cross Attack four coin outcomes/Confusion; no named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         }
       ]
     },
@@ -19047,13 +19053,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Evolutionary Spore",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Evolutionary Spore: multiple chosen Hoppip/Skiploom, separate deck searches, legal evolutions and shuffle; Solarbeam cost/damage. No named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Solarbeam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Evolutionary Spore: multiple chosen Hoppip/Skiploom, separate deck searches, legal evolutions and shuffle; Solarbeam cost/damage. No named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         }
       ]
     },
@@ -19148,13 +19160,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Aurora Wave",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Crystal Body: attack secondary effects versus damage, all three Special Condition locks; Aurora Wave two coin outcomes. No named active Power handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Crystal Body",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Crystal Body: attack secondary effects versus damage, all three Special Condition locks; Aurora Wave two coin outcomes. No named active Power handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         }
       ]
     },
@@ -19167,13 +19185,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Fly",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Prehistoric Memory: either player's Evolved Pokémon using Basic/underlying Evolution attacks with original Energy costs, status locks; Fly coin and shield. No named active Power handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Prehistoric Memory",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Prehistoric Memory: either player's Evolved Pokémon using Basic/underlying Evolution attacks with original Energy costs, status locks; Fly coin and shield. No named active Power handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         }
       ]
     },
@@ -19199,13 +19223,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Mega Flame",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Legendary Body: Active-only Trainer immunity, attached Trainer discard, Stadium exception and status persistence; Mega Flame two coin outcomes and discards. No named active Power handler found; imported text has duplicated 'other than Trainer cards' phrase requiring independent print review. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Legendary Body",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current-engine source-only review: Legendary Body: Active-only Trainer immunity, attached Trainer discard, Stadium exception and status persistence; Mega Flame two coin outcomes and discards. No named active Power handler found; imported text has duplicated 'other than Trainer cards' phrase requiring independent print review. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
+          ]
         }
       ]
     },
