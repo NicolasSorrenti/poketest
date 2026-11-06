@@ -12521,7 +12521,11 @@
           "kind": "power",
           "index": 0,
           "name": "Natural Healing",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "classic_power_core.js validates existing damage, ONCE gating and removes exactly 10; status/suppression via enabled. Source-only; turn timing and repeated activation not executed."
+          ],
+          "scope": "Live reducer source inspection only; no executed scenarios; independent printed image, errata and historical rulings pending."
         }
       ]
     },
@@ -13515,7 +13519,11 @@
           "kind": "power",
           "index": 0,
           "name": "Shapeshift",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "classic_power_core.js selects Stage 1/2 from hand, stores gymShapeshiftCard, discards on second use; headless_duel.js effectiveCard substitutes printed stats/attacks and applyCondition discards attached Evolution on Sleep/Confusion/Paralysis. Source-only; evolution legality, KO, attached-card discard and turn ownership not executed."
+          ],
+          "scope": "Live reducer source inspection only; no executed scenarios; independent printed image, errata and historical rulings pending."
         }
       ]
     },
@@ -13572,7 +13580,11 @@
           "kind": "power",
           "index": 0,
           "name": "Fortitude",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "headless_duel.js knockout handling checks opponent attack, Active Machamp, lethal damage, enabled and heads before reducing damage to maxHP-10. Source-only; status, simultaneous KO, Prize and Bench attack interaction not executed."
+          ],
+          "scope": "Live reducer source inspection only; no executed scenarios; independent printed image, errata and historical rulings pending."
         }
       ]
     },
@@ -13610,7 +13622,11 @@
           "kind": "power",
           "index": 0,
           "name": "Call the Boss",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "classic_power_core.js ONPLAY selection filters Trainer named Giovanni in deck and moves chosen card to hand; shuffle currently occurs only when selected. Source-only; optional decline shuffle wording and trigger timing not executed."
+          ],
+          "scope": "Live reducer source inspection only; no executed scenarios; independent printed image, errata and historical rulings pending."
         }
       ]
     },
@@ -13705,7 +13721,11 @@
           "kind": "power",
           "index": 0,
           "name": "Rebellion",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "headless_duel.js rolls two coins on attack; double tails shuffles Active and attachments into deck and invokes promotion or no-Bench loss. Source-only; promotion and turn ownership after attack cancellation not executed."
+          ],
+          "scope": "Live reducer source inspection only; no executed scenarios; independent printed image, errata and historical rulings pending."
         }
       ]
     },
