@@ -20280,13 +20280,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Eerie Howl",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Eerie Howl and Dark Fire: imported neo4 card text inspected; no named effect in current attack_effects_core.js or headless_duel.js. Opponent hand reveal, bench placement/switch and Darkness Energy discard bonus unexecuted; generic handling not excluded. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dark Fire",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Eerie Howl and Dark Fire: imported neo4 card text inspected; no named effect in current attack_effects_core.js or headless_duel.js. Opponent hand reveal, bench placement/switch and Darkness Energy discard bonus unexecuted; generic handling not excluded. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         }
       ]
     },
@@ -20299,13 +20305,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Curve Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Spatial Distortion: imported text inspected; no named handler in current classic_power_core.js or headless_duel.js. Coin, discard Stadium selection, existing Stadium replacement and turn ownership unexecuted. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Spatial Distortion",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Spatial Distortion: imported text inspected; no named handler in current classic_power_core.js or headless_duel.js. Coin, discard Stadium selection, existing Stadium replacement and turn ownership unexecuted. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         }
       ]
     },
@@ -20375,13 +20387,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Gentle Flames",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Drive Off: imported text inspected; no named handler in current classic_power_core.js or headless_duel.js. Opponent-selected switch, active-only status lock and turn ownership unexecuted. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Drive Off",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Drive Off: imported text inspected; no named handler in current classic_power_core.js or headless_duel.js. Opponent-selected switch, active-only status lock and turn ownership unexecuted. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         }
       ]
     },
@@ -20413,13 +20431,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Light Wave",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Miraculous Wind: imported text inspected; no named handler in current classic_power_core.js or headless_duel.js. Active-only Special Energy type/effect suppression and status lock unexecuted. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Miraculous Wind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Miraculous Wind: imported text inspected; no named handler in current classic_power_core.js or headless_duel.js. Active-only Special Energy type/effect suppression and status lock unexecuted. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         }
       ]
     },
@@ -20432,13 +20456,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Sweet Kiss",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Gift: imported text inspected; no named handler in current classic_power_core.js or headless_duel.js. Both players' optional Tool searches, order, shuffle and empty-deck cases unexecuted. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Gift",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 current RPG/Classic source-only audit: Gift: imported text inspected; no named handler in current classic_power_core.js or headless_duel.js. Both players' optional Tool searches, order, shuffle and empty-deck cases unexecuted. No reducer execution; printed errata/historical rulings not independently verified."
+          ]
         }
       ]
     },
