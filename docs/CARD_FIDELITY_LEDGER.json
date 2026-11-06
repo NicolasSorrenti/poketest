@@ -10153,7 +10153,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Speed Ball",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: One Lightning Energy, 20 damage. Flat-attack compiler and active reducer must be followed through cost, Weakness/Resistance, shield, KO, Prize and turn ownership. Imported cards/base5.json text checked; independent printed/errata/historical rulings not established. No executable Node checkout through GitHub connector; no reducer scenarios executed."
+          ],
+          "scope": "One Lightning Energy, 20 damage. Flat-attack compiler and active reducer must be followed through cost, Weakness/Resistance, shield, KO, Prize and turn ownership."
         }
       ]
     },
@@ -10166,13 +10170,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Ram",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: Ram: one Colorless for 10; Bite: Grass plus Colorless for 20. Distinct cost checks, normal attack damage, modifiers, KO and promotion still require reducer execution. Imported cards/base5.json text checked; independent printed/errata/historical rulings not established. No executable Node checkout through GitHub connector; no reducer scenarios executed."
+          ],
+          "scope": "Ram: one Colorless for 10; Bite: Grass plus Colorless for 20. Distinct cost checks, normal attack damage, modifiers, KO and promotion still require reducer execution."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Bite",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: Ram: one Colorless for 10; Bite: Grass plus Colorless for 20. Distinct cost checks, normal attack damage, modifiers, KO and promotion still require reducer execution. Imported cards/base5.json text checked; independent printed/errata/historical rulings not established. No executable Node checkout through GitHub connector; no reducer scenarios executed."
+          ],
+          "scope": "Ram: one Colorless for 10; Bite: Grass plus Colorless for 20. Distinct cost checks, normal attack damage, modifiers, KO and promotion still require reducer execution."
         }
       ]
     },
@@ -10205,7 +10217,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: The Boss's Way: current classic_trainer_core.js stages deck choice filtered by Pokémon name starting 'Dark ', transfers selected card to hand and shuffles deck. Check Evolution-only eligibility, zero-match search, reveal to opponent, decision cancellation, shuffle and turn ownership. Imported cards/base5.json text checked; independent printed/errata/historical rulings not established. No executable Node checkout through GitHub connector; no reducer scenarios executed."
+          ],
+          "scope": "The Boss's Way: current classic_trainer_core.js stages deck choice filtered by Pokémon name starting 'Dark ', transfers selected card to hand and shuffles deck. Check Evolution-only eligibility, zero-match search, reveal to opponent, decision cancellation, shuffle and turn ownership."
         }
       ]
     },
@@ -10310,7 +10326,11 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: Rainbow Energy: headless_duel.js attach_energy adds 10 damage and checks direct KO; energy pool uses Any, distinct from basic Energy outside play. Check KO/promotion/Prize, on-attachment Power callbacks, Energy cost and damage-prevention interactions. Imported cards/base5.json text checked; independent printed/errata/historical rulings not established. No executable Node checkout through GitHub connector; no reducer scenarios executed."
+          ],
+          "scope": "Rainbow Energy: headless_duel.js attach_energy adds 10 damage and checks direct KO; energy pool uses Any, distinct from basic Energy outside play. Check KO/promotion/Prize, on-attachment Power callbacks, Energy cost and damage-prevention interactions."
         }
       ]
     },
@@ -10336,7 +10356,11 @@
       "effects": [
         {
           "kind": "energy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub source-only review: Potion Energy: headless_duel.js attach_energy heals 10 damage on attachment and energy pool grants one Colorless. Check hand-only trigger, zero-damage host, damaged Active/Bench, attachment limits, modifiers and turn ownership. Imported cards/base5.json text checked; independent printed/errata/historical rulings not established. No executable Node checkout through GitHub connector; no reducer scenarios executed."
+          ],
+          "scope": "Potion Energy: headless_duel.js attach_energy heals 10 damage on attachment and energy pool grants one Colorless. Check hand-only trigger, zero-damage host, damaged Active/Bench, attachment limits, modifiers and turn ownership."
         }
       ]
     },
