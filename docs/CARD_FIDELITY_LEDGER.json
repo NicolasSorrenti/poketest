@@ -20017,7 +20017,11 @@
           "kind": "power",
           "index": 0,
           "name": "[Keep]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub current-engine source review: Passive protection against opponent attack/Power/Trainer Energy discard; no named implementation in active Power registry/reducer; verify own Unown targets, mixed Energy discard, status lock and KO sequencing. Zero reducer executions; printed/errata/historical-ruling verification pending."
+          ],
+          "scope": "Source-only cross-module inspection; not a verified gameplay outcome."
         }
       ]
     },
@@ -20152,7 +20156,11 @@
           "kind": "power",
           "index": 0,
           "name": "Conductivity",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub current-engine source review: Opponent hand Energy attachment must deal 10 direct damage, disable with multiple own Dark Ampharos or status; attachment hook currently only dispatches Energy Evolution. Zero reducer executions; printed/errata/historical-ruling verification pending."
+          ],
+          "scope": "Source-only cross-module inspection; not a verified gameplay outcome."
         }
       ]
     },
@@ -20171,7 +20179,11 @@
           "kind": "power",
           "index": 0,
           "name": "Surprise Bite",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub current-engine source review: On-play optional 20 to chosen opposing Active/Bench before Knock Out/Prize/promotion; not in active ONPLAY registry. Zero reducer executions; printed/errata/historical-ruling verification pending."
+          ],
+          "scope": "Source-only cross-module inspection; not a verified gameplay outcome."
         }
       ]
     },
@@ -20228,7 +20240,11 @@
           "kind": "power",
           "index": 0,
           "name": "Scare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub current-engine source review: Active-only suppression of opponent Baby Powers and attacks, disabled by status; absent from active passive registry and attack availability check. Zero reducer executions; printed/errata/historical-ruling verification pending."
+          ],
+          "scope": "Source-only cross-module inspection; not a verified gameplay outcome."
         }
       ]
     },
@@ -20247,7 +20263,11 @@
           "kind": "power",
           "index": 0,
           "name": "Deep Sleep",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-06 direct GitHub current-engine source review: End-of-turn sleeping Pokémon require two flips and remain asleep if either tails; checkup calls one flip, no named Deep Sleep branch. Zero reducer executions; printed/errata/historical-ruling verification pending."
+          ],
+          "scope": "Source-only cross-module inspection; not a verified gameplay outcome."
         }
       ]
     },
