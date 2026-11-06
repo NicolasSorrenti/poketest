@@ -312,6 +312,21 @@ function likelyOpponentKnockout(o,defender,apex=false){
   knockoutChance(attack,enemy,defender,o.opponent.bench.length,
    apex?livePlusPowerBonus(o,'opponent'):0)*confusionChance>=.75);
 }
+// Only a legal, funded Bench-target attack can threaten a Benched patient.
+// Bench hits ignore Weakness/Resistance and do not receive Active PlusPower.
+function likelyOpponentBenchKnockout(o,unit,damage=unit.damage){
+ const enemy=o.opponent.active;
+ if(!enemy||!unit||['Asleep','Paralyzed','Confused'].includes(enemy.status))return false;
+ const fromEnemy={...o,self:o.opponent,opponent:o.self};
+ return (enemy.effectiveAttacks||card(enemy.id)?.attacks||[]).some((attack,index)=>{
+  const program=ATTACK.compile(attack);
+  if(program?.kind!=='bench-target'||!eligibleAttack(fromEnemy,enemy,attack,index)||
+     !canPayEnergy(attack.cost||[],energyPool(enemy)))return false;
+  const hit=program.energyBenchMultiplier!==undefined?
+   (enemy.energies||[]).length*program.energyBenchMultiplier:program.benchDamage||0;
+  return hit>0&&hit>=hpRemaining({...unit,damage});
+ });
+}
 function hpRemaining(u){return Math.max(0,(Number(card(u?.id)?.hp)||60)-(u?.damage||0));}
 function setupValue(unit){
  const c=card(unit?.id);
@@ -624,8 +639,11 @@ function choiceValue(option,decision,o,cfg){
    // Energy-free Bench Pokémon cannot be the recipient of this effect.
    if(healed<=0||(o.pendingTrainerName==='Super Potion'&&
       !(target.energies||[]).length))return -500;
-   const saved=n===-1&&likelyOpponentKnockout(o,target,true)&&
-    !likelyOpponentKnockout(o,{...target,damage:target.damage-healed},true);
+   const saved=n===-1?
+    (likelyOpponentKnockout(o,target,true)&&
+     !likelyOpponentKnockout(o,{...target,damage:target.damage-healed},true)):
+    (likelyOpponentBenchKnockout(o,target)&&
+     !likelyOpponentBenchKnockout(o,target,target.damage-healed));
    // A Super Potion discards Energy after choosing the patient. Preserve
    // valuable attachments by preferring a rescue over cosmetic healing.
    const energyCost=o.pendingTrainerName==='Super Potion'?
@@ -1514,11 +1532,12 @@ function score(a,o,cfg,used){
     (name!=='Super Potion'||(u.energies?.length||0)>0));
    const best=Math.max(0,...patients.map(u=>{
     const healed=Math.min(healCap,u.damage);
-    // The opponent's ordinary attacks target our Active, not an arbitrary
-    // Benched patient. A hypothetical Bench KO must not inflate healing
-    // priority or cause Apex to spend a Trainer on imaginary pressure.
-    const survival=u===p.active&&likelyOpponentKnockout(o,u,true)&&
-     !likelyOpponentKnockout(o,{...u,damage:u.damage-healed},true);
+    // Rescue only from legal attacks that can actually hit this position.
+    const survival=u===p.active?
+     (likelyOpponentKnockout(o,u,true)&&
+      !likelyOpponentKnockout(o,{...u,damage:u.damage-healed},true)):
+     (likelyOpponentBenchKnockout(o,u)&&
+      !likelyOpponentBenchKnockout(o,u,u.damage-healed));
     const cost=name==='Super Potion'?85:0;
     return healed*2+(survival?110:0)-cost;
    }));
