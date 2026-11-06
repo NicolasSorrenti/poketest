@@ -18237,7 +18237,11 @@
           "kind": "power",
           "index": 0,
           "name": "Energy Evolution",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only current RPG/Classic engine review (2026-11-06): Attachment hook in classic_power_core.js flips on typed Energy and offers an Eevee evolution from deck; evolves and shuffles. Scenarios: heads/tails, decline, empty deck, Energy type and special Energy, Bench/Active, status lock, evolution timing and turn ownership. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only PARTIAL; scenarios specified, not executed"
         }
       ]
     },
@@ -18269,7 +18273,11 @@
           "kind": "power",
           "index": 0,
           "name": "Gaze",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only current RPG/Classic engine review (2026-11-06): Activated Gaze selects opposing Benched Pokémon with a Power; gazeSuppressedUntil blocks it until turn boundary or Bench exit. Scenarios: multiple Powers, moving Active and back, no legal target, repeated activation, turn ownership. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only PARTIAL; scenarios specified, not executed"
         }
       ]
     },
@@ -18390,7 +18398,11 @@
           "kind": "power",
           "index": 0,
           "name": "Darkness",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only current RPG/Classic engine review (2026-11-06): headless_duel.js unownDarkness counts exact neo2-47 copies across both players and reduces damage by 30 after Weakness/Resistance; enabled permits status conditions. Scenarios: one/two Unown D, opponent's Darkness attacks, Bench damage, status lock, power suppression and KO. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only PARTIAL; scenarios specified, not executed"
         }
       ]
     },
@@ -18409,7 +18421,11 @@
           "kind": "power",
           "index": 0,
           "name": "[Find]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only current RPG/Classic engine review (2026-11-06): classic_power_core.js requires FIND spelled on own Bench, searches Trainer, reveals and shuffles. Fixed source defect: empty Trainer search previously threw and choice could not be declined; commit f8dad0bf. Scenarios: full FIND Bench, missing letter, zero/one/multiple Trainers, decline, shuffle, reveal, status and turn ownership. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only PARTIAL; scenarios specified, not executed"
         }
       ]
     },
@@ -18465,7 +18481,11 @@
           "kind": "power",
           "index": 0,
           "name": "Undo",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only current RPG/Classic engine review (2026-11-06): Printed Undo returns own Active Pokémon and attachments to hand when UNDO is spelled on Bench; current classic_power_core.js ACTIVATED/ONCE registries and headless_duel.js lack named Undo dispatch. Source-only probable missing implementation. Scenarios: full UNDO Bench, no replacement vs replacement, attached evolution stack, KO/promotion, status and turn ownership. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending."
+          ],
+          "scope": "Source-only PARTIAL; scenarios specified, not executed"
         }
       ]
     },
