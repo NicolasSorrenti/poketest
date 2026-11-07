@@ -172,7 +172,7 @@ const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundr
 
 // CG-only Mia and Live domestic stories. Filenames are the user-provided stems;
 // art can be added to this folder independently without adding Mia to the roster.
-const MIA_BASE='/rpg-assets/characters/lyla/events/mia/';
+const MIA_BASE='/rpg-assets/characters/live/events/mia/';
 const MIA_SCENES=[
  {id:'mia_dancing_with_live',title:'Just One Dance',day:6,slot:0,after:'mia_first_time',image:'a_highly_detailed_anime_style_cg_scene_in_the_same',
  lines:[['Narrator','Music spills out of the living room. Live is twirling Mia around with a huge grin.'],['Live','Come on, Mia! You used to love this song.'],['Mia','Mom! I was twelve!'],['Live','And you were a wonderful dancer then, too.'],['Mia','All right, one more spin. But only because you look so happy.'],['Narrator','Mia catches sight of you in the doorway and starts laughing.']],
@@ -265,7 +265,7 @@ const MIA_SLEEP_EVENT={
   {label:'Share a quiet moment',reply:'The house stays peaceful.',flag:'mia_sleep_whispered'}
  ]
 };
-const MIA_SLEEP_ART=MIA_BASE+'37_a_highly_detailed_colorful_anime_style_illustrati.png';
+const MIA_SLEEP_ART='/rpg-assets/characters/live/events/37_a_highly_detailed_colorful_anime_style_illustrati.png';
 
 
 

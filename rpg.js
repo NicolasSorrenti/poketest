@@ -90,7 +90,7 @@ const MIA_FIRST_TIME={
   {label:'What exactly did Live tell you?',reply:'Mia laughs. "Nothing bad, I promise!" Live sighs in relief.'}
  ]
 };
-LIVE_EVENT_ART[MIA_FIRST_TIME.id]='/rpg-assets/characters/lyla/events/mia/mia_first_time.png';
+LIVE_EVENT_ART[MIA_FIRST_TIME.id]='/rpg-assets/characters/live/events/mia/mia_first_time.png';
 const miaStoryIds=MIA_IDS||new Set();
 const MIA_SCENE_SLOT=Object.fromEntries((window.NeoRpgLiveCampaignContent?.MIA_EVENTS||[]).map(e=>[e.id,Number.isInteger(e.slot)?e.slot:0]));
 const MIA_SCENE_PREV=Object.fromEntries((window.NeoRpgLiveCampaignContent?.MIA_EVENTS||[]).map(e=>[e.id,Object.keys(e.trigger||{}).length===1?e.trigger.eventSeen:null]));
@@ -116,7 +116,7 @@ function miaDialogueText(value){
   // gossip, even before that event has been marked seen.
   .replace(/\bdaddy\b/gi,state.miaDaddyRetired?'you':'Daddy');
 }
-const MIA_GOSSIP_EXTRA='/rpg-assets/characters/lyla/events/mia/a_highly_detailed_anime_style_illustration_of_the.png';
+const MIA_GOSSIP_EXTRA='/rpg-assets/characters/live/events/mia/a_highly_detailed_anime_style_illustration_of_the.png';
 function miaArt(id){return id==='mia_gossip'&&miaRomanceGossip()?MIA_GOSSIP_EXTRA:MIA_EVENT_ART[id];}
 Object.assign(LIVE_EVENT_ART,MIA_EVENT_ART);
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]).map(event=>
@@ -702,7 +702,7 @@ function livePhotoRequest(active){
 function MIA_BASE_PRIVATE_IMAGE(){
  // Later artwork is not used in this non-explicit adaptation.
  const stage=state.miaPrivateStage==='outro'?1:Number(state.miaPrivateStage)||1;
- return '/rpg-assets/characters/lyla/events/mia/part'+Math.min(4,Math.max(1,stage))+'.png';
+ return '/rpg-assets/characters/live/events/mia/part'+Math.min(4,Math.max(1,stage))+'.png';
 }
 function renderMiaPrivate(){
  if(state.miaPrivateStage==='outro')return {speaker:'Mia',line:'Ah... I guess that\'s fine.',choices:[['Continue ›','miaPrivateClose']]};

@@ -210,7 +210,8 @@ function open(options={}){
   // Reuse all the proven Dance Battle UI and controls without a second copy.
   $('.nc-overline').textContent='✦ RINA / PIXEL PALACE';
   $('.nc-song-sub').textContent='Rina · 136 BPM';
-  $('.nc-dance-tag').textContent='♫ RINA · DANCE BATTLE';
+  // The current Center Stage layout has no .nc-dance-tag; the visible
+  // heading and dialogue name are updated below instead.
   $('.nc-dance-comment small').textContent='RINA ♡';
   $('.nc-dance-comment-text').textContent='Follow the beat with me! ♡';
   $('.nc-overlay .nc-chip').textContent='♫ ELECTRIC HEART · RINA · 136 BPM';
