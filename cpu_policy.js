@@ -1722,7 +1722,7 @@ function score(a,o,cfg,used){
    (newDamage===0&&oldDamage>0?70:0)-(oldDamage>0?oldDamage*.25:0):0;
   return -sacrificeTempo-attackTempo+
    (safeMatchupLoss?-320:0)+(unreadySwap?-190:0)+
-   (before.status?180:45)+(gain>0?Math.min(30,gain):0)+
+   // Confusion still allows an attack (with a coin flip). Do not treat it\n   // like Sleep/Paralysis and pay retreat Energy merely to clear it.\n   // The separate KO-rescue and attack-pressure terms still favor a swap\n   // when the new Active is genuinely safer or can attack more reliably.\n   (cfg.level===8?(before.status==='Confused'?55:\n    ['Asleep','Paralyzed'].includes(before.status)?180:45):\n    (before.status?180:45))+(gain>0?Math.min(30,gain):0)+
    ((hpRemaining(before)<30)&&alternativeSurvives?23:0)*style.survival-
    (before.energies?.length||0)*18+foresight;
  }
