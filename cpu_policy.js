@@ -337,7 +337,7 @@ function setupValue(unit){
  const attacks=c?.attacks||[];
  return (Number(c?.hp)||40)*.3+Math.max(0,30-Math.min(...attacks.map(a=>(a.cost||[]).length),5)*10)+attacks.length*4;
 }
-function openingReadiness(cardId,hand){
+function openingReadiness(cardId,hand,apex=false){
  const pokemon=card(cardId),moves=pokemon?.attacks||[];
  // An opening Energy must be attachable to the selected Active. Miracle
  // Energy cannot power an ordinary Basic even if its symbols match a cost.
@@ -350,13 +350,16 @@ function openingReadiness(cardId,hand){
  if(!moves.length)return 0;
  // Zero-cost attacks remain playable with no Energy in the opening hand.
  // Their readiness must not depend on finding an attachable Energy card.
- let readiness=moves.some(move=>(move.cost||[]).length===0)?12:0;
+ // Apex values a usable free attack as real first-turn tempo, not merely
+ // a small consolation bonus for having no Energy in the opening hand.
+ const freeReadiness=apex?70:12;
+ let readiness=moves.some(move=>(move.cost||[]).length===0)?freeReadiness:0;
  if(!energies.length)return readiness;
  for(const e of energies){
   const provided=energyPool({energies:[e]});
   for(const move of moves){
    const cost=move.cost||[];
-   if(!cost.length)readiness=Math.max(readiness,12);
+   if(!cost.length)readiness=Math.max(readiness,freeReadiness);
    else if(canPayEnergy(cost,provided))readiness=Math.max(readiness,85);
    else if(cost.some(t=>t!=='Colorless'&&(provided.includes(t)||provided.includes('Any'))))
     readiness=Math.max(readiness,30);
@@ -1246,7 +1249,7 @@ function score(a,o,cfg,used){
    // Champion evaluates a realistic first attack with Energy actually in hand
    // rather than always choosing the printed strongest Basic and getting stuck
    // on the wrong half of a mixed Water/Fighting deck.
-   const ready=openingReadiness(u.id,p.hand);
+   const ready=openingReadiness(u.id,p.hand,cfg.level===8);
    const foresight=cfg.level===1?0:cfg.level===2?.18:
     cfg.level===3?.45:cfg.level===4?.65:1;
    return 200+quality+ready*foresight*style.setup;
