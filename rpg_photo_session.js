@@ -165,6 +165,9 @@
    zoomInput=$(shell,'[data-zoom]'),motionCanvas=$(shell,'[data-motion]');
   function camera(){
    actor.style.setProperty('--zoom',String(session.zoom));
+   motionCanvas.style.setProperty('--zoom',String(session.zoom));
+   motionCanvas.style.setProperty('--pan-x',session.x+'px');
+   motionCanvas.style.setProperty('--pan-y',session.y+'px');
    actor.style.setProperty('--pan-x',session.x+'px');
    actor.style.setProperty('--pan-y',session.y+'px');
    const silhouette=$(shell,'.nps-silhouette');
@@ -177,32 +180,155 @@
   function setZoom(value){
    session.zoom=clamp(Number(value)||1,1,2.5);camera();
   }
-  function setMood(id){
+  // All reaction frames are preloaded before a sequence begins.
+  // This avoids surprise blank frames when flipping between overworld and portraits.
+  function preloadPose(id){
+   if(session.preload.has(id))return session.preload.get(id);
+   const src=pose(id).src;
+   const promise=new Promise(resolve=>{
+    if(shell.classList.contains('nps-discreet')){resolve(true);return;}
+    const im=new Image();
+    im.onload=()=>{im.decode?.().catch(()=>{}).finally(()=>resolve(true))||resolve(true);};
+    im.onerror=()=>resolve(false);
+    im.src=src;
+   });
+   session.preload.set(id,promise);
+   return promise;
+  }
+  function setMood(id,opts={}){
    const target=pose(id);
-   if(session.closed)return;
+   if(session.closed)return Promise.resolve(false);
+   const fromReaction=!!opts.fromReaction;
+   const seq=++session.imageSequence;
    session.poseId=target.id;
-   session.mode=target.kind;
-   session.auto=false;
+   if(!fromReaction){
+    stopReaction();
+    session.mode=target.kind;
+    session.auto=false;
+   }
    drawChoices();
    updateFeedback();
-   $(shell,'[data-caption]').textContent=captions[target.id];
-   const seq=++session.imageSequence;
-   if(shell.classList.contains('nps-discreet')){loading.hidden=true;return;}
+   $(shell,'[data-caption]').textContent=opts.line||captions[target.id];
+   if(session.motionResolve){session.motionResolve(false);session.motionResolve=null;}
+   if(shell.classList.contains('nps-discreet')){
+    loading.hidden=true;
+    return Promise.resolve(true);
+   }
+   // Keep the previous rendered frame as a still until the new animation
+   // has actually loaded; crossfade only after the new canvas is ready.
+   if(session.motionReady){
+    try{actor.src=motionCanvas.toDataURL('image/png');}
+    catch{actor.src=pose(id).src;}
+    actor.style.opacity='1';
+    motionCanvas.style.opacity='0';
+   }
+   session.motionReady=false;
+   loading.hidden=!!opts.silent && !!actor.src;
+   if(!loading.hidden)loading.textContent='Loading '+labels[target.id]+' pose…';
+   return new Promise(resolve=>{
+    const done=(okay)=>{
+     if(session.imageSequence!==seq||session.closed){resolve(false);return;}
+     loading.hidden=true;
+     if(!okay){
+      actor.src=target.src;
+      actor.style.opacity='1';
+      motionCanvas.style.opacity='0';
+     }
+     resolve(okay);
+    };
+    if(session.motion){
+     session.motionResolve=done;
+     session.motion.setSource(target.src);
+    }else{
+     const image=new Image();
+     image.onload=()=>{if(session.imageSequence===seq){actor.src=target.src;done(true);}};
+     image.onerror=()=>done(false);
+     image.src=target.src;
+    }
+   });
+  }
+  // Cancel every pending timeline when closing, retrying, changing mode,
+  // or capturing; callbacks are tied to a monotonic serial number.
+  function stopReaction(){
+   session.reactionSerial++;
+   session.reaction=null;
+   session.reactionBusy=false;
+   clearTimeout(session.reactionTimer);
+   session.reactionTimer=null;
+   if(session.reactionCancel){session.reactionCancel();session.reactionCancel=null;}
+   updateFeedback();
+  }
+  async function playReaction(id){
+   const action=REACTIONS.find(a=>a.id===id);
+   if(!action||session.closed||session.reviewOpen)return;
+   stopReaction();
+   session.mode='reactions';session.auto=false;session.reactionBusy=true;
+   const serial=session.reactionSerial;
+   drawChoices();
+   const status=$(shell,'[data-reaction-status]');
+   status.textContent='Barb is getting ready…';
    loading.hidden=false;
-   loading.textContent='Loading '+labels[target.id]+' pose…';
-   const image=new Image();
-   image.onload=()=>{
-    if(session.closed||session.imageSequence!==seq)return;
-    actor.src=target.src;
-    actor.alt='Barb: '+labels[target.id]+' pose';
-    loading.hidden=true;
-   };
-   image.onerror=()=>{
-    if(session.closed||session.imageSequence!==seq)return;
-    loading.hidden=true;
-    $(shell,'[data-caption]').textContent='This pose could not load. Choose another image.';
-   };
-   image.src=target.src;
+   loading.textContent='Preparing Barb’s reactions…';
+   const prepared=await Promise.all(action.frames.map(frame=>preloadPose(frame.pose)));
+   if(session.closed||serial!==session.reactionSerial)return;
+   loading.hidden=true;
+   if(prepared.some(ok=>!ok)){
+    status.textContent='Some images did not load. Please try again.';
+    session.reactionBusy=false;drawChoices();return;
+   }
+   for(let i=0;i<action.frames.length;i++){
+    if(session.closed||serial!==session.reactionSerial)return;
+    const frame=action.frames[i];
+    const ready=await setMood(frame.pose,{fromReaction:true,silent:true,line:frame.line});
+    if(session.closed||serial!==session.reactionSerial)return;
+    if(!ready){
+     status.textContent='Could not show this reaction. Please retry.';
+     break;
+    }
+    const started=performance.now();
+    session.reaction={id:action.id,pose:frame.pose,highlight:!!frame.highlight,
+     start:started,duration:frame.duration};
+    status.textContent=frame.highlight?'📷 PHOTO OPPORTUNITY! Capture Barb now!':
+     'Barb: '+(i===0?'Reacting…':'The moment is changing…');
+    updateFeedback();
+    await new Promise(resolve=>{
+     session.reactionCancel=resolve;
+     session.reactionTimer=setTimeout(()=>{session.reactionCancel=null;resolve();},frame.duration);
+    });
+    if(session.closed||serial!==session.reactionSerial)return;
+   }
+   if(session.closed||serial!==session.reactionSerial)return;
+   session.reactionBusy=false;session.reaction=null;
+   status.textContent='The moment passed. Try another interaction.';
+   await setMood('neutral',{fromReaction:true,silent:true});
+   drawChoices();updateFeedback();
+  }
+  // One canvas instance per session, shared with the rhythm game's renderer.
+  // No local torso warping: only low-amplitude whole-sprite motion for photos.
+  if(!shell.classList.contains('nps-discreet')&&root.NeoRpgSpriteDeformer?.create){
+   try{
+    session.motion=root.NeoRpgSpriteDeformer.create(motionCanvas,{
+     fit:'contain',cropTop:0,cropHeight:1,
+     width:270,height:440,fps:22,tempo:78,speed:.9,
+     baseBounce:1.3,feverBounce:1.9,tilt:.011,zones:[],
+     onReady:()=>{
+      if(session.closed)return;
+      session.motionReady=true;
+      motionCanvas.style.opacity='1';
+      actor.style.opacity='0';
+      loading.hidden=true;
+      const done=session.motionResolve;session.motionResolve=null;
+      if(done)done(true);
+     },
+     onError:()=>{
+      session.motionReady=false;
+      const done=session.motionResolve;session.motionResolve=null;
+      if(done)done(false);
+     }
+    });
+   }catch(error){
+    console.warn('Photo sprite motion unavailable, falling back to portraits',error);
+   }
   }
   function drawChoices(){
    poseBox.replaceChildren();
