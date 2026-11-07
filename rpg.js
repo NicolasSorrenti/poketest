@@ -926,7 +926,7 @@ function miaPrivateAction(action){
  const step=Number(state.miaPrivateStage)||1;
  if(action==='miaPrivateYes'&&step===1){
   // Permanent retirement as soon as the first answer is chosen.
-  state.miaDaddyRetired=true;
+
   state.miaPrivateStage=2;
  }else if(action==='miaPrivateNext'&&step>=2&&step<7){
   state.miaPrivateStage=step+1;
