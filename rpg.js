@@ -67,8 +67,29 @@ function liveEventArt(id){
  if(LIVE_NEW.byId(id))return LIVE_NEW.artAt(id,state.mandatoryEventState?.active?.id===id?Number(state.mandatoryEventState.active.index)||0:0);
  return id===LIVE_HOME_CHECKIN.id?state.liveHomeActivityScene?.cg||LIVE_HOME_CHECKIN_ART[0]:LIVE_EVENT_ART[id];
 }
+// Mia is Live's adult daughter, a CG-only visitor rather than a roster NPC.
+const MIA_FIRST_TIME={
+ id:'mia_first_time',title:'A New Face at Home',kind:'season',priority:97,
+ earliestDay:3,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',
+ trigger:{eventSeen:'live_home_welcome'},
+ lines:[
+  {speaker:'Narrator',text:'You wake up and head into the living room. Live is chatting with a girl about your age.'},
+  {speaker:'Live',text:'Good morning, honey! Perfect timing. There is someone I want you to meet.'},
+  {speaker:'Live',text:'This is Mia, my daughter. Mia, this is the boy I told you about.'},
+  {speaker:'Mia',text:'Nice to meet you! So you are the one Mom keeps talking about.'},
+  {speaker:'Live',text:'Mia! You make it sound like I never talk about anything else!'},
+  {speaker:'Mia',text:'What? I only said you told me about him!'},
+  {speaker:'Mia',text:'Anyway, I hope we get along. I will be stopping by from time to time.'},
+  {speaker:'Live',text:'I am sure you two will. Now, who wants breakfast?'}
+ ],
+ choices:[
+  {label:'Nice to meet you too, Mia',reply:'Mia smiles. "Likewise! I have a feeling we will get along."'},
+  {label:'What exactly did Live tell you?',reply:'Mia laughs. "Nothing bad, I promise!" Live sighs in relief.'}
+ ]
+};
+LIVE_EVENT_ART[MIA_FIRST_TIME.id]='/rpg-assets/characters/lyla/events/mia/mia_first_time.png';
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]).map(event=>
- event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
+ event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,MIA_FIRST_TIME,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -481,6 +502,18 @@ function maybeStartMandatory(){
   persist();
   return;
  }
+ // Mia's introduction is a one-time morning scene after meeting Live.
+ // Save it through mandatoryEventState.seen, without adding Mia to the NPC roster.
+ if(state.location==='home'&&state.slot===0&&state.day>=MIA_FIRST_TIME.earliestDay&&
+    state.day<=90&&state.mandatoryEventState?.seen?.live_home_welcome&&
+    !state.mandatoryEventState?.seen?.[MIA_FIRST_TIME.id]){
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  m.active={id:MIA_FIRST_TIME.id,phase:'lines',index:0,choice:null};
+  state.liveDayScene={day:state.day,id:MIA_FIRST_TIME.id,cg:LIVE_EVENT_ART[MIA_FIRST_TIME.id],firstSlot:state.slot,lastSeenSlot:state.slot};
+  state.liveLastEventDay=state.day;
+  persist();
+  return;
+ }
  // Once Live's daily scene is established, do not reroll it on a return
  // visit. Later periods receive a contextual follow-up with the SAME CG.
  const daily=state.liveDayScene;
@@ -549,7 +582,7 @@ function maybeStartMandatory(){
  // The non-Live scheduler runs only when no Live scene is active.
  // Exclude the replayable pool so it cannot accidentally start on every render.
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
-  !LIVE_EVENTS.includes(e)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
+  !LIVE_EVENTS.includes(e)&&e.id!==MIA_FIRST_TIME.id&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -610,7 +643,7 @@ function renderMandatory(){
    ?{speaker:'Live',text:liveFollowupContent().text}:original;
   const name=line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker;
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
-  return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
+  return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]&&e.id!==MIA_FIRST_TIME.id?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice'){
   if(e.id===LIVE_DAY_FOLLOWUP.id){
@@ -631,7 +664,7 @@ function renderMandatory(){
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
   const speaker=last?.speaker==='Protagonist'?'You':(cast[last?.speaker]?.name||last?.speaker||'Narrator');
   const photoOffer=livePhotoRequest(a);
-  const baseChoices=LIVE_EVENT_ART[e.id]?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]);
+  const baseChoices=LIVE_EVENT_ART[e.id]&&e.id!==MIA_FIRST_TIME.id?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]);
   const choices=photoOffer?[...baseChoices,
    ["Sure, I'll take those photos",'mandatoryPhotoLive']]:baseChoices;
   const line=mandatoryText(last?.text||'')+
@@ -655,7 +688,7 @@ function renderMandatory(){
  const responseActor=[...e.lines].reverse().find(line=>cast[line.speaker])?.speaker;
  const remoteReply=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
  const actorName=cast[e.characterId]?.name||e.characterId;
- return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]?
+ return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]&&e.id!==MIA_FIRST_TIME.id?
   [['Leave now ›','mandatoryFinish'],['◉ Glance at Live','mandatoryGlance'],
    ...(liveCanRepeat()?[["Ask Live to spend another private morning together",'mandatoryRepeatLive']]:[])]:
   [['Continue story ›','mandatoryFinish']]};
