@@ -10,20 +10,20 @@
 // Other modes can provide any portrait, crop, zone shapes and BPM.
 (function(root){
  'use strict';
- if(root.NeoRpgSpriteDeformer?.version===4)return;
+ if(root.NeoRpgSpriteDeformer?.version===5)return;
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  const val=(n,def)=>Number.isFinite(Number(n))?Number(n):def;
  const smooth=n=>{n=clamp(n,0,1);return n*n*(3-2*n);};
  const defaults=Object.freeze({
   width:210,height:280,fps:22,tempo:136,speed:.93,
-  cropTop:0,cropHeight:.9,cameraMode:'crop',baseBounce:0,feverBounce:0,tilt:0,
+  cropTop:0,cropHeight:.9,cameraMode:'crop',cameraFit:'cover',baseBounce:0,feverBounce:0,tilt:0,
   intensity:1,expansion:1,feverInflate:0,zones:[]
  });
  const presets=Object.freeze({
   daisyDance:Object.freeze({
    source:'/rpg-assets/characters/daisy/portraits/primary.png',
    width:210,height:280,fps:22,tempo:119,speed:.9,
-   cameraMode:'viewport',cropTop:.11,cropHeight:.78,
+   cameraMode:'viewport',cameraFit:'full-width',cropTop:.11,cropHeight:.78,
    baseBounce:0,feverBounce:5.1,tilt:0,
    feverInflate:1.2,intensity:.65,expansion:1,
    // Calibrated directly in Motion Lab. Coordinates stay relative to the
@@ -58,15 +58,26 @@
    const heightFraction=clamp(val(config.cropHeight,1),.08,1-top);
    const cameraMode=config.cameraMode==='viewport'?'viewport':'crop';
    if(cameraMode==='viewport'){
-    const scale=Math.max(W/image.naturalWidth,H/(image.naturalHeight*heightFraction));
-    surfaceW=Math.max(W,Math.ceil(image.naturalWidth*scale));
-    surfaceH=Math.max(H,Math.ceil(image.naturalHeight*scale));
+    // Cover intentionally zooms and can clip left/right. Full-width instead
+    // fits the ENTIRE original sprite horizontally into the camera window.
+    // Keep a full-height backing surface, so vertical bobbing may reveal the
+    // original pixels outside the initial visible frame.
+    const fullWidth=config.cameraFit==='full-width';
+    const scale=fullWidth
+      ? W/image.naturalWidth
+      : Math.max(W/image.naturalWidth,H/(image.naturalHeight*heightFraction));
+    const drawW=Math.max(1,Math.round(image.naturalWidth*scale));
+    const drawH=Math.max(1,Math.round(image.naturalHeight*scale));
+    surfaceW=Math.max(W,drawW);
+    surfaceH=Math.max(H,drawH);
     cameraX=(surfaceW-W)/2;
-    cameraY=clamp(top*surfaceH,0,surfaceH-H);
+    const visibleY=top*drawH;
+    cameraY=clamp(visibleY,0,surfaceH-H);
+    const drawX=(surfaceW-drawW)/2;
     srcCanvas.width=dstCanvas.width=surfaceW;
     srcCanvas.height=dstCanvas.height=surfaceH;
     srcCtx.clearRect(0,0,surfaceW,surfaceH);
-    srcCtx.drawImage(image,0,0,surfaceW,surfaceH);
+    srcCtx.drawImage(image,drawX,0,drawW,drawH);
    }else{
     surfaceW=W;surfaceH=H;cameraX=0;cameraY=0;
     srcCanvas.width=dstCanvas.width=W;
@@ -110,11 +121,11 @@
   }
   function configure(update={}){
    if(disposed)return;
-   const oldWidth=W,oldHeight=H,oldTop=config.cropTop,oldCrop=config.cropHeight,oldFit=config.fit,oldMode=config.cameraMode;
+   const oldWidth=W,oldHeight=H,oldTop=config.cropTop,oldCrop=config.cropHeight,oldFit=config.fit,oldMode=config.cameraMode,oldCameraFit=config.cameraFit;
    config={...config,...update,zones:(update.zones??config.zones).map(z=>({...z}))};
    if(Math.round(val(config.width,210))!==W||Math.round(val(config.height,280))!==H)size();
    if(update.source!==undefined&&String(update.source)!==imageSrc)setSource(update.source);
-   else if(ready&&(W!==oldWidth||H!==oldHeight||oldTop!==config.cropTop||oldCrop!==config.cropHeight||oldFit!==config.fit||oldMode!==config.cameraMode))snapshot();
+   else if(ready&&(W!==oldWidth||H!==oldHeight||oldTop!==config.cropTop||oldCrop!==config.cropHeight||oldFit!==config.fit||oldMode!==config.cameraMode||oldCameraFit!==config.cameraFit))snapshot();
    last=-Infinity;
   }
   function render(ms=0,energy=0){
@@ -210,5 +221,5 @@
   if(config.source)setSource(config.source);
   return Object.freeze({render,configure,setSource,dispose,get ready(){return ready;},get source(){return imageSrc;}});
  }
- root.NeoRpgSpriteDeformer=Object.freeze({version:4,create,presets});
+ root.NeoRpgSpriteDeformer=Object.freeze({version:5,create,presets});
 })(window);
