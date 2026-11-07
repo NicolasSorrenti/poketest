@@ -1925,33 +1925,45 @@ function act(action,confirmedInvitationHandoff=false){
  if(type==='socialPlan')return planSharedActivity(id);
  if(type==='socialDo'){
   if(!cast[id]||!currentPeople().includes(id))return;
-  // Barb's photoshoot uses verified existing overworld and expressionsv2 art.
-  // Commit only after three shots and explicit Save; cancel leaves RPG state intact.
-  if(part==='park_photo_session'){
+  // Character-neutral photography. The current location selects the proper
+  // eye-level background. Only completed sessions change social state.
+  if(SOCIAL.activities.some(activity=>activity.id===part&&activity.photoSession)){
    const available=SOCIAL.options(state,id,currentPeople(),cast).find(x=>x.id===part&&!x.disabledReason);
    if(!available)return sayCharacterChoiceMenu(id,'SPEND TIME','This photoshoot is not available right now.',sharedActivityChoices(id));
    if(!window.NeoRpgPhotoSession?.open)return sayCharacterChoiceMenu(id,'SPEND TIME','The camera is temporarily unavailable.',sharedActivityChoices(id));
    if(!confirmTimeAdvance())return;
    window.NeoRpgPhotoSession.open({
-    name:cast[id].name,characterId:id,savedAlbum:state.photoAlbum,
+    name:cast[id].name,characterId:id,location:state.location,savedAlbum:state.photoAlbum,
     onCancel:()=>{},
     onComplete:result=>{
      try{
       if(!SOCIAL.options(state,id,currentPeople(),cast).some(x=>x.id===part&&!x.disabledReason))
        throw Error('The photoshoot is no longer available.');
+      if(result.characterId!==id||!Array.isArray(result.photos)||result.photos.length!==3)
+       throw Error('The photo session result is incomplete.');
       const before=activityBalance(id);
       const outcome=SOCIAL.complete(state,id,part,currentPeople(),cast);
       const award=Math.max(0,Math.min(14,Number(result.credits)||0));
       state.credits=Math.min(999999,(Number(state.credits)||0)+award);
-      const photos=Array.isArray(result.photos)?result.photos.filter(p=>p.character==='barb').slice(0,3):[];
-      state.photoAlbum=(Array.isArray(state.photoAlbum)?state.photoAlbum:[])
-       .concat(photos.map(p=>({...p,day:state.day}))).slice(-24);
+      const photos=result.photos.filter(p=>p.character===id).slice(0,3);
+      // Every character has a separate album view. Keep up to six recent
+      // photos per character, and a global cap to bound cloud-save size.
+      const all=(Array.isArray(state.photoAlbum)?state.photoAlbum:[])
+       .concat(photos.map(p=>({...p,day:state.day})));
+      const perCharacter={};
+      state.photoAlbum=all.slice().reverse().filter(p=>{
+       if(typeof p?.character!=='string')return false;
+       const count=perCharacter[p.character]||0;
+       if(count>=6)return false;
+       perCharacter[p.character]=count+1;
+       return true;
+      }).slice(0,72).reverse();
       state.photoRecords=state.photoRecords||{};
       const previous=state.photoRecords[id]||{};
       state.photoRecords[id]={lastDay:state.day,sessions:(previous.sessions||0)+1,
        bestAverage:Math.max(previous.bestAverage||0,result.average||0),
        lastAverage:result.average||0};
-      log('Photographed '+cast[id].name+' at Riverside Park: '+(result.average||0)+'/100 average.');
+      log('Photographed '+cast[id].name+' at '+places[state.location][0]+': '+(result.average||0)+'/100 average.');
       recordIntention('hangout');
       const memories=recordCG('hangout',id);
       activityOutcome(cast[id].name,'Your three photos averaged '+result.average+
