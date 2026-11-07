@@ -54,7 +54,7 @@
  "/rpg_daily_planner.js",
  "/rpg_social_activities.js",
  "/rpg_arcade_game.js?v=daisy-theatrhythm-touchfix-20261106",
- "/rpg_photo_session.js?v=barb-photo-v1",
+ "/rpg_photo_session.js?v=barb-photo-v2",
  "/rpg_planned_dates.js",
  "/rpg_preduel.js?v=restore-original-attacks-20261102",
  "/rpg_situations.js",
