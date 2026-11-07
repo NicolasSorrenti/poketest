@@ -194,6 +194,57 @@
   function currentMeter(){
    return .5+.5*Math.sin((performance.now()-session.begin)/620);
   }
+  function updateFeedback(){
+   const task=session.tasks[session.shots.length];
+   if(!task||session.closed)return;
+   const poseGood=session.poseId===task.pose;
+   const frameGood=Math.abs(session.zoom-frameZoom[task.framing])<=.22;
+   const centered=Math.hypot(session.x,session.y)<=Math.max(45,stage.clientWidth*.13);
+   const lightGood=session.light===task.light;
+   const momentGood=currentMeter()>=.78;
+   const myFrame=session.zoom>=1.66?'Close-up':session.zoom>=1.23?'Medium':'Full body';
+   function check(key,good,message){
+    const el=$(shell,'[data-check-'+key+']');
+    if(!el)return;
+    el.dataset.ready=String(good);
+    el.textContent=(good?'✓ ':'○ ')+message;
+   }
+   check('pose',poseGood,'Pose: '+labels[task.pose]+(poseGood?'':' (choose this)'));
+   check('framing',frameGood&&centered,'Frame: '+({close:'Close-up',medium:'Medium',full:'Full body'}[task.framing])+
+    (frameGood&&centered?' ✓':(!frameGood?' · now '+myFrame:' · center Barb')));
+   check('light',lightGood,'Light: '+({soft:'Soft',warm:'Warm',bright:'Bright'}[task.light]));
+   check('moment',momentGood,'Moment: '+(momentGood?'Now!':'Wait for bar'));
+   let next;
+   if(!poseGood)next='First: choose the '+labels[task.pose]+' pose.';
+   else if(!frameGood)next='Next: adjust zoom until Frame turns green.';
+   else if(!centered)next='Next: drag Barb toward the center.';
+   else if(!lightGood)next='Next: choose '+task.light+' light.';
+   else if(!momentGood)next='Almost ready! Wait for the moment bar to fill.';
+   else next='PERFECT SETUP! Press SNAP now!';
+   const helper=$(shell,'[data-next-action]');
+   if(helper)helper.textContent=next;
+   const shutter=$(shell,'[data-snap]');
+   if(shutter)shutter.classList.toggle('nps-ready',poseGood&&frameGood&&centered&&lightGood&&momentGood);
+  }
+  function showGuide(){
+   if(session.closed||$(shell,'.nps-instructions'))return;
+   const guide=document.createElement('div');
+   guide.className='nps-instructions';
+   guide.setAttribute('role','dialog');guide.setAttribute('aria-label','How to play Photo Session');
+   guide.innerHTML='<div class="nps-guide-card">'+
+    '<div class="nps-step-tag">A QUICK GUIDE · THREE PHOTOS</div>'+
+    '<h3>How to play 📷</h3>'+
+    '<p>Barb gives you a different photo request each round. Your goal is to match the request and capture the best moment.</p>'+
+    '<div class="nps-guide-steps">'+
+    '<div><b>1 · Match the request</b><div>Choose the requested pose and lighting on the right. The indicators turn green when correct.</div></div>'+
+    '<div><b>2 · Frame Barb</b><div>Zoom for a full-body, medium, or close-up photo. Drag the image to keep Barb centered.</div></div>'+
+    '<div><b>3 · SNAP at the right moment</b><div>Wait for the pink moment bar to fill, then press SNAP. Check your score and retry before keeping each photo.</div></div></div>'+
+    '<p>Nothing is timed. Take as long as you like. After three saved shots, you receive a session result.</p>'+
+    '<div class="nps-guide-actions"><button type="button" class="nps-btn nps-primary" data-start-shooting>Got it · Start shooting!</button></div></div>';
+   $(shell,'.nps-shell').append(guide);
+   $(guide,'[data-start-shooting]').onclick=()=>guide.remove();
+   $(guide,'[data-start-shooting]').focus();
+  }
   function tick(){
    if(session.closed)return;
    const moment=currentMeter();
