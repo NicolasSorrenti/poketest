@@ -25,17 +25,25 @@
   const npc=String(options.characterId||'barb').toLowerCase();
   const profile=root.NeoRpgPhotoProfiles?.byId(npc);
   if(!profile)return false;
+  const narrative=options.story?(options.storyId?
+   root.NeoRpgPhotoStories?.byId(npc,options.storyId,profile):
+   root.NeoRpgPhotoStories?.select(npc,profile,
+    Number.isFinite(Number(options.trust))?Number(options.trust):99,
+    {day:options.day||1,slot:options.slot||0})):null;
+  if(options.storyId&&!narrative)return false;
+  if(narrative&&options.trust!=null&&Number(options.trust)<narrative.trustMin)return false;
   const PORTRAIT=profile.portraitIds,CANDID=profile.candidIds,labels=profile.labels,
    captions=profile.captions,POSES=profile.poses,
-   REACTIONS=options.story?profile.storyActions:profile.actions,
-   REACTION_TASKS=options.story?profile.scripted:profile.tasks;
+   REACTIONS=options.story?(narrative?.storyActions||profile.storyActions):profile.actions,
+   REACTION_TASKS=options.story?(narrative?.shots||profile.scripted):profile.tasks;
   const pose=id=>POSES.find(p=>p.id===id)||POSES[0];
   const location=String(options.location||profile.defaultLocation||'park').toLowerCase();
   const PHOTO_BACKGROUND=root.NeoRpgPhotoProfiles.backgroundFor(location);
   ensureStyle();
   const session={
    id:npc,name:profile.name,location,freePlay:!!options.freePlay,
-   scripted:!!options.story,
+   scripted:!!options.story,narrative,storyId:narrative?.id||null,
+   storyTimer:null,
    savedAlbum:Array.isArray(options.savedAlbum)?options.savedAlbum.slice(-72):[],
    onCancel:options.onCancel,onComplete:options.onComplete,closed:false,
    mode:'reactions',poseId:'neutral',light:'warm',zoom:1.3,x:0,y:0,shots:[],
@@ -49,6 +57,7 @@
   const shell=document.createElement('div');
   shell.className='nps-root';
   shell.classList.toggle('nps-story',session.scripted);
+  shell.classList.toggle('nps-precomposed',!!profile.precomposed);
   shell.classList.toggle('nps-discreet',document.documentElement.dataset.rpgDiscreet==='on');
   shell.setAttribute('role','dialog');shell.setAttribute('aria-modal','true');
   shell.setAttribute('aria-label','Photo Session with '+session.name);
@@ -182,8 +191,9 @@
    paintCamera();
    const view=stage.getBoundingClientRect(),sprite=cameraLayer().getBoundingClientRect();
    if(view.height>2&&sprite.height>2){
-    session.y=view.top+view.height*.48-
-     (sprite.top+sprite.height*frameFocus[type]);
+    const requested=session.scripted?session.tasks[session.shots.length]?.target:null;
+   session.y=view.top+view.height*.48-
+     (sprite.top+sprite.height*(requested?.y??frameFocus[type]));
    }
    camera();
   }
@@ -280,6 +290,7 @@
    updateFeedback();
   }
   async function playReaction(id){
+   if(session.storyTimer){clearTimeout(session.storyTimer);session.storyTimer=null;}
    const action=REACTIONS.find(a=>a.id===id);
    if(!action||session.closed||session.reviewOpen)return;
    stopReaction();
@@ -330,7 +341,7 @@
   }
   // One canvas instance per session, shared with the rhythm game's renderer.
   // No local torso warping: only low-amplitude whole-sprite motion for photos.
-  if(!shell.classList.contains('nps-discreet')&&root.NeoRpgSpriteDeformer?.create){
+  if(!profile.precomposed&&!shell.classList.contains('nps-discreet')&&root.NeoRpgSpriteDeformer?.create){
    try{
     session.motion=root.NeoRpgSpriteDeformer.create(motionCanvas,{
      fit:'contain',cropTop:0,cropHeight:1,
@@ -427,7 +438,7 @@
    $(shell,'[data-shotcount]').textContent='Shot '+(session.shots.length+1)+' / 3';
    $(shell,'[data-brief-index]').textContent=(session.shots.length+1)+' OF 3';
    $(shell,'[data-goal]').textContent=session.scripted?
-    session.name+' requests: '+task.name:task.name;
+    (session.narrative?.title?session.narrative.title+' · ':'')+task.name:task.name;
    $(shell,'[data-hint]').textContent=task.hint;
    if(session.scripted){
     // Let the player concentrate on framing the requested detail.
@@ -503,7 +514,10 @@
    guide.innerHTML='<div class="nps-guide-card">'+
     '<div class="nps-step-tag">A QUICK GUIDE · THREE PHOTOS</div>'+
     '<h3>How to play 📷</h3>'+
-    '<p>'+(session.scripted?session.name+' asked you to take three photographs. Your model chooses the poses and tells you which detail to highlight.':'Your goal is to cause a reaction and photograph it while it happens.')+'</p>'+
+    '<p>'+(session.scripted?
+     (session.narrative?.hook||session.name+' asked you to take three photographs.')+
+     ' Your model chooses each pose and tells you what detail to capture.':
+     'Your goal is to cause a reaction and photograph it while it happens.')+'</p>'+
     '<div class="nps-guide-steps">'+
     '<div><b>1 · Listen to '+session.name+'</b><div>'+(session.scripted?
      'Watch the short scene. The character will choose a pose and tell you what to photograph. Use Repeat pose as often as needed.':
@@ -694,12 +708,29 @@
     $(shell,'[data-caption]').textContent='Camera: '+error.message;
     console.warn('Photo capture unavailable',error);return;
    }
-   const shot={character:session.id,location:session.location,day:null,pose:session.poseId,framing:task.framing,
+   const shot={character:session.id,location:session.location,storyId:session.storyId,
+    day:null,pose:session.poseId,framing:task.framing,
     light:session.light,zoom:Number(session.zoom.toFixed(2)),
     x:Math.round(session.x),y:Math.round(session.y),score:points.score,task:task.name,
     thumbnail:capture.thumbnail};
    stopReaction();
    showReview(shot,points,capture.fullImage);
+  }
+  function queueStoryReaction(task,line,delay=1250,followupPose=null){
+   if(!task||session.closed)return;
+   clearTimeout(session.storyTimer);
+   const caption=line?session.name+': "'+line+'"':'';
+   if(caption){
+    $(shell,'[data-caption]').textContent=caption;
+    $(shell,'[data-reaction-status]').textContent=caption;
+   }
+   if(followupPose)void setMood(followupPose,{
+    fromReaction:true,silent:true,line:caption
+   });
+   session.storyTimer=setTimeout(()=>{
+    session.storyTimer=null;
+    if(!session.closed&&!session.reviewOpen)void playReaction(task.action);
+   },delay);
   }
   function showReview(shot,points,snapshot=null){
    session.reviewOpen=true;
@@ -747,16 +778,22 @@
     list.append(row);
    }
    const weakest=checks.slice().sort((a,b)=>a[1]/a[2]-b[1]/b[2])[0];
-   $(review,'[data-review-message]').textContent=points.score>=85?
-    session.name+': "That one is great! Can we keep it?" You can keep it or practice again.':
+   const storyTask=session.tasks[session.shots.length];
+   $(review,'[data-review-message]').textContent=session.narrative?
+    session.name+': "'+(points.score>=55?storyTask.successLine:storyTask.retryLine)+'"':
+    points.score>=85?
+     session.name+': "That one is great! Can we keep it?" You can keep it or practice again.':
     points.score>=65?
-    'Nice shot! You could improve the '+weakest[0].toLowerCase()+' for a higher score.':
-    'Almost there! The biggest improvement would be '+weakest[0].toLowerCase()+'. Try again—there is no penalty.';
+     'Nice shot! You could improve the '+weakest[0].toLowerCase()+' for a higher score.':
+     'Almost there! The biggest improvement would be '+weakest[0].toLowerCase()+'. Try again—there is no penalty.';
    $(shell,'.nps-shell').append(review);
    $(review,'[data-retry]').onclick=()=>{
     session.reviewOpen=false;review.remove();
     if(session.scripted){
-     drawChoices();void playReaction(session.tasks[session.shots.length].action);
+     const current=session.tasks[session.shots.length];
+     drawChoices();
+     if(session.narrative)queueStoryReaction(current,current.retryLine,1150);
+     else void playReaction(current.action);
     }else{
      void setMood('neutral',{fromReaction:session.mode==='reactions',silent:true});
      drawChoices();updateFeedback();
@@ -773,18 +810,23 @@
      label.textContent='Photo '+(i+1)+' · '+p.score+'/100';
      mini.append(label);
     });
-    $(shell,'[data-caption]').textContent=shot.score>=85?
+    const finished=session.tasks[session.shots.length-1];
+    const successLine=session.narrative?(shot.score>=55?finished.successLine:
+     'Let me try that pose again sometime.'):'';
+    $(shell,'[data-caption]').textContent=successLine?
+     session.name+': "'+successLine+'"':shot.score>=85?
      session.name+': "That looks fantastic! Show me!"':shot.score>=65?
      session.name+': "Hey, I like that one!"':session.name+': "We can try a new angle next time!"';
     if(session.shots.length===3){showResult();}
     else{
      taskUI();
-     // Do not auto-solve the next brief: give the player a reason to choose a new pose.
      const next=session.tasks[session.shots.length];
      if(session.scripted){
-      // Next character request starts automatically after keeping a photo.
+      // Let the model react to the last result before automatically
+      // changing pose and beginning the next part of the microstory.
       drawChoices();
-      void playReaction(next.action);
+      if(session.narrative)queueStoryReaction(next,successLine,1700,finished.followupPose);
+      else void playReaction(next.action);
      }else{
       const reset=session.mode==='reactions'?'neutral':pose(next.pose).kind==='candid'?'walking':'neutral';
       void setMood(reset,{fromReaction:session.mode==='reactions',silent:true});
@@ -798,7 +840,11 @@
    const creditReward=average>=85?14:average>=65?10:6;
    const report=document.createElement('div');
    report.className='nps-report';
-   report.innerHTML='<h3>Photo Session complete!</h3><p>'+session.name+' looks over the photos with you. Every picture has its own personality.</p>';
+   report.innerHTML='<h3>Photo Session complete!</h3><p>'+
+    (session.narrative?
+     session.name+': "'+(session.tasks[2]?.successLine||'Let me see all three!')+'"':
+     session.name+' looks over the photos with you. Every picture has its own personality.')+
+    '</p>';
    const cards=document.createElement('div');cards.className='nps-report-items';
    for(const [label,value] of [['Average score',average+'/100'],['Best photo',Math.max(...session.shots.map(p=>p.score))+'/100'],
     ['RPG reward',session.freePlay?'Free play':creditReward+' credits']]){
@@ -820,7 +866,8 @@
    finish.textContent=session.freePlay?'Finish practice':'Save session and collect';
    finish.onclick=()=>{
     const result={average,credits:session.freePlay?0:creditReward,
-     photos:session.shots.map(({snapshot,...saved})=>saved),characterId:session.id};
+     photos:session.shots.map(({snapshot,...saved})=>saved),
+     characterId:session.id,storyId:session.storyId};
     close(true,result);
    };
    buttons.append(cancel,finish);report.append(buttons);
@@ -831,6 +878,7 @@
   }
   function close(completed,result){
    if(session.closed)return;
+   clearTimeout(session.storyTimer);session.storyTimer=null;
    session.closed=true;
    cancelAnimationFrame(session.clock);
    stopReaction();
