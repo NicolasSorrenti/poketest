@@ -72,7 +72,7 @@
     hero.style.backgroundImage='linear-gradient(180deg,#e6bedb42,#0b10225c),url("'+
      api.backgroundFor(location.value)+'")';
    }
-   const requested=new URLSearchParams(location.search).get('character');
+   const requested=new URLSearchParams(window.location.search).get('character');
    selected.value=api.byId(requested)?requested:'barb';
    if(!selected.value)selected.value=api.list()[0]?.id||'barb';
    selected.onchange=()=>refresh(true);
