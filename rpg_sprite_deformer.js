@@ -9,7 +9,7 @@
 // Other modes can provide any portrait, crop, zone shapes and BPM.
 (function(root){
  'use strict';
- if(root.NeoRpgSpriteDeformer?.version===1)return;
+ if(root.NeoRpgSpriteDeformer?.version===2)return;
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  const val=(n,def)=>Number.isFinite(Number(n))?Number(n):def;
  const smooth=n=>{n=clamp(n,0,1);return n*n*(3-2*n);};
@@ -22,12 +22,13 @@
   daisyDance:Object.freeze({
    source:'/rpg-assets/characters/daisy/portraits/primary.png',
    width:210,height:280,fps:22,tempo:136,speed:.93,cropTop:0,cropHeight:.9,
-   baseBounce:2.7,feverBounce:5.5,tilt:.018,
+   baseBounce:0.4,feverBounce:1.2,tilt:.002,
    // Mid-torso zones. Normalized to the cropped portrait, not full source.
    // Separately adjustable regions; excludes head, neck and waist.
    zones:[
-    {x:.385,y:.555,rx:.16,ry:.114,scaleX:.024,scaleY:.004,moveY:.009,phase:-.4},
-    {x:.620,y:.555,rx:.16,ry:.114,scaleX:.024,scaleY:.004,moveY:.009,phase:-.68}
+    // Each zone independently expands/contracts on the beat; no neck movement.
+    {x:.385,y:.580,rx:.148,ry:.108,inflateX:.18,inflateY:.15,inflatePhase:-.20,scaleX:0,scaleY:0,moveY:0,phase:0},
+    {x:.620,y:.580,rx:.148,ry:.108,inflateX:.18,inflateY:.15,inflatePhase:-.20,scaleX:0,scaleY:0,moveY:0,phase:0}
    ]
   })
  });
@@ -78,11 +79,11 @@
   }
   function configure(update={}){
    if(disposed)return;
-   const oldWidth=W,oldHeight=H,oldTop=config.cropTop,oldCrop=config.cropHeight;
+   const oldWidth=W,oldHeight=H,oldTop=config.cropTop,oldCrop=config.cropHeight,oldFit=config.fit;
    config={...config,...update,zones:(update.zones??config.zones).map(z=>({...z}))};
    if(Math.round(val(config.width,210))!==W||Math.round(val(config.height,280))!==H)size();
    if(update.source!==undefined&&String(update.source)!==imageSrc)setSource(update.source);
-   else if(ready&&(W!==oldWidth||H!==oldHeight||oldTop!==config.cropTop||oldCrop!==config.cropHeight))snapshot();
+   else if(ready&&(W!==oldWidth||H!==oldHeight||oldTop!==config.cropTop||oldCrop!==config.cropHeight||oldFit!==config.fit))snapshot();
    last=-Infinity;
   }
   function render(ms=0,energy=0){
@@ -99,6 +100,10 @@
     ry:clamp(val(z.ry,.12),.005,1),scaleX:val(z.scaleX,0),
     scaleY:val(z.scaleY,0),moveY:val(z.moveY,0),phase:val(z.phase,0)
    }));
+   // Expansion is a separate optional module; legacy motion remains compatible.
+   const inflationEngine=root.NeoRpgSpriteInflate?.version===1?root.NeoRpgSpriteInflate:null;
+   const expansions=inflationEngine?config.zones.map(z=>inflationEngine.prepare(z,phase,power)):null;
+   const displacement={dx:0,dy:0};
    if(power>0&&regions.length){
     let xmin=W,xmax=0,ymin=H,ymax=0;
     for(const z of regions){
@@ -120,6 +125,11 @@
        const edge=1-smooth((Math.sqrt(r2)-.45)/.55),w=edge*edge*power;
        dx+=w*z.scaleX*pulse*ux;
        dy+=w*(z.moveY*Math.sin(2*phase+z.phase)+z.scaleY*pulse*uy);
+      }
+      if(expansions){
+       displacement.dx=0;displacement.dy=0;
+       for(const exp of expansions)inflationEngine.apply(nx,ny,exp,displacement);
+       dx+=displacement.dx;dy+=displacement.dy;
       }
       if(Math.abs(dx)+Math.abs(dy)<1e-6)continue;
       const sx=clamp((nx-dx)*W,0,W-1),sy=clamp((ny-dy)*H,0,H-1);
@@ -148,5 +158,5 @@
   if(config.source)setSource(config.source);
   return Object.freeze({render,configure,setSource,dispose,get ready(){return ready;},get source(){return imageSrc;}});
  }
- root.NeoRpgSpriteDeformer=Object.freeze({version:1,create,presets});
+ root.NeoRpgSpriteDeformer=Object.freeze({version:2,create,presets});
 })(window);
