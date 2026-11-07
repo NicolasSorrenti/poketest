@@ -92,7 +92,18 @@ LIVE_EVENT_ART[MIA_FIRST_TIME.id]='/rpg-assets/characters/lyla/events/mia/mia_fi
 const miaStoryIds=MIA_IDS||new Set();
 const MIA_SCENE_SLOT=Object.fromEntries((window.NeoRpgLiveCampaignContent?.MIA_EVENTS||[]).map(e=>[e.id,Number.isInteger(e.slot)?e.slot:0]));
 const MIA_SCENE_PREV=Object.fromEntries((window.NeoRpgLiveCampaignContent?.MIA_EVENTS||[]).map(e=>[e.id,Object.keys(e.trigger||{}).length===1?e.trigger.eventSeen:null]));
-function miaRomanceGossip(){return !!(state.mandatoryEventState?.seen?.live_glance_next_morning||state.liveSpecialSeen?.live_glance_next_morning);}
+function miaFirstIntimateDay(){
+ const seen=state.mandatoryEventState?.seen?.live_glance_next_morning;
+ const day=Number(seen?.day);
+ // The mandatory event is recorded with its completion day. Existing older
+ // campaigns may carry the legacy completion flag without a dated entry.
+ return Number.isInteger(day)&&day>=1?day:null;
+}
+function miaGossipCompleted(){return !!state.mandatoryEventState?.seen?.mia_gossip;}
+function miaRomanceGossip(){return miaFirstIntimateDay()!==null;}
+function miaDialogueText(value){
+ return String(value||'').replace(/\{\{miaPlayerName\}\}/g,miaGossipCompleted()?'Daddy':'you');
+}
 const MIA_GOSSIP_EXTRA='/rpg-assets/characters/lyla/events/mia/a_highly_detailed_anime_style_illustration_of_the.png';
 function miaArt(id){return id==='mia_gossip'&&miaRomanceGossip()?MIA_GOSSIP_EXTRA:MIA_EVENT_ART[id];}
 Object.assign(LIVE_EVENT_ART,MIA_EVENT_ART);
@@ -526,11 +537,14 @@ function maybeStartMandatory(){
  // One first-time scene per day, except the later-sofa follow-up in a later period.
  if(state.location==='home'&&state.day<=90&&state.mandatoryEventState?.seen?.[MIA_FIRST_TIME.id]){
   const seen=state.mandatoryEventState.seen;
-  const due=MIA_EVENTS.filter(e=>state.day>=e.earliestDay&&state.slot>=(e.id==='mia_daytime_nap_return'?2:MIA_SCENE_SLOT[e.id])&&
-   !!seen[MIA_SCENE_PREV[e.id]]&&!seen[e.id]&&
+  const firstIntimateDay=miaFirstIntimateDay();
+  const gossipDue=firstIntimateDay!==null&&state.day>=firstIntimateDay+2&&!seen.mia_gossip;
+  const due=MIA_EVENTS.filter(e=>(e.id==='mia_gossip'?gossipDue:state.day>=e.earliestDay)&&
+   state.slot>=(e.id==='mia_gossip'?0:MIA_SCENE_SLOT[e.id])&&
+   (e.id==='mia_gossip'?true:!!seen[MIA_SCENE_PREV[e.id]])&&!seen[e.id]&&
    (e.id==='mia_daytime_nap_return'?
       state.day>=Number(state.miaLastSceneDay)&&state.slot===2:
-      Number(state.miaLastSceneDay)!==state.day)).sort((a,b)=>a.earliestDay-b.earliestDay);
+      Number(state.miaLastSceneDay)!==state.day)).sort((a,b)=>(a.id==='mia_gossip'?-1:b.id==='mia_gossip'?1:a.earliestDay-b.earliestDay));
   if(due.length){
    const event=due[0],m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
    m.active={id:event.id,phase:'lines',index:0,choice:null};
@@ -665,14 +679,14 @@ function renderMandatory(){
    return {speaker:line.speaker,line:line.text,choices:[['Continue ›','mandatoryNext']]};
   }
   const original=e.lines[a.index]||e.lines[e.lines.length-1];
-  if(e.id==='mia_gossip'&&miaRomanceGossip()&&a.index===3)return {speaker:'Mia',line:'So... does this mean I have a new dad now? Should I call you Daddy? Just kidding! Mom, your face is completely red!',choices:[['Continue ›','mandatoryNext']]};
+  if(e.id==='mia_gossip'&&a.index===3)return {speaker:'Mia',line:'So... does this mean I have a new dad now? Should I call you Daddy? Just kidding! Mom, your face is completely red!',choices:[['Continue ›','mandatoryNext']]};
   const cooling=LIVE_ROTATING_IDS.has(e.id)&&Number(state.liveRepeatLastDay)>0&&
     state.day>state.liveRepeatLastDay&&state.day<=state.liveRepeatLastDay+5;
   const line=cooling&&original.speaker==='Live'&&a.index===1
    ?{speaker:'Live',text:liveFollowupContent().text}:original;
   const name=line.speaker==='Protagonist'?'You':cast[line.speaker]?.name||line.speaker;
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
-  return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]&&!miaStoryIds.has(e.id)&&e.id!==MIA_FIRST_TIME.id?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
+  return {speaker:remote&&cast[line.speaker]?'✉ '+name+' · message':name,line:mandatoryText(miaStoryIds.has(e.id)?miaDialogueText(line.text):line.text),choices:a.index===e.lines.length-1&&LIVE_EVENT_ART[e.id]&&!miaStoryIds.has(e.id)&&e.id!==MIA_FIRST_TIME.id?[[ 'Respond ›','mandatoryNext'],['◉ Glance at Live','mandatoryGlance']]:[[a.index<e.lines.length-1?'Continue ›':'Respond ›','mandatoryNext']]};
  }
  if(a.phase==='choice'){
   if(e.id===LIVE_DAY_FOLLOWUP.id){
@@ -696,7 +710,7 @@ function renderMandatory(){
   const baseChoices=LIVE_EVENT_ART[e.id]&&!miaStoryIds.has(e.id)&&e.id!==MIA_FIRST_TIME.id?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]);
   const choices=photoOffer?[...baseChoices,
    ["Sure, I'll take those photos",'mandatoryPhotoLive']]:baseChoices;
-  const line=mandatoryText(last?.text||'')+
+  const line=mandatoryText(miaStoryIds.has(e.id)?miaDialogueText(last?.text||''):last?.text||'')+
    (photoOffer?'\n\nLive: "'+photoOffer.story.hook+'"':'');
   return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line,choices};
  }
@@ -717,7 +731,7 @@ function renderMandatory(){
  const responseActor=[...e.lines].reverse().find(line=>cast[line.speaker])?.speaker;
  const remoteReply=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
  const actorName=cast[e.characterId]?.name||e.characterId;
- return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(choice?.reply||''),choices:LIVE_EVENT_ART[e.id]&&!miaStoryIds.has(e.id)&&e.id!==MIA_FIRST_TIME.id?
+ return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(miaStoryIds.has(e.id)?miaDialogueText(choice?.reply||''):choice?.reply||''),choices:LIVE_EVENT_ART[e.id]&&!miaStoryIds.has(e.id)&&e.id!==MIA_FIRST_TIME.id?
   [['Leave now ›','mandatoryFinish'],['◉ Glance at Live','mandatoryGlance'],
    ...(liveCanRepeat()?[["Ask Live to spend another private morning together",'mandatoryRepeatLive']]:[])]:
   [['Continue story ›','mandatoryFinish']]};
