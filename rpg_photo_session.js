@@ -209,13 +209,16 @@
     el.dataset.ready=String(good);
     el.textContent=(good?'✓ ':'○ ')+message;
    }
-   check('pose',poseGood,'Pose: '+labels[task.pose]+(poseGood?'':' (choose this)'));
+   check('pose',poseGood,'Pose: '+labels[task.pose]+(poseGood?'':
+    (pose(task.pose).kind!==session.mode?' · '+(pose(task.pose).kind==='candid'?'Candid':'Directed'):' · select')));
    check('framing',frameGood&&centered,'Frame: '+({close:'Close-up',medium:'Medium',full:'Full body'}[task.framing])+
     (frameGood&&centered?' ✓':(!frameGood?' · now '+myFrame:' · center Barb')));
    check('light',lightGood,'Light: '+({soft:'Soft',warm:'Warm',bright:'Bright'}[task.light]));
    check('moment',momentGood,'Moment: '+(momentGood?'Now!':'Wait for bar'));
    let next;
-   if(!poseGood)next='First: choose the '+labels[task.pose]+' pose.';
+   if(!poseGood)next=pose(task.pose).kind!==session.mode?
+    'First: switch to '+(pose(task.pose).kind==='candid'?'Candid':'Directed')+' mode, then choose '+labels[task.pose]+'.':
+    'First: choose the '+labels[task.pose]+' pose.';
    else if(!frameGood)next='Next: adjust zoom until Frame turns green.';
    else if(!centered)next='Next: drag Barb toward the center.';
    else if(!lightGood)next='Next: choose '+task.light+' light.';
@@ -495,7 +498,7 @@
   stage.addEventListener('pointerup',end);stage.addEventListener('pointercancel',end);
   stage.addEventListener('wheel',e=>{e.preventDefault();setZoom(session.zoom+(e.deltaY>0?-.08:.08));},{passive:false});
   shell.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close(false);}});
-  drawChoices();taskUI();camera();setMood(session.tasks[0].pose);startAuto();
+  drawChoices();taskUI();camera();setMood('neutral');startAuto();
   session.clock=requestAnimationFrame(tick);
   showGuide();
   return true;
