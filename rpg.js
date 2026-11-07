@@ -57,6 +57,12 @@ function liveCanRepeat(){
   (!last||state.day>=last+6);
 }
 function liveEventArt(id){
+ // The exercise scare has two CG beats: worrying, then relieved with a towel.
+ if(id==='live_workout_wake_scare')
+  return (state.mandatoryEventState?.active?.id===id&&
+    Number(state.mandatoryEventState.active.index)>=4)
+   ?'/rpg-assets/characters/live/events/08_a_highly_detailed_anime_style_illustration_close.png'
+   :LIVE_EVENT_ART.live_workout_wake_scare;
  if(id===LIVE_AFTER_EVENT.id)return LIVE_AFTER_ART;
  if(id===MIA_PRIVATE_EVENT.id)return MIA_PRIVATE_ART;
  if(id===MIA_SLEEP_EVENT.id)return MIA_SLEEP_ART;
@@ -3456,6 +3462,11 @@ function syncSceneCG(){
   // Until the new approved CG pack is uploaded, existing Live art stays visible.
   const sourceId=liveEventId===LIVE_DAY_FOLLOWUP.id?state.liveDayScene?.id:liveEventId;
   const fallbackArt=LIVE_NEW.fallback(sourceId);
+  if(liveEventId==='live_workout_wake_scare'||liveEventId==='live_cleaning_wake'){
+   // Both new CGs may be uploaded later; never leave an empty scene.
+   const existing='/rpg-assets/characters/live/events/live_waking_up_casual.png';
+   if(!paths.includes(existing))paths.push(existing);
+  }
   if(fallbackArt&&!paths.includes(fallbackArt))paths.push(fallbackArt);
   cgScenePresenter.show(entry,paths.map(path=>({kind:'event',path})),()=>{},()=>{});
   return;
