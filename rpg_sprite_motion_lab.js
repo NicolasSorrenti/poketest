@@ -12,14 +12,14 @@
  }
  const DRAFT='neoRpgMotionLabDraftV1';
  const ACTIVE='neoRpgDaisyMotionTuningV1';
- const RINA_ACTIVE='neoRpgRinaDancePoseTuningV1';
+ const RINA_ACTIVE='neoRpgRinaDancePoseTuningV2';
  const query=new URLSearchParams(location.search);
  let characterId=query.get('character')==='rina'?'rina':'daisy';
  let poseId=String(query.get('pose')||(characterId==='rina'?'happy':'primary')).toLowerCase();
  const available=()=>posesApi.presets[characterId]||[];
  if(!available().some(x=>x.id===poseId))poseId=available()[0]?.id||'primary';
  const draftKey=()=>characterId==='daisy'&&poseId==='primary'?DRAFT:
-  'neoRpgMotionLabPoseDraftV2:'+characterId+':'+poseId;
+  (characterId==='rina'?'neoRpgMotionLabPoseDraftV3:':'neoRpgMotionLabPoseDraftV2:')+characterId+':'+poseId;
  const globalFields=['tempo','speed','fps','baseBounce','feverBounce','tilt','intensity','feverInflate','cropTop','cropHeight'];
  const zoneFields=['x','y','rx','ry','inflateX','inflateY','inflatePhase','scaleX','scaleY','moveY','phase'];
  const clone=o=>JSON.parse(JSON.stringify(o));
