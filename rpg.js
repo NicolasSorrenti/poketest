@@ -3649,7 +3649,7 @@ function render(){
     {id:'duel',label:'⚔ Duel',title:'Challenge '+stageMenu.name+' to a duel'}
    ];
    const availableSocial=!state.hungOut?.[state.day+':'+selectedCharacter]?
-    SOCIAL.options(state,selectedCharacter,people,cast).filter(option=>!option.disabledReason):[];
+    SOCIAL.options(state,selectedCharacter,people,cast).filter(option=>!option.disabledReason&&!option.photoSession):[];
    if(availableSocial.length)
     stageMenu.actions.push({id:'spend',label:'✧ Spend time',title:'Suggest an activity together'});
    if(APPOINTMENTS.proposed(state,selectedCharacter,SCHEDULES).length)
