@@ -1155,6 +1155,14 @@ function liveMiaChoiceAction(action){
   state.liveDayScene=null;state.liveHomeActivityScene=null;
   state.liveLastEventDay=state.day;
   persist();render();
+  if(choice==='both'&&ROMANCE?.openPair){
+   const opened=ROMANCE.openPair({
+    discreet:liveDiscreetEnabled(),
+    onFinish:()=>{state.liveMiaFinalViewed=true;persist();render();},
+    onCancel:()=>{state.liveMiaFinalViewed=false;persist();render();}
+   });
+   if(!opened)log('The Live and Mia shared CG viewer is unavailable; the relationship choice has been saved.');
+  }
   if(choice!=='both'&&ROMANCE?.open){
    const person=choice==='live'?'Live':'Mia';
    const lines=choice==='live'
