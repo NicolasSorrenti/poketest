@@ -1156,11 +1156,13 @@ function commit(g,plan,h){
 const pFor=(g,side)=>g.players[side];
 function start(g,side,handIndex,h){const p=g.players[side],c=get(p.hand[handIndex]);if(c.supertype!=='Trainer'&&c.name!=='Clefairy Doll')throw Error('Not a Trainer');if(!SUPPORTED.has(c.name))throw Error('Unported Trainer '+c.name);
  if(c.name==='Mail from Bill'&&p.hand.length>=5)throw Error('Mail from Bill requires at most 4 cards in hand (including itself)');
+ if(c.name==="Team Rocket's Evil Deeds"&&!g.players[1-side].hand.length)throw Error("Team Rocket's Evil Deeds requires a card in the opponent's hand");
  const plan={side,handIndex,cardId:c.id,data:{},cancelBaseline:cancelFingerprint(g)};return prompt(g,plan,h);
 }
 function startProxy(g,side,cardId,h,ownerSide=side){
  if(g.players[side].trainerLockedUntil>g.turnSerial)throw Error('Redirected Trainer use blocked this turn');
  const c=get(cardId);if((c.supertype!=='Trainer'&&c.name!=='Clefairy Doll')||c.subtypes?.includes('Stadium')||ATTACH_ONLY.has(c.name)||!SUPPORTED.has(c.name))throw Error('Unsupported redirected Trainer');
+ if(c.name==="Team Rocket's Evil Deeds"&&!g.players[1-side].hand.length)throw Error("Team Rocket's Evil Deeds requires a card in the opponent's hand");
  return prompt(g,{side,handIndex:g.players[side].hand.length,cardId,proxy:true,ownerSide,data:{}},h);
 }
 function answer(g,plan,response,h){
