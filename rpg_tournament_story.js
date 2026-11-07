@@ -87,6 +87,29 @@
   const established=Array.isArray(guests)?guests.filter(id=>cast[id]):[];
   const fallback={neighborhood:'elio',regional:'alma',championship:'nereo'}[cup.id];
   const guestAt=i=>established[i]||null;
+  if(key==='wakeup'&&state?.tournamentNarrative?.[cup.id]?.miaDeckWakeup&&!state?.tournamentNarrative?.[cup.id]?.miaWakeup){
+   // Same tournament opening, with three illustrated beats rather than a
+   // separate mandatory event. The final deck box is the player's own deck.
+   const scene=[
+    ['Narrator','Morning sunlight fills the room. Live and Mia are leaning over the bed, trying not to wake you too suddenly.',0],
+    ['Mia','Mom... what if he slept through the alarm? The tournament is today!',0],
+    ['Live','I know, darling. But he practiced so late yesterday. I wanted him to have a little extra rest.',0],
+    ['Mia','Right, but what if he is still asleep? We should check before we start panicking.',1],
+    ['Live','Sweetheart? Can you hear us? Are you awake?',1],
+    ['You','I have been awake for a minute. I was listening to you two argue about it.',1],
+    ['Mia','Oh! So you heard EVERYTHING?!',1],
+    ['Live','Then our master plan to let you rest was not especially subtle...',1],
+    ['Mia','Well, at least you did not oversleep. Now we can stop worrying!',1],
+    ['Narrator','Live and Mia exchange a relieved look. Live reaches for the familiar deck box they kept ready for you.',2],
+    ['Live','Here you go, love. Your deck is ready, just as you left it.',2],
+    ['Mia','Deck box, sleeves, registration... we checked the essentials. You are not getting away with forgetting anything!',2],
+    ['You','Thanks, both of you. I think I am ready.',2],
+    ['Live','Then go enjoy the tournament. We will be cheering for you!',2],
+    ['Narrator','You take your existing deck box and get ready for the tournament. Their laughter follows you out the door.',2]
+   ];
+   scene.forEach(([speaker,text,frame])=>out.push({speaker,text,frame,miaDeckWakeup:true}));
+   return out;
+  }
   if(key==='wakeup'&&state?.tournamentNarrative?.[cup.id]?.miaWakeup){
    // Five ordered CGs: sleeping -> realizing the time -> Mia at the
    // doorway -> turning around -> facing Mia. This replaces, not adds to,
@@ -298,8 +321,11 @@
   overlay.dataset.liveRomance=(phase==='wakeup'&&liveRomance)?'on':'off';
   const wakeItem=script[Math.max(0,Math.min(index,script.length-1))];
   const miaSequence=phase==='wakeup'&&!!script[0]?.miaWakeup;
+  const miaDeckSequence=phase==='wakeup'&&!!script[0]?.miaDeckWakeup;
   overlay.dataset.miaWakeup=miaSequence?'on':'off';
   overlay.dataset.miaWakeupFrame=miaSequence?String(wakeItem?.frame??0):'0';
+  overlay.dataset.miaDeckWakeup=miaDeckSequence?'on':'off';
+  overlay.dataset.miaDeckWakeupFrame=miaDeckSequence?String(wakeItem?.frame??0):'0';
   // Discreet Mode must not display or fetch the character illustration.
   overlay.dataset.discreet=(doc.documentElement?.dataset?.rpgDiscreet==='on'||
    (typeof window!=='undefined'&&window.NeoRpgDiscreet?.isEnabled?.()===true))?'on':'off';
