@@ -211,6 +211,8 @@ function open(options={}){
     for(const key of ['tempo','speed','fps','baseBounce','feverBounce','tilt','intensity','feverInflate','cropTop','cropHeight']){
      if(Number.isFinite(Number(saved[key])))config[key]=Number(saved[key]);
     }
+    // Camera mode travels with the saved tuning, not only the numeric sliders.
+    if(saved.cameraMode==='viewport'||saved.cameraMode==='crop')config.cameraMode=saved.cameraMode;
     const keys=['x','y','rx','ry','inflateX','inflateY','inflatePhase','scaleX','scaleY','moveY','phase'];
     config.zones=saved.zones.slice(0,2).map(z=>{
      const region={};
