@@ -18885,13 +18885,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Rollout",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Rollout flat damage; Hypnosis exact generic status Asleep. Check Energy, status, KO and turn ownership; no reducer execution."
+          ],
+          "scope": "Current live reducer source-path inspection only; independent historical rulings and executable battle-state verification pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hypnosis",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Rollout flat damage; Hypnosis exact generic status Asleep. Check Energy, status, KO and turn ownership; no reducer execution."
+          ],
+          "scope": "Current live reducer source-path inspection only; independent historical rulings and executable battle-state verification pending."
         }
       ]
     },
@@ -18904,13 +18912,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Scout",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Scout exact discovery:scout handler and private opponent-hand log in live reducer; Tackle generic flat damage. Check private-information scope and opponent visibility; no reducer execution."
+          ],
+          "scope": "Current live reducer source-path inspection only; independent historical rulings and executable battle-state verification pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Scout exact discovery:scout handler and private opponent-hand log in live reducer; Tackle generic flat damage. Check private-information scope and opponent visibility; no reducer execution."
+          ],
+          "scope": "Current live reducer source-path inspection only; independent historical rulings and executable battle-state verification pending."
         }
       ]
     },
@@ -18923,7 +18939,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Poison Sting",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Poison Sting generic coin-status pattern, 20 damage before heads Poison; check KO-before-status and existing conditions; no reducer execution."
+          ],
+          "scope": "Current live reducer source-path inspection only; independent historical rulings and executable battle-state verification pending."
         }
       ]
     },
@@ -18936,13 +18956,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Scratch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Scratch generic flat; Nap Time exact discovery:nap-time handler sets healAllSelf and selfStatus Asleep; live reducer clears own damage and applies condition. Check special conditions, turn and KOs; no reducer execution."
+          ],
+          "scope": "Current live reducer source-path inspection only; independent historical rulings and executable battle-state verification pending."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Nap Time",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Scratch generic flat; Nap Time exact discovery:nap-time handler sets healAllSelf and selfStatus Asleep; live reducer clears own damage and applies condition. Check special conditions, turn and KOs; no reducer execution."
+          ],
+          "scope": "Current live reducer source-path inspection only; independent historical rulings and executable battle-state verification pending."
         }
       ]
     },
@@ -18955,7 +18983,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Smash Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Smash Punch generic coin-failure; baby rule in headless_duel requires opponent flip before attacking Baby. Check attack-energy payment, both flips, defender baby, turn ownership; no reducer execution."
+          ],
+          "scope": "Current live reducer source-path inspection only; independent historical rulings and executable battle-state verification pending."
         }
       ]
     },
