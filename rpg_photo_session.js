@@ -80,7 +80,7 @@
    '<h3>💬 Interact with '+session.name+'</h3><p class="nps-hint">Choose an interaction. Watch the reaction and capture the best moment!</p>'+
    '<div class="nps-react-grid" data-reaction-actions></div>'+
    '<p class="nps-react-status" data-reaction-status>Choose an interaction to begin.</p></section>'+
-   '<section class="nps-section" data-pose-section><h3>✦ Barb’s poses / moods</h3><div class="nps-choice-grid" data-poses></div></section>'+
+   '<section class="nps-section" data-pose-section><h3>✦ '+session.name+'’s poses / moods</h3><div class="nps-choice-grid" data-poses></div></section>'+
    '<section class="nps-section"><h3>☀ Lighting</h3><div class="nps-choice-grid">'+
    '<button class="nps-btn" data-light="soft">Soft</button>'+
    '<button class="nps-btn" data-light="warm">Warm</button>'+
@@ -90,7 +90,7 @@
    '<input aria-label="Camera zoom" data-zoom type="range" min="1" max="2.5" step=".01" value="1.3">'+
    '<button class="nps-btn" data-zoom-in type="button">+</button></div>'+
    '<div class="nps-framing-guide"><span>Full body</span><span>Medium</span><span>Close-up</span></div>'+
-   '<p class="nps-hint">Use zoom for the requested frame. Drag Barb toward the center. When the framing indicator turns green, you are ready.</p>'+
+   '<p class="nps-hint">Use zoom for the requested frame. Drag the character toward the center. When the framing indicator turns green, you are ready.</p>'+
    '<button class="nps-btn" data-reset type="button">Reset camera</button></section></div></div>'+
    '<footer class="nps-bottom"><div class="nps-mini-album" data-mini><div class="nps-mini-photo">3 shots to take</div></div>'+
    '<div class="nps-snaps"><span class="nps-snap-status" data-next-action>Match the brief, then snap when the meter is full.</span>'+
@@ -236,7 +236,7 @@
     session.reaction={id:action.id,pose:frame.pose,highlight:!!frame.highlight,
      start:started,duration:frame.duration};
     status.textContent=frame.highlight?'📷 PHOTO OPPORTUNITY! Capture '+session.name+' now!':
-     'Barb: '+(i===0?'Reacting…':'The moment is changing…');
+     session.name+': '+(i===0?'Reacting…':'The moment is changing…');
     updateFeedback();
     await new Promise(resolve=>{
      session.reactionCancel=resolve;
@@ -367,17 +367,17 @@
    check('pose',poseGood,(reacting?'Reaction: ':'Pose: ')+labels[task.pose]+(poseGood?'':
     (reacting?' · interact':pose(task.pose).kind!==session.mode?' · '+(pose(task.pose).kind==='candid'?'Candid':'Directed'):' · select')));
    check('framing',frameGood&&centered,'Frame: '+({close:'Close-up',medium:'Medium',full:'Full body'}[task.framing])+
-    (frameGood&&centered?' ✓':(!frameGood?' · now '+myFrame:' · center Barb')));
+    (frameGood&&centered?' ✓':(!frameGood?' · now '+myFrame:' · center character')));
    check('light',lightGood,'Light: '+({soft:'Soft',warm:'Warm',bright:'Bright'}[task.light]));
    check('moment',momentGood,'Moment: '+(momentGood?'NOW!':reacting?'Trigger reaction':'Wait for bar'));
    let next;
    if(reacting&&!poseGood)next=session.reactionBusy?'Wait for '+labels[task.pose]+' to appear…':
-    'Interact with Barb! Try '+REACTIONS.find(a=>a.id===task.action)?.label+'.';
+    'Interact with '+session.name+'! Try '+REACTIONS.find(a=>a.id===task.action)?.label+'.';
    else if(!poseGood)next=pose(task.pose).kind!==session.mode?
     'First: switch to '+(pose(task.pose).kind==='candid'?'Candid':'Directed')+' mode, then choose '+labels[task.pose]+'.':
     'First: choose the '+labels[task.pose]+' pose.';
    else if(!frameGood)next='Next: adjust zoom until Frame turns green.';
-   else if(!centered)next='Next: drag Barb toward the center.';
+   else if(!centered)next='Next: drag the character toward the center.';
    else if(!lightGood)next='Next: choose '+task.light+' light.';
    else if(!momentGood)next='Almost ready! Wait for the moment bar to fill.';
    else next='PERFECT SETUP! Press SNAP now!';
@@ -420,7 +420,7 @@
    if(label.dataset.ready!==String(ready)){
     label.dataset.ready=String(ready);
     label.textContent=ready?'✨ NOW! Take the shot!':session.mode==='reactions'?
-     (session.reactionBusy?'Watch Barb’s expression…':'Start an interaction to catch a moment'):
+     (session.reactionBusy?'Watch the expression…':'Start an interaction to catch a moment'):
      'Wait for the bar to fill…';
     updateFeedback();
    }
@@ -641,7 +641,7 @@
    $(shell,'.nps-shell').append(review);
    $(review,'[data-retry]').onclick=()=>{
     session.reviewOpen=false;review.remove();
-    // The photo was rejected; the player can prompt Barb again.
+    // The photo was rejected; the player can prompt this character again.
     void setMood('neutral',{fromReaction:session.mode==='reactions',silent:true});
     drawChoices();updateFeedback();
    };
@@ -795,5 +795,6 @@
  }
  root.NeoRpgPhotoSession=Object.freeze({open,isOpen:()=>!!active,
   characters:()=>root.NeoRpgPhotoProfiles?.list()||[],
-  posesFor:id=>root.NeoRpgPhotoProfiles?.byId(id)?.poses||[]});
+  posesFor:id=>root.NeoRpgPhotoProfiles?.byId(id)?.poses||[],
+  poses:root.NeoRpgPhotoProfiles?.byId('barb')?.poses||[]});
 })(typeof window==='undefined'?null:window);
