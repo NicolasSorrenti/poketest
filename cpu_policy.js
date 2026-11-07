@@ -2011,7 +2011,25 @@ function chooseAction(game,raw={},memo={}){
  const safeActions=centerSafeActions(o,cfg,used,actions);
  if(!safeActions.length)return null;
  const random=rng(cfg.seed+game.turnSerial*7919+(game.events?.length||0)*17011+cfg.side*31);
- const preparedActions=energyPreparationActions(o,cfg,safeActions);
+ // Apex must reject attacks that deterministically KO its Active and every
+ // possible Bench replacement. Magnemite's Selfdestruct hits its own Bench.
+ const survivableActions=cfg.level===8?safeActions.filter(action=>{
+  if(action.type!=='attack'||!o.self.active)return true;
+  const attacks=o.self.active.effectiveAttacks||card(o.self.active.id)?.attacks||[];
+  const attack=attacks[action.payload.attackIndex];
+  const program=ATTACK.compile(attack);
+  if(!['recoil','bench-both-recoil'].includes(program?.kind))return true;
+  if(!(program.selfDamage>=hpRemaining(o.self.active)))return true;
+  const ownBenchHit=program.kind==='bench-both-recoil'?program.benchDamage||0:0;
+  if(o.self.bench.some(unit=>hpRemaining(unit)>ownBenchHit))return true;
+  // Preserve a certain immediate win from taking the final Prize.
+  const winning=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
+   knockoutChance(attack,o.self.active,o.opponent.active,o.self.bench.length,
+    livePlusPowerBonus(o))>=.999&&o.self.active.status!=='Confused';
+  return winning;
+ }):safeActions;
+ const viableActions=survivableActions.length?survivableActions:safeActions;
+ const preparedActions=energyPreparationActions(o,cfg,viableActions);
  const ranked=preparedActions.map((action,i)=>({action,
   score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
   .sort((a,b)=>b.score-a.score||a.tie-b.tie);
