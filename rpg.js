@@ -3164,8 +3164,13 @@ function syncSceneCG(){
   const finalSecond=(liveEventId==='live_glance_next_morning'&&state.mandatoryEventState.active.index>=2)||
     (liveEventId===LIVE_REPEAT_MORNING.id&&state.mandatoryEventState.active.index>=1);
   // Include period and selected CG so repeated encounters update the bitmap.
-  const entry={id:[liveEventId,state.day,state.slot,state.liveDayScene?.id||'',finalSecond?'second':'first',liveArt].join(':'),
-   title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home'};
+  const sleepFocus=liveEventId===MIA_SLEEP_EVENT.id&&!liveDiscreetEnabled()&&
+   state.miaSleepTarget&&(state.miaSleepStage==='wake'||state.miaSleepStage==='talk'||state.miaSleepStage==='end')
+    ?(state.miaSleepTarget==='live'?{x:434,y:64,width:337,height:438}:{x:1027,y:45,width:359,height:418}):null;
+  const entry={id:[liveEventId,state.day,state.slot,state.liveDayScene?.id||'',finalSecond?'second':'first',liveArt,
+    sleepFocus?state.miaSleepTarget:'wide'].join(':'),
+   title:MANDATORY_EVENTS.find(e=>e.id===liveEventId)?.title||'Live at Home',
+   ...(sleepFocus?{cgFocus:sleepFocus}:{})};
   const paths=liveDiscreetEnabled()?[LIVE_DISCREET_PLACEHOLDER]:liveEventId===LIVE_AFTER_EVENT.id?[LIVE_AFTER_ART]:liveEventId===LIVE_REPEAT_MORNING.id?
    [finalSecond?LIVE_REPEAT_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning]:
    LIVE_SPECIAL_IDS.has(liveEventId)
