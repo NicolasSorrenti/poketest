@@ -2136,7 +2136,7 @@ function act(action,confirmedInvitationHandoff=false){
  }
  if(type==='cup'){
   if(cupToday?.id!==id)return;
-  try{return selectTournamentDeck({tournament:TOURNAMENTS.begin(state,id)});}
+  try{return selectTournamentDeck({tournamentId:id});}
   catch(err){return say('Tournament Desk',err.message);}
  }
  if(type==='competitive'){
@@ -2533,7 +2533,7 @@ function launchPreparedDuel(){
 
 
 let tournamentDeckPopup=null;
-async function selectTournamentDeck({tournament=null,competition=null}={}){
+async function selectTournamentDeck({tournamentId=null,competition=null}={}){
  syncDeckStudioSave();
  if(!state.deckJourney?.starter){showStarterChoice();return;}
  if(state.pendingDuel)return;
@@ -2553,7 +2553,7 @@ async function selectTournamentDeck({tournament=null,competition=null}={}){
   }catch(err){say('Tournament Desk','Could not load card details. Please try again.');return;}
  }
  if(state.pendingDuel||
-    tournament&&!TOURNAMENTS.available(state).some(c=>c.id===tournament.tournamentId)||
+    tournamentId&&!TOURNAMENTS.available(state).some(c=>c.id===tournamentId)||
     competition&&!COMPETE.available(state).some(e=>e.id===competition.id))return;
  const viable=COLLECT.slots(state).map((slot,i)=>{
   if(!slot||!COLLECT.check(slot.cards,state.deckJourney.owned).valid)return null;
@@ -2578,7 +2578,7 @@ async function selectTournamentDeck({tournament=null,competition=null}={}){
  };
  if(!viable.length){
   const warning=document.createElement('p');warning.textContent='You have no usable decks for this tournament. Prepare a legal deck in one of your five slots before entering.';warning.setAttribute('role','status');panel.append(warning);
-  button('Edit my decks',()=>{close();openDeckWorkshop();});
+  button('Edit my decks',()=>{close();location.assign('/rpg_deck_studio.html');});
  }else for(const {slot,i} of viable)button((i+1)+'. '+slot.name+' · 60 cards',()=>{
   const latest=state.deckJourney.deckSlots?.[i];
   if(!latest||state.pendingDuel)return close();
@@ -2586,7 +2586,10 @@ async function selectTournamentDeck({tournament=null,competition=null}={}){
   if(!COLLECT.check(cards,state.deckJourney.owned).valid||
       theme&&!COMPETE.legalThemeDeck(cards,theme,COLLECT.packRarity,catalog).valid)return close();
   close();
-  if(tournament)startDuel(tournament.npc,null,null,{...tournament,selectedDeckCards:cards});
+  if(tournamentId){
+   try{const match=TOURNAMENTS.begin(state,tournamentId);startDuel(match.npc,null,null,{...match,selectedDeckCards:cards});}
+   catch(err){say('Tournament Desk',err.message);}
+  }
   else startDuel(competition.npc,null,null,null,null,false,{...competition,selectedDeckCards:cards});
  });
  button('Cancel',close);
