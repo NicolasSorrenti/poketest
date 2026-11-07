@@ -64,20 +64,50 @@
     danceButton.id='neoOverworldDanceFreePlay';
     danceButton.type='button';danceButton.hidden=true;
     danceButton.textContent='♫ DANCE BATTLE · FREE PLAY';
-    danceButton.title='Play Daisy Dance Battle anytime at Pixel Palace — no time, credits or rewards';
-    danceButton.setAttribute('aria-label','Play Daisy Dance Battle for free');
+    danceButton.title='Choose Daisy or Rina for free Dance Battle — no time, credits or rewards';
+    danceButton.setAttribute('aria-label','Choose a Dance Battle partner');
+    danceButton.setAttribute('aria-expanded','false');
     danceButton.style.cssText='position:absolute;top:73px;left:50%;transform:translateX(-50%);z-index:8;max-width:calc(100vw - 24px);padding:11px 17px;min-height:44px;border:1px solid #ff91dd;border-radius:28px;background:linear-gradient(115deg,#782b9c,#be2b89);color:#fff;font:900 13px system-ui;letter-spacing:.035em;box-shadow:0 4px 22px #db45d680;cursor:pointer;white-space:nowrap';
-    danceButton.onclick=()=>{
+    // A compact, accessible partner chooser. Only one active cabinet; no
+    // repeated overlays or separate copies of the rhythm game.
+    const danceChoices=document.createElement('div');
+    danceChoices.id='neoOverworldDanceChoices';
+    danceChoices.setAttribute('role','group');
+    danceChoices.setAttribute('aria-label','Choose your Dance Battle partner');
+    danceChoices.style.cssText='position:absolute;top:123px;left:50%;transform:translateX(-50%);z-index:9;display:none;gap:8px;flex-wrap:wrap;justify-content:center;width:max-content;max-width:calc(100vw - 20px);padding:10px;background:#23132ef5;border:1px solid #f494da;border-radius:14px;box-shadow:0 8px 34px #000b;';
+    const checkDanceEntry=()=>{
       const current=bridge()?.snapshot?.();
-      if(!current||current.location!=='arcade'||current.locked||current.storyActive){
+      if(!current||current.location!=='arcade'||current.locked||current.storyActive||current.arriving){
         showNotice('Finish the current dialogue before playing Dance Battle.');
-        return;
+        return false;
       }
-      if(!bridge()?.runOpportunity?.('arcadeFreePlay','daisy')){
-        showNotice('Dance Battle is unavailable. Please reload the arcade.');
-      }
+      return true;
     };
-    overlay.append(danceButton);
+    const hideDanceChoices=()=>{
+      danceChoices.style.display='none';
+      danceButton.setAttribute('aria-expanded','false');
+    };
+    for(const [id,name] of [['daisy','Daisy'],['rina','Rina']]){
+      const option=document.createElement('button');
+      option.type='button';
+      option.textContent='♫ BAILAR CON '+name.toUpperCase();
+      option.style.cssText='border:1px solid #ffb7eb;border-radius:10px;background:linear-gradient(130deg,#77358b,#52205f);color:#fff;min-height:43px;padding:10px 14px;font:800 13px system-ui;cursor:pointer;';
+      option.onclick=()=>{
+        if(!checkDanceEntry()){hideDanceChoices();return;}
+        hideDanceChoices();
+        if(!bridge()?.runOpportunity?.('arcadeFreePlay',id))
+          showNotice('Dance Battle is unavailable. Please reload the arcade.');
+      };
+      danceChoices.append(option);
+    }
+    danceButton.onclick=()=>{
+      if(!checkDanceEntry()){hideDanceChoices();return;}
+      const willShow=danceChoices.style.display==='none';
+      danceChoices.style.display=willShow?'flex':'none';
+      danceButton.setAttribute('aria-expanded',String(willShow));
+      if(willShow)danceChoices.querySelector('button')?.focus({preventScroll:true});
+    };
+    overlay.append(danceButton,danceChoices);
     function syncNpcIndicators(force=false){
       const data=bridge()?.snapshot?.();
       if(!data||!frame.contentWindow||frame.getAttribute('src')==='about:blank')return;
@@ -1669,6 +1699,7 @@
       if(locationName.textContent!==name)locationName.textContent=name;
       if(dayLabel.textContent!==dayText)dayLabel.textContent=dayText;
       danceButton.hidden=data.location!=='arcade'||!!data.locked||!!data.storyActive||!!data.arriving;
+      if(danceButton.hidden)hideDanceChoices();
       next.disabled=data.locked;travelToggle.disabled=data.locked;
       if(data.locked&&expandedSheet)closeSheet();
       const people=data.people.map(id=>{
