@@ -1141,10 +1141,8 @@ function liveMiaChoiceAction(action){
   state.liveMiaChoiceStage='liveEnding';state.liveMiaChoiceStep=0;
  }else if(action==='liveMiaChooseMia'&&phase==='joint'){
   state.liveMiaChoiceStage='miaEnding';state.liveMiaChoiceStep=0;
-  state.miaDaddyRetired=true;
  }else if(action==='liveMiaChooseBoth'&&phase==='joint'){
   state.liveMiaChoiceStage='bothEnding';state.liveMiaChoiceStep=0;
-  state.miaDaddyRetired=true;
  }else if(action==='liveMiaFinish'&&['liveEnding','miaEnding','bothEnding'].includes(phase)){
   const choice=phase==='liveEnding'?'live':phase==='miaEnding'?'mia':'both';
   const m=state.mandatoryEventState;
