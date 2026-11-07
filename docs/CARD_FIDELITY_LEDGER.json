@@ -20863,13 +20863,21 @@
           "kind": "attack",
           "index": 0,
           "name": "High Voltage",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "High Voltage is registered in neo_attack_batch_v083.js (coin -> Trainer lock); Stun Wave is registered in neo_attack_batch_v091.js (neo91PowerSilence) and headless_duel.js suppresses the Defending Pokémon's Power. Source-only; verify heads/tails, timing, Trainer lock and Power suppression across switch/evolution; historical rulings pending."
+          ],
+          "scope": "Current live RPG/Classic source trace only; no reducer execution or independent historical ruling certification."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Stun Wave",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "High Voltage is registered in neo_attack_batch_v083.js (coin -> Trainer lock); Stun Wave is registered in neo_attack_batch_v091.js (neo91PowerSilence) and headless_duel.js suppresses the Defending Pokémon's Power. Source-only; verify heads/tails, timing, Trainer lock and Power suppression across switch/evolution; historical rulings pending."
+          ],
+          "scope": "Current live RPG/Classic source trace only; no reducer execution or independent historical ruling certification."
         }
       ]
     },
@@ -20882,13 +20890,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Armor Up",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Explosion matches generic recoil pattern in attack_effects_core.js; Armor Up has no identified exact implementation in registered Neo modules or generic compiler. Verify heads/tails KO prevention, 10 HP reset, Bench attack damage, self-KO/Prize and promotion. Source-only; historical rulings pending."
+          ],
+          "scope": "Current live RPG/Classic source trace only; no reducer execution or independent historical ruling certification."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Explosion",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Explosion matches generic recoil pattern in attack_effects_core.js; Armor Up has no identified exact implementation in registered Neo modules or generic compiler. Verify heads/tails KO prevention, 10 HP reset, Bench attack damage, self-KO/Prize and promotion. Source-only; historical rulings pending."
+          ],
+          "scope": "Current live RPG/Classic source trace only; no reducer execution or independent historical ruling certification."
         }
       ]
     },
@@ -21002,13 +21018,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Tackle matches flat damage and Charging Horn text matches generic coin-bonus in attack_effects_core.js; verify typed cost, coin damage, Weakness/Resistance, KO and turn. Source-only; historical rulings pending."
+          ],
+          "scope": "Current live RPG/Classic source trace only; no reducer execution or independent historical ruling certification."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Charging Horn",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Tackle matches flat damage and Charging Horn text matches generic coin-bonus in attack_effects_core.js; verify typed cost, coin damage, Weakness/Resistance, KO and turn. Source-only; historical rulings pending."
+          ],
+          "scope": "Current live RPG/Classic source trace only; no reducer execution or independent historical ruling certification."
         }
       ]
     },
@@ -22351,7 +22375,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Crushing Earth",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Crushing Earth text has no identified exact registered handler or generic compiler match; requires coin success/failure, both Benches, KOs, promotions and next-turn attack prohibition. Printed one-copy Shining rule restored to catalogue; deck enforcement unverified. Source-only; historical rulings pending."
+          ],
+          "scope": "Current live RPG/Classic source trace only; no reducer execution or independent historical ruling certification."
         }
       ]
     },
@@ -22363,12 +22391,22 @@
         {
           "kind": "attack",
           "index": 0,
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Catalogue previously omitted both printed attack names and effect texts, allowing generic flat 30/50 damage; corrected Mountain Crush, Destructive Fire and one-copy Shining rule in cards/neo4.json commit 265db8a. No identified exact reducer handlers for either complex attack; verify milling until tails, Fire Energy flip/discard decisions, opponent Energy selection, KO/turn and deck limits. Source-only; historical rulings pending."
+          ],
+          "scope": "Current live RPG/Classic source trace only; no reducer execution or independent historical ruling certification.",
+          "name": "Mountain Crush"
         },
         {
           "kind": "attack",
           "index": 1,
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Catalogue previously omitted both printed attack names and effect texts, allowing generic flat 30/50 damage; corrected Mountain Crush, Destructive Fire and one-copy Shining rule in cards/neo4.json commit 265db8a. No identified exact reducer handlers for either complex attack; verify milling until tails, Fire Energy flip/discard decisions, opponent Energy selection, KO/turn and deck limits. Source-only; historical rulings pending."
+          ],
+          "scope": "Current live RPG/Classic source trace only; no reducer execution or independent historical ruling certification.",
+          "name": "Destructive Fire"
         }
       ]
     }
