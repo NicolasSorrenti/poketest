@@ -560,6 +560,23 @@ function mandatoryText(value){
  const closest=state.partner?'You chose to share part of this journey with '+(cast[state.partner]?.name||state.partner)+'.':friends.length?'Friends you met along the way include '+friends.join(' and ')+'.':'You made your own way through the town, on your own terms.';
  return String(value||'').replace(/\{\{(seasonRecord|championshipRecord|friendshipRecord)\}\}/g,(_,key)=>({seasonRecord:results.length+' duels, '+wins+' victories',championshipRecord:standings,friendshipRecord:closest})[key]);
 }
+// Live has no NPC in the normal roster. Her photo stories unlock through
+// familiarity from completed repeatable apartment encounters instead.
+function livePhotoRequest(active){
+ if(!active||!LIVE_ROTATING_IDS.has(active.id)||active.phase!=='choice'||
+    state.location!=='home'||state.day>90||(Number(state.focus)||0)<8)return null;
+ const familiarity=Math.min(20,Object.values(state.liveRepeatCounts||{})
+  .reduce((total,count)=>total+Math.max(0,Number(count)||0),0));
+ const profile=window.NeoRpgPhotoProfiles?.byId('live');
+ const stories=window.NeoRpgPhotoStories;
+ if(!profile||!stories||familiarity<2)return null;
+ // Fixed for the whole period and event; reloading cannot reroll the request.
+ const chance=(state.day*17+state.slot*11+
+  [...active.id].reduce((sum,ch)=>sum+ch.charCodeAt(0),0))%5<2;
+ if(!chance)return null;
+ const story=stories.select('live',profile,familiarity,state);
+ return story?{story,trust:familiarity}:null;
+}
 function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(!a||!e)return null;
@@ -613,7 +630,13 @@ function renderMandatory(){
   const last=e.lines.at(-1);
   const remote=e.kind==='bond'&&(e.delivery==='remote'||!SCHEDULES.peopleAt(state.day,state.slot,state.location,publicAppointments(state.location)).includes(e.characterId));
   const speaker=last?.speaker==='Protagonist'?'You':(cast[last?.speaker]?.name||last?.speaker||'Narrator');
-  return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line:mandatoryText(last?.text||''),choices:LIVE_EVENT_ART[e.id]?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i])};
+  const photoOffer=livePhotoRequest(a);
+  const baseChoices=LIVE_EVENT_ART[e.id]?[...e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]),['◉ Glance at Live','mandatoryGlance']]:e.choices.map((c,i)=>[c.label,'mandatoryChoice:'+i]);
+  const choices=photoOffer?[...baseChoices,
+   ["Sure, I'll take those photos",'mandatoryPhotoLive']]:baseChoices;
+  const line=mandatoryText(last?.text||'')+
+   (photoOffer?'\n\nLive: "'+photoOffer.story.hook+'"':'');
+  return {speaker:remote&&cast[last?.speaker]?'✉ '+speaker+' · message':speaker,line,choices};
  }
  const choice=e.choices[a.choice];
  if(e.id===LIVE_REPEAT_MORNING.id)return {speaker:'Narrator',line:choice?.reply||'',choices:[['Continue ›','mandatoryFinish']]};
@@ -639,6 +662,53 @@ function renderMandatory(){
 }
 function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;
+ if(type==='mandatoryPhotoLive'){
+  const offer=livePhotoRequest(state.mandatoryEventState.active);
+  if(!offer||!window.NeoRpgPhotoSession?.open||!confirmTimeAdvance())return true;
+  window.NeoRpgPhotoSession.open({
+   characterId:'live',location:'home',story:true,storyId:offer.story.id,
+   trust:offer.trust,day:state.day,slot:state.slot,savedAlbum:state.photoAlbum,
+   onCancel:()=>{},onComplete:result=>{
+    try{
+     if(!livePhotoRequest(state.mandatoryEventState.active)||
+        result?.characterId!=='live'||result.storyId!==offer.story.id||
+        !Array.isArray(result.photos)||result.photos.length!==3)
+      throw Error('The photo story is no longer available.');
+     const before=activityBalance();
+     const complete=MANDATORY.finish(state,MANDATORY_EVENTS);
+     if(!complete)throw Error('This apartment encounter has already ended.');
+     const activeId=complete.event.id;
+     state.liveRepeatCounts=state.liveRepeatCounts||{};
+     state.liveRepeatCounts[activeId]=(Number(state.liveRepeatCounts[activeId])||0)+1;
+     state.liveHomeActivityScene=null;
+     state.credits=Math.min(999999,(Number(state.credits)||0)+Math.max(0,Math.min(14,Number(result.credits)||0)));
+     state.focus=Math.max(0,(Number(state.focus)||0)-8);
+     const album=(Array.isArray(state.photoAlbum)?state.photoAlbum:[])
+      .concat(result.photos.map(p=>({...p,day:state.day})));
+     const counts={};
+     state.photoAlbum=album.slice().reverse().filter(p=>{
+      const key=String(p?.character||'');
+      if(!key||counts[key]>=6)return false;
+      counts[key]=(counts[key]||0)+1;return true;
+     }).slice(0,72).reverse();
+     state.photoStoryDone=state.photoStoryDone||{};
+     const seen=Array.isArray(state.photoStoryDone.live)?state.photoStoryDone.live:[];
+     if(!seen.includes(offer.story.id))state.photoStoryDone.live=[...seen,offer.story.id];
+     state.photoRecords=state.photoRecords||{};
+     const prev=state.photoRecords.live||{};
+     state.photoRecords.live={lastDay:state.day,sessions:(prev.sessions||0)+1,
+      bestAverage:Math.max(prev.bestAverage||0,result.average||0),lastAverage:result.average||0};
+     activityOutcome('Live',offer.story.title+'. '+result.average+
+      '/100 average. Live thanks you for the photographs.',before,null);
+    }catch(error){
+     window.NeoRpgErrorReport?.capture?.(error,{source:'live-photo',action:'complete'});
+     console.error('Live photo story completion failed',error);
+     persist();render();
+    }
+   }
+  });
+  return true;
+ }
  if(type==='mandatoryNext')MANDATORY.advanceDialogue(state,MANDATORY_EVENTS);
  else if(type==='mandatoryChoice'){
   const specialId=state.mandatoryEventState.active.id;
