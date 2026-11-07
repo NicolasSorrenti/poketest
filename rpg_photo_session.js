@@ -17,7 +17,7 @@
   if(document.getElementById('neo-photo-session-style'))return;
   const link=document.createElement('link');
   link.id='neo-photo-session-style';link.rel='stylesheet';
-  link.href='/rpg_photo_session.css?v=photo-80-scenes-v1-20261107';
+  link.href='/rpg_photo_session.css?v=photo-subtitles-fab-v1-20261107';
   document.head.append(link);
  }
  function open(options={}){
