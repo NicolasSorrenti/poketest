@@ -370,3 +370,14 @@
  }
  .nps-story .nps-brief-copy>p{max-height:40px;white-space:normal;line-height:1.25}
 }
+
+
+/* Full-scene Live CG photography: no sprite deformation or synthetic backdrop.
+   Existing event art is a complete composition; keep it sharp and unwarped. */
+.nps-precomposed .nps-stage{background-color:#142036!important;background-image:none!important}
+.nps-precomposed .nps-actor{
+ left:50%;bottom:0;height:100%;width:100%;
+ object-fit:contain;object-position:center;
+ filter:none;transition:opacity .12s ease
+}
+.nps-precomposed .nps-motion-actor{display:none!important}
