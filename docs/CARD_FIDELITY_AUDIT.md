@@ -1552,3 +1552,18 @@ Entry points: `classic_local_service.js` imports `headless_duel.js` (`createGame
 - **neo2-47 Unown [D] — PARTIAL.** `Hidden Power`: flat 10. `Darkness`: reducer's `unownDarkness` counts exactly one neo2-47 across both sides and applies -30 to Darkness-type damage on owner Pokémon; source explicitly allows the printed status exceptions. Scenarios: one/two copies, opposite-side copy, status locks, suppression, Active/Bench damage, simultaneous KOs and owner/attacker distinctions.
 
 **Validation:** Source-only, no executable repository checkout supplied by GitHub connector; **zero reducer scenarios executed**. TCGdex-imported catalogue text inspected, but authoritative printed images, errata and historical rulings not independently certified. All five remain PARTIAL. No gameplay fix established conclusively, no tests/CI or new PRs. The historical audit file contains references to now-removed test infrastructure; these are archival references only and must not be restored.
+
+
+## 2026-11-07 — Neo Discovery #52–56 (current RPG/Classic source-only)
+
+Five distinct printings: neo2-52 Xatu, neo2-53 Caterpie, neo2-54 Dunsparce, neo2-55 Hoppip, neo2-56 Kabuto. All **PARTIAL**. Entry path: RPG result bridge `rpg_duel_bridge.js` and Classic session authority `classic_local_service.js` -> `headless_duel.js` -> `attack_effects_core.js` -> `neo_discovery_attack_core.js` / `neo_attack_batch_v049.js` / generic effects; Powers use `classic_power_core.js`. No legacy behavior considered. Imported TCGdex print text reviewed; independent printed-image/errata/historical ruling comparison pending. GitHub source-only access: no executable checkout, **zero reducer scenarios executed**.
+
+| ID | Source evidence and realistic battle-state sequences requiring execution |
+| --- | --- |
+| neo2-52 | Xatu Energy Cycle: Psychic paid; heads/tails; defending Pokémon with zero/two Energy; opposing Bench empty/two; select Energy then recipient; verify energy owner and turn, protected Energy, defender KO and Prize/promotion. Super Psy: Psychic/Psychic/Colorless cost, flat 50, Weakness/Resistance and KO. Exact discovery compiler and headless staged decisions identified. |
+| neo2-53 | Caterpie Spin Tackle: 20 to defender, 10 recoil. Try attacker at 10 remaining HP, defender at 20 remaining, Metal Energy/Defender and Weakness; verify both KOs, Prize ownership, replacement and turn. Generic recoil compiler and headless self-damage path identified. |
+| neo2-54 | Dunsparce Glare: Colorless cost, 10 damage and heads Paralysis. Control both coin results, prevention and defender KO; inspect status, prizes, promotion, end turn. Generic coin-status path identified. |
+| neo2-55 | Hoppip Rolling Tackle: Grass cost, flat 20. Check missing/valid typed Energy, Weakness/Resistance, KO, Prize and turn. Generic flat program identified. |
+| neo2-56 | Kabuto Work Together: Fighting+Colorless, tails 10; heads 10+10 per own Benched Omanyte/Omastar/Kabuto/Kabutops (0–5), excluding attacker and opposing Bench; check damage, KOs and Prize flow. Dedicated neo49 handler uses `neo49Fossils`. Revive Friends: healthy Power, once per turn, heads/tails, empty/full Bench, zero/multiple Kabuto in deck, choose/decline, new Kabuto Basic treatment, shuffle, turn ownership. Classic Power path identified. |
+
+No new gameplay defect conclusively established. No test files, scripts, CI, new PR, legacy or Apex edits. All five stay PARTIAL until independent rulings and execution. Ledger counts: **0 verified, 575 partial, 548 unreviewed; 1123 not fully verified**.
