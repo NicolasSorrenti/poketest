@@ -1417,7 +1417,14 @@ function score(a,o,cfg,used){
    v.slot===-1&&!likelyAttackKo(unit)&&likelyAttackKo(afterUnit):
    after>=hpRemaining(q.active)&&before<hpRemaining(q.active);
   const future=(improvement*(cfg.level===2?.50:.85)+(ko?(cfg.level===2?30:65):0))*style.damage;
-  const saturation=before>0&&improvement===0?(cfg.level===2?14:35):0;
+  // Apex saturation must use a legal attack against the opposing Active.
+  // strongestAffordableAttack() includes printed Bench-only damage and ignores
+  // public attack locks; neither means this attachment is redundant.
+  // A Benched attacker is forecast after promotion, with one fewer Bench slot.
+  const apexPriorPressure=cfg.level===8?
+   projectedAttackValue(unit,q.active,o.turnSerial,
+    v.slot===-1?p.bench.length:Math.max(0,p.bench.length-1)):before;
+  const saturation=apexPriorPressure>0&&improvement===0?(cfg.level===2?14:35):0;
   // Full Heal Energy clears conditions as soon as it is attached. A ready
   // Asleep/Paralyzed Active can then attack this turn, while curing Confusion
   // removes the mandatory failure coin flip. Only reward a legal, payable
