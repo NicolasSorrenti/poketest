@@ -1,0 +1,18 @@
+/* Preserve the exact existing VN crop, opacity, responsive framing and fallback. */
+#neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person .neo-ow-idle-canvas{
+ position:absolute!important;left:0!important;top:0!important;
+ display:block;width:100%!important;
+ height:var(--neo-ow-dialogue-bust-height,278%)!important;
+ max-height:none!important;max-width:none!important;
+ object-fit:cover!important;object-position:center top!important;
+ pointer-events:none;filter:drop-shadow(0 6px 12px #0009);
+}
+#neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person .neo-ow-idle-canvas[hidden]{display:none!important}
+#neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person.neo-ow-idle-active>img:not(.rpg-safe-avatar){opacity:0!important}
+#neoOverworldOverlay.neo-ow-idle-interaction #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person .neo-ow-idle-canvas{
+ height:var(--neo-ow-dialogue-bust-height,278%)!important;
+}
+@media(prefers-reduced-motion:reduce){
+ #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-idle-canvas{display:none!important}
+ #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>img{opacity:1!important}
+}
