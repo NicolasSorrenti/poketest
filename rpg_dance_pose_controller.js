@@ -6,7 +6,7 @@
 // Never owns gameplay, affinity, scoring, RPG time or saves.
 (function(root){
  'use strict';
- if(root.NeoRpgDancePoseController?.version===3)return;
+ if(root.NeoRpgDancePoseController?.version===4)return;
  const DAISY_POSES=Object.freeze([
   {id:'primary',type:'base'},
   {id:'happy',src:'/rpg-assets/characters/daisy/expressionsv2/happy.png'},
@@ -72,7 +72,7 @@
    layer.style.cssText='position:absolute;inset:0;overflow:hidden;opacity:0;pointer-events:none;transition:opacity '+transitionMs+'ms ease-in-out;will-change:opacity;';
    const poseCanvas=document.createElement('canvas');
    poseCanvas.className='nc-pose-motion-canvas';
-   poseCanvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;object-fit:fill;';
+   poseCanvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;object-fit:contain;object-position:center center;';
    layer.append(poseCanvas);
    target.append(layer);
    entry.frame=layer;
@@ -187,6 +187,6 @@
   });
  }
  root.NeoRpgDancePoseController=Object.freeze({
-  version:3,create:make,presets:Object.freeze({daisy:DAISY_POSES})
+  version:4,create:make,presets:Object.freeze({daisy:DAISY_POSES})
  });
 })(window);
