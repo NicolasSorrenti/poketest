@@ -429,12 +429,12 @@
    guide.innerHTML='<div class="nps-guide-card">'+
     '<div class="nps-step-tag">A QUICK GUIDE · THREE PHOTOS</div>'+
     '<h3>How to play 📷</h3>'+
-    '<p>Barb gives you a different photo request each round. Your goal is to match the request and capture the best moment.</p>'+
+    '<p>Barb reacts to what you say. This time, the goal is not to select a pose: it is to <b>cause</b> a reaction and photograph it while it happens.</p>'+
     '<div class="nps-guide-steps">'+
-    '<div><b>1 · Match the request</b><div>Choose the requested pose and lighting on the right. The indicators turn green when correct.</div></div>'+
-    '<div><b>2 · Frame Barb</b><div>Zoom for a full-body, medium, or close-up photo. Drag the image to keep Barb centered.</div></div>'+
-    '<div><b>3 · SNAP at the right moment</b><div>Wait for the pink moment bar to fill, then press SNAP. Check your score and retry before keeping each photo.</div></div></div>'+
-    '<p>Nothing is timed. Take as long as you like. After three saved shots, you receive a session result.</p>'+
+    '<div><b>1 · Talk to Barb</b><div>Choose an interaction on the right, like telling a joke, walking with her or asking about her designs.</div></div>'+
+    '<div><b>2 · Prepare your shot</b><div>Adjust your zoom and lighting. Barb will change poses and expressions during the interaction.</div></div>'+
+    '<div><b>3 · Catch the reaction!</b><div>When Barb shows the requested expression, the bar fills briefly. SNAP before the moment ends! Retry without penalty.</div></div></div>'+
+    '<p>There is no countdown between interactions. A reaction itself is brief, but you can trigger it again. Directed and Candid modes remain available for free posing.</p>'+
     '<div class="nps-guide-actions"><button type="button" class="nps-btn nps-primary" data-start-shooting>Got it · Start shooting!</button></div></div>';
    $(shell,'.nps-shell').append(guide);
    $(guide,'[data-start-shooting]').onclick=()=>guide.remove();
@@ -443,7 +443,7 @@
   function tick(){
    if(session.closed)return;
    if(session.motionReady&&session.motion&&!shell.classList.contains('nps-discreet')){
-    const energy=session.reaction?.highlight?.75:session.reactionBusy?.35:0;
+    const energy=session.reaction?.highlight ? .75 : session.reactionBusy ? .35 : 0;
     session.motion.render(performance.now()-session.begin,energy);
    }
    const moment=currentMeter();
@@ -531,9 +531,17 @@
    const shot={character:'barb',day:null,pose:session.poseId,framing:task.framing,
     light:session.light,zoom:Number(session.zoom.toFixed(2)),
     x:Math.round(session.x),y:Math.round(session.y),score:points.score,task:task.name};
-   showReview(shot,points);
+   // The animation can be moving. Freeze the current *rendered* frame before
+   // stopping the timeline; metadata only is stored in the campaign save.
+   let frozen=null;
+   if(session.motionReady&&session.motion){
+    session.motion.render(performance.now()-session.begin,session.reaction?.highlight?.75:0);
+    try{frozen=motionCanvas.toDataURL('image/png');}catch{}
+   }
+   stopReaction();
+   showReview(shot,points,frozen);
   }
-  function showReview(shot,points){
+  function showReview(shot,points,frozen=null){
    session.reviewOpen=true;
    const review=document.createElement('div');
    review.className='nps-review';
@@ -554,7 +562,7 @@
    preview.dataset.light=shot.light;
    if(!shell.classList.contains('nps-discreet')){
     const img=document.createElement('img');
-    img.src=pose(shot.pose).src;
+    img.src=frozen||pose(shot.pose).src;
     img.alt='Your photo of Barb in the '+labels[shot.pose]+' pose';
     img.style.transform='translate(calc(-50% + '+shot.x+'px),'+shot.y+'px) scale('+shot.zoom+')';
     preview.append(img);
@@ -585,7 +593,12 @@
     'Nice shot! You could improve the '+weakest[0].toLowerCase()+' for a higher score.':
     'Almost there! The biggest improvement would be '+weakest[0].toLowerCase()+'. Try again—there is no penalty.';
    $(shell,'.nps-shell').append(review);
-   $(review,'[data-retry]').onclick=()=>{session.reviewOpen=false;review.remove();updateFeedback();};
+   $(review,'[data-retry]').onclick=()=>{
+    session.reviewOpen=false;review.remove();
+    // The photo was rejected; the player can prompt Barb again.
+    void setMood('neutral',{fromReaction:session.mode==='reactions',silent:true});
+    drawChoices();updateFeedback();
+   };
    $(review,'[data-keep]').onclick=()=>{
     session.reviewOpen=false;review.remove();
     session.shots.push(shot);
@@ -605,8 +618,8 @@
      taskUI();
      // Do not auto-solve the next brief: give the player a reason to choose a new pose.
      const next=session.tasks[session.shots.length];
-     const reset=pose(next.pose).kind==='candid'?'walking':'neutral';
-     setMood(reset);
+     const reset=session.mode==='reactions'?'neutral':pose(next.pose).kind==='candid'?'walking':'neutral';
+     void setMood(reset,{fromReaction:session.mode==='reactions',silent:true});
     }
    };
    $(review,'[data-retry]').focus();
@@ -651,6 +664,10 @@
    if(session.closed)return;
    session.closed=true;
    cancelAnimationFrame(session.clock);
+   stopReaction();
+   if(session.motionResolve){session.motionResolve(false);session.motionResolve=null;}
+   session.motion?.dispose();
+   session.preload.clear();
    if(session.interval)clearInterval(session.interval);
    shell.remove();
    active=null;
@@ -666,8 +683,12 @@
   $(shell,'[data-zoom-out]').onclick=()=>setZoom(session.zoom-.15);
   $(shell,'[data-zoom-in]').onclick=()=>setZoom(session.zoom+.15);
   zoomInput.oninput=()=>setZoom(zoomInput.value);
-  $(shell,'[data-mode=portrait]').onclick=()=>{session.mode='portrait';setMood('neutral');};
-  $(shell,'[data-mode=candid]').onclick=()=>{session.mode='candid';setMood('walking');};
+  $(shell,'[data-mode=reactions]').onclick=()=>{
+   stopReaction();session.mode='reactions';drawChoices();
+   void setMood('neutral',{fromReaction:true,silent:true});
+  };
+  $(shell,'[data-mode=portrait]').onclick=()=>{session.mode='portrait';void setMood('neutral');};
+  $(shell,'[data-mode=candid]').onclick=()=>{session.mode='candid';void setMood('walking');};
   $(shell,'[data-auto]').onclick=()=>{session.auto=!session.auto;drawChoices();};
   for(const b of shell.querySelectorAll('button[data-light]')){
    b.onclick=()=>{session.light=b.dataset.light;stage.dataset.light=session.light;drawChoices();updateFeedback();};
@@ -698,7 +719,7 @@
   stage.addEventListener('pointerup',end);stage.addEventListener('pointercancel',end);
   stage.addEventListener('wheel',e=>{e.preventDefault();setZoom(session.zoom+(e.deltaY>0?-.08:.08));},{passive:false});
   shell.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close(false);}});
-  drawChoices();taskUI();camera();setMood('neutral');startAuto();
+  drawChoices();taskUI();camera();void setMood('neutral',{fromReaction:true});startAuto();
   session.clock=requestAnimationFrame(tick);
   showGuide();
   return true;
