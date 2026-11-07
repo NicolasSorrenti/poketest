@@ -920,7 +920,7 @@ function openRomanceVisit(id){
    [['Close','close']]);
  }
 }
-function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null,creditBond=false){
+function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null,creditBond=false,photoOffer=null){
  if(!Array.isArray(lines)||!lines.length)return;
  const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
  if(!script.length)return;
@@ -929,7 +929,7 @@ function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,m
   line:first.text,choices:script.length>1?[['Continue ›','chatNext']]:afterChoices,
   dialogue:script,index:0,afterChoices,reactionId,invitation,bondConversation:creditBond,
    memoryId:memory?.kind==='followup'?memory.id:null,memoryOfferId:memory?.kind==='intro'?memory.id:null,
-   casualId:casual?.id||null,asideId:casual?.asideId||null};
+   casualId:casual?.id||null,asideId:casual?.asideId||null,photoOffer};
  state.scene=scene;persist();render();
 }
 function advanceConversation(){
@@ -1490,7 +1490,23 @@ function selectPerson(id,{skipInvitation=false}={}){
   const invitations=fresh?VN.choices(state,id):[];
   const memory=!first&&!context&&!invitations.length?MEM?.offer(state,id):null;
   const casual=!context&&!memory?ordinaryTalk(id,c,{first,present:currentPeople()}):null;
-  sayConversation(context?.lines||memory?.lines||casual?.lines,memory?.choices||invitations,context?.id||null,null,memory,casual?.record,true);
+  // A spontaneous photo request can follow normal dialogue, but never
+  // overrides a first meeting, story, memory or authored invitation.
+  const photo=SOCIAL.options(state,id,currentPeople(),cast)
+   .find(activity=>activity.photoSession&&!activity.disabledReason);
+  const photoProfile=window.NeoRpgPhotoProfiles?.byId(id);
+  const photoChance=(state.day*23+[...id].reduce((sum,ch)=>sum+ch.charCodeAt(0)*7,0))%5<2;
+  const photoOffer=!!(!first&&fresh&&!invite&&!context&&!memory&&!invitations.length&&
+   casual?.lines?.length&&photo&&photoProfile&&photoChance);
+  const talkLines=photoOffer?[...casual.lines,{
+   speaker:id,text:photoProfile.invitation.replace(/^[^:]+:\s*"/,'').replace(/"$/,'')
+  }]:context?.lines||memory?.lines||casual?.lines;
+  const talkChoices=photoOffer?[
+   ["Sure, I'd love to take your photos",'photoAccept:'+id],
+   ['Maybe another time','photoLater:'+id]
+  ]:memory?.choices||invitations;
+  sayConversation(talkLines,talkChoices,context?.id||null,null,memory,
+   casual?.record,true,photoOffer?id:null);
  }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
@@ -1505,7 +1521,7 @@ function plannedDateSlots(id){
 }
 function sharedActivityChoices(id){
  const available=SOCIAL.options(state,id,currentPeople(),cast);
- return [...available.map(a=>[
+ return [...available.filter(a=>!a.photoSession).map(a=>[
    a.title+' · ⏳ 1 period · '+a.focus+' focus'+(a.credits?' + '+a.credits+' credits':'')
    +(a.disabledReason?' · '+a.disabledReason:''),
    'socialDo:'+id+':'+a.id
@@ -1842,6 +1858,16 @@ function act(action,confirmedInvitationHandoff=false){
   if(id==='exhibition')return act('event',true);
   return;
  }
+ if(type==='photoAccept'||type==='photoLater'){
+  if(scene?.photoOffer!==id||state.selected!==id||!cast[id]||!currentPeople().includes(id))return;
+  if(type==='photoLater')return say(cast[id].name,
+   'Of course. We can do it another time.',[['Continue ›','close']]);
+  const activity=SOCIAL.options(state,id,currentPeople(),cast)
+   .find(option=>option.photoSession&&!option.disabledReason);
+  if(!activity)return say(cast[id].name,
+   'Maybe later. The light is not quite right now.',[['Continue ›','close']]);
+  return act('socialDo:'+id+':'+activity.id,true);
+ }
  if(type==='eventChat'){
   if(cast[id]&&currentPeople().includes(id))return selectPerson(id,{skipInvitation:true});
    return say('Narrator','They have moved on. You can try again later.');
@@ -1939,9 +1965,15 @@ function act(action,confirmedInvitationHandoff=false){
    if(!available)return sayCharacterChoiceMenu(id,'SPEND TIME','This photoshoot is not available right now.',sharedActivityChoices(id));
    if(!window.NeoRpgPhotoSession?.open)return sayCharacterChoiceMenu(id,'SPEND TIME','The camera is temporarily unavailable.',sharedActivityChoices(id));
    if(!confirmTimeAdvance())return;
-   window.NeoRpgPhotoSession.open({
+   const fromConversation=scene?.photoOffer===id;
+   if(fromConversation){
+    // Clear the invitation only after accepting and passing the clock check.
+    scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;
+    persist();render();
+   }
+   const opened=window.NeoRpgPhotoSession.open({
     name:cast[id].name,characterId:id,location:state.location,savedAlbum:state.photoAlbum,
-    onCancel:()=>{},
+    story:fromConversation,onCancel:()=>{},
     onComplete:result=>{
      try{
       if(!SOCIAL.options(state,id,currentPeople(),cast).some(x=>x.id===part&&!x.disabledReason))
@@ -1983,6 +2015,8 @@ function act(action,confirmedInvitationHandoff=false){
      }
     }
    });
+   if(!opened)return say(cast[id].name,'The camera could not open. We can try again later.',
+    [['Continue ›','close']]);
    return;
   }
   // Interactive arcade challenge: finish first; never charge time or currency on cancel.
@@ -3616,9 +3650,6 @@ function render(){
    ];
    const availableSocial=!state.hungOut?.[state.day+':'+selectedCharacter]?
     SOCIAL.options(state,selectedCharacter,people,cast).filter(option=>!option.disabledReason):[];
-   if(availableSocial.some(option=>option.photoSession))
-    stageMenu.actions.push({id:'photo',label:'📷 Photos',
-     title:'Start a photo session with '+stageMenu.name+' · 1 period · 8 focus'});
    if(availableSocial.length)
     stageMenu.actions.push({id:'spend',label:'✧ Spend time',title:'Suggest an activity together'});
    if(APPOINTMENTS.proposed(state,selectedCharacter,SCHEDULES).length)
@@ -3645,11 +3676,6 @@ function render(){
    if(command==='glance')void glanceAt(id);
    else if(command==='talk')selectPerson(id);
    else if(command==='duel')startDuel(id);
-   else if(command==='photo'){
-    const available=SOCIAL.options(state,id,currentPeople(),cast)
-     .find(option=>option.photoSession&&!option.disabledReason);
-    if(available)safeAct('socialDo:'+id+':'+available.id);
-   }
    else if(command==='spend')planSharedActivity(id);
    else if(command==='plan')act('dateInvite:'+id);
    else if(command==='romance')act('romanceOffer:'+id);
