@@ -3593,8 +3593,12 @@ function render(){
     {id:'talk',label:'☏ Talk',title:'Talk to '+stageMenu.name},
     {id:'duel',label:'⚔ Duel',title:'Challenge '+stageMenu.name+' to a duel'}
    ];
-   if(!state.hungOut?.[state.day+':'+selectedCharacter]&&
-      SOCIAL.options(state,selectedCharacter,people,cast).some(option=>!option.disabledReason))
+   const availableSocial=!state.hungOut?.[state.day+':'+selectedCharacter]?
+    SOCIAL.options(state,selectedCharacter,people,cast).filter(option=>!option.disabledReason):[];
+   if(availableSocial.some(option=>option.photoSession))
+    stageMenu.actions.push({id:'photo',label:'📷 Photos',
+     title:'Start a photo session with '+stageMenu.name+' · 1 period · 8 focus'});
+   if(availableSocial.length)
     stageMenu.actions.push({id:'spend',label:'✧ Spend time',title:'Suggest an activity together'});
    if(APPOINTMENTS.proposed(state,selectedCharacter,SCHEDULES).length)
     stageMenu.actions.push({id:'plan',label:'◷ Make plans',title:'Invite '+display+' to meet on another day'});
@@ -3620,6 +3624,11 @@ function render(){
    if(command==='glance')void glanceAt(id);
    else if(command==='talk')selectPerson(id);
    else if(command==='duel')startDuel(id);
+   else if(command==='photo'){
+    const available=SOCIAL.options(state,id,currentPeople(),cast)
+     .find(option=>option.photoSession&&!option.disabledReason);
+    if(available)safeAct('socialDo:'+id+':'+available.id);
+   }
    else if(command==='spend')planSharedActivity(id);
    else if(command==='plan')act('dateInvite:'+id);
    else if(command==='romance')act('romanceOffer:'+id);
