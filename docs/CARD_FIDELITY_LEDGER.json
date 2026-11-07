@@ -18199,13 +18199,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Quick Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit: Quick Attack coin 10/30 generic coin-bonus; Pursuit neo49:pursuit sets defender marker, retreat() applies 10 before Energy payment, KO/promotion branch. Check source identity, switching, damage KO, turn ownership. Reducer not executed; independent historical ruling verification pending."
+          ],
+          "scope": "Current live RPG/Classic source call path and battle-state reasoning only; not runtime verified."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Pursuit",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit: Quick Attack coin 10/30 generic coin-bonus; Pursuit neo49:pursuit sets defender marker, retreat() applies 10 before Energy payment, KO/promotion branch. Check source identity, switching, damage KO, turn ownership. Reducer not executed; independent historical ruling verification pending."
+          ],
+          "scope": "Current live RPG/Classic source call path and battle-state reasoning only; not runtime verified."
         }
       ]
     },
@@ -18245,13 +18253,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Headpress",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit: Headpress coin tails must do no damage, heads 20 and Paralysis; Double Lariat two coins at 40 per heads. Verify zero/one/two heads and prevention/KO. Reducer not executed; independent historical ruling verification pending."
+          ],
+          "scope": "Current live RPG/Classic source call path and battle-state reasoning only; not runtime verified."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Double Lariat",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit: Headpress coin tails must do no damage, heads 20 and Paralysis; Double Lariat two coins at 40 per heads. Verify zero/one/two heads and prevention/KO. Reducer not executed; independent historical ruling verification pending."
+          ],
+          "scope": "Current live RPG/Classic source call path and battle-state reasoning only; not runtime verified."
         }
       ]
     },
@@ -18264,7 +18280,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Counter",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit: Counter neo49:counter stores reactive effect, retaliates on heads if opponent attack deals damage, including Wobbuffet KO. Inspect attacker target, weakness/resistance, damage modifiers and simultaneous KO Prize order. Reducer not executed; independent historical ruling verification pending."
+          ],
+          "scope": "Current live RPG/Classic source call path and battle-state reasoning only; not runtime verified."
         }
       ]
     },
@@ -18277,13 +18297,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Shockwave",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit: Shockwave neo48:shockwave flips for 10 to opponent Active and Bench then forces opponent-chosen promotion even on tails; Swift 30 ignores Weakness, Resistance, Powers and defending effects. Check zero Bench, KO-before-switch, all-prevention bypass. Reducer not executed; independent historical ruling verification pending."
+          ],
+          "scope": "Current live RPG/Classic source call path and battle-state reasoning only; not runtime verified."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Swift",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit: Shockwave neo48:shockwave flips for 10 to opponent Active and Bench then forces opponent-chosen promotion even on tails; Swift 30 ignores Weakness, Resistance, Powers and defending effects. Check zero Bench, KO-before-switch, all-prevention bypass. Reducer not executed; independent historical ruling verification pending."
+          ],
+          "scope": "Current live RPG/Classic source call path and battle-state reasoning only; not runtime verified."
         }
       ]
     },
@@ -18296,13 +18324,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Recover",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit: Recover requires discarding one attached Energy before removing all own damage; Spike Cannon 2 coins x30. Check cost selection, no Energy, healing cap, 0/1/2 heads, KO and turn. Reducer not executed; independent historical ruling verification pending."
+          ],
+          "scope": "Current live RPG/Classic source call path and battle-state reasoning only; not runtime verified."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Spike Cannon",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit: Recover requires discarding one attached Energy before removing all own damage; Spike Cannon 2 coins x30. Check cost selection, no Energy, healing cap, 0/1/2 heads, KO and turn. Reducer not executed; independent historical ruling verification pending."
+          ],
+          "scope": "Current live RPG/Classic source call path and battle-state reasoning only; not runtime verified."
         }
       ]
     },
