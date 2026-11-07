@@ -241,7 +241,7 @@ function open(options={}){
  // Alternate art keeps its own sizing: never reuse Daisy's tuned deformation
  // mask on a differently posed sprite.
  const dancePoses=isDaisy?root.NeoRpgDancePoseController?.create?.($('.nc-dance-actor'),{
-  characterId:'daisy',baseCanvas:$('.nc-actor-canvas'),bpm:136,beatsPerBar:4,transitionMs:280
+  characterId:'daisy',baseCanvas:$('.nc-actor-canvas'),bpm:136,leadMs:LEAD,beatsPerBar:4,transitionMs:280
  }):null;
 
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
