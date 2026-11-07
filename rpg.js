@@ -1404,7 +1404,13 @@ function overworldOpportunities(){
  const circuit=[
   {kind:'community',id:'board',label:'▦ Community Board · standings, rivalries & club news',disabled:locked}
  ];
- if(state.location==='arcade')circuit.unshift({kind:'arcadeFreePlay',id:'daisy',label:'♫ Dance Battle · Daisy · FREE PLAY',description:'Play the complete rhythm challenge whenever you want. No time, credits or rewards.',disabled:locked});
+ if(state.location==='arcade'){
+  // Character selection belongs to the cabinet, not a duplicate minigame.
+  circuit.unshift(
+   {kind:'arcadeFreePlay',id:'rina',label:'♫ Dance Battle · Rina · FREE PLAY',description:'Dance with Rina. No time, credits or rewards.',disabled:locked},
+   {kind:'arcadeFreePlay',id:'daisy',label:'♫ Dance Battle · Daisy · FREE PLAY',description:'Dance with Daisy. No time, credits or rewards.',disabled:locked}
+  );
+ }
  const consequence=CONSEQ.opportunities(state)[0];
  if(consequence)circuit.push({kind:'consequence',id:String(consequence.id),
   label:(state.location==='center'?'↗ Reflect on your match with ':'↗ Visit the Center to reflect on ')+
@@ -1477,7 +1483,8 @@ function runOverworldOpportunity(kind,id){
  if(!found)return false;
  if(kind==='arcadeFreePlay'){
   if(!window.NeoRpgArcadeGame?.open)return false;
-  return window.NeoRpgArcadeGame.open({name:'Daisy',characterId:'daisy',freePlay:true,onCancel:()=>{},onComplete:()=>{}});
+  const dancer=found.id==='rina'?'rina':'daisy';
+  return window.NeoRpgArcadeGame.open({name:dancer==='rina'?'Rina':'Daisy',characterId:dancer,freePlay:true,onCancel:()=>{},onComplete:()=>{}});
  }
  if(kind==='story')startStory(found.id);
  else if(kind==='arc')act('arc:'+found.id);
