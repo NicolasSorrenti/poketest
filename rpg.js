@@ -545,6 +545,7 @@ function maybeStartMandatory(){
  // visit. Later periods receive a contextual follow-up with the SAME CG.
  const daily=state.liveDayScene;
  if(state.location==='home'&&daily?.day===state.day&&
+    daily.id!==MIA_FIRST_TIME.id&&!miaStoryIds.has(daily.id)&&
     daily.lastSeenSlot!==state.slot&&state.slot>daily.firstSlot){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   delete m.seen[LIVE_DAY_FOLLOWUP.id];
