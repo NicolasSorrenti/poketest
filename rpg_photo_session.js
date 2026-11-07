@@ -613,15 +613,16 @@
     const small=document.createElement('small');
     small.textContent=(labels[p.pose]||'Photo')+' · '+(p.framing||'frame');
     card.append(strong,small);
-    // Rebuild thumbnails from asset paths. Do not store large bitmap data in cloud saves.
-    if(!shell.classList.contains('nps-discreet')){
-     const preview=document.createElement('div');
-     preview.style.cssText='position:relative;width:128px;height:94px;overflow:hidden;border-radius:7px;margin:0 auto 6px;background:#273a57 url(/rpg-assets/locations/panoramas/park-day.webp) center/cover';
-     const image=document.createElement('img');image.src=pose(p.pose).src;
-     image.alt=labels[p.pose]||'Barb pose';
-     image.loading='lazy';
-     image.style.cssText='position:absolute;left:50%;bottom:-2%;height:99%;width:80%;object-fit:contain;object-position:bottom center;transform-origin:center 66%;transform:translate(calc(-50% + '+Math.round((p.x||0)*.25)+'px),'+Math.round((p.y||0)*.25)+'px) scale('+(p.zoom||1)+')';
-     preview.append(image);card.prepend(preview);
+    if(!shell.classList.contains('nps-discreet')&&(p.snapshot||p.thumbnail)){
+     const img=document.createElement('img');
+     img.className='nps-photo-thumbnail';
+     img.src=p.snapshot||p.thumbnail;
+     img.alt='Camera photo of Barb: '+(labels[p.pose]||'pose');
+     img.loading='lazy';card.prepend(img);
+    }else{
+     const older=document.createElement('div');older.className='nps-photo-legacy';
+     older.textContent=shell.classList.contains('nps-discreet')?'◇ Hidden':'📷 Older photo · image unavailable';
+     card.prepend(older);
     }
     list.append(card);
    });
@@ -639,20 +640,20 @@
    if(session.reviewOpen||session.shots.length>=3||!loading.hidden)return;
    const task=session.tasks[session.shots.length];
    const points=photoScore();
+   let capture;
+   try{capture=captureStage();}
+   catch(error){
+    $(shell,'[data-caption]').textContent='Camera: '+error.message;
+    console.warn('Photo capture unavailable',error);return;
+   }
    const shot={character:'barb',day:null,pose:session.poseId,framing:task.framing,
     light:session.light,zoom:Number(session.zoom.toFixed(2)),
-    x:Math.round(session.x),y:Math.round(session.y),score:points.score,task:task.name};
-   // The animation can be moving. Freeze the current *rendered* frame before
-   // stopping the timeline; metadata only is stored in the campaign save.
-   let frozen=null;
-   if(session.motionReady&&session.motion){
-    session.motion.render(performance.now()-session.begin,session.reaction?.highlight ? .75 : 0);
-    try{frozen=motionCanvas.toDataURL('image/png');}catch{}
-   }
+    x:Math.round(session.x),y:Math.round(session.y),score:points.score,task:task.name,
+    thumbnail:capture.thumbnail};
    stopReaction();
-   showReview(shot,points,frozen);
+   showReview(shot,points,capture.fullImage);
   }
-  function showReview(shot,points,frozen=null){
+  function showReview(shot,points,snapshot=null){
    session.reviewOpen=true;
    const review=document.createElement('div');
    review.className='nps-review';
@@ -670,12 +671,12 @@
     '<button type="button" class="nps-btn nps-primary" data-keep>✓ Keep photo</button>'+
     '</div></div>';
    const preview=$(review,'[data-preview]');
-   preview.dataset.light=shot.light;
-   if(!shell.classList.contains('nps-discreet')){
+   preview.classList.add('nps-captured');
+   if(!shell.classList.contains('nps-discreet')&&snapshot){
     const img=document.createElement('img');
-    img.src=frozen||pose(shot.pose).src;
-    img.alt='Your photo of Barb in the '+labels[shot.pose]+' pose';
-    img.style.transform='translate(calc(-50% + '+shot.x+'px),'+shot.y+'px) scale('+shot.zoom+')';
+    img.className='nps-photo-capture';
+    img.src=snapshot;
+    img.alt='The exact photograph captured when SNAP was pressed';
     preview.append(img);
    }else{
     const symbol=document.createElement('div');
@@ -712,7 +713,7 @@
    };
    $(review,'[data-keep]').onclick=()=>{
     session.reviewOpen=false;review.remove();
-    session.shots.push(shot);
+    session.shots.push({...shot,snapshot});
     const mini=$(shell,'[data-mini]');
     mini.replaceChildren();
     session.shots.forEach((p,i)=>{
@@ -762,7 +763,7 @@
    finish.textContent=session.freePlay?'Finish practice':'Save session and collect';
    finish.onclick=()=>{
     const result={average,credits:session.freePlay?0:creditReward,
-     photos:session.shots.map(p=>({...p})),characterId:'barb'};
+     photos:session.shots.map(({snapshot,...saved})=>saved),characterId:'barb'};
     close(true,result);
    };
    buttons.append(cancel,finish);report.append(buttons);
