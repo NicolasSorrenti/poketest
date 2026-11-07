@@ -993,7 +993,8 @@ function opponentResponseBonus(action,o,cfg){
     cfg.level===8?livePlusPowerBonus(o):0)*
     (cfg.level===8&&attacker.status==='Confused'?.5:1)>=.75);
  if(currentKO)return 0;
- const replacement=cfg.level===8?projectedAttackValue(next,q.active,o.turnSerial,p.bench.length):
+ // The promoted attacker leaves the Bench before its attack resolves.
+  const replacement=cfg.level===8?projectedAttackValue(next,q.active,o.turnSerial,Math.max(0,p.bench.length-1)):
   strongestAffordableAttack(next,q.active,p.bench.length);
  if(!replacement)return 0; // Do not flee into a passive Bench that cannot defend itself.
  const lostEnergy=Math.min(attacker.energies?.length||0,(card(attacker.id)?.retreatCost||[]).length);
