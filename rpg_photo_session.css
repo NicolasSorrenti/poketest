@@ -381,3 +381,81 @@
  filter:none;transition:opacity .12s ease
 }
 .nps-precomposed .nps-motion-actor{display:none!important}
+
+
+/* Readable narrative subtitles and floating shutter */
+.nps-story-subtitle{display:none}
+.nps-story .nps-caption{display:none}
+.nps-story .nps-story-subtitle{
+ position:absolute;display:block;left:50%;bottom:9px;z-index:12;
+ transform:translateX(-50%);width:min(720px,calc(100% - 38px));
+ padding:12px 16px 13px;border-radius:15px;
+ border:1px solid #ead4ffb8;
+ color:#fff;background:linear-gradient(180deg,#17213fea,#0b1024f5);
+ box-shadow:0 7px 28px #050717cc,0 0 0 1px #fff2 inset;
+ pointer-events:none;line-height:1.35;text-shadow:0 1px 3px #000c
+}
+.nps-subtitle-meta{display:flex;justify-content:space-between;align-items:center;
+ gap:8px;color:#ffe6ad;font-weight:900;font-size:12px;
+ letter-spacing:.06em;margin-bottom:5px}
+.nps-subtitle-meta [data-story-step]{font-weight:750;color:#d6c7fa;font-size:10px}
+.nps-subtitle-context{font-size:13px;line-height:1.35;color:#cfdaf4;margin-bottom:5px}
+.nps-subtitle-line{font-weight:800;font-size:clamp(17px,1.85vw,23px);
+ line-height:1.3;color:#fff}
+.nps-subtitle-request{font-size:14px;line-height:1.37;color:#fff0b2;
+ margin-top:6px;border-top:1px solid #d3cbef55;padding-top:6px}
+.nps-stage.nps-shutter-flash{animation:nps-photo-shutter .38s ease-out}
+@keyframes nps-photo-shutter{
+ 0%{filter:brightness(1.85)}25%{filter:brightness(1.4)}100%{filter:brightness(1)}
+}
+/* The full contact sheet appears only after shot three. */
+.nps-final-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:12px;width:100%;margin:12px 0 15px}
+.nps-final-photo{min-width:0;background:#0d1c37;border:1px solid #b9c1ed88;
+ border-radius:13px;padding:10px;text-align:left;box-shadow:0 4px 18px #0006}
+.nps-final-photo img{display:block;width:100%;aspect-ratio:16/10;
+ object-fit:contain;background:#080f20;border-radius:8px;margin-bottom:8px}
+.nps-final-photo strong{color:#ffe3a3;font-size:15px}
+.nps-final-photo p{margin:4px 0 0!important;font-size:12px!important;
+ line-height:1.3!important;color:#cbd8ef!important}
+@media(max-width:740px),(max-height:530px) and (pointer:coarse){
+ .nps-story .nps-story-subtitle{
+  left:8px;right:83px;bottom:7px;transform:none;width:auto;
+  max-height:65%;overflow:hidden;padding:9px 10px 10px;
+  border-radius:12px
+ }
+ .nps-subtitle-meta{font-size:11px;margin-bottom:3px}
+ .nps-subtitle-meta [data-story-step]{font-size:9px}
+ .nps-subtitle-context{font-size:12px;line-height:1.25;margin-bottom:4px}
+ .nps-subtitle-line{font-size:16px;line-height:1.28}
+ .nps-subtitle-request{font-size:13px;line-height:1.25;margin-top:4px;padding-top:4px}
+ .nps-snaps{grid-template-columns:minmax(70px,1fr) minmax(70px,1fr);
+  padding-right:82px}
+ .nps-primary[data-snap]{
+  position:fixed;right:calc(12px + env(safe-area-inset-right,0px));
+  bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  z-index:70;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;width:76px;height:76px;min-width:76px;
+  min-height:76px;max-height:76px;padding:8px;border-radius:50%;
+  border:3px solid #fff1b0;background:linear-gradient(145deg,#f1469b,#bd1765);
+  color:#fff;box-shadow:0 4px 0 #640b3a,0 12px 35px #000c;
+  font-size:28px;line-height:1.05;
+  grid-column:auto;grid-row:auto;touch-action:manipulation;
+ }
+ .nps-primary[data-snap] span{display:block;font-size:11px;
+  font-weight:900;letter-spacing:.03em}
+ .nps-primary[data-snap]:active{transform:scale(.94)}
+ .nps-root:has(.nps-instructions) [data-snap]{visibility:hidden}
+ .nps-final-gallery{grid-template-columns:1fr;gap:10px}
+ .nps-final-photo{display:grid;grid-template-columns:minmax(0,130px) 1fr;
+  column-gap:10px;align-items:center;padding:8px}
+ .nps-final-photo img{grid-row:1/3;margin:0;max-height:110px}
+ .nps-final-photo strong{font-size:14px}
+ .nps-final-photo p{font-size:12px!important}
+}
+@media(max-height:620px) and (pointer:coarse){
+ .nps-story .nps-story-subtitle{max-height:70%;bottom:4px;padding:6px 9px}
+ .nps-subtitle-context{display:none}
+ .nps-primary[data-snap]{width:64px;height:64px;min-width:64px;
+  min-height:64px;max-height:64px;right:9px;bottom:calc(9px + env(safe-area-inset-bottom,0px))}
+}
