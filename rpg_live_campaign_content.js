@@ -267,7 +267,55 @@ const MIA_SLEEP_EVENT={
 };
 const MIA_SLEEP_ART='/rpg-assets/characters/live/events/37_a_highly_detailed_colorful_anime_style_illustrati.png';
 
+// A separate, one-time choice encounter after the earlier sofa scene.
+// The full CG transitions to the chosen character's exact reference crop.
+const MIA_COUCH_CHOICE_EVENT={
+ id:'mia_live_couch_choice',title:'An Awkward Awakening',
+ kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,
+ expiry:'never',fallback:'queue',trigger:{eventSeen:MIA_SLEEP_EVENT.id},
+ lines:[{speaker:'Narrator',text:'Live and Mia look up at you from beneath the blankets, both surprised to find you there.'}],
+ choices:[
+  {label:'Give them some privacy',reply:'You quietly close the door.',flag:'mia_couch_choice_left'},
+  {label:'Stay for a conversation',reply:'The conversation continues softly.',flag:'mia_couch_choice_stayed'}
+ ]
+};
+const MIA_COUCH_CHOICE_ART='/rpg-assets/characters/live/events/mia/47_a_highly_detailed_anime_style_illustration_tightl.png';
 
 
-window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
+
+// Three ordered kitchen encounters. Each has distinct banter and a separate
+// CG, but the actual lines are selected at render time by the Mia route.
+const MIA_KITCHEN_SCENES=[
+ {id:'mia_kitchen_59',title:'Almost Ready',day:15,
+  art:MIA_BASE+'59_a_highly_detailed_anime_style_illustration_in_a_co.png'},
+ {id:'mia_kitchen_60',title:'A Little More Seasoning',day:23,
+  art:MIA_BASE+'60_a_detailed_anime_style_illustration_in_warm_gold.png'},
+ {id:'mia_kitchen_61',title:'The Finishing Touch',day:31,
+  art:MIA_BASE+'61_a_detailed_high_quality_anime_style_cel_shaded_il.png'}
+];
+const MIA_KITCHEN_EVENTS=MIA_KITCHEN_SCENES.map((s,i)=>({
+ id:s.id,title:s.title,kind:'season',priority:96,
+ earliestDay:s.day,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',
+ trigger:{eventSeen:i?MIA_KITCHEN_SCENES[i-1].id:'mia_first_time'},
+ lines:[{speaker:'Narrator',text:'Live is preparing dinner while Mia keeps you company nearby.'}],
+ choices:[{label:'Enjoy the conversation',reply:'You stay a moment longer.',flag:s.id+'_talk'},
+          {label:'Give them space',reply:'You leave the kitchen.',flag:s.id+'_leave'}]
+}));
+const MIA_KITCHEN_ART=Object.fromEntries(MIA_KITCHEN_SCENES.map(s=>[s.id,s.art]));
+
+// The player overhears a wine-tasting mishap. No illustration is shown
+// until the player opens the door and discovers the two asleep on the floor.
+const MIA_WINE_MISUNDERSTANDING={
+ id:'mia_live_wine_misunderstanding',title:'What Was That Noise?',
+ kind:'season',priority:97,earliestDay:5,delivery:'world',timeCost:0,
+ expiry:'never',fallback:'queue',trigger:{eventSeen:'mia_first_time'},
+ lines:[{speaker:'Narrator',text:'You awaken to strange sounds from the next room.'}],
+ choices:[
+  {label:'Investigate',reply:'You discover the empty sparkling-wine bottle.',flag:'mia_wine_discovered'},
+  {label:'Go back to bed',reply:'The mystery can wait until morning.',flag:'mia_wine_ignored'}
+ ]
+};
+const MIA_WINE_REVEAL_ART=MIA_BASE+'42_a_highly_detailed_anime_style_illustration_vibran.png';
+
+window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,MIA_WINE_MISUNDERSTANDING,MIA_WINE_REVEAL_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
 })();

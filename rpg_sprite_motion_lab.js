@@ -6,18 +6,27 @@
  const $=id=>document.getElementById(id);
  const api=window.NeoRpgSpriteDeformer;
  const PRESET=api?.presets?.daisyDance;
- if(!api||!window.NeoRpgSpriteInflate||!PRESET){
+ const posesApi=window.NeoRpgDancePoseController;
+ if(!api||!window.NeoRpgSpriteInflate||!PRESET||!posesApi?.previewConfig){
   $('motionStatus').textContent='No se pudo cargar el módulo de movimiento. Recargá la página.';return;
  }
  const DRAFT='neoRpgMotionLabDraftV1';
  const ACTIVE='neoRpgDaisyMotionTuningV1';
+ const RINA_ACTIVE='neoRpgRinaDancePoseTuningV1';
+ const query=new URLSearchParams(location.search);
+ let characterId=query.get('character')==='rina'?'rina':'daisy';
+ let poseId=String(query.get('pose')||(characterId==='rina'?'happy':'primary')).toLowerCase();
+ const available=()=>posesApi.presets[characterId]||[];
+ if(!available().some(x=>x.id===poseId))poseId=available()[0]?.id||'primary';
+ const draftKey=()=>characterId==='daisy'&&poseId==='primary'?DRAFT:
+  'neoRpgMotionLabPoseDraftV2:'+characterId+':'+poseId;
  const globalFields=['tempo','speed','fps','baseBounce','feverBounce','tilt','intensity','feverInflate','cropTop','cropHeight'];
  const zoneFields=['x','y','rx','ry','inflateX','inflateY','inflatePhase','scaleX','scaleY','moveY','phase'];
  const clone=o=>JSON.parse(JSON.stringify(o));
- const defaults=clone(PRESET);
+ let defaults=clone(posesApi.previewConfig(characterId,poseId)||PRESET);
  const specs={
   x:['Centro X',.15,.85,.005,'pct','Coordenada horizontal en el retrato.'],
-  y:['Centro Y',.25,.85,.005,'pct','Bajá este valor solo si la zona sigue demasiado arriba.'],
+  y:['Centro Y',.20,.95,.005,'pct','Bajá este valor solo si la zona sigue demasiado arriba.'],
   rx:['Radio horizontal',.04,.35,.005,'pct','Ancho del área afectada.'],
   ry:['Radio vertical',.03,.3,.005,'pct','Alto del área afectada.'],
   inflateX:['Expandir ancho',0,.8,.005,'pct','Aumenta el tamaño horizontal y vuelve al original al compás.'],
@@ -61,8 +70,23 @@
   if(typeof raw.source==='string'&&raw.source.startsWith('/rpg-assets/'))result.source=raw.source;
   return result;
  }
- state=cleanConfig(storageRead(DRAFT),defaults);
+ state=cleanConfig(storageRead(draftKey()),defaults);
  const canvas=$('motionPreview'),stage=$('motionStage');
+ const characterPicker=$('motionCharacter'),posePicker=$('motionPose');
+ function fillPoseOptions(){
+  posePicker.replaceChildren();
+  const labels={primary:'Principal',happy:'Happy',idol:'Idol (overworld)',reaching:'Reaching (overworld)',
+   determined:'Determined',victory:'Battle Victory',surprised:'Surprised',
+   walking:'Walking',kneeling:'Kneeling (overworld)'};
+  for(const pose of available()){
+   const option=document.createElement('option');option.value=pose.id;
+   option.textContent=labels[pose.id]||pose.id;posePicker.append(option);
+  }
+  posePicker.value=poseId;
+  characterPicker.value=characterId;
+  $('motionPreviewTitle').textContent='Vista previa · '+(characterId==='rina'?'Rina':'Daisy')+' · '+(posePicker.selectedOptions[0]?.textContent||poseId);
+ }
+ fillPoseOptions();
  const message=(text,isError=false)=>{$('motionStatus').textContent=text;$('motionStatus').dataset.error=String(isError);};
  let motion;
  try {
@@ -145,8 +169,28 @@
  }
  function changed(){
   applyPreview();
-  storageWrite(DRAFT,{...state,source:state.source.startsWith('blob:')?defaults.source:state.source});
+  storageWrite(draftKey(),{...state,source:state.source.startsWith('blob:')?defaults.source:state.source});
  }
+ function choosePose(character,pose){
+  if(character!=='rina'&&character!=='daisy')return;
+  characterId=character;
+  const list=available();
+  poseId=list.some(e=>e.id===pose)?pose:(characterId==='rina'?'happy':'primary');
+  fillPoseOptions();
+  defaults=clone(posesApi.previewConfig(characterId,poseId)||PRESET);
+  state=cleanConfig(storageRead(draftKey()),defaults);
+  motion?.dispose();
+  motion=api.create(canvas,{...state,zones:clone(state.zones),
+   onReady:()=>message('Pose '+poseId+' cargada. Mové las elipses para ajustar las zonas.'),
+   onError:e=>message('No se pudo cargar la pose: '+e.message,true)});
+  viewOriginal=false;
+  $('motionOriginal').textContent='Ver original';
+  $('motionSource').value=state.source||defaults.source;
+  syncSliders();overlay();
+  message('Cargando pose '+poseId+'…');
+ }
+ characterPicker.addEventListener('change',()=>choosePose(characterPicker.value,characterPicker.value==='rina'?'happy':'primary'));
+ posePicker.addEventListener('change',()=>choosePose(characterId,posePicker.value));
  syncSliders();overlay();
  document.querySelectorAll('[data-tab]').forEach(button=>{
   button.addEventListener('click',()=>{
@@ -196,7 +240,7 @@
  stage.addEventListener('pointermove',e=>{if(dragIndex>=0){moveZone(toRelative(e));e.preventDefault();}});
  stage.addEventListener('pointerup',()=>dragIndex=-1);
  stage.addEventListener('pointercancel',()=>dragIndex=-1);
- function showConfig(){const data={...state,zones:clone(state.zones)};if(data.source?.startsWith('blob:'))data.source=defaults.source;return data;}
+ function showConfig(){const data={characterId,poseId,...state,zones:clone(state.zones)};if(data.source?.startsWith('blob:'))data.source=defaults.source;return data;}
  $('motionGenerate').addEventListener('click',()=>{
   $('motionExport').value=JSON.stringify(showConfig(),null,2);
   message('JSON generado. Compartí este texto para fijar los parámetros del juego.');
@@ -218,22 +262,34 @@
   allowed.cameraMode=state.cameraMode==='crop'?'crop':'viewport';
   allowed.cameraFit=['full-width','cover','dialogue-bust'].includes(state.cameraFit)?state.cameraFit:'full-width';
   allowed.zones=clone(state.zones);
-  if(storageWrite(ACTIVE,allowed))message('Configuración aplicada a Dance Battle en este navegador. Abrí Free Play para verla.');
-  else message('No se pudieron guardar los parámetros; copiá el JSON para conservarlos.',true);
+  if(characterId==='rina'){
+   const saved=storageRead(RINA_ACTIVE)||{};
+   saved[poseId]=allowed;
+   if(storageWrite(RINA_ACTIVE,saved))
+    message('Rina · '+poseId+': aplicado solo a esta pose en Dance Battle de este navegador.');
+   else message('No se pudieron guardar los parámetros. Copiá el JSON.',true);
+  }else if(poseId==='primary'){
+   if(storageWrite(ACTIVE,allowed))message('Daisy principal: valores guardados para Dance Battle en este navegador.');
+   else message('No se pudo guardar. Copiá el JSON.',true);
+  }else{
+   message('Esta pose de Daisy se calibra mediante JSON: copiá los parámetros para integrarlos al juego.');
+  }
  });
  $('motionImport').addEventListener('click',()=>{
   try{
    const parsed=JSON.parse($('motionExport').value);
    if(!Array.isArray(parsed.zones)||parsed.zones.length<2)throw Error('Faltan las dos zonas en el JSON.');
+   if(['rina','daisy'].includes(parsed.characterId)&&typeof parsed.poseId==='string')
+    choosePose(parsed.characterId,parsed.poseId);
    state=cleanConfig(parsed,defaults);changed();syncSliders();
-   message('JSON importado y aplicado a la vista previa.');
+   message('JSON importado en '+characterId+' · '+poseId+'.');
   }catch(error){message('No se pudo importar: '+error.message,true);}
  });
  $('motionReset').addEventListener('click',()=>{
-  if(!window.confirm('¿Restablecer los controles a los valores iniciales de Daisy?'))return;
+  if(!window.confirm('¿Restablecer los controles de esta pose a sus valores iniciales?'))return;
   state=clone(defaults);energy=.75;viewOriginal=false;
   $('motionOriginal').textContent='Ver original';
-  changed();syncSliders();message('Volviste a los parámetros iniciales del módulo. Para usarlos en el juego, tocá Aplicar.');
+  changed();syncSliders();message('Restableciste los valores de esta pose. Tocá Aplicar para guardarlos en Dance Battle.');
  });
  function loadImageSource(src){
   if(!src)return;
@@ -257,5 +313,5 @@
  });
  window.addEventListener('pagehide',()=>{motion?.dispose();if(localUrl)URL.revokeObjectURL(localUrl);});
  $('motionSource').value=state.source||defaults.source;
- message('Cargando retrato de Daisy…');
+ message('Cargando '+(characterId==='rina'?'Rina':'Daisy')+' · '+poseId+'…');
 })();

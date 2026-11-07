@@ -6,7 +6,7 @@
 // Never owns gameplay, affinity, scoring, RPG time or saves.
 (function(root){
  'use strict';
- if(root.NeoRpgDancePoseController?.version===5)return;
+ if(root.NeoRpgDancePoseController?.version===7)return;
  const DAISY_POSES=Object.freeze([
   {id:'primary',type:'base'},
   {id:'happy',src:'/rpg-assets/characters/daisy/expressionsv2/happy.png'},
@@ -55,6 +55,69 @@
    scaleX:0,scaleY:0,moveY:.014,phase:side===0?0:-.04
   });
   return [toZone(pair.left,0),toZone(pair.right,1)];
+ }
+ // A read-only snapshot of the same pose/camera/motion values used by
+ // Dance Battle. Motion Lab uses this to show each pose exactly as it runs,
+ // rather than guessing new zone coordinates.
+ function previewConfig(characterId,poseId='primary'){
+  const id=String(characterId||'').toLowerCase();
+  const poses=id==='rina'?RINA_POSES:id==='daisy'?DAISY_POSES:null;
+  if(!poses)return null;
+  const entry=poses.find(p=>p.id===poseId);
+  if(!entry)return null;
+  if(id==='rina'&&poseId==='primary')return {
+   source:'/rpg-assets/characters/rina/expressionsv2/neutral.png',
+   width:210,height:280,fps:22,tempo:119,speed:.9,
+   cameraMode:'viewport',cameraFit:'dialogue-bust',dialogueBustScale:2.78,
+   cropTop:0,cropHeight:1,baseBounce:0,feverBounce:3.2,tilt:0,
+   intensity:.52,feverInflate:.65,expansion:1,
+   zones:[
+    {x:.34,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-.2,scaleX:0,scaleY:0,moveY:.012,phase:0},
+    {x:.67,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-3.14,scaleX:0,scaleY:0,moveY:.012,phase:-.04}
+   ]
+  };
+  if(id==='daisy'&&poseId==='primary'){
+   const base=root.NeoRpgSpriteDeformer?.presets?.daisyDance;
+   return base?JSON.parse(JSON.stringify(base)):null;
+  }
+  return {
+   source:entry.src,width:210,height:280,
+   cameraMode:'viewport',
+   cameraFit:entry.cameraFit||(entry.framing==='overworld'||entry.framing==='crouching'?'full-width':'dialogue-bust'),
+   cropTop:Number.isFinite(Number(entry.cropTop))?Number(entry.cropTop):0,
+   cropHeight:Number.isFinite(Number(entry.cropHeight))?Number(entry.cropHeight):1,
+   dialogueBustScale:Number(entry.dialogueBustScale)||2.78,
+   tempo:119,speed:.9,fps:22,baseBounce:0,
+   feverBounce:id==='rina'?3.2:5.1,tilt:0,
+   intensity:id==='rina'?.52:.58,feverInflate:id==='rina'?.65:1.2,
+   expansion:1,zones:motionZones(entry,id)
+  };
+ }
+ // Only Rina's explicitly adjusted pose is overridden; all other
+ // characters and poses continue to use their original tuned defaults.
+ function localPoseOverride(characterId,poseId){
+  if(characterId!=='rina')return {};
+  try{
+   const saved=JSON.parse(localStorage.getItem('neoRpgRinaDancePoseTuningV1')||'null');
+   const patch=saved?.[poseId];
+   if(!patch||typeof patch!=='object')return {};
+   const out={};
+   for(const k of ['tempo','speed','fps','cropTop','cropHeight','dialogueBustScale',
+    'baseBounce','feverBounce','tilt','intensity','feverInflate']){
+    if(patch[k]!==undefined&&Number.isFinite(Number(patch[k])))out[k]=Number(patch[k]);
+   }
+   if(patch.cameraMode==='crop'||patch.cameraMode==='viewport')out.cameraMode=patch.cameraMode;
+   if(['full-width','cover','dialogue-bust'].includes(patch.cameraFit))out.cameraFit=patch.cameraFit;
+   if(Array.isArray(patch.zones)&&patch.zones.length===2){
+    const fields=['x','y','rx','ry','inflateX','inflateY','inflatePhase','scaleX','scaleY','moveY','phase'];
+    out.zones=patch.zones.map(zone=>{
+     const z={};
+     for(const k of fields)if(Number.isFinite(Number(zone?.[k])))z[k]=Number(zone[k]);
+     return z;
+    });
+   }
+   return out;
+  }catch(_){return {};}
  }
  function make(target,options={}){
   if(!target?.appendChild)throw new TypeError('Dance pose controller needs an actor container');
@@ -113,6 +176,8 @@
      intensity:Math.min(.58,Number(animationPreset.intensity)||.65),
      feverInflate:Number.isFinite(Number(animationPreset.feverInflate))?Number(animationPreset.feverInflate):1.2,
      zones:motionZones(entry,characterId),
+     ...localPoseOverride(characterId,entry.id),
+     source:entry.src,
      onReady:()=>{
       if(disposed)return;
       entry.loaded=true;readyMap.set(entry.id,entry);totalReady++;
@@ -208,6 +273,6 @@
   });
  }
  root.NeoRpgDancePoseController=Object.freeze({
-  version:5,create:make,presets:Object.freeze({daisy:DAISY_POSES,rina:RINA_POSES})
+  version:7,create:make,previewConfig,presets:Object.freeze({daisy:DAISY_POSES,rina:RINA_POSES})
  });
 })(window);

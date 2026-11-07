@@ -208,16 +208,17 @@ function open(options={}){
  const $=q=>host.querySelector(q),$$=q=>Array.from(host.querySelectorAll(q));
  if(isRina){
   // Reuse all the proven Dance Battle UI and controls without a second copy.
-  $('.nc-overline').textContent='✦ RINA / PIXEL PALACE';
-  $('.nc-song-sub').textContent='Rina · 136 BPM';
-  // The current Center Stage layout has no .nc-dance-tag; the visible
-  // heading and dialogue name are updated below instead.
-  $('.nc-dance-comment small').textContent='RINA ♡';
-  $('.nc-dance-comment-text').textContent='Follow the beat with me! ♡';
-  $('.nc-overlay .nc-chip').textContent='♫ ELECTRIC HEART · RINA · 136 BPM';
-  $('.nc-overlay h2').textContent='DANCE WITH RINA';
-  $('.nc-actor-canvas').setAttribute('aria-label','Rina dancing');
-  $('.nc-motion-lab-link')?.remove(); // Daisy-only calibrated editor
+  const setText=(selector,value)=>{const node=$(selector);if(node)node.textContent=value;};
+  setText('.nc-overline','✦ RINA / PIXEL PALACE');
+  setText('.nc-song-sub','Rina · 136 BPM');
+  // Center Stage intentionally has no .nc-dance-tag.
+  setText('.nc-dance-comment small','RINA ♡');
+  setText('.nc-dance-comment-text','Follow the beat with me! ♡');
+  setText('.nc-overlay .nc-chip','♫ ELECTRIC HEART · RINA · 136 BPM');
+  setText('.nc-overlay h2','DANCE WITH RINA');
+  $('.nc-actor-canvas')?.setAttribute('aria-label','Rina dancing');
+  const lab=$('.nc-motion-lab-link');
+  if(lab){lab.href='/rpg_sprite_motion_lab.html?character=rina&pose=happy';lab.textContent='⚙ AJUSTAR RINA';}
  }
  // Center Stage intentionally has no rival label; the classic cabinet still does.
  const rivalLabel=$('.nc-rival');
@@ -231,7 +232,8 @@ function open(options={}){
  $('.nc-progress-text').textContent='0:00 / '+asClock(session.duration);
  // Use the local motion-lab tuning only in Daisy Dance Battle.
  function danceMotionConfig(){
-  if(isRina)return {
+  if(isRina){
+   const config={
    source:'/rpg-assets/characters/rina/expressionsv2/neutral.png',
    width:210,height:280,fps:22,tempo:119,speed:.9,
    cameraMode:'viewport',cameraFit:'dialogue-bust',dialogueBustScale:2.78,
@@ -243,7 +245,28 @@ function open(options={}){
     {x:.34,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-.2,scaleX:0,scaleY:0,moveY:.012,phase:0},
     {x:.67,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-3.14,scaleX:0,scaleY:0,moveY:.012,phase:-.04}
    ]
-  };
+   };
+   // The principal Rina portrait can also be calibrated independently from
+   // the other poses; do not change Daisy's earlier Motion Lab settings.
+   try{
+    const saved=JSON.parse(localStorage.getItem('neoRpgRinaDancePoseTuningV1')||'null')?.primary;
+    if(saved&&typeof saved==='object'){
+     for(const k of ['tempo','speed','fps','baseBounce','feverBounce','tilt','intensity','feverInflate','cropTop','cropHeight']){
+      if(saved[k]!==undefined&&Number.isFinite(Number(saved[k])))config[k]=Number(saved[k]);
+     }
+     if(saved.cameraMode==='viewport'||saved.cameraMode==='crop')config.cameraMode=saved.cameraMode;
+     if(['full-width','cover','dialogue-bust'].includes(saved.cameraFit))config.cameraFit=saved.cameraFit;
+     if(Array.isArray(saved.zones)&&saved.zones.length===2){
+      const fields=['x','y','rx','ry','inflateX','inflateY','inflatePhase','scaleX','scaleY','moveY','phase'];
+      config.zones=saved.zones.map(zone=>{
+       const z={};for(const k of fields)if(Number.isFinite(Number(zone?.[k])))z[k]=Number(zone[k]);
+       return z;
+      });
+     }
+    }
+   }catch(err){console.warn('Ignoring invalid Rina pose tuning',err);}
+   return config;
+  }
   const config={preset:'daisyDance'};
   try{
    const saved=JSON.parse(localStorage.getItem('neoRpgDaisyMotionTuningV1')||'null');
@@ -269,7 +292,7 @@ function open(options={}){
 // overworld and crouching poses select their own wider, pose-specific camera.
  const danceMotionSettings=isDance?danceMotionConfig():null;
  const dancer=isDance?root.NeoRpgSpriteDeformer?.create?.($('.nc-actor-canvas'),{
-  ...danceMotionSettings,cameraMode:'viewport',cameraFit:isRina?'dialogue-bust':'full-width'
+  ...danceMotionSettings,cameraMode:'viewport',cameraFit:isRina?danceMotionSettings.cameraFit||'dialogue-bust':'full-width'
  }):null;
  const dancePoses=isDance?root.NeoRpgDancePoseController?.create?.($('.nc-dance-actor'),{
   characterId:isRina?'rina':'daisy',baseCanvas:$('.nc-actor-canvas'),bpm:136,leadMs:LEAD,

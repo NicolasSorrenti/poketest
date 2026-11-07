@@ -53,6 +53,10 @@ main{max-width:1540px;margin:auto;padding:15px;display:grid;grid-template-column
 .actions button{flex:1 1 auto}
 details{border-top:1px solid #8f50944d;padding:12px 15px}summary{cursor:pointer;font-size:13px;color:#ffbfec;font-weight:750}
 #motionFile{max-width:100%;font-size:12px}
+.motion-pose-selection{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 15px 0}
+.motion-pose-selection label{display:grid;gap:6px;font-size:12px;font-weight:800;color:#f3cce9}
+.motion-pose-selection select{min-width:0;width:100%;padding:10px 9px;border:1px solid #ae7ab7;border-radius:9px;color:#fff;background:#271634;font-size:13px}
+.motion-pose-selection select:focus-visible{outline:2px solid #fff0b0;outline-offset:2px}
 [hidden]{display:none!important}
 @media(max-width:850px){main{display:flex;flex-direction:column;padding:9px;gap:9px}.preview-panel{position:relative;top:auto}.scene{max-width:320px;min-height:240px;margin:8px auto}.panel-head{padding:11px}.control-grid{gap:8px}.control-content{padding:10px}.control{padding:8px}.controls{padding:8px}}
 @media(max-width:365px){.control-grid{grid-template-columns:1fr}header{gap:6px;padding:9px}header strong{font-size:16px}.back{font-size:11px}}
@@ -62,7 +66,11 @@ details{border-top:1px solid #8f50944d;padding:12px 15px}summary{cursor:pointer;
 <header><div><strong>♡ NEO CAMPUS · MOTION LAB</strong><small>Ajustá la animación por zonas, en vivo y sin reiniciar</small></div><a class="back" href="/rpg-overworld.html">← Volver al RPG</a></header>
 <main>
 <section class="panel preview-panel" aria-label="Visualizador de movimiento">
-<div class="panel-head"><h2>Vista previa · Daisy</h2><p>Arrastrá el centro de cada zona para ubicarlo sobre la imagen. El encuadre ahora funciona como una cámara: al rebotar Daisy se revela el resto del sprite. Las elipses no aparecen en el juego.</p></div>
+<div class="panel-head"><h2 id="motionPreviewTitle">Vista previa · Daisy</h2><p>Elegí el personaje y la pose que querés calibrar. Podés arrastrar las dos zonas directamente sobre la imagen; el visor muestra el mismo encuadre y animación usados en Dance Battle.</p></div>
+<div class="motion-pose-selection">
+<label for="motionCharacter">Personaje<select id="motionCharacter"><option value="rina">Rina</option><option value="daisy">Daisy</option></select></label>
+<label for="motionPose">Pose<select id="motionPose"></select></label>
+</div>
 <div class="scene"><div id="motionStage"><canvas id="motionPreview" width="210" height="280" aria-label="Retrato animado"></canvas>
 <svg id="zoneOverlay" viewBox="0 0 210 280" preserveAspectRatio="none" aria-hidden="true">
 <ellipse id="zoneLeft"/><ellipse id="zoneRight"/>
@@ -103,11 +111,12 @@ details{border-top:1px solid #8f50944d;padding:12px 15px}summary{cursor:pointer;
 <button class="btn muted" id="motionImport" type="button">Importar JSON</button>
 <button class="btn muted" id="motionReset" type="button">Restablecer</button>
 </div>
-<p class="note" style="padding:0 15px">Aplicar guarda los valores solo en este dispositivo para que los puedas probar en Free Play. Copiá el JSON y envíamelo para convertirlos en los nuevos valores predeterminados del juego.</p>
+<p class="note" style="padding:0 15px">Aplicar guarda solo los valores de la pose seleccionada en este navegador. Podés probarla en Free Play; luego copiá el JSON y enviámelo para fijar el ajuste en el repositorio.</p>
 </section>
 </main>
 <script src="/rpg_sprite_inflate.js?v=motion-lab-20261107"></script>
 <script src="/rpg_sprite_deformer.js?v=motion-lab-v6-dialogue-20261107"></script>
-<script src="/rpg_sprite_motion_lab.js?v=motion-lab-v5-dialogue-20261107"></script>
+<script src="/rpg_dance_pose_controller.js?v=rina-pose-tuning-v7-20261107"></script>
+<script src="/rpg_sprite_motion_lab.js?v=rina-pose-editor-v7-20261107"></script>
 </body>
 </html>
