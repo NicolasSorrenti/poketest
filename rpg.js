@@ -90,7 +90,7 @@ const MIA_FIRST_TIME={
 };
 LIVE_EVENT_ART[MIA_FIRST_TIME.id]='/rpg-assets/characters/lyla/events/mia/mia_first_time.png';
 const miaStoryIds=MIA_IDS||new Set();
-const MIA_SCENE_SLOT=Object.fromEntries((window.NeoRpgLiveCampaignContent?.MIA_EVENTS||[]).map(e=>[e.id,e.id==='mia_wine_evening'||e.id==='mia_wine_giggly'?2:e.id==='mia_daytime_nap_return'?2:0]));
+const MIA_SCENE_SLOT=Object.fromEntries((window.NeoRpgLiveCampaignContent?.MIA_EVENTS||[]).map(e=>[e.id,Number.isInteger(e.slot)?e.slot:0]));
 const MIA_SCENE_PREV=Object.fromEntries((window.NeoRpgLiveCampaignContent?.MIA_EVENTS||[]).map(e=>[e.id,Object.keys(e.trigger||{}).length===1?e.trigger.eventSeen:null]));
 function miaRomanceGossip(){return !!(state.mandatoryEventState?.seen?.live_glance_next_morning||state.liveSpecialSeen?.live_glance_next_morning);}
 const MIA_GOSSIP_EXTRA='/rpg-assets/characters/lyla/events/mia/a_highly_detailed_anime_style_illustration_of_the.png';
@@ -529,7 +529,7 @@ function maybeStartMandatory(){
   const due=MIA_EVENTS.filter(e=>state.day>=e.earliestDay&&state.slot>=(e.id==='mia_daytime_nap_return'?2:MIA_SCENE_SLOT[e.id])&&
    !!seen[MIA_SCENE_PREV[e.id]]&&!seen[e.id]&&
    (e.id==='mia_daytime_nap_return'?
-      state.day===Number(state.miaLastSceneDay)&&state.slot>Number(state.miaLastSceneSlot):
+      state.day>=Number(state.miaLastSceneDay)&&state.slot===2&&state.day<=Number(state.miaLastSceneDay)+2:
       Number(state.miaLastSceneDay)!==state.day)).sort((a,b)=>a.earliestDay-b.earliestDay);
   if(due.length){
    const event=due[0],m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
