@@ -1511,3 +1511,18 @@ Exactly five printings: **neo2-27 Politoed**, **neo2-28 Poliwrath**, **neo2-29 S
 - **neo2-31 Tyranitar:** Slam two coins; Trample registration uses an exact attack signature shared with neo2-12, and the live reducer flips for each Pokémon on *both* Benches and applies 30 on heads. Scenario: 0–5 Bench each side, heads/tails, multiple simultaneous Bench KOs, Prize ordering, defender KO and turn ownership.
 
 **Evidence limits:** TCGdex-imported catalogue descriptions were inspected; independent printed images, errata and historical rulings were not certified. GitHub connector gives source only; no executable repository checkout was available and **zero** headless reducer battle sequences were run. No test files/scripts/CI, new PRs, legacy modifications or Apex modifications. No gameplay change made without conclusive full-path proof. Ledger: **1 fully verified, 559 partial, 563 unreviewed; 1,122 not fully verified**.
+
+
+## 2026-11-07 — Five Neo Discovery printings (source-only)
+
+Scope: `neo2-32` Umbreon, `neo2-34` Ursaring, `neo2-35` Wobbuffet, `neo2-36` Yanma, `neo2-37` Corsola. All **PARTIAL**. Live path: `rpg_duel_bridge.js` (RPG result/receipt) and `classic_local_service.js` (session authority) -> `headless_duel.js` -> `attack_effects_core.js` -> `neo_attack_batch_v048.js` / `neo_attack_batch_v049.js` or generic effect compiler. No legacy reducer considered. Node executable checkout unavailable from GitHub-only access; **zero reducer scenarios executed**. Imported TCGdex catalogue reviewed; independent printed-image errata and historical ruling comparison remains pending.
+
+| ID | Source evidence and battle-state scenario still requiring execution |
+| --- | --- |
+| neo2-32 | Quick Attack coin 10/30 generic coin-bonus; Pursuit neo49:pursuit sets defender marker, retreat() applies 10 before Energy payment, KO/promotion branch. Check source identity, switching, damage KO, turn ownership. |
+| neo2-34 | Headpress coin tails must do no damage, heads 20 and Paralysis; Double Lariat two coins at 40 per heads. Verify zero/one/two heads and prevention/KO. |
+| neo2-35 | Counter neo49:counter stores reactive effect, retaliates on heads if opponent attack deals damage, including Wobbuffet KO. Inspect attacker target, weakness/resistance, damage modifiers and simultaneous KO Prize order. |
+| neo2-36 | Shockwave neo48:shockwave flips for 10 to opponent Active and Bench then forces opponent-chosen promotion even on tails; Swift 30 ignores Weakness, Resistance, Powers and defending effects. Check zero Bench, KO-before-switch, all-prevention bypass. |
+| neo2-37 | Recover requires discarding one attached Energy before removing all own damage; Spike Cannon 2 coins x30. Check cost selection, no Energy, healing cap, 0/1/2 heads, KO and turn. |
+
+For each scenario, construct legal evolved/Basic board state, attach the printed typed Energy costs, control coin outcomes and choices, observe turn owner, pending decision actor, Prize count and KO promotion. No gameplay patch is justified solely by unexecuted paths. No tests or CI infrastructure added.
