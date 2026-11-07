@@ -22080,7 +22080,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: live classic_trainer_core.js attaches Tool; headless_duel.js applies +20 damage to attacker on heads after positive attack damage, discards Tool on both flips. Check KO-before-trigger, attack prevention, opposing turn, defender identity, simultaneous KOs and Prizes; not executed. TCGdex imported text checked; independent errata/rulings pending."
+          ],
+          "scope": "Live-engine source path and imported card text only; no reducer execution or independent historical ruling verification"
         }
       ]
     },
@@ -22091,7 +22095,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: live classic_trainer_core.js prompts Energy from hand, shuffles into deck, flips, optionally searches 0–3 Basic Energy cards and reshuffles. Check no other Energy in hand, heads/tails, repeated decisions, hand-index changes, deck exhaustion; not executed. TCGdex imported text checked; independent errata/rulings pending."
+          ],
+          "scope": "Live-engine source path and imported card text only; no reducer execution or independent historical ruling verification"
         }
       ]
     },
@@ -22102,7 +22110,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: live headless_duel.js use_stadium limits each player to one use per turn, flips and optionally returns Basic Energy from own discard to hand; stadium replacement in classic_trainer_core.js. Check no discard Energy, both players, stadium replacement and stale pending choices; not executed. TCGdex imported text checked; independent errata/rulings pending."
+          ],
+          "scope": "Live-engine source path and imported card text only; no reducer execution or independent historical ruling verification"
         }
       ]
     },
@@ -22113,7 +22125,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: live headless_duel.js use_stadium checks once per turn, flips and draws one card on heads; classic_trainer_core.js handles stadium replacement. Check both players, no deck, KO/deck-out and replacement; not executed. TCGdex imported text checked; independent errata/rulings pending."
+          ],
+          "scope": "Live-engine source path and imported card text only; no reducer execution or independent historical ruling verification"
         }
       ]
     },
@@ -22124,7 +22140,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_trainer_core.js attaches Tool; headless_duel.js ignoreResistance applies to attack damage, finishTurn discards Magnifier at end of owner's turn. Check attacks to Active/Bench, switching, no-attack turn, Resistance Gym and existing Tool eligibility; not executed. TCGdex imported text checked; independent errata/rulings pending."
+          ],
+          "scope": "Live-engine source path and imported card text only; no reducer execution or independent historical ruling verification"
         }
       ]
     },
