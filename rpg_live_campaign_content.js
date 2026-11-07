@@ -46,6 +46,40 @@ const LIVE_EVENTS=[
  ]},
  {id:'live_waking_up_casual',title:'The Early Riser',kind:'season',priority:90,earliestDay:41,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_extra_exhaused_workout'},lines:[{speaker:'Narrator',text:"The apartment is quiet until Live appears in the kitchen, still sleepy."},{speaker:'Live',text:"Morning. I was hoping to get breakfast ready before you woke up."},{speaker:'Protagonist',text:"You can sleep in sometimes, you know."}],choices:[{label:'Spend a moment with Live',reply:"I know. I just like having someone to make breakfast for."}]},
  {id:'live_waking_up_lavender',title:'A Slow Start',kind:'season',priority:90,earliestDay:46,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',trigger:{eventSeen:'live_waking_up_casual'},lines:[{speaker:'Narrator',text:"Live emerges from her room with a sleepy smile."},{speaker:'Live',text:"I think the alarm clock and I have agreed to disagree today."},{speaker:'Protagonist',text:"Coffee?"}],choices:[{label:'Spend a moment with Live',reply:"Please. You're a lifesaver. And I promise I'll make the next pot."}]}
+ ,
+ {id:'live_workout_wake_scare',title:'Are You Breathing?',kind:'season',priority:90,
+  earliestDay:12,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',
+  trigger:{eventSeen:'live_home_welcome'},
+  lines:[
+   {speaker:'Narrator',text:'A quiet morning. You are still asleep when Live, fresh from her workout, leans over the bed to check on you.'},
+   {speaker:'Live',text:'Honey...? You are awfully quiet. I cannot even hear you breathing over the fan.'},
+   {speaker:'Narrator',text:'She leans closer, trying to hear you. The mattress shifts under her weight.'},
+   {speaker:'Live',text:'Oh, please, say something... Just one little snore would be fine!'},
+   {speaker:'Narrator',text:'The movement wakes you. You catch the familiar scent of Live\'s perfume and open your eyes.'},
+   {speaker:'Protagonist',text:'Live...? Is that your perfume? What happened?'},
+   {speaker:'Live',text:'Oh! You are awake! Thank goodness. I could not hear you breathe and frightened myself silly.'},
+   {speaker:'Protagonist',text:'I was sleeping. You were the one who woke me.'},
+   {speaker:'Live',text:'Then I owe you an apology... and breakfast! I am just so relieved you are all right.'}
+  ],
+  choices:[
+   {label:'Reassure her with a smile',reply:'Live finally relaxes and laughs at herself. "You really scared me for a moment. I am glad you are okay."'},
+   {label:'Tease her about the perfume',reply:'Live laughs. "That was not exactly the alarm clock I planned to use! Next time I will just say good morning."'}
+  ]},
+ {id:'live_cleaning_wake',title:'A Very Tidy Wake-Up',kind:'season',priority:90,
+  earliestDay:15,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',
+  trigger:{eventSeen:'live_home_welcome'},
+  lines:[
+   {speaker:'Narrator',text:'You wake to the faint swish of a cleaning cloth. Morning light fills the bedroom.'},
+   {speaker:'Narrator',text:'Live is wiping down a shelf, completely focused on making the room spotless.'},
+   {speaker:'Protagonist',text:'Morning, Live. How long have you been cleaning?'},
+   {speaker:'Live',text:'Oh! Good morning, sleepyhead. I was trying to finish before you woke up.'},
+   {speaker:'Protagonist',text:'You did not have to do that.'},
+   {speaker:'Live',text:'I know, honey. I just like making the place feel welcoming. Would you like breakfast?'}
+  ],
+  choices:[
+   {label:'Thank her and offer to help',reply:'"That is sweet of you," Live says, handing you a spare cloth.'},
+   {label:'Ask her to take a break',reply:'Live smiles. "All right. But only if you join me for some coffee."'}
+  ]}
 ];
 // Everyday apartment moments are replayable; they never join the one-time Live storyline.
 const REPEATABLE_LIVE_EVENTS=[
@@ -70,6 +104,9 @@ const LIVE_ROTATING_EVENTS=[...LIVE_EVENTS.filter(event=>event.id!=='live_home_w
 const LIVE_ROTATING_IDS=new Set(LIVE_ROTATING_EVENTS.map(event=>event.id));
 const LIVE_EVENT_ART={"live_clothe_washing":"/rpg-assets/characters/live/events/live_clothe_washing.jpg","live_cleaning":"/rpg-assets/characters/live/events/live_cleaning.jpg","live_cooking":"/rpg-assets/characters/live/events/live_cooking.jpg","live_library":"/rpg-assets/characters/live/events/live_library.jpg","live_sweater_bra":"/rpg-assets/characters/live/events/live_sweater_bra.jpg","live_home_welcome":"/rpg-assets/characters/live/events/live_couch_sweater.png","live_home_cooking":"/rpg-assets/characters/live/events/live_cooking_evening.png","live_home_reading":"/rpg-assets/characters/live/events/live_reading.png","live_home_relaxing":"/rpg-assets/characters/live/events/live_relaxing_sofa.png","live_brushing_teeth":"/rpg-assets/characters/live/events/live_brushing_teeth.png","live_getting_ready":"/rpg-assets/characters/live/events/live_getting_ready.png","live_cleaning_table":"/rpg-assets/characters/live/events/live_cleaning_table.png","live_vacuuming":"/rpg-assets/characters/live/events/live_vacuuming.png","live_laundry":"/rpg-assets/characters/live/events/live_laundry.png","live_workout_break":"/rpg-assets/characters/live/events/live_workout_break.png","live_workout_exhausted":"/rpg-assets/characters/live/events/live_workout_exhausted.png","live_extra_exhaused_workout":"/rpg-assets/characters/live/events/live_extra_exhaused_workout.jpg","live_waking_up_casual":"/rpg-assets/characters/live/events/live_waking_up_casual.png","live_waking_up_lavender":"/rpg-assets/characters/live/events/live_waking_up_lavender.png"};
 
+// The first wake-up switches CG after the player notices her perfume.
+LIVE_EVENT_ART.live_workout_wake_scare='/rpg-assets/characters/live/events/09_a_highly_detailed_polished_anime_style_illustrati.png';
+LIVE_EVENT_ART.live_cleaning_wake='/rpg-assets/characters/live/events/10_a_detailed_anime_style_illustration_clean_glossy.png';
 Object.assign(LIVE_EVENT_ART,LIVE_NEW.art);
 
 // Glance milestones are independent of the rotating apartment encounters.
