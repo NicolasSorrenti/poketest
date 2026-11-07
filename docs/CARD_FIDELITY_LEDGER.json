@@ -18468,13 +18468,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Squeeze",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source trace: Squeeze exact discovery:squeeze compiler gives 10 tails / 30 and Paralysis heads; Spike Barrage flips once per attached Energy via ctx.selfEnergy and +20 per heads. Inspect weakness, status, multi-coin, KO and Prize promotion. Source-only; no executable reducer run or independent printed/ruling verification."
+          ],
+          "scope": "Source-only PARTIAL; scenarios described, not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Spike Barrage",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source trace: Squeeze exact discovery:squeeze compiler gives 10 tails / 30 and Paralysis heads; Spike Barrage flips once per attached Energy via ctx.selfEnergy and +20 per heads. Inspect weakness, status, multi-coin, KO and Prize promotion. Source-only; no executable reducer run or independent printed/ruling verification."
+          ],
+          "scope": "Source-only PARTIAL; scenarios described, not executed."
         }
       ]
     },
@@ -18487,13 +18495,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Belly Drum",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source trace: Belly Drum uses neo49:belly-drum; prompts optional selection of up to 2 Basic Energy from deck only if 30 self-damage is nonlethal, applies self-damage and attaches then shuffles. Water Gun bonus must count extra Water-providing Energy beyond Water Water Colorless cost, max +20; compiler registration and mixed-energy allocation require deeper review. Source-only; no reducer run or independent rulings."
+          ],
+          "scope": "Source-only PARTIAL; scenarios described, not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source trace: Belly Drum uses neo49:belly-drum; prompts optional selection of up to 2 Basic Energy from deck only if 30 self-damage is nonlethal, applies self-damage and attaches then shuffles. Water Gun bonus must count extra Water-providing Energy beyond Water Water Colorless cost, max +20; compiler registration and mixed-energy allocation require deeper review. Source-only; no reducer run or independent rulings."
+          ],
+          "scope": "Source-only PARTIAL; scenarios described, not executed."
         }
       ]
     },
@@ -18506,13 +18522,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Skull Bash",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source trace: Skull Bash compiles flat 20. Dust Devil compiles discovery:dust-devil, spreads 10 to each non-Fighting Pokémon on both sides, including Active, with no Weakness/Resistance; catalogue loses Fighting symbol as 'non- Pokémon'. Verify shields, KOs, multiple Prize choices, and promotion. Source-only; printed/rulings unverified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios described, not executed."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Dust Devil",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source trace: Skull Bash compiles flat 20. Dust Devil compiles discovery:dust-devil, spreads 10 to each non-Fighting Pokémon on both sides, including Active, with no Weakness/Resistance; catalogue loses Fighting symbol as 'non- Pokémon'. Verify shields, KOs, multiple Prize choices, and promotion. Source-only; printed/rulings unverified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios described, not executed."
         }
       ]
     },
@@ -18525,7 +18549,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Fury Cutter",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source trace: Fury Cutter exact discovery:fury-cutter handler flips 4 coins and computes 10 base plus 0/10/20/40/80 for 0/1/2/3/4 heads. Verify coin sequencing, Sabrina ESP rerolls, modifiers, KO and turn ownership. Source-only; no reducer run or independent ruling verification."
+          ],
+          "scope": "Source-only PARTIAL; scenarios described, not executed."
         }
       ]
     },
@@ -18538,7 +18566,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source trace: Hidden Power is flat 10. Darkness Pokémon Power uses unownDarkness, requires exactly one neo2-47 across both players, own side and enabled Power; reduction applies to Darkness-type Active and spread damage, with status allowed. Verify multiple copies, Dark type interactions, spread, suppression, KOs and source/owner distinctions. Source-only; no reducer run or independent printed/ruling verification."
+          ],
+          "scope": "Source-only PARTIAL; scenarios described, not executed."
         },
         {
           "kind": "power",
@@ -18546,7 +18578,8 @@
           "name": "Darkness",
           "status": "partial",
           "evidence": [
-            "Source-only current RPG/Classic engine review (2026-11-06): headless_duel.js unownDarkness counts exact neo2-47 copies across both players and reduces damage by 30 after Weakness/Resistance; enabled permits status conditions. Scenarios: one/two Unown D, opponent's Darkness attacks, Bench damage, status lock, power suppression and KO. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending."
+            "Source-only current RPG/Classic engine review (2026-11-06): headless_duel.js unownDarkness counts exact neo2-47 copies across both players and reduces damage by 30 after Weakness/Resistance; enabled permits status conditions. Scenarios: one/two Unown D, opponent's Darkness attacks, Bench damage, status lock, power suppression and KO. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending.",
+            "2026-11-07 revisit: exact single-copy and damage-reduction paths inspected; still source-only, no execution."
           ],
           "scope": "Source-only PARTIAL; scenarios specified, not executed"
         }
