@@ -387,7 +387,14 @@ function openingReadiness(cardId,hand,apex=false){
   for(const move of moves){
    const cost=move.cost||[];
    if(!cost.length)readiness=Math.max(readiness,freeReadiness(move));
-   else if(canPayEnergy(cost,provided))readiness=Math.max(readiness,85);
+   else if(canPayEnergy(cost,provided)){
+    // An attachable Energy makes a move legal, not necessarily offensive.
+    // Apply the same opening damage/control distinction to one-Energy moves
+    // as to free moves; otherwise a Bench-only or zero-damage utility move
+    // incorrectly outranks a genuinely attacking opening Basic.
+    const moveValue=apex?Math.min(85,freeReadiness(move)+(freeReadiness(move)===70?15:0)):85;
+    readiness=Math.max(readiness,moveValue);
+   }
    else if(cost.some(t=>t!=='Colorless'&&(provided.includes(t)||provided.includes('Any'))))
     readiness=Math.max(readiness,30);
   }
