@@ -16,3 +16,6 @@
  #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-idle-canvas{display:none!important}
  #neoOverworldStoryDock #neoOverworldScenePeople .neo-ow-person>img{opacity:1!important}
 }
+
+:root[data-rpg-discreet="on"] #neoOverworldStoryDock .neo-ow-idle-canvas{display:none!important}
+:root[data-rpg-discreet="on"] #neoOverworldStoryDock .neo-ow-person>img{opacity:1!important}
