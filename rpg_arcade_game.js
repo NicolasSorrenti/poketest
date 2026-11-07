@@ -236,12 +236,12 @@ function open(options={}){
   }catch(error){console.warn('Ignoring invalid local Daisy Motion Lab settings',error);}
   return config;
  }
- // Dialogue-framed stage presentation: preserve each character's saved
- // local motion intensity/zones, but use the SAME 278% bust camera as the RPG
- // speech box for the base sprite and every expression/overworld alternative.
+ // Keep Daisy's PRIMARY illustration at the previously approved Motion Lab
+ // framing. Only alternate dialogue expressions use the 278% bust crop;
+// overworld and crouching poses select their own wider, pose-specific camera.
  const danceMotionSettings=isDaisy?daisyMotionConfig():null;
  const dancer=isDaisy?root.NeoRpgSpriteDeformer?.create?.($('.nc-actor-canvas'),{
-  ...danceMotionSettings,cameraMode:'viewport',cameraFit:'dialogue-bust',dialogueBustScale:2.78
+  ...danceMotionSettings,cameraMode:'viewport',cameraFit:'full-width'
  }):null;
  const dancePoses=isDaisy?root.NeoRpgDancePoseController?.create?.($('.nc-dance-actor'),{
   characterId:'daisy',baseCanvas:$('.nc-actor-canvas'),bpm:136,leadMs:LEAD,
