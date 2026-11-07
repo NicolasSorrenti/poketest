@@ -279,7 +279,8 @@
    const comp=Math.round(30*framing*(.6+.4*panPenalty));
    const lightPoints=task.light===session.light?15:5;
    const timing=Math.round(20*currentMeter());
-   return clamp(posePoints+comp+lightPoints+timing,0,100);
+   return {score:clamp(posePoints+comp+lightPoints+timing,0,100),
+    pose:posePoints,framing:comp,light:lightPoints,moment:timing};
   }
   function showAlbum(){
    const stored=session.savedAlbum.filter(p=>p?.character==='barb');
@@ -321,24 +322,91 @@
    b.onclick=()=>{report.remove();$(shell,'.nps-main').hidden=false;$(shell,'.nps-bottom').hidden=false;$(shell,'.nps-goal').hidden=false;};
   }
   function snap(){
-   if(session.shots.length>=3||!loading.hidden)return;
+   if(session.reviewOpen||session.shots.length>=3||!loading.hidden)return;
    const task=session.tasks[session.shots.length];
-   const score=photoScore();
+   const points=photoScore();
    const shot={character:'barb',day:null,pose:session.poseId,framing:task.framing,
     light:session.light,zoom:Number(session.zoom.toFixed(2)),
-    x:Math.round(session.x),y:Math.round(session.y),score,task:task.name};
-   session.shots.push(shot);
-   const mini=$(shell,'[data-mini]');
-   mini.replaceChildren();
-   session.shots.forEach((p,i)=>{
-    const label=document.createElement('div');label.className='nps-mini-photo';
-    label.textContent='Shot '+(i+1)+' · '+p.score+'/100';mini.append(label);
-   });
-   $(shell,'[data-caption]').textContent=score>=85?
-    'Barb: "That looks fantastic! Show me!"':score>=65?
-    'Barb: "Hey, I like that one!"':'Barb: "We will try a better angle next time!"';
-   if(session.shots.length===3){setTimeout(()=>{if(!session.closed)showResult();},350);}
-   else{taskUI();setTimeout(()=>{if(!session.closed)setMood(session.tasks[session.shots.length].pose);},600);}
+    x:Math.round(session.x),y:Math.round(session.y),score:points.score,task:task.name};
+   showReview(shot,points);
+  }
+  function showReview(shot,points){
+   session.reviewOpen=true;
+   const review=document.createElement('div');
+   review.className='nps-review';
+   review.setAttribute('role','dialog');
+   review.setAttribute('aria-label','Review your photo');
+   review.innerHTML='<div class="nps-guide-card nps-review-card">'+
+    '<div class="nps-step-tag">PHOTO REVIEW · SHOT '+(session.shots.length+1)+' OF 3</div>'+
+    '<h3>'+points.score+' / 100 points</h3>'+
+    '<div class="nps-review-content">'+
+    '<div class="nps-review-preview" data-preview></div>'+
+    '<div><div class="nps-review-breakdown" data-breakdown></div>'+
+    '<p class="nps-review-message" data-review-message></p></div></div>'+
+    '<div class="nps-guide-actions">'+
+    '<button type="button" class="nps-btn" data-retry>↻ Try again</button>'+
+    '<button type="button" class="nps-btn nps-primary" data-keep>✓ Keep photo</button>'+
+    '</div></div>';
+   const preview=$(review,'[data-preview]');
+   preview.dataset.light=shot.light;
+   if(!shell.classList.contains('nps-discreet')){
+    const img=document.createElement('img');
+    img.src=pose(shot.pose).src;
+    img.alt='Your photo of Barb in the '+labels[shot.pose]+' pose';
+    img.style.transform='translate(calc(-50% + '+shot.x+'px),'+shot.y+'px) scale('+shot.zoom+')';
+    preview.append(img);
+   }else{
+    const symbol=document.createElement('div');
+    symbol.style.cssText='height:100%;display:grid;place-items:center;font-size:65px;color:#faf7ff';
+    symbol.textContent='◇';
+    preview.append(symbol);
+   }
+   const checks=[['Pose / expression',points.pose,35],
+    ['Zoom and composition',points.framing,30],
+    ['Lighting',points.light,15],
+    ['Shutter moment',points.moment,20]];
+   const list=$(review,'[data-breakdown]');
+   for(const [label,value,max] of checks){
+    const row=document.createElement('div');
+    const name=document.createElement('span');
+    name.textContent=label;
+    const score=document.createElement('strong');
+    score.textContent=value+' / '+max;
+    row.append(name,score);
+    list.append(row);
+   }
+   const weakest=checks.slice().sort((a,b)=>a[1]/a[2]-b[1]/b[2])[0];
+   $(review,'[data-review-message]').textContent=points.score>=85?
+    'Barb: "That one is great! Can we keep it?" You can keep it or practice again.':
+    points.score>=65?
+    'Nice shot! You could improve the '+weakest[0].toLowerCase()+' for a higher score.':
+    'Almost there! The biggest improvement would be '+weakest[0].toLowerCase()+'. Try again—there is no penalty.';
+   $(shell,'.nps-shell').append(review);
+   $(review,'[data-retry]').onclick=()=>{session.reviewOpen=false;review.remove();updateFeedback();};
+   $(review,'[data-keep]').onclick=()=>{
+    session.reviewOpen=false;review.remove();
+    session.shots.push(shot);
+    const mini=$(shell,'[data-mini]');
+    mini.replaceChildren();
+    session.shots.forEach((p,i)=>{
+     const label=document.createElement('div');
+     label.className='nps-mini-photo';
+     label.textContent='Photo '+(i+1)+' · '+p.score+'/100';
+     mini.append(label);
+    });
+    $(shell,'[data-caption]').textContent=shot.score>=85?
+     'Barb: "That looks fantastic! Show me!"':shot.score>=65?
+     'Barb: "Hey, I like that one!"':'Barb: "We can try a new angle next time!"';
+    if(session.shots.length===3){showResult();}
+    else{
+     taskUI();
+     // Do not auto-solve the next brief: give the player a reason to choose a new pose.
+     const next=session.tasks[session.shots.length];
+     const reset=pose(next.pose).kind==='candid'?'walking':'neutral';
+     setMood(reset);
+    }
+   };
+   $(review,'[data-retry]').focus();
   }
   function showResult(){
    const average=Math.round(session.shots.reduce((n,x)=>n+x.score,0)/3);
