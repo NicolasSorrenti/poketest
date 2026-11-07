@@ -240,5 +240,21 @@ const MIA_EVENTS=MIA_SCENES.map(e=>({
 }));
 const MIA_IDS=new Set(MIA_EVENTS.map(e=>e.id));
 
-window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
+// Standalone, one-time Mia conversation. The final sections remain non-explicit
+// and deliberately do not reference artwork depicting sexual activity.
+const MIA_PRIVATE_EVENT={
+ id:'mia_private_conversation',title:'Something Mia Wants to Say',
+ kind:'season',priority:110,earliestDay:1,delivery:'world',
+ timeCost:0,expiry:'never',fallback:'queue',
+ trigger:{eventSeen:'mia_gossip'},
+ lines:[{speaker:'Mia',text:'There is something I have wanted to ask you.'}],
+ choices:[
+  {label:'Keep this between us',reply:'Mia nods. The conversation will stay between you.',flag:'mia_private_kept'},
+  {label:'Give us more time',reply:'Mia understands. There is no rush.',flag:'mia_private_paused'}
+ ]
+};
+const MIA_PRIVATE_ART=MIA_BASE+'part1.png';
+
+
+window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
 })();
