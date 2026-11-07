@@ -233,7 +233,9 @@ function open(options={}){
  // Use the local motion-lab tuning only in Daisy Dance Battle.
  function danceMotionConfig(){
   if(isRina){
-   const config={
+   // Use the same saved defaults exposed to Motion Lab by the pose
+   // controller; avoid a second, drifting copy of Primary's mask.
+   const config=root.NeoRpgDancePoseController?.previewConfig?.('rina','primary')||{
    source:'/rpg-assets/characters/rina/expressionsv2/neutral.png',
    width:210,height:280,fps:22,tempo:119,speed:.9,
    cameraMode:'viewport',cameraFit:'dialogue-bust',dialogueBustScale:2.78,
@@ -242,14 +244,14 @@ function open(options={}){
    intensity:.52,feverInflate:.65,
    // Independent, conservative starting profile for Rina's standing portrait.
    zones:[
-    {x:.34,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-.2,scaleX:0,scaleY:0,moveY:.012,phase:0},
-    {x:.67,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-3.14,scaleX:0,scaleY:0,moveY:.012,phase:-.04}
+    {x:.44,y:.835,rx:.2,ry:.15,inflateX:.1,inflateY:.055,inflatePhase:-.2,scaleX:0,scaleY:0,moveY:.031,phase:.78},
+    {x:.76,y:.815,rx:.145,ry:.118,inflateX:.145,inflateY:.22,inflatePhase:-3.14,scaleX:0,scaleY:0,moveY:.031,phase:-.04}
    ]
    };
    // The principal Rina portrait can also be calibrated independently from
    // the other poses; do not change Daisy's earlier Motion Lab settings.
    try{
-    const saved=JSON.parse(localStorage.getItem('neoRpgRinaDancePoseTuningV1')||'null')?.primary;
+    const saved=JSON.parse(localStorage.getItem('neoRpgRinaDancePoseTuningV2')||'null')?.primary;
     if(saved&&typeof saved==='object'){
      for(const k of ['tempo','speed','fps','baseBounce','feverBounce','tilt','intensity','feverInflate','cropTop','cropHeight']){
       if(saved[k]!==undefined&&Number.isFinite(Number(saved[k])))config[k]=Number(saved[k]);
