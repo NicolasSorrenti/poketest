@@ -1761,6 +1761,10 @@ function projectedAttackValue(active,defender,turnSerial=0,benchCount=null){
   // Forecast Active damage only: Bench-target attacks cannot hit it.
   const program=ATTACK.compile(attack);
   if(!program||program.kind==='bench-target'||!canPayEnergy(attack.cost||[],pool))continue;
+   // Switch-self attacks require a real Bench destination. Without one the
+   // authoritative reducer cannot execute the attack, so it must not make
+   // an Active or prospective replacement look attack-ready.
+   if(program.kind==='switch-self'&&benchCount===0)continue;
   // A once-used Gym attack is permanently unavailable; unlike cooldowns,
   // advancing the forecast turn cannot make this attack legal again.
   if(active.gymAttackOnce?.includes(i))continue;
