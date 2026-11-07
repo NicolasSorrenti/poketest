@@ -169,5 +169,60 @@ const LIVE_HOME_CHECKIN={id:'live_home_activity_checkin',title:'Still Home?',kin
 ],choices:[{label:'Leave now',reply:"I'll be here if you need anything."}]};
 const LIVE_HOME_CHECKIN_ART=['live_cleaning_table','live_vacuuming','live_laundry','live_getting_ready','live_workout_break'].map(name=>'/rpg-assets/characters/live/events/'+name+'.png');
 
-window.NeoRpgLiveCampaignContent=Object.freeze({LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
+
+// CG-only Mia and Live domestic stories. Filenames are the user-provided stems;
+// art can be added to this folder independently without adding Mia to the roster.
+const MIA_BASE='/rpg-assets/characters/lyla/events/mia/';
+const MIA_SCENES=[
+ {id:'mia_dancing_with_live',title:'Just One Dance',day:6,slot:0,after:'mia_first_time',image:'a_highly_detailed_anime_style_cg_scene_in_the_same',
+ lines:[['Narrator','Music spills out of the living room. Live is twirling Mia around with a huge grin.'],['Live','Come on, Mia! You used to love this song.'],['Mia','Mom! I was twelve!'],['Live','And you were a wonderful dancer then, too.'],['Mia','All right, one more spin. But only because you look so happy.'],['Narrator','Mia catches sight of you in the doorway and starts laughing.']],
+ choices:[['Applaud their performance','Mia takes an exaggerated bow while Live beams.'],['Ask who chose the song','Mia points at Live. "She still remembers every step!"']]},
+ {id:'mia_reading_hug',title:'One More Page',day:9,slot:1,after:'mia_dancing_with_live',image:'a_detailed_polished_anime_style_cg_of_the_two_wom',
+ lines:[['Narrator','Mia is absorbed in a novel on the sofa when Live comes up behind her and wraps her in a hug.'],['Mia','Mom, I am at the important part!'],['Live','I know. That is why I am being very quiet.'],['Mia','You just whispered directly into my ear.'],['Live','Then I will simply hug you quietly.'],['Mia','...Okay. But let me finish this chapter.']],
+ choices:[['Ask what Mia is reading','Mia lights up and promises to lend you the book once she is done.'],['Leave them to their book','Live gives you a grateful smile as Mia turns the page.']]},
+ {id:'mia_pokemon_lesson',title:'A Lesson in Pokémon',day:12,slot:1,after:'mia_reading_hug',image:'anime_style_illustration_of_two_adult_women_live',
+ lines:[['Narrator','You arrive to find a few Pokémon cards spread across the coffee table. Mia is explaining them to Live.'],['Mia','See, Mom? You attach Energy before your Pokémon can use most attacks.'],['Live','But why does this little one need three just to bite?'],['Mia','Because that is the game! Not because its teeth are expensive.'],['Live','Oh, I see! Well, almost. Can you show me again?'],['Mia','Maybe you should teach us the rest.']],
+ choices:[['Explain a simple attack','Live nods seriously. "Now that makes sense. I think."'],['Suggest a friendly practice match','Mia grins. "Careful. She might become our toughest opponent."']]},
+ {id:'mia_christmas_memories',title:'A Christmas Wish',day:35,slot:0,after:'mia_pokemon_lesson',image:'risas_navideñas_junto_al_álbum_de_fotos',
+ lines:[['Narrator','Live and Mia have dug out an old family photo album and decided to play at having Christmas early.'],['Live','Remember how we used to make wishes while looking through the holiday photographs?'],['Mia','I remember you always pretending not to hear mine!'],['Live','That is because a wish is supposed to be a secret.'],['Mia','Then here is mine: more afternoons like this, together.'],['Live','Oh, sweetheart. That is my wish too.']],
+ choices:[['Wish them a happy pretend Christmas','Mia laughs. "Best imaginary holiday ever."'],['Ask to see an old photo','Live turns a page and tells you the story behind a familiar smile.']]},
+ {id:'mia_christmas_costumes',title:'The Holiday Tradition',day:38,slot:0,after:'mia_christmas_memories',image:'a_cozy_christmas_living_room_scene_the_two_women',
+ lines:[['Narrator','The Christmas game has become a full production: Mia and Live are dressed in festive clothes.'],['Mia','If we are pretending it is Christmas, we have to do it properly!'],['Live','And we each get another wish. Ready?'],['Mia','I wish we never get too busy to do silly things together.'],['Live','That one I can help make come true.'],['Narrator','They close their eyes, make their wishes, and burst out laughing.']],
+ choices:[['Join their holiday game','Mia declares you an honorary guest at the imaginary celebration.'],['Compliment their outfits','Live laughs. "Mia planned every last detail."']]},
+ {id:'mia_christmas_hug',title:'The Best Present',day:41,slot:0,after:'mia_christmas_costumes',image:'a_warm_detailed_anime_style_illustration_of_two_a',
+ lines:[['Narrator','The album lies open again. Mia pauses at a photograph from years ago.'],['Mia','It is strange how much changes, but this still feels the same.'],['Live','Because we still have each other.'],['Mia','Come here, Mom.'],['Narrator','They share a long, affectionate hug, remembering all the happy holidays they have spent together.'],['Live','This is all the Christmas present I need.']],
+ choices:[['Tell them it is a lovely tradition','Mia smiles. "We should keep it going."'],['Give them a quiet moment','You leave them laughing over the album together.']]},
+ {id:'mia_gossip',title:'Mother-Daughter Gossip',day:18,slot:1,after:'mia_pokemon_lesson',image:'a_detailed_anime_style_illustration_cg_scene_two',
+ lines:[['Narrator','Live and Mia are talking in hushed voices on the couch. They both look up when you walk in.'],['Mia','Oh, perfect timing. We were just talking about you!'],['Live','Mia, please! It was nothing important.'],['Mia','That is exactly what makes it fun.'],['Live','We were only wondering how your day has gone.']],
+ choices:[['Ask what they were saying','Mia grins. "You will never know." Live looks relieved.'],['Tell them about your day','The three of you end up exchanging stories and laughing.']]},
+ {id:'mia_surprise_hug',title:'Caught by a Hug',day:22,slot:1,after:'mia_gossip',image:'a_detailed_high_quality_anime_style_illustration',
+ lines:[['Narrator','Mia is looking for something on the living room table when Live hugs her from behind.'],['Mia','Mom! I nearly dropped everything.'],['Live','Sorry, sweetheart. I just wanted a hug.'],['Mia','You could ask, you know.'],['Live','Would you say yes?'],['Mia','...Probably.']],
+ choices:[['Laugh with them','Mia rolls her eyes, but she is smiling.'],['Give them a moment','You head for the kitchen while they finish their hug.']]},
+ {id:'mia_wine_evening',title:'An Evening Toast',day:46,slot:2,after:'mia_surprise_hug',image:'a_detailed_anime_style_illustration_of_the_same_tw',
+ lines:[['Narrator','Live and Mia, both adults, are enjoying a little wine with dinner.'],['Live','To a rare evening when neither of us has anywhere to rush off to.'],['Mia','And to you finally letting me choose the music.'],['Live','Within reason!'],['Narrator','They clink glasses and share a laugh.']],
+ choices:[['Toast to their evening','Mia raises her glass with a cheerful smile.'],['Offer some water and snacks','Live thanks you and makes room at the table.']]},
+ {id:'mia_wine_giggly',title:'The Longest Story',day:49,slot:2,after:'mia_wine_evening',image:'a_detailed_anime_style_illustration_the_same_two',
+ lines:[['Narrator','Another quiet evening has left Live and Mia a little tipsy and extremely talkative.'],['Mia','No, no, you are telling the story wrong!'],['Live','I was there! I know how it happened!'],['Mia','You were laughing too hard to see anything.'],['Narrator','Both of them dissolve into laughter before either can finish the story.'],['Live','All right. I think we have had enough wine for tonight.']],
+ choices:[['Bring them water','Mia thanks you. "Good idea. Tomorrow we can finish arguing."'],['Suggest calling it a night','Live nods. "Excellent plan. Sofa first, then bed."']]},
+ {id:'mia_wine_sleep',title:'The Morning After',day:50,slot:0,after:'mia_wine_giggly',image:'a_detailed_anime_style_illustration_two_adult_wom',
+ lines:[['Narrator','You come into the living room and find Live and Mia asleep on the same sofa, blankets and cushions all askew.'],['Narrator','They must have fallen asleep halfway through their conversation.'],['Mia','Mmm... five more minutes...'],['Live','You said that last night, dear...'],['Narrator','Neither opens her eyes. Apparently the sofa has won.']],
+ choices:[['Quietly straighten a blanket','You make them a little more comfortable and head to the kitchen.'],['Let them sleep','You tiptoe away before either of them wakes up.']]},
+ {id:'mia_daytime_nap',title:'The Sleepy Afternoon',day:56,slot:1,after:'mia_wine_sleep',image:'a_cozy_detailed_anime_style_illustration_of_the_s',
+ lines:[['Narrator','In broad daylight, you find Live and Mia napping together on the living room sofa.'],['Narrator','A forgotten movie is still playing quietly on the television.'],['Live','Mmm... turn the volume down, please...'],['Mia','...We are still watching...'],['Narrator','It seems neither of them intends to move any time soon.']],
+ choices:[['Turn down the television','The living room goes quiet. Neither sleeper stirs.'],['Leave them to rest','You close the door gently and let them enjoy their nap.']]},
+ {id:'mia_daytime_nap_return',title:'Still on the Sofa',day:56,slot:2,after:'mia_daytime_nap',image:'a_cozy_living_room_morning_next_day_scene_with_two',
+ lines:[['Narrator','You return later and discover that Live and Mia are still sprawled across the same sofa, now in even more disarray.'],['Mia','Did we miss the end of the movie?'],['Live','...I think we missed the whole afternoon.'],['Mia','We are terrible at movie nights.'],['Live','But very good at resting together.'],['Narrator','They exchange a sleepy laugh before finally getting up.']],
+ choices:[['Offer to put the kettle on','Live yawns. "Tea sounds wonderful."'],['Tease them about the movie','Mia laughs. "Next time we will actually watch it!"']]}
+];
+const MIA_EVENT_ART=Object.fromEntries(MIA_SCENES.map(e=>[e.id,MIA_BASE+e.image+'.png']));
+const MIA_EVENTS=MIA_SCENES.map(e=>({
+ id:e.id,title:e.title,kind:'season',priority:97,earliestDay:e.day,
+ delivery:'world',timeCost:0,expiry:'never',fallback:'queue',
+ trigger:{eventSeen:e.after},
+ lines:e.lines.map(([speaker,text])=>({speaker,text})),
+ choices:e.choices.map(([label,reply],i)=>({label,reply,flag:e.id+'_choice_'+i}))
+}));
+const MIA_IDS=new Set(MIA_EVENTS.map(e=>e.id));
+
+window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
 })();
