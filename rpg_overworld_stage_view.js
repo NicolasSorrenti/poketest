@@ -10,7 +10,7 @@
   'mandatoryChoice','storyChoice','sliceChoice','sideChoice','arcChoice',
   'encounterChoice','situationChoice','sideDuel','sidePause','dateBook',
   'dateActivity','dateSlot','book','socialPlan','dateInvite','flirt',
-  'eventInvite','eventChat'
+  'eventInvite','eventChat','photoAccept','photoLater'
  ]);
  function render({document:doc,model,onAction,onContinue,onCommand}){
   if(!doc||!model)return false;
