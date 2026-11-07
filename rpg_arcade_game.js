@@ -202,7 +202,7 @@ function open(options={}){
  active=session;
  const asClock=ms=>{const n=Math.floor(ms/1000);return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
  $('.nc-progress-text').textContent='0:00 / '+asClock(session.duration);
- const dancer=isDaisy?setupDaisyActor($('.nc-actor-canvas')):null;
+ const dancer=isDaisy?root.NeoRpgSpriteDeformer?.create?.($('.nc-actor-canvas'),{preset:'daisyDance'}):null;
 
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
  function resetCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(2,root.devicePixelRatio||1);const w=Math.max(1,Math.floor(r.width*dpr)),h=Math.max(1,Math.floor(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}if(notesCanvas.width!==w||notesCanvas.height!==h){notesCanvas.width=w;notesCanvas.height=h;}ctx.setTransform(w/800,0,0,h/445,0,0);notesCtx.setTransform(w/800,0,0,h/445,0,0);}
@@ -346,60 +346,7 @@ function open(options={}){
  $('.nc-start').addEventListener('click',()=>{if(session.playing||session.finished)return;session.playing=true;$('.nc-overlay').hidden=true;session.start=performance.now();session.audio=startArcadeAudio(isDaisy?136:60000/STEP,LEAD);session.frame=requestAnimationFrame(frame);hud();},{once:true});
  scene(0);$('.nc-start').focus();return true;
 }
-// A bounded, continuous inverse-warp on the *existing* Daisy sprite.
- // No disconnected pieces, no external music, and no change to RPG rewards.
- function setupDaisyActor(canvas){
-  const c=canvas.getContext('2d',{alpha:true});
-  if(!c)return {render(){},dispose(){}};
-  const src=document.createElement('canvas'),sc=src.getContext('2d',{willReadFrequently:true});
-  const out=document.createElement('canvas'),oc=out.getContext('2d');
-  const img=new Image();let original=null,ready=false,last=-Infinity,disposed=false;
-  const W=210,H=280;
-  canvas.width=W;canvas.height=H;src.width=out.width=W;src.height=out.height=H;
-  img.onload=()=>{
-   if(disposed)return;
-   sc.clearRect(0,0,W,H);
-   // Original RPG art; portrait crop favors the face and upper body.
-   const cropH=img.naturalHeight*.90,cropW=Math.min(img.naturalWidth,cropH*W/H);
-   sc.drawImage(img,(img.naturalWidth-cropW)/2,0,cropW,cropH,0,0,W,H);
-   original=sc.getImageData(0,0,W,H);ready=true;
-  };
-  img.onerror=()=>{if(!disposed&&!img.src.includes('/portraits/primary.png'))img.src='/rpg-assets/characters/daisy/portraits/primary.png';};
-  // Always use the repo's canonical Daisy portrait. Older locally imported
-  // sprites must never silently override this approved game artwork.
-  img.src='/rpg-assets/characters/daisy/portraits/primary.png';
-  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
-  const mask=(nx,ny,z)=>{const r=Math.hypot((nx-z.x)/z.rx,(ny-z.y)/z.ry);return r>=1?0:(1-smooth(Math.max(0,(r-.45)/.55)))**2;};
-  function render(ms,fever=0){
-   if(!ready||disposed||ms-last<45)return;last=ms;
-   const phase=ms*.001*136/60*Math.PI*.93;
-   const data=new ImageData(new Uint8ClampedArray(original.data),W,H),dst=data.data,sp=original.data;
-   // Centers calibrated against the approved Daisy chest-zone reference.
-   // With the new portrait (full image, not cropped), the region is below the face.
-   // Move the local deformation UP to the upper chest. Keep face and waist untouched.
-   const L={x:.385,y:.49,rx:.158,ry:.108},R={x:.620,y:.49,rx:.158,ry:.108};
-   const bp=Math.sin(2*phase-.5),pL=Math.sin(2*phase-.4),pR=Math.sin(2*phase-.68);
-   for(let y=Math.floor(H*.37);y<Math.ceil(H*.61);y++){const ny=(y+.5)/H;for(let x=Math.floor(W*.19);x<Math.ceil(W*.81);x++){
-    const nx=(x+.5)/W,wl=mask(nx,ny,L),wr=mask(nx,ny,R);
-    // Continuous inverse warp, confined to the two marked upper-torso zones.
-    const dx=.008*3*bp*(wl*(nx-L.x)/L.rx+wr*(nx-R.x)/R.rx);
-    const dy=.009*(wl*pL+wr*pR)+.004*bp*(wl*(ny-L.y)/L.ry+wr*(ny-R.y)/R.ry);
-    const sx=Math.max(0,Math.min(W-1,(nx-dx)*W)),sy=Math.max(0,Math.min(H-1,(ny-dy)*H));
-    const x0=Math.floor(sx),y0=Math.floor(sy),x1=Math.min(W-1,x0+1),y1=Math.min(H-1,y0+1);
-    const tx=sx-x0,ty=sy-y0,i=(y*W+x)*4;
-    for(let k=0;k<4;k++){const a=sp[(y0*W+x0)*4+k],b=sp[(y0*W+x1)*4+k],d=sp[(y1*W+x0)*4+k],e=sp[(y1*W+x1)*4+k];dst[i+k]=(a*(1-tx)+b*tx)*(1-ty)+(d*(1-tx)+e*tx)*ty;}
-   }}
-   oc.putImageData(data,0,0);
-   c.clearRect(0,0,W,H);
-   // Fever builds the vertical dance energy; the viewport stays fixed at the approved waist-up crop.
-   // Keep the movement bounded in sprite pixels so the face remains inside the camera at max Fever.
-   const feverLevel=Math.max(0,Math.min(1,fever));
-   const bounceAmplitude=2.7+5.5*feverLevel;
-   const bounce=Math.sin(2*phase)*bounceAmplitude;
-   const tilt=Math.sin(phase)*.018;
-   c.save();c.translate(W/2,H*.54+bounce);c.rotate(tilt);c.drawImage(out,-W/2,-H*.54,W,H);c.restore();
-  }
-  return {render,setSource(value){ready=false;last=-Infinity;img.src=value;},dispose(){disposed=true;img.onload=img.onerror=null;}};
- }
+// Character deformation is owned by rpg_sprite_deformer.js. The arcade
+// supplies elapsed time and Fever only; other modes can reuse the same API.
  root.NeoRpgArcadeGame=Object.freeze({open,isOpen:()=>!!active});
 })(window);
