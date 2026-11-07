@@ -322,7 +322,9 @@
    }
    if(session.closed||serial!==session.reactionSerial)return;
    session.reactionBusy=false;session.reaction=null;
-   status.textContent='The moment passed. Try another interaction.';
+   status.textContent=session.scripted?
+    session.name+': "Want me to pose again? Just ask."':
+    'The moment passed. Try another interaction.';
    await setMood('neutral',{fromReaction:true,silent:true});
    drawChoices();updateFeedback();
   }
@@ -424,8 +426,16 @@
    if(!task)return;
    $(shell,'[data-shotcount]').textContent='Shot '+(session.shots.length+1)+' / 3';
    $(shell,'[data-brief-index]').textContent=(session.shots.length+1)+' OF 3';
-   $(shell,'[data-goal]').textContent=task.name;
+   $(shell,'[data-goal]').textContent=session.scripted?
+    session.name+' requests: '+task.name:task.name;
    $(shell,'[data-hint]').textContent=task.hint;
+   if(session.scripted){
+    // Let the player concentrate on framing the requested detail.
+    // Lighting is automatically chosen for the character's scene.
+    session.light=task.light;
+    stage.dataset.light=session.light;
+    drawChoices();
+   }
    $(shell,'[data-score]').textContent=session.shots.reduce((v,p)=>v+p.score,0)+' pts';
    updateFeedback();
   }
@@ -434,7 +444,9 @@
     const r=session.reaction;
     if(!r?.highlight)return 0;
     const t=clamp((performance.now()-r.start)/r.duration,0,1);
-    return clamp(1-Math.abs(t-.47)*2.2,0,1);
+    return session.scripted?
+     clamp(1-Math.abs(t-.5)*.8,0,1):
+     clamp(1-Math.abs(t-.47)*2.2,0,1);
    }
    return .5+.5*Math.sin((performance.now()-session.begin)/620);
   }
@@ -447,7 +459,7 @@
    // Intentional vertical panning is necessary for close-ups; judge the
    // subject's actual focal position in the viewfinder instead of raw pan.
    const centered=frameAlignment(task.framing)>=.72;
-   const lightGood=session.light===task.light;
+   const lightGood=session.scripted||session.light===task.light;
    const momentGood=currentMeter()>=.78;
    const myFrame=session.zoom>=1.66?'Close-up':session.zoom>=1.23?'Medium':'Full body';
    function check(key,good,message){
@@ -467,6 +479,7 @@
    check('moment',momentGood,'Moment: '+(momentGood?'NOW!':reacting?'Trigger reaction':'Wait for bar'));
    let next;
    if(reacting&&!poseGood)next=session.reactionBusy?'Wait for '+labels[task.pose]+' to appear…':
+    session.scripted?'Press Repeat pose to see the requested moment again.':
     'Interact with '+session.name+'! Try '+REACTIONS.find(a=>a.id===task.action)?.label+'.';
    else if(!poseGood)next=pose(task.pose).kind!==session.mode?
     'First: switch to '+(pose(task.pose).kind==='candid'?'Candid':'Directed')+' mode, then choose '+labels[task.pose]+'.':
@@ -548,7 +561,7 @@
    const framing=clamp(1-Math.abs(session.zoom-frameZoom[task.framing])/1.1,0,1);
    const alignment=frameAlignment(task.framing);
    const comp=Math.round(30*framing*(.6+.4*alignment));
-   const lightPoints=task.light===session.light?15:5;
+   const lightPoints=session.scripted||task.light===session.light?15:5;
    const timing=Math.round(20*currentMeter());
    return {score:clamp(posePoints+comp+lightPoints+timing,0,100),
     pose:posePoints,framing:comp,light:lightPoints,moment:timing};
@@ -561,7 +574,7 @@
    const sceneRect=stage.getBoundingClientRect();
    if(!sceneRect.width||!sceneRect.height)throw Error('Camera is not visible');
    if(!backdrop.complete||!backdrop.naturalWidth)
-    throw Error('The park background is still loading. Please try SNAP again.');
+    throw Error('The location background is still loading. Please try SNAP again.');
    const ratio=Math.min(2,root.devicePixelRatio||1,1600/sceneRect.width);
    const full=document.createElement('canvas');
    full.width=Math.max(1,Math.round(sceneRect.width*ratio));
@@ -720,7 +733,7 @@
     preview.append(symbol);
    }
    const checks=[['Pose / expression',points.pose,35],
-    ['Zoom and composition',points.framing,30],
+    [session.scripted?'Requested detail':'Zoom and composition',points.framing,30],
     ['Lighting',points.light,15],
     ['Shutter moment',points.moment,20]];
    const list=$(review,'[data-breakdown]');
