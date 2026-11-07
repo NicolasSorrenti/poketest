@@ -1,0 +1,363 @@
+
+'use strict';
+// Neo Campus Photo Session. Render-only minigame. Only the RPG controller
+// awards credits, advances time, and saves metadata after a completed session.
+(function(root){
+ const BASE='/rpg-assets/characters/barb/';
+ const PORTRAIT=['neutral','happy','surprised','determined','irritated','vulnerable'];
+ const CANDID=['walking','chatting','lounge','back-view'];
+ const labels={
+  neutral:'Relaxed',happy:'Happy',surprised:'Surprised',determined:'Confident',
+  irritated:'Teasing',vulnerable:'Shy',walking:'Walking',chatting:'Chatting',
+  lounge:'Relaxing','back-view':'Looking away'
+ };
+ const captions={
+  neutral:'Barb: "How do you want me to stand?"',
+  happy:'Barb: "That is a smile you can keep!"',
+  surprised:'Barb: "You really surprised me there!"',
+  determined:'Barb: "Okay, serious model face. Got it!"',
+  irritated:'Barb: "That angle? You are kidding!"',
+  vulnerable:'Barb: "This one feels a little more personal."',
+  walking:'Barb: "I will walk by. Catch me when you are ready!"',
+  chatting:'Barb: "It is easier when we just talk!"',
+  lounge:'Barb: "Now this is how I like to relax."',
+  'back-view':'Barb: "The river looks lovely from here."'
+ };
+ const POSES=[...PORTRAIT.map(id=>({id,kind:'portrait',src:BASE+'expressionsv2/'+id+'.png'})),
+  ...CANDID.map(id=>({id,kind:'candid',src:BASE+'overworld/'+id+'.png'}))];
+ const TASKS=[
+  {name:'A joyful portrait',pose:'happy',framing:'close',light:'warm',
+   hint:'Catch a genuine smile up close with warm lighting.'},
+  {name:'A walk by the river',pose:'walking',framing:'full',light:'bright',
+   hint:'Capture Barb in motion, showing her full pose.'},
+  {name:'A relaxed afternoon',pose:'lounge',framing:'medium',light:'soft',
+   hint:'A calm medium shot, gently lit.'},
+  {name:'An unexpected reaction',pose:'surprised',framing:'close',light:'bright',
+   hint:'Get close and capture her surprise.'},
+  {name:'Casual conversation',pose:'chatting',framing:'medium',light:'warm',
+   hint:'Catch Barb chatting naturally in a medium shot.'},
+  {name:'Quiet confidence',pose:'determined',framing:'medium',light:'soft',
+   hint:'A composed portrait with soft lighting.'},
+  {name:'Riverside silhouette',pose:'back-view',framing:'full',light:'warm',
+   hint:'A scenic full-body shot from behind.'}
+ ];
+ const frameZoom={close:1.9,medium:1.42,full:1.06};
+ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+ const $=(el,q)=>el.querySelector(q);
+ let active=null;
+ function ensureStyle(){
+  if(document.getElementById('neo-photo-session-style'))return;
+  const link=document.createElement('link');
+  link.id='neo-photo-session-style';link.rel='stylesheet';
+  link.href='/rpg_photo_session.css?v=barb-photo-v1';
+  document.head.append(link);
+ }
+ function pickTasks(){
+  const sorted=[TASKS[0],TASKS[1],TASKS[2+Math.floor(Math.random()*(TASKS.length-2))]];
+  return sorted.sort(()=>Math.random()-.5);
+ }
+ function pose(id){return POSES.find(p=>p.id===id)||POSES[0];}
+ function open(options={}){
+  if(active||typeof document==='undefined')return false;
+  const npc=String(options.characterId||'barb').toLowerCase();
+  if(npc!=='barb')return false; // Only use assets inspected and approved for this character.
+  ensureStyle();
+  const session={
+   name:options.name||'Barb',freePlay:!!options.freePlay,
+   savedAlbum:Array.isArray(options.savedAlbum)?options.savedAlbum.slice(-24):[],
+   onCancel:options.onCancel,onComplete:options.onComplete,closed:false,
+   mode:'portrait',poseId:'neutral',light:'warm',zoom:1.3,x:0,y:0,shots:[],
+   tasks:pickTasks(),auto:false,imageSequence:0,clock:null,interval:null,
+   available:true,animation:null,begin:performance.now()
+  };
+  active=session;
+  const shell=document.createElement('div');
+  shell.className='nps-root';
+  shell.classList.toggle('nps-discreet',document.documentElement.dataset.rpgDiscreet==='on');
+  shell.setAttribute('role','dialog');shell.setAttribute('aria-modal','true');
+  shell.setAttribute('aria-label','Photo Session with Barb');
+  shell.innerHTML='<div class="nps-shell">'+
+   '<header class="nps-top"><div><div class="nps-kicker">NEO CAMPUS · RIVERSIDE PARK</div>'+
+   '<h2>📷 Photo Session · Barb</h2></div><div class="nps-top-right">'+
+   '<span data-shotcount>Shot 1 / 3</span><strong data-score>0 pts</strong>'+
+   '<button type="button" class="nps-btn nps-close" data-close>✕ Close</button></div></header>'+
+   '<div class="nps-goal"><strong data-goal>Preparing the camera…</strong><span data-hint></span></div>'+
+   '<div class="nps-main"><div class="nps-stage" data-stage data-light="warm">'+
+   '<img class="nps-actor" data-actor alt="Barb posing for the camera">'+
+   '<div class="nps-silhouette" aria-label="Character artwork hidden">◇</div>'+
+   '<div class="nps-frame" aria-hidden="true"></div><div class="nps-cross" aria-hidden="true"></div>'+
+   '<div class="nps-meter">✦ Perfect moment<div class="nps-meter-track"><span data-meter></span></div></div>'+
+   '<div class="nps-caption" data-caption>Barb: "Ready when you are!"</div>'+
+   '<div class="nps-loading" data-loading>Loading Barb’s artwork…</div></div>'+
+   '<div class="nps-controls">'+
+   '<section class="nps-section"><h3>📸 Session style</h3>'+
+   '<div class="nps-mode"><button class="nps-btn" data-mode="portrait">Directed</button>'+
+   '<button class="nps-btn" data-mode="candid">Candid</button></div>'+
+   '<div class="nps-camerarow"><button class="nps-btn" data-auto type="button">Auto poses: Off</button></div></section>'+
+   '<section class="nps-section"><h3>✦ Barb’s poses / moods</h3><div class="nps-choice-grid" data-poses></div></section>'+
+   '<section class="nps-section"><h3>☀ Lighting</h3><div class="nps-choice-grid">'+
+   '<button class="nps-btn" data-light="soft">Soft</button>'+
+   '<button class="nps-btn" data-light="warm">Warm</button>'+
+   '<button class="nps-btn" data-light="bright">Bright</button></div></section>'+
+   '<section class="nps-section"><h3>⊕ Camera zoom</h3>'+
+   '<div class="nps-camerarow"><button class="nps-btn" data-zoom-out type="button">−</button>'+
+   '<input aria-label="Camera zoom" data-zoom type="range" min="1" max="2.5" step=".01" value="1.3">'+
+   '<button class="nps-btn" data-zoom-in type="button">+</button></div>'+
+   '<p class="nps-hint">Drag the picture to pan. Mouse wheel, pinch or slider to zoom. Aim for the requested framing.</p>'+
+   '<button class="nps-btn" data-reset type="button">Reset camera</button></section></div></div>'+
+   '<footer class="nps-bottom"><div class="nps-mini-album" data-mini><div class="nps-mini-photo">3 shots to take</div></div>'+
+   '<div class="nps-snaps"><button class="nps-btn" data-album>View album</button>'+
+   '<button class="nps-btn nps-primary" data-snap>📷 SNAP!</button></div></footer></div>';
+  document.body.append(shell);
+  session.shell=shell;
+  const stage=$(shell,'[data-stage]'),actor=$(shell,'[data-actor]'),
+   loading=$(shell,'[data-loading]'),poseBox=$(shell,'[data-poses]'),
+   zoomInput=$(shell,'[data-zoom]');
+  function camera(){
+   actor.style.setProperty('--zoom',String(session.zoom));
+   actor.style.setProperty('--pan-x',session.x+'px');
+   actor.style.setProperty('--pan-y',session.y+'px');
+   const silhouette=$(shell,'.nps-silhouette');
+   silhouette.style.setProperty('--zoom',String(session.zoom));
+   silhouette.style.setProperty('--pan-x',session.x+'px');
+   silhouette.style.setProperty('--pan-y',session.y+'px');
+   zoomInput.value=String(session.zoom);
+  }
+  function setZoom(value){
+   session.zoom=clamp(Number(value)||1,1,2.5);camera();
+  }
+  function setMood(id){
+   const target=pose(id);
+   if(session.closed)return;
+   session.poseId=target.id;
+   session.mode=target.kind;
+   session.auto=false;
+   drawChoices();
+   $(shell,'[data-caption]').textContent=captions[target.id];
+   const seq=++session.imageSequence;
+   if(shell.classList.contains('nps-discreet')){loading.hidden=true;return;}
+   loading.hidden=false;
+   loading.textContent='Loading '+labels[target.id]+' pose…';
+   const image=new Image();
+   image.onload=()=>{
+    if(session.closed||session.imageSequence!==seq)return;
+    actor.src=target.src;
+    actor.alt='Barb: '+labels[target.id]+' pose';
+    loading.hidden=true;
+   };
+   image.onerror=()=>{
+    if(session.closed||session.imageSequence!==seq)return;
+    loading.hidden=true;
+    $(shell,'[data-caption]').textContent='This pose could not load. Choose another image.';
+   };
+   image.src=target.src;
+  }
+  function drawChoices(){
+   poseBox.replaceChildren();
+   $(shell,'[data-mode=portrait]').classList.toggle('is-selected',session.mode==='portrait');
+   $(shell,'[data-mode=candid]').classList.toggle('is-selected',session.mode==='candid');
+   const list=session.mode==='portrait'?PORTRAIT:CANDID;
+   for(const id of list){
+    const b=document.createElement('button');
+    b.type='button';b.className='nps-btn';
+    b.textContent=labels[id];b.classList.toggle('is-selected',id===session.poseId);
+    b.setAttribute('aria-pressed',String(id===session.poseId));
+    b.onclick=()=>setMood(id);
+    poseBox.append(b);
+   }
+   $(shell,'[data-auto]').textContent='Auto poses: '+(session.auto?'On':'Off');
+   for(const btn of shell.querySelectorAll('[data-light]')){
+    if(btn===stage)continue;
+    btn.classList.toggle('is-selected',btn.dataset.light===session.light);
+   }
+  }
+  function taskUI(){
+   const task=session.tasks[session.shots.length];
+   if(!task)return;
+   $(shell,'[data-shotcount]').textContent='Shot '+(session.shots.length+1)+' / 3';
+   $(shell,'[data-goal]').textContent=task.name+' · '+task.framing+' frame';
+   $(shell,'[data-hint]').textContent=task.hint;
+   $(shell,'[data-score]').textContent=session.shots.reduce((v,p)=>v+p.score,0)+' pts';
+  }
+  function currentMeter(){
+   return .5+.5*Math.sin((performance.now()-session.begin)/620);
+  }
+  function tick(){
+   if(session.closed)return;
+   $(shell,'[data-meter]').style.transform='scaleX('+currentMeter().toFixed(3)+')';
+   session.clock=requestAnimationFrame(tick);
+  }
+  function startAuto(){
+   if(session.interval)clearInterval(session.interval);
+   session.interval=setInterval(()=>{
+    if(session.closed||!session.auto||!document.body.contains(shell))return;
+    const pool=session.mode==='portrait'?PORTRAIT:CANDID;
+    let next=pool[(pool.indexOf(session.poseId)+1)%pool.length];
+    setMood(next);
+    session.auto=true;
+    drawChoices();
+   },3900);
+  }
+  function photoScore(){
+   const task=session.tasks[session.shots.length];
+   const selected=pose(session.poseId);
+   const posePoints=task.pose===selected.id?35:
+    pose(task.pose).kind===selected.kind?14:2;
+   const framing=clamp(1-Math.abs(session.zoom-frameZoom[task.framing])/1.1,0,1);
+   const panPenalty=clamp(1-Math.hypot(session.x,session.y)/Math.max(120,stage.clientWidth*.53),0,1);
+   const comp=Math.round(30*framing*(.6+.4*panPenalty));
+   const lightPoints=task.light===session.light?15:5;
+   const timing=Math.round(20*currentMeter());
+   return clamp(posePoints+comp+lightPoints+timing,0,100);
+  }
+  function showAlbum(){
+   const stored=session.savedAlbum.filter(p=>p?.character==='barb');
+   const combined=[...stored,...session.shots].slice(-24).reverse();
+   const report=document.createElement('div');
+   report.className='nps-report';
+   const title=document.createElement('h3');title.textContent='📸 Barb’s photo album';
+   const subtitle=document.createElement('p');
+   subtitle.textContent=combined.length?'Saved compositions and photographs from this session.':'No photos yet. Start shooting!';
+   report.append(title,subtitle);
+   const list=document.createElement('div');
+   list.className='nps-report-items';
+   combined.forEach(p=>{
+    const card=document.createElement('div');card.className='nps-score-card';
+    const strong=document.createElement('strong');strong.textContent=(p.score||0)+'/100';
+    const small=document.createElement('small');
+    small.textContent=(labels[p.pose]||'Photo')+' · '+(p.framing||'frame');
+    card.append(strong,small);
+    // Rebuild thumbnails from asset paths. Do not store large bitmap data in cloud saves.
+    if(!shell.classList.contains('nps-discreet')){
+     const image=document.createElement('img');image.src=pose(p.pose).src;
+     image.alt=labels[p.pose]||'Barb pose';
+     image.loading='lazy';
+     image.style.cssText='display:block;max-width:100px;height:115px;object-fit:contain;margin:0 auto 6px;';
+     card.prepend(image);
+    }
+    list.append(card);
+   });
+   report.append(list);
+   const b=document.createElement('button');
+   b.className='nps-btn';b.textContent='← Back to camera';
+   b.onclick=()=>report.remove();
+   report.append(b);
+   $(shell,'.nps-shell').append(report);
+   $(shell,'.nps-main').hidden=true;
+   $(shell,'.nps-bottom').hidden=true;
+   $(shell,'.nps-goal').hidden=true;
+   b.onclick=()=>{report.remove();$(shell,'.nps-main').hidden=false;$(shell,'.nps-bottom').hidden=false;$(shell,'.nps-goal').hidden=false;};
+  }
+  function snap(){
+   if(session.shots.length>=3||!loading.hidden)return;
+   const task=session.tasks[session.shots.length];
+   const score=photoScore();
+   const shot={character:'barb',day:null,pose:session.poseId,framing:task.framing,
+    light:session.light,zoom:Number(session.zoom.toFixed(2)),
+    x:Math.round(session.x),y:Math.round(session.y),score,task:task.name};
+   session.shots.push(shot);
+   const mini=$(shell,'[data-mini]');
+   mini.replaceChildren();
+   session.shots.forEach((p,i)=>{
+    const label=document.createElement('div');label.className='nps-mini-photo';
+    label.textContent='Shot '+(i+1)+' · '+p.score+'/100';mini.append(label);
+   });
+   $(shell,'[data-caption]').textContent=score>=85?
+    'Barb: "That looks fantastic! Show me!"':score>=65?
+    'Barb: "Hey, I like that one!"':'Barb: "We will try a better angle next time!"';
+   if(session.shots.length===3){setTimeout(()=>{if(!session.closed)showResult();},350);}
+   else{taskUI();setTimeout(()=>{if(!session.closed)setMood(session.tasks[session.shots.length].pose);},600);}
+  }
+  function showResult(){
+   const average=Math.round(session.shots.reduce((n,x)=>n+x.score,0)/3);
+   const creditReward=average>=85?14:average>=65?10:6;
+   const report=document.createElement('div');
+   report.className='nps-report';
+   report.innerHTML='<h3>Photo Session complete!</h3><p>Barb looks over the photos with you. Every picture has its own personality.</p>';
+   const cards=document.createElement('div');cards.className='nps-report-items';
+   for(const [label,value] of [['Average score',average+'/100'],['Best photo',Math.max(...session.shots.map(p=>p.score))+'/100'],
+    ['RPG reward',session.freePlay?'Free play':creditReward+' credits']]){
+    const div=document.createElement('div');div.className='nps-score-card';
+    const strong=document.createElement('strong');strong.textContent=value;
+    const small=document.createElement('small');small.textContent=label;
+    div.append(strong,small);cards.append(div);
+   }
+   report.append(cards);
+   const note=document.createElement('p');
+   note.textContent=session.freePlay?
+    'Practice only: no time, focus, credits or affection are changed.':
+    'Save the session to claim credits and your normal social activity rewards. Closing cancels without changes.';
+   report.append(note);
+   const buttons=document.createElement('div');buttons.className='nps-report-actions';
+   const cancel=document.createElement('button');cancel.className='nps-btn';cancel.textContent='Cancel (no rewards)';
+   cancel.onclick=()=>close(false);
+   const finish=document.createElement('button');finish.className='nps-btn nps-primary';
+   finish.textContent=session.freePlay?'Finish practice':'Save session and collect';
+   finish.onclick=()=>{
+    const result={average,credits:session.freePlay?0:creditReward,
+     photos:session.shots.map(p=>({...p})),characterId:'barb'};
+    close(true,result);
+   };
+   buttons.append(cancel,finish);report.append(buttons);
+   $(shell,'.nps-shell').append(report);
+   $(shell,'.nps-main').hidden=true;
+   $(shell,'.nps-bottom').hidden=true;
+   $(shell,'.nps-goal').hidden=true;
+  }
+  function close(completed,result){
+   if(session.closed)return;
+   session.closed=true;
+   cancelAnimationFrame(session.clock);
+   if(session.interval)clearInterval(session.interval);
+   shell.remove();
+   active=null;
+   try{if(completed)session.onComplete?.(result);else session.onCancel?.();}
+   catch(error){console.error('Photo Session callback error',error);
+    root.NeoRpgErrorReport?.capture?.(error,{source:'photo-minigame',action:'callback'});}
+  }
+  $(shell,'[data-close]').onclick=()=>close(false);
+  $(shell,'[data-snap]').onclick=snap;
+  $(shell,'[data-album]').onclick=showAlbum;
+  $(shell,'[data-reset]').onclick=()=>{session.x=0;session.y=0;setZoom(1.3);};
+  $(shell,'[data-zoom-out]').onclick=()=>setZoom(session.zoom-.15);
+  $(shell,'[data-zoom-in]').onclick=()=>setZoom(session.zoom+.15);
+  zoomInput.oninput=()=>setZoom(zoomInput.value);
+  $(shell,'[data-mode=portrait]').onclick=()=>{session.mode='portrait';setMood('neutral');};
+  $(shell,'[data-mode=candid]').onclick=()=>{session.mode='candid';setMood('walking');};
+  $(shell,'[data-auto]').onclick=()=>{session.auto=!session.auto;drawChoices();};
+  for(const b of shell.querySelectorAll('button[data-light]')){
+   b.onclick=()=>{session.light=b.dataset.light;stage.dataset.light=session.light;drawChoices();};
+  }
+  let pointer=null,pinchDist=0;
+  const pointers=new Map();
+  stage.addEventListener('pointerdown',e=>{
+   if(e.button!==undefined&&e.button!==0)return;
+   stage.setPointerCapture(e.pointerId);
+   pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+   pointer={x:e.clientX,y:e.clientY};
+  });
+  stage.addEventListener('pointermove',e=>{
+   if(!pointers.has(e.pointerId))return;
+   const last=pointers.get(e.pointerId);
+   pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+   if(pointers.size===2){
+    const p=[...pointers.values()];const dist=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);
+    if(pinchDist)setZoom(session.zoom+(dist-pinchDist)/220);
+    pinchDist=dist;return;
+   }
+   pinchDist=0;
+   session.x=clamp(session.x+e.clientX-last.x,-stage.clientWidth*.4,stage.clientWidth*.4);
+   session.y=clamp(session.y+e.clientY-last.y,-stage.clientHeight*.38,stage.clientHeight*.38);
+   camera();
+  });
+  const end=e=>{pointers.delete(e.pointerId);pinchDist=0;};
+  stage.addEventListener('pointerup',end);stage.addEventListener('pointercancel',end);
+  stage.addEventListener('wheel',e=>{e.preventDefault();setZoom(session.zoom+(e.deltaY>0?-.08:.08));},{passive:false});
+  shell.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close(false);}});
+  drawChoices();taskUI();camera();setMood(session.tasks[0].pose);startAuto();
+  session.clock=requestAnimationFrame(tick);
+  $(shell,'[data-snap]').focus();
+  return true;
+ }
+ root.NeoRpgPhotoSession=Object.freeze({open,isOpen:()=>!!active,poses:POSES.map(p=>({id:p.id,kind:p.kind,path:p.src}))});
+})(typeof window==='undefined'?null:window);
