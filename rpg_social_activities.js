@@ -11,22 +11,28 @@
   {id:'shop_deck_lab',place:'shop',title:'Build a deck together',tag:'strategy',tone:'rivalry',focus:12,credits:0,detail:'Compare opening hands and make each other rethink a risky play.'},
   {id:'shop_welcome',place:'shop',title:'Welcome a new player',tag:'community',tone:'friendship',focus:8,credits:0,detail:'Show a newcomer how to play without making them feel judged.'},
   {id:'shop_custom',place:'shop',title:'Customize deck sleeves',tag:'creative',tone:'friendship',focus:6,credits:5,detail:'Make a personalized deck case and trade design ideas.'},
+  {id:'shop_photo_session',place:'shop',photoSession:true,noDate:true,title:'Take photos together',tag:'creative',tone:'friendship',focus:8,credits:0,detail:'Photograph your companion at the card shop.'},
   {id:'arcade_highscore',place:'arcade',title:'Challenge the high score',tag:'competitive',tone:'rivalry',focus:12,credits:6,detail:'Try to beat each other at a rhythm and reflex challenge.'},
   {id:'arcade_coop',place:'arcade',title:'Play a chaotic co-op game',tag:'playful',tone:'friendship',focus:10,credits:6,detail:'Team up, improvise, and laugh at the resulting disaster.'},
   {id:'arcade_music',place:'arcade',title:'Make a music playlist',tag:'creative',tone:'friendship',focus:6,credits:0,detail:'Trade favorite tracks and create a soundtrack for the club.'},
+  {id:'arcade_photo_session',place:'arcade',photoSession:true,noDate:true,title:'Take photos together',tag:'playful',tone:'friendship',focus:8,credits:0,detail:'Photograph a lively moment in the arcade.'},
   {id:'park_riverside',place:'park',title:'Take a riverside walk',tag:'quiet',tone:'friendship',focus:5,credits:0,detail:'Unwind by the waterfront and talk about things beyond the circuit.'},
   {id:'park_explore',place:'park',title:'Explore the waterfront',tag:'adventure',tone:'friendship',focus:10,credits:0,detail:'Visit unfamiliar corners of Neo Harbor and find a new viewpoint.'},
   {id:'park_sketch',place:'park',title:'Sketch the riverside',tag:'creative',tone:'friendship',focus:7,credits:0,detail:'Make postcard-sized drawings of the view and exchange them.'},
-  {id:'park_photo_session',place:'park',npc:'barb',noDate:true,title:'Photo Session with Barb',tag:'playful',tone:'friendship',focus:8,credits:0,detail:'Direct and photograph Barb using her existing portraits and natural poses.'},
+  {id:'park_photo_session',place:'park',photoSession:true,noDate:true,title:'Take photos together',tag:'playful',tone:'friendship',focus:8,credits:0,detail:'Take three photos together and capture some unforgettable reactions.'},
   {id:'cafe_trade',place:'cafe',title:'Share a favorite card story',tag:'collection',tone:'friendship',focus:5,credits:5,detail:'Tell each other which card matters most and why.'},
   {id:'cafe_break',place:'cafe',title:'Take an unhurried break',tag:'quiet',tone:'friendship',focus:5,credits:7,detail:'Share a snack and leave the tournament pressure outside.'},
   {id:'cafe_games',place:'cafe',title:'Make up a silly challenge',tag:'playful',tone:'friendship',focus:8,credits:5,detail:'Invent a harmless wager and see who cracks up first.'},
+  {id:'cafe_photo_session',place:'cafe',photoSession:true,noDate:true,title:'Take photos together',tag:'creative',tone:'friendship',focus:8,credits:0,detail:'Capture a quiet portrait in the café.'},
   {id:'center_scrimmage',place:'center',title:'Practice tricky openings',tag:'strategy',tone:'rivalry',focus:15,credits:0,detail:'Analyze sample hands together without starting a real duel.'},
   {id:'center_coach',place:'center',title:'Coach a beginner',tag:'community',tone:'friendship',focus:10,credits:0,detail:'Help a newer player find their own way to win.'},
   {id:'center_tactics',place:'center',title:'Study tournament tactics',tag:'competitive',tone:'rivalry',focus:12,credits:0,detail:'Debate difficult tournament decisions after the crowd leaves.'},
+  {id:'center_photo_session',place:'center',photoSession:true,noDate:true,title:'Take photos together',tag:'playful',tone:'friendship',focus:8,credits:0,detail:'Capture a memorable pose at the tournament hall.'},
   {id:'library_research',place:'library',title:'Research unusual combos',tag:'strategy',tone:'rivalry',focus:10,credits:0,detail:'Compare archived deck lists and test a surprising idea on paper.'},
   {id:'library_story',place:'library',title:'Swap favorite book passages',tag:'quiet',tone:'friendship',focus:5,credits:0,detail:'Find a story worth sharing beyond the game.'},
-  {id:'library_archive',place:'library',title:'Explore the old card archives',tag:'collection',tone:'friendship',focus:8,credits:0,detail:'Look through old match records and discover a forgotten card.'}
+  {id:'library_archive',place:'library',title:'Explore the old card archives',tag:'collection',tone:'friendship',focus:8,credits:0,detail:'Look through old match records and discover a forgotten card.'},
+  {id:'library_photo_session',place:'library',photoSession:true,noDate:true,title:'Take photos together',tag:'creative',tone:'friendship',focus:8,credits:0,detail:'Take atmospheric photographs among the shelves.'},
+  {id:'home_photo_session',place:'home',photoSession:true,noDate:true,title:'Take photos together',tag:'quiet',tone:'friendship',focus:8,credits:0,detail:'Capture a cozy portrait in the apartment.'}
  ]);
  const ids=new Map(activities.map(x=>[x.id,Object.freeze(x)]));
  // Private preference categories are discovered through actual time spent together,
@@ -48,7 +54,13 @@
   park_riverside:'The river passes quietly beside you as the conversation wanders.',
   park_explore:'You find a tucked-away spot neither of you had noticed before.',
   park_sketch:'Your sketches look nothing alike, but somehow they belong together.',
-  park_photo_session:'You take three photographs by the river, and Barb laughs as you compare your favorite shots.',
+  park_photo_session:'You take three photographs by the river and compare your favorite shots.',
+  shop_photo_session:'Three photos later, you review the results amid the card displays.',
+  arcade_photo_session:'You take three energetic photographs against the arcade lights.',
+  cafe_photo_session:'You compare three café photographs over a relaxed conversation.',
+  center_photo_session:'You take three photographs between tournament sessions.',
+  library_photo_session:'Three quiet photographs capture the atmosphere of the library.',
+  home_photo_session:'You share three relaxed photographs in the apartment.',
   cafe_trade:'One treasured card leads to another story, and then another.',
   cafe_break:'The cups grow cold while you lose track of the time.',
   cafe_games:'Your invented rules become sillier with every round.',
@@ -147,7 +159,8 @@
      ||!places.has(s.location)||!cast[npc]||!present.includes(npc))return [];
   const spent=!!s.hungOut?.[s.day+':'+npc];
   const reserved=!!(s.pendingDuel||s.activeStory||s.activeSideQuest||s.activeEncounter||s.activeArc);
-  return activities.filter(x=>x.place===s.location&&(!x.npc||x.npc===npc)).map(a=>{
+  return activities.filter(x=>x.place===s.location&&(!x.npc||x.npc===npc)&&
+   (!x.photoSession||typeof window==='undefined'||!!window.NeoRpgPhotoProfiles?.byId(npc))).map(a=>{
    const disabledReason=reserved?'Finish your current scene first':spent?'Already spent time together today':
     (s.focus||0)<a.focus?'Not enough focus':(s.credits||0)<a.credits?'Not enough credits':null;
    return {...a,affinity:affinity(npc,a.tag,cast),disabledReason};
