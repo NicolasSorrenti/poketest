@@ -19436,7 +19436,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Plasma",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live engine source-only: Exact attack registered as neo89:plasma in neo_attack_batch_v089.js; headless_duel.js creates mandatory discard-recovery choice for available Energy and resolves selected index to attachment. Review pending: zero Energy, multiple Energy types, turn ownership, KO and promotion. No reducer execution. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
+          ],
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         },
         {
           "kind": "power",
@@ -19444,8 +19448,10 @@
           "name": "Electromagnetic Power",
           "status": "partial",
           "evidence": [
-            "Source-only: Electromagnetic Power absent from ACTIVATED registry and no name/printing ID in headless_duel.js. Repeated transfer among Magnemite/Magneton/Dark Magneton with status locks and turn preservation unresolved. Runtime and independent rulings pending."
-          ]
+            "Source-only: Electromagnetic Power absent from ACTIVATED registry and no name/printing ID in headless_duel.js. Repeated transfer among Magnemite/Magneton/Dark Magneton with status locks and turn preservation unresolved. Runtime and independent rulings pending.",
+            "2026-11-07 current live engine source-only: Existing partial Power review retained: no named activated registry entry identified in classic_power_core.js. Repeatable same-turn Energy movement among Magnemite/Magneton/Dark Magneton, statuses and energy typing not validated. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
+          ],
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         }
       ]
     },
@@ -19458,13 +19464,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Night Eyes",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live engine source-only: Imported text specifies unconditional Sleep; generic status compiler in attack_effects_core.js matches exact status text. Sleep application and turn ownership not executed. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
+          ],
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Perish Song",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live engine source-only: Imported text requires Defending Pokémon Asleep and previously attacked by Night Eyes on the prior turn. No dedicated named attack found in inspected active core/neo89-92 modules; previous-turn target identity, switching, Sleep recovery, KO, Prize and promotion unresolved. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
+          ],
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         }
       ]
     },
@@ -19477,7 +19491,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Delta Beam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live engine source-only: Imported text requires heads to choose Asleep, Confused or Paralyzed. Generic coin-status compiler does not support this three-way choice; no dedicated named handler found in inspected modules. Decision and turn ownership unresolved. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
+          ],
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         },
         {
           "kind": "power",
@@ -19485,8 +19503,10 @@
           "name": "Energy Converter",
           "status": "partial",
           "evidence": [
-            "Source-only: Energy Converter absent from ACTIVATED registry and no name/printing ID in headless_duel.js. Once/turn Basic Energy type override and reversion on status or end turn unresolved. Runtime and independent rulings pending."
-          ]
+            "Source-only: Energy Converter absent from ACTIVATED registry and no name/printing ID in headless_duel.js. Once/turn Basic Energy type override and reversion on status or end turn unresolved. Runtime and independent rulings pending.",
+            "2026-11-07 current live engine source-only: Existing partial review retained: no named activated registry entry found. Once-per-turn Basic Energy type override, duration and immediate reversion when Porygon2 becomes statused unresolved. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
+          ],
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         }
       ]
     },
@@ -19499,7 +19519,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Lightning Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live engine source-only: Imported 50 damage and 20 self-damage on tails match generic coin-recoil pattern in attack_effects_core.js. Self-KO/Prize/promotion and turn transition not executed. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
+          ],
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         },
         {
           "kind": "power",
@@ -19507,9 +19531,10 @@
           "name": "Lightning Burst",
           "status": "partial",
           "evidence": [
-            "Source-only: Lightning Burst absent from current classic_power_core.js registries/attached hook and headless_duel.js named effect paths. Attach Lightning Energy from hand to Active/Benched Raikou with opponent Bench (1/multiple/empty); opponent must choose forced Active switch without ending attacher's turn. Verify status locks and subsequent attack/KO. Zero reducer executions; independent print/errata/ruling check pending."
+            "Source-only: Lightning Burst absent from current classic_power_core.js registries/attached hook and headless_duel.js named effect paths. Attach Lightning Energy from hand to Active/Benched Raikou with opponent Bench (1/multiple/empty); opponent must choose forced Active switch without ending attacher's turn. Verify status locks and subsequent attack/KO. Zero reducer executions; independent print/errata/ruling check pending.",
+            "2026-11-07 current live engine source-only: Existing partial review retained: no named attached-Energy hook identified. Opponent-controlled switch on Lightning Energy hand attachment, status locks and preserving current turn unresolved. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
           ],
-          "scope": "Current live RPG/Classic reducer source-only Power path inspection; not runtime verified"
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         }
       ]
     },
@@ -19524,8 +19549,10 @@
           "name": "Aurora Wave",
           "status": "partial",
           "evidence": [
-            "2026-11-06 current-engine source-only review: Crystal Body: attack secondary effects versus damage, all three Special Condition locks; Aurora Wave two coin outcomes. No named active Power handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
-          ]
+            "2026-11-06 current-engine source-only review: Crystal Body: attack secondary effects versus damage, all three Special Condition locks; Aurora Wave two coin outcomes. No named active Power handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created.",
+            "2026-11-07 current live engine source-only: Imported two-coin conditional Paralyzed (HH), Asleep (HT/TH), no status (TT) cannot be represented by generic single coin-status regex; no dedicated named handler in inspected modules. All branches and KO order unresolved. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
+          ],
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         },
         {
           "kind": "power",
@@ -19533,8 +19560,10 @@
           "name": "Crystal Body",
           "status": "partial",
           "evidence": [
-            "2026-11-06 current-engine source-only review: Crystal Body: attack secondary effects versus damage, all three Special Condition locks; Aurora Wave two coin outcomes. No named active Power handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
-          ]
+            "2026-11-06 current-engine source-only review: Crystal Body: attack secondary effects versus damage, all three Special Condition locks; Aurora Wave two coin outcomes. No named active Power handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created.",
+            "2026-11-07 current live engine source-only: Existing partial review retained: no named attack-effect prevention hook found in inspected Power core; status locks and damage-versus-secondary-effect split unresolved. Printed text cross-checked only against repository's imported neo3.json; independent printed card/errata/historical rulings pending. Runtime not executed."
+          ],
+          "scope": "Current RPG/Classic authoritative reducer source review; PARTIAL, not runtime-certified"
         }
       ]
     },
