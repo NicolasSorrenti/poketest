@@ -236,12 +236,16 @@ function open(options={}){
   }catch(error){console.warn('Ignoring invalid local Daisy Motion Lab settings',error);}
   return config;
  }
- const dancer=isDaisy?root.NeoRpgSpriteDeformer?.create?.($('.nc-actor-canvas'),daisyMotionConfig()):null;
- // Expression / overworld pose choreography is a presentation-only controller.
- // Alternate art keeps its own sizing: never reuse Daisy's tuned deformation
- // mask on a differently posed sprite.
+ // Dialogue-framed stage presentation: preserve each character's saved
+ // local motion intensity/zones, but use the SAME 278% bust camera as the RPG
+ // speech box for the base sprite and every expression/overworld alternative.
+ const danceMotionSettings=isDaisy?daisyMotionConfig():null;
+ const dancer=isDaisy?root.NeoRpgSpriteDeformer?.create?.($('.nc-actor-canvas'),{
+  ...danceMotionSettings,cameraMode:'viewport',cameraFit:'dialogue-bust',dialogueBustScale:2.78
+ }):null;
  const dancePoses=isDaisy?root.NeoRpgDancePoseController?.create?.($('.nc-dance-actor'),{
-  characterId:'daisy',baseCanvas:$('.nc-actor-canvas'),bpm:136,leadMs:LEAD,beatsPerBar:4,transitionMs:280
+  characterId:'daisy',baseCanvas:$('.nc-actor-canvas'),bpm:136,leadMs:LEAD,
+  beatsPerBar:4,transitionMs:280,motionConfig:danceMotionSettings
  }):null;
 
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
@@ -327,8 +331,14 @@ function open(options={}){
  }
  function scene(time){
   resetCanvas();
-  if(dancer)dancer.render(time||0,session.fever/100);
-  if(isDaisy){dancePoses?.render(time||0,{combo:session.combo,fever:session.fever/100});drawDaisyStage(time||0);drawDaisyNotes(time||0);return;}
+  if(isDaisy){
+   dancePoses?.render(time||0,{combo:session.combo,fever:session.fever/100});
+   // Only deform the base portrait when it is actually visible, including
+   // its brief outgoing crossfade. Alternate poses animate in their module.
+   if(dancer&&(!dancePoses||dancePoses.needsBaseRender))
+    dancer.render(time||0,session.fever/100);
+   drawDaisyStage(time||0);drawDaisyNotes(time||0);return;
+  }
   const bg=ctx.createLinearGradient(0,0,0,445);bg.addColorStop(0,'#08102b');bg.addColorStop(.7,'#170d36');bg.addColorStop(1,'#070b24');ctx.fillStyle=bg;ctx.fillRect(0,0,800,445);
   // Arcade room: atmospheric neon signs and cabinet silhouettes behind the lane.
   ctx.fillStyle='#160d38';for(let i=0;i<10;i++){const x=i*94-30;ctx.fillRect(x,80+(i%3)*15,60,240);ctx.fillStyle='#2d164a';ctx.fillRect(x+8,97+(i%3)*15,44,70);ctx.fillStyle='#170e34';}
