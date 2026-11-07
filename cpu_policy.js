@@ -373,6 +373,9 @@ function openingReadiness(cardId,hand,apex=false){
   else if(program?.kind==='coin-failure')expected=program.damage*.5;
   else if(['coin-bonus','coin-recoil-bonus'].includes(program?.kind))
    expected=program.base+program.bonus*.5;
+  // Bench-only damage cannot threaten the opposing opening Active.
+  // Keep the move playable without treating it as immediate offense.
+  if(program?.kind==='bench-target')return 18;
   if(expected>0)return 70;
   return /poison|paraly|asleep|sleep|confus/i.test(move.text||'')?32:18;
  };
