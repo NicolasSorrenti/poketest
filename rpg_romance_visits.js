@@ -728,7 +728,7 @@
  // One shared modal, two independently rendered CGs. Desktop uses two columns
  // and narrow mobile viewports stack them. Existing single-CG visits are intact.
  // Dialogue is intentionally left blank until the joint script is authored.
- function openPair({discreet=false,onFinish,onCancel}={}){
+ function openPair({discreet=false,miaNickname='you',onFinish,onCancel}={}){
   const doc=typeof document!=='undefined'?document:null;
   const panApi=typeof window!=='undefined'?window.NeoRpgCGPan:null;
   if(!doc?.body||!panApi||doc.getElementById('neoRomanceVisitCG'))return false;
@@ -744,6 +744,8 @@
     #neoRomanceVisitCG .neo-dual-cg-frame img{position:absolute;top:0;left:0;width:100%;height:auto;max-width:none;max-height:none;pointer-events:none}
     #neoRomanceVisitCG .neo-dual-cg-message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font:14px system-ui;color:#e1d5ed}
     #neoRomanceVisitCG .neo-dual-cg-caption{text-align:center;color:#e7daec;font:600 14px system-ui}
+    #neoRomanceVisitCG .neo-dual-cg-panel.is-speaking .neo-dual-cg-frame{outline:2px solid #e8badc;outline-offset:-2px}
+    #neoRomanceVisitCG .neo-dual-cg-dialogue{min-height:48px;padding:12px 18px;background:#221b30;color:#f8e7f8;text-align:center;font:600 clamp(14px,2vw,17px)/1.4 system-ui}
     @media(max-width:640px){
       #neoRomanceVisitCG .neo-dual-cg-panels{grid-template-columns:minmax(0,1fr);gap:12px}
       #neoRomanceVisitCG .neo-dual-cg-frame{height:36dvh;min-height:170px}
@@ -772,6 +774,27 @@
    frame.append(img,message);panel.append(caption,frame);panels.append(panel);
    return {entry,img,message,frame,pan:null,loaded:false};
   });
+  const dialogue=doc.createElement('p');
+  dialogue.className='neo-dual-cg-dialogue';
+  dialogue.setAttribute('role','status');
+  dialogue.setAttribute('aria-live','off');
+  dialog.append(dialogue);
+  const spoken=[
+   {speaker:'live',text:'ahhh... finally... i can be.. ah.. honest...'},
+   {speaker:'mia',text:'mom,,, yes... i think this is great... {you/daddy} make us so happy... ahhh'},
+   {speaker:'live',text:'ahhh yes, you both... i love you so much AHH'},
+   {speaker:'mia',text:'AHHH AHHH YES'}
+  ];
+  const nickname=miaNickname==='Daddy'?'Daddy':'you';
+  let speechIndex=0,speechTimer=null;
+  function showSpeech(index){
+   const line=spoken[index];
+   dialogue.textContent=(line.speaker==='live'?'Live: ':'Mia: ')+line.text.replace(/\{you\/daddy\}/g,nickname);
+   for(const pane of panes){
+    pane.frame.parentElement.classList.toggle('is-speaking',pane.entry.id===line.speaker);
+    pane.pan?.smoothUpdateConfig?.(timingFor(pane.entry.id,index),550);
+   }
+  }
   const note=doc.createElement('p');
   note.style.cssText='margin:0;padding:4px 12px 8px;color:#c9badb;text-align:center;font:12px system-ui';
   note.textContent='Two synchronized scene panels';
@@ -787,9 +810,19 @@
   cancel.textContent='Leave for now';actions.append(finish,cancel);dialog.append(actions);
   doc.body.append(dialog);
   let closed=false;
+  function startSpeech(){
+   if(speechTimer)return;
+   showSpeech(speechIndex);
+   speechTimer=setInterval(()=>{
+    if(closed)return;
+    speechIndex=(speechIndex+1)%spoken.length;
+    showSpeech(speechIndex);
+   },2400);
+  }
   function close(done){
    if(closed)return;
    closed=true;
+   if(speechTimer!==null){clearInterval(speechTimer);speechTimer=null;}
    for(const pane of panes){pane.pan?.dispose();pane.pan=null;pane.img.removeAttribute('src');}
    if(dialog.open)dialog.close();
    dialog.remove();
@@ -799,6 +832,7 @@
   cancel.onclick=()=>close(false);
   dialog.addEventListener('cancel',event=>{event.preventDefault();close(false);});
   dialog.showModal();
+  if(discreet)startSpeech();
   if(!discreet){
    const maybeReady=()=>{
     if(!panes.every(p=>p.loaded))return;
@@ -808,6 +842,7 @@
      pane.pan=panApi.attach(pane.frame,pane.img,timingFor(pane.entry.id,0));
     }
     finish.disabled=false;
+    startSpeech();
    };
    for(const pane of panes){
     const {entry,img,message,frame}=pane;
