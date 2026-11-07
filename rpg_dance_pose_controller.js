@@ -6,7 +6,7 @@
 // Never owns gameplay, affinity, scoring, RPG time or saves.
 (function(root){
  'use strict';
- if(root.NeoRpgDancePoseController?.version===6)return;
+ if(root.NeoRpgDancePoseController?.version===7)return;
  const DAISY_POSES=Object.freeze([
   {id:'primary',type:'base'},
   {id:'happy',src:'/rpg-assets/characters/daisy/expressionsv2/happy.png'},
@@ -93,6 +93,32 @@
    expansion:1,zones:motionZones(entry,id)
   };
  }
+ // Only Rina's explicitly adjusted pose is overridden; all other
+ // characters and poses continue to use their original tuned defaults.
+ function localPoseOverride(characterId,poseId){
+  if(characterId!=='rina')return {};
+  try{
+   const saved=JSON.parse(localStorage.getItem('neoRpgRinaDancePoseTuningV1')||'null');
+   const patch=saved?.[poseId];
+   if(!patch||typeof patch!=='object')return {};
+   const out={};
+   for(const k of ['tempo','speed','fps','cropTop','cropHeight','dialogueBustScale',
+    'baseBounce','feverBounce','tilt','intensity','feverInflate']){
+    if(patch[k]!==undefined&&Number.isFinite(Number(patch[k])))out[k]=Number(patch[k]);
+   }
+   if(patch.cameraMode==='crop'||patch.cameraMode==='viewport')out.cameraMode=patch.cameraMode;
+   if(['full-width','cover','dialogue-bust'].includes(patch.cameraFit))out.cameraFit=patch.cameraFit;
+   if(Array.isArray(patch.zones)&&patch.zones.length===2){
+    const fields=['x','y','rx','ry','inflateX','inflateY','inflatePhase','scaleX','scaleY','moveY','phase'];
+    out.zones=patch.zones.map(zone=>{
+     const z={};
+     for(const k of fields)if(Number.isFinite(Number(zone?.[k])))z[k]=Number(zone[k]);
+     return z;
+    });
+   }
+   return out;
+  }catch(_){return {};}
+ }
  function make(target,options={}){
   if(!target?.appendChild)throw new TypeError('Dance pose controller needs an actor container');
   const canvas=options.baseCanvas||target.querySelector('canvas');
@@ -150,6 +176,8 @@
      intensity:Math.min(.58,Number(animationPreset.intensity)||.65),
      feverInflate:Number.isFinite(Number(animationPreset.feverInflate))?Number(animationPreset.feverInflate):1.2,
      zones:motionZones(entry,characterId),
+     ...localPoseOverride(characterId,entry.id),
+     source:entry.src,
      onReady:()=>{
       if(disposed)return;
       entry.loaded=true;readyMap.set(entry.id,entry);totalReady++;
@@ -245,6 +273,6 @@
   });
  }
  root.NeoRpgDancePoseController=Object.freeze({
-  version:6,create:make,previewConfig,presets:Object.freeze({daisy:DAISY_POSES,rina:RINA_POSES})
+  version:7,create:make,previewConfig,presets:Object.freeze({daisy:DAISY_POSES,rina:RINA_POSES})
  });
 })(window);
