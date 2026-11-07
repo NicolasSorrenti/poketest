@@ -208,7 +208,7 @@ function open(options={}){
   try{
    const saved=JSON.parse(localStorage.getItem('neoRpgDaisyMotionTuningV1')||'null');
    if(saved&&Array.isArray(saved.zones)&&saved.zones.length>=2){
-    for(const key of ['tempo','speed','fps','baseBounce','feverBounce','tilt','intensity','cropTop','cropHeight']){
+    for(const key of ['tempo','speed','fps','baseBounce','feverBounce','tilt','intensity','feverInflate','cropTop','cropHeight']){
      if(Number.isFinite(Number(saved[key])))config[key]=Number(saved[key]);
     }
     const keys=['x','y','rx','ry','inflateX','inflateY','inflatePhase','scaleX','scaleY','moveY','phase'];
