@@ -223,6 +223,7 @@ function open(options={}){
     }
     // Camera mode travels with the saved tuning, not only the numeric sliders.
     if(saved.cameraMode==='viewport'||saved.cameraMode==='crop')config.cameraMode=saved.cameraMode;
+    if(saved.cameraFit==='full-width'||saved.cameraFit==='cover')config.cameraFit=saved.cameraFit;
     const keys=['x','y','rx','ry','inflateX','inflateY','inflatePhase','scaleX','scaleY','moveY','phase'];
     config.zones=saved.zones.slice(0,2).map(z=>{
      const region={};
