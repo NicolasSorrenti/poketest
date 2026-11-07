@@ -68,7 +68,7 @@
    onCancel:options.onCancel,onComplete:options.onComplete,closed:false,
    mode:'portrait',poseId:'neutral',light:'warm',zoom:1.3,x:0,y:0,shots:[],
    tasks:pickTasks(),auto:false,imageSequence:0,clock:null,interval:null,
-   available:true,animation:null,begin:performance.now()
+   available:true,animation:null,reviewOpen:false,begin:performance.now()
   };
   active=session;
   const shell=document.createElement('div');
@@ -80,13 +80,20 @@
    '<header class="nps-top"><div><div class="nps-kicker">NEO CAMPUS · RIVERSIDE PARK</div>'+
    '<h2>📷 Photo Session · Barb</h2></div><div class="nps-top-right">'+
    '<span data-shotcount>Shot 1 / 3</span><strong data-score>0 pts</strong>'+
+   '<button type="button" class="nps-btn nps-help" data-help>❔ Help</button>'+
    '<button type="button" class="nps-btn nps-close" data-close>✕ Close</button></div></header>'+
-   '<div class="nps-goal"><strong data-goal>Preparing the camera…</strong><span data-hint></span></div>'+
+   '<div class="nps-goal"><div class="nps-brief-copy"><div class="nps-step-tag">PHOTO BRIEF · <span data-brief-index>1 OF 3</span></div>'+
+   '<strong data-goal>Preparing the camera…</strong><p data-hint></p></div>'+
+   '<div class="nps-checklist" aria-label="Live photo goal checklist">'+
+   '<span class="nps-check" data-check-pose>Pose</span>'+
+   '<span class="nps-check" data-check-framing>Framing</span>'+
+   '<span class="nps-check" data-check-light>Lighting</span>'+
+   '<span class="nps-check" data-check-moment>Moment</span></div></div>'+
    '<div class="nps-main"><div class="nps-stage" data-stage data-light="warm">'+
    '<img class="nps-actor" data-actor alt="Barb posing for the camera">'+
    '<div class="nps-silhouette" aria-label="Character artwork hidden">◇</div>'+
    '<div class="nps-frame" aria-hidden="true"></div><div class="nps-cross" aria-hidden="true"></div>'+
-   '<div class="nps-meter">✦ Perfect moment<div class="nps-meter-track"><span data-meter></span></div></div>'+
+   '<div class="nps-meter">✦ SHUTTER MOMENT<div class="nps-meter-track"><span data-meter></span></div><span class="nps-meter-label" data-meter-label>Wait for the bar to fill</span></div>'+
    '<div class="nps-caption" data-caption>Barb: "Ready when you are!"</div>'+
    '<div class="nps-loading" data-loading>Loading Barb’s artwork…</div></div>'+
    '<div class="nps-controls">'+
@@ -103,10 +110,12 @@
    '<div class="nps-camerarow"><button class="nps-btn" data-zoom-out type="button">−</button>'+
    '<input aria-label="Camera zoom" data-zoom type="range" min="1" max="2.5" step=".01" value="1.3">'+
    '<button class="nps-btn" data-zoom-in type="button">+</button></div>'+
-   '<p class="nps-hint">Drag the picture to pan. Mouse wheel, pinch or slider to zoom. Aim for the requested framing.</p>'+
+   '<div class="nps-framing-guide"><span>Full body</span><span>Medium</span><span>Close-up</span></div>'+
+   '<p class="nps-hint">Use zoom for the requested frame. Drag Barb toward the center. When the framing indicator turns green, you are ready.</p>'+
    '<button class="nps-btn" data-reset type="button">Reset camera</button></section></div></div>'+
    '<footer class="nps-bottom"><div class="nps-mini-album" data-mini><div class="nps-mini-photo">3 shots to take</div></div>'+
-   '<div class="nps-snaps"><button class="nps-btn" data-album>View album</button>'+
+   '<div class="nps-snaps"><span class="nps-snap-status" data-next-action>Match the brief, then snap when the meter is full.</span>'+
+   '<button class="nps-btn" data-album>View album</button>'+
    '<button class="nps-btn nps-primary" data-snap>📷 SNAP!</button></div></footer></div>';
   document.body.append(shell);
   session.shell=shell;
@@ -122,6 +131,7 @@
    silhouette.style.setProperty('--pan-x',session.x+'px');
    silhouette.style.setProperty('--pan-y',session.y+'px');
    zoomInput.value=String(session.zoom);
+   updateFeedback();
   }
   function setZoom(value){
    session.zoom=clamp(Number(value)||1,1,2.5);camera();
@@ -133,6 +143,7 @@
    session.mode=target.kind;
    session.auto=false;
    drawChoices();
+   updateFeedback();
    $(shell,'[data-caption]').textContent=captions[target.id];
    const seq=++session.imageSequence;
    if(shell.classList.contains('nps-discreet')){loading.hidden=true;return;}
@@ -166,8 +177,7 @@
     poseBox.append(b);
    }
    $(shell,'[data-auto]').textContent='Auto poses: '+(session.auto?'On':'Off');
-   for(const btn of shell.querySelectorAll('[data-light]')){
-    if(btn===stage)continue;
+   for(const btn of shell.querySelectorAll('button[data-light]')){
     btn.classList.toggle('is-selected',btn.dataset.light===session.light);
    }
   }
@@ -175,16 +185,26 @@
    const task=session.tasks[session.shots.length];
    if(!task)return;
    $(shell,'[data-shotcount]').textContent='Shot '+(session.shots.length+1)+' / 3';
-   $(shell,'[data-goal]').textContent=task.name+' · '+task.framing+' frame';
+   $(shell,'[data-brief-index]').textContent=(session.shots.length+1)+' OF 3';
+   $(shell,'[data-goal]').textContent=task.name;
    $(shell,'[data-hint]').textContent=task.hint;
    $(shell,'[data-score]').textContent=session.shots.reduce((v,p)=>v+p.score,0)+' pts';
+   updateFeedback();
   }
   function currentMeter(){
    return .5+.5*Math.sin((performance.now()-session.begin)/620);
   }
   function tick(){
    if(session.closed)return;
-   $(shell,'[data-meter]').style.transform='scaleX('+currentMeter().toFixed(3)+')';
+   const moment=currentMeter();
+   $(shell,'[data-meter]').style.transform='scaleX('+moment.toFixed(3)+')';
+   const ready=moment>=.78;
+   const label=$(shell,'[data-meter-label]');
+   if(label.dataset.ready!==String(ready)){
+    label.dataset.ready=String(ready);
+    label.textContent=ready?'✨ NOW! Take the shot!':'Wait for the bar to fill…';
+    updateFeedback();
+   }
    session.clock=requestAnimationFrame(tick);
   }
   function startAuto(){
@@ -242,7 +262,6 @@
    report.append(list);
    const b=document.createElement('button');
    b.className='nps-btn';b.textContent='← Back to camera';
-   b.onclick=()=>report.remove();
    report.append(b);
    $(shell,'.nps-shell').append(report);
    $(shell,'.nps-main').hidden=true;
