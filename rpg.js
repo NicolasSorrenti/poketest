@@ -56,7 +56,7 @@ function liveCanRepeat(){
  return !!(state.mandatoryEventState?.seen?.live_glance_next_morning||state.liveSpecialSeen?.live_glance_next_morning)&&(!last||state.day>=last+6);
 }
 function miaRepeatEligible(){
- const last=Number(state.miaRepeatLastDay)||0;
+ const last=Number(state.miaRepeatLastDay)||Number(state.liveMiaChoiceLastDay)||0;
  return ['mia','both'].includes(state.liveMiaFinalChoice)&&
   (!last||state.day>=last+6);
 }
@@ -1426,7 +1426,7 @@ function renderMandatory(){
    const follow=liveFollowupContent();
    return {speaker:follow.speaker,line:follow.text,
     choices:[['See you later ›','mandatoryChoice:0'],
-     ...(!follow.away?[['◉ Glance at Live','mandatoryGlance']]:[])]};
+     ...(!follow.away?[['◉ Glance at Live','mandatoryGlance'],...liveMiaRepeatOptions()]:[])]};
   }
   if(e.id===LIVE_REPEAT_MORNING.id)
    return {speaker:'Narrator',line:'The morning passes quietly.',choices:[['Continue ›','mandatoryChoice:0']]};
@@ -1466,7 +1466,7 @@ function renderMandatory(){
  const actorName=cast[e.characterId]?.name||e.characterId;
  return {speaker:e.kind==='bond'?(remoteReply?'✉ '+actorName+' · message':actorName):(cast[responseActor]?.name||'Narrator'),line:mandatoryText(miaStoryIds.has(e.id)?miaDialogueText(choice?.reply||''):choice?.reply||''),choices:LIVE_EVENT_ART[e.id]&&!miaStoryIds.has(e.id)&&e.id!==MIA_FIRST_TIME.id?
   [['Leave now ›','mandatoryFinish'],['◉ Glance at Live','mandatoryGlance'],
-   ...(liveCanRepeat()?[["Ask Live to spend another private morning together",'mandatoryRepeatLive']]:[])]:
+   ...liveMiaRepeatOptions()]:
   [['Continue story ›','mandatoryFinish']]};
 }
 function mandatoryAction(type,id){
@@ -1549,6 +1549,36 @@ function mandatoryAction(type,id){
    state.liveFirstConversationGlanceCount=state.liveGlanceCount;
    if(state.liveGlanceCount>=30&&!state.liveThirtyGlancesDay)state.liveThirtyGlancesDay=state.day;
   }
+ }
+ else if(type==='liveMiaInviteMia'){
+  if(!miaAskEligible()||state.location!=='home')return true;
+  const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
+  if(!outcome)return true;
+  state.miaVisitRequestedDay=state.day+1;
+  state.liveHomeActivityScene=null;
+  state.liveLastEventDay=state.day;
+  log('Live promised to invite Mia for tomorrow.');
+  persist();render();return true;
+ }
+ else if(type==='liveMiaRepeatMia'||type==='liveMiaRepeatBoth'){
+  const both=type==='liveMiaRepeatBoth';
+  if(state.location!=='home'||!miaRepeatEligible()||
+     (both&&!sharedRepeatEligible()))return true;
+  const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
+  if(!outcome)return true;
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  delete m.seen[LIVE_MIA_REPEAT_EVENT.id];
+  m.active={id:LIVE_MIA_REPEAT_EVENT.id,phase:'lines',index:0,choice:null};
+  state.liveMiaRepeatMode=both?'both':'mia';
+  state.liveMiaRepeatStep=0;
+  state.miaLastSceneDay=state.day;
+  state.miaLastSceneSlot=state.slot;
+  state.liveDayScene={day:state.day,id:LIVE_MIA_REPEAT_EVENT.id,
+   cg:both?LIVE_MIA_REPEAT_ART.together:LIVE_MIA_REPEAT_ART.mia,
+   firstSlot:state.slot,lastSeenSlot:state.slot};
+  state.liveLastEventDay=state.day;
+  state.liveHomeActivityScene=null;
+  persist();render();return true;
  }
  else if(type==='mandatoryRepeatLive'){
   const activeId=state.mandatoryEventState.active.id;
