@@ -1400,6 +1400,17 @@ function liveMiaRepeatAction(type){
    onCancel:()=>{persist();render();}
   });
  }
+ if(mode==='both'&&state.liveMiaFinalChoice==='both'&&ROMANCE?.openPair){
+  // Repeat the same synchronized two-CG animation as the first joint ending.
+  // The five-day cooldown and next-period aftermath are already recorded above.
+  const opened=ROMANCE.openPair({
+   discreet:liveDiscreetEnabled(),
+   miaNickname:miaUsesDaddy()?'Daddy':'you',
+   onFinish:()=>{state.liveMiaRepeatViewerSeen=true;persist();render();},
+   onCancel:()=>{persist();render();}
+  });
+  if(!opened)log('The shared Live and Mia animated CG viewer is unavailable.');
+ }
  return true;
 }
 function renderMandatory(){
