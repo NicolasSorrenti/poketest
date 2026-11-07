@@ -77,8 +77,10 @@ const CSS=String.raw`
 .nc-daisy .nc-stage canvas.nc-note-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
 .nc-daisy .nc-dance-actor{display:block;position:absolute;z-index:2;left:54%;top:0;width:44%;height:98%;filter:drop-shadow(0 0 22px #eb58c87f);pointer-events:none}
 .nc-daisy .nc-dance-actor canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.nc-daisy .nc-dance-comment{position:absolute;display:flex;flex-direction:column;z-index:6;left:2%;top:47%;bottom:auto;right:auto;min-width:115px;max-width:27%;padding:11px 12px;border:1px solid #f7a6e8;border-radius:16px;background:#310b40d9;color:#fff;font-size:clamp(10px,1.1vw,14px);line-height:1.3}
-.nc-daisy .nc-dance-comment small{font-size:10px;color:#ff9edd;font-weight:900}
+.nc-daisy .nc-dance-comment{position:absolute;display:flex;flex-direction:column;z-index:6;left:4%;top:auto;bottom:36%;right:auto;width:48%;max-width:48%;min-width:0;padding:13px 17px;border:2px solid #ff9de9;border-radius:17px;background:linear-gradient(135deg,#351140f5,#1b0d31f5);color:#fff;font-size:clamp(14px,1.5vw,19px);line-height:1.38;text-shadow:0 1px 2px #080311;box-shadow:0 7px 26px #070413a8,0 0 19px #f458be52;pointer-events:none}
+.nc-daisy .nc-dance-comment::after{content:"";position:absolute;bottom:-9px;left:45%;height:15px;width:15px;transform:rotate(45deg);background:#260e36;border-right:2px solid #ff9de9;border-bottom:2px solid #ff9de9}
+.nc-daisy .nc-dance-comment-text{font-weight:850;letter-spacing:.005em}
+.nc-daisy .nc-dance-comment small{font-size:11px;color:#fface6;font-weight:1000;letter-spacing:.07em;margin-bottom:3px}
 .nc-daisy .nc-eval{display:none} /* All Daisy judgements are rendered on the hit circle. */
 .nc-daisy .nc-side{min-width:0;padding-top:89px;gap:10px}
 .nc-daisy .nc-stat{padding:12px 7px;border:1px solid #bf63c2;background:#220e37e8;border-radius:13px}
@@ -124,7 +126,7 @@ const CSS=String.raw`
  .nc-daisy .nc-progress-text{font-size:9px}
  .nc-daisy .nc-stage{flex:1;min-height:330px}
  .nc-daisy .nc-dance-actor{left:47%;width:52%;height:95%}
- .nc-daisy .nc-dance-comment{left:1%;top:50%;max-width:33%;min-width:0;padding:7px;font-size:10px}
+ .nc-daisy .nc-dance-comment{left:3%;right:auto;top:auto;bottom:36%;width:65%;max-width:65%;min-width:0;padding:10px 12px;font-size:clamp(12px,3.2vw,16px);line-height:1.35}
  .nc-daisy .nc-dance-comment small{font-size:9px}
  .nc-daisy .nc-side{order:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:3px 0}
  .nc-daisy .nc-stat{min-width:0;padding:6px 2px;border-radius:9px}
