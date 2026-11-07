@@ -1158,6 +1158,7 @@ function liveMiaChoiceAction(action){
   if(choice==='both'&&ROMANCE?.openPair){
    const opened=ROMANCE.openPair({
     discreet:liveDiscreetEnabled(),
+    miaNickname:miaUsesDaddy()?'Daddy':'you',
     onFinish:()=>{state.liveMiaFinalViewed=true;persist();render();},
     onCancel:()=>{state.liveMiaFinalViewed=false;persist();render();}
    });
