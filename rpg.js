@@ -103,8 +103,16 @@ function miaFirstIntimateDay(){
 }
 function miaGossipCompleted(){return !!state.mandatoryEventState?.seen?.mia_gossip;}
 function miaRomanceGossip(){return miaFirstIntimateDay()!==null;}
+// Single authority for Mia's nickname in every scene, including out-of-order
+// or resumed saves. The first explicit confession permanently retires it.
+function miaUsesDaddy(){
+ return miaGossipCompleted()&&!state.miaDaddyRetired;
+}
 function miaDialogueText(value){
- return String(value||'').replace(/\{\{miaPlayerName\}\}/g,miaGossipCompleted()&&!state.miaDaddyRetired?'Daddy':'you');
+ return String(value||'')
+  .replace(/\{\{miaPlayerName\}\}/g,miaUsesDaddy()?'Daddy':'you')
+  .replace(/\{\{miaNickname\}\}/g,miaUsesDaddy()?'Daddy':'you')
+  .replace(/\bDaddy\b/g,miaUsesDaddy()?'Daddy':'you');
 }
 const MIA_GOSSIP_EXTRA='/rpg-assets/characters/lyla/events/mia/a_highly_detailed_anime_style_illustration_of_the.png';
 function miaArt(id){return id==='mia_gossip'&&miaRomanceGossip()?MIA_GOSSIP_EXTRA:MIA_EVENT_ART[id];}
@@ -706,7 +714,9 @@ function renderMiaPrivate(){
   6:['Mia','Sometimes I feel everyone sees me only as Live\'s daughter. I want to make my own decisions. And I trust you enough to say that.'],
   7:['Mia','Thanks for listening. I wanted to tell you for ages... but please, let me be the one to talk to Live when I am ready.']
  };
- const [speaker,line]=nodes[step];
+ const [speaker,originalLine]=nodes[step];
+ const line=originalLine.replace('becoming my daddy','being part of my family');
+
  const back=['Go back — end the conversation','miaPrivateExit'];
  const choices=step===1?[
   ['I care about getting to know you, Mia','miaPrivateYes'],
@@ -722,7 +732,7 @@ function renderMiaPrivate(){
  ]:step<7?[
   ['Keep listening','miaPrivateNext']
  ]:[['Promise to respect her choice','miaPrivateFinish']];
- return {speaker,line,choices};
+ return {speaker,line:miaDialogueText(line),choices};
 }
 function miaPrivateAction(action){
  const m=state.mandatoryEventState;
@@ -771,12 +781,12 @@ function renderMiaSleep(){
  if(stage==='wake')return who==='live'
   ?{speaker:'Live',line:'Mmm... honey? Shhh. Mia is sleeping right beside us. Did you need something?',
     choices:[['Ask her to talk somewhere quieter','miaSleepTalk'],['Let her sleep','miaSleepLeave']]}
-  :{speaker:'Mia',line:'Huh? You picked me? Why are we whispering? Mom sleeps like a rock.',
+  :{speaker:'Mia',line:miaDialogueText('Huh? You picked me, {{miaNickname}}? Why are we whispering? Mom sleeps like a rock.'),
     choices:[['Ask for a moment together','miaSleepTalk'],['Let her sleep','miaSleepLeave']]};
  if(stage==='talk')return who==='live'
   ?{speaker:'Live',line:'Shhh... a little quieter, darling. She knows me too well. One look and she will start asking questions!',
     choices:[['Respect her privacy','miaSleepContinue'],['Leave her to rest','miaSleepLeave']]}
-  :{speaker:'Mia',line:'You do not have to whisper so much. I like it when you say what you mean. Can you imagine Mom\'s face if she noticed?',
+  :{speaker:'Mia',line:miaDialogueText('You do not have to whisper so much, {{miaNickname}}. I like it when you say what you mean. Can you imagine Mom\'s face if she noticed?'),
     choices:[['Ask her to keep the moment private','miaSleepContinue'],['Leave her to rest','miaSleepLeave']]};
  if(stage==='moment')return who==='live'
   ?{speaker:'Narrator',line:'Live looks toward the sleeping Mia, then takes your hand. You share a quiet moment before she gently suggests continuing the conversation somewhere more private.',
@@ -786,7 +796,7 @@ function renderMiaSleep(){
  if(stage==='end')return who==='live'
   ?{speaker:'Live',line:'Thank you for being discreet. Let us have a proper conversation later, when nobody is trying to sleep.',
     choices:[['Leave quietly','miaSleepFinish']]}
-  :{speaker:'Mia',line:'Part of me wants Mom to find out about our little talk... but I would rather tell her myself. Thanks for listening.',
+  :{speaker:'Mia',line:miaDialogueText('Part of me wants Mom to find out about our little talk... but I would rather tell her myself. Thanks for listening, {{miaNickname}}.'),
     choices:[['Leave quietly','miaSleepFinish']]};
  return {speaker:'Narrator',line:'You leave the room as quietly as you entered.',choices:[['Continue','miaSleepFinish']]};
 }
@@ -839,7 +849,7 @@ function renderMandatory(){
    return {speaker:line.speaker,line:line.text,choices:[['Continue ›','mandatoryNext']]};
   }
   const original=e.lines[a.index]||e.lines[e.lines.length-1];
-  if(e.id==='mia_gossip'&&a.index===3)return {speaker:'Mia',line:'So... does this mean I have a new dad now? Should I call you Daddy? Just kidding! Mom, your face is completely red!',choices:[['Continue ›','mandatoryNext']]};
+  if(e.id==='mia_gossip'&&a.index===3)return {speaker:'Mia',line:miaDialogueText('So... does this mean I have a new dad now? Should I call you Daddy? Just kidding! Mom, your face is completely red!'),choices:[['Continue ›','mandatoryNext']]};
   const cooling=LIVE_ROTATING_IDS.has(e.id)&&Number(state.liveRepeatLastDay)>0&&
     state.day>state.liveRepeatLastDay&&state.day<=state.liveRepeatLastDay+5;
   const line=cooling&&original.speaker==='Live'&&a.index===1
