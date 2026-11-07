@@ -740,7 +740,7 @@
   style.textContent=`
     #neoRomanceVisitCG .neo-dual-cg-panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}
     #neoRomanceVisitCG .neo-dual-cg-panel{min-width:0;display:flex;flex-direction:column;gap:7px}
-    #neoRomanceVisitCG .neo-dual-cg-frame{position:relative;overflow:hidden;isolation:isolate;background:#10101c;height:min(55dvh,430px);border-radius:10px}
+    #neoRomanceVisitCG .neo-dual-cg-frame{position:relative;overflow:hidden;isolation:isolate;background:#10101c;height:min(55dvh,430px);max-height:min(55dvh,430px);border-radius:10px}
     #neoRomanceVisitCG .neo-dual-cg-frame img{position:absolute;top:0;left:0;width:100%;height:auto;max-width:none;max-height:none;pointer-events:none}
     #neoRomanceVisitCG .neo-dual-cg-message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font:14px system-ui;color:#e1d5ed}
     #neoRomanceVisitCG .neo-dual-cg-caption{text-align:center;color:#e7daec;font:600 14px system-ui}
@@ -748,7 +748,7 @@
     #neoRomanceVisitCG .neo-dual-cg-dialogue{min-height:48px;padding:12px 18px;background:#221b30;color:#f8e7f8;text-align:center;font:600 clamp(14px,2vw,17px)/1.4 system-ui}
     @media(max-width:640px){
       #neoRomanceVisitCG .neo-dual-cg-panels{grid-template-columns:minmax(0,1fr);gap:12px}
-      #neoRomanceVisitCG .neo-dual-cg-frame{height:36dvh;min-height:170px}
+      #neoRomanceVisitCG .neo-dual-cg-frame{height:36dvh;max-height:36dvh}
     }
   `;
   dialog.append(style);
@@ -809,7 +809,7 @@
   finish.textContent='Finish scene';finish.disabled=!discreet;
   cancel.textContent='Leave for now';actions.append(finish,cancel);dialog.append(actions);
   doc.body.append(dialog);
-  let closed=false;
+  let closed=false,started=false;
   function startSpeech(){
    if(speechTimer)return;
    showSpeech(speechIndex);
@@ -835,20 +835,30 @@
   if(discreet)startSpeech();
   if(!discreet){
    const maybeReady=()=>{
-    if(!panes.every(p=>p.loaded))return;
-    // Start both native pan animations in the same event-loop turn, after
-    // both full-resolution images are ready. Independent layouts, shared start.
-    for(const pane of panes){
-     pane.pan=panApi.attach(pane.frame,pane.img,timingFor(pane.entry.id,0));
-    }
-    finish.disabled=false;
-    startSpeech();
+    if(started||!panes.every(p=>p.loaded))return;
+    started=true;
+    // Let both dynamically sized half-image viewports settle before attaching.
+    // A fixed-height two-column layout can fit the entire image and stop
+    // NeoRpgCGPan from animating, even though the single-CG viewer moves.
+    requestAnimationFrame(()=>{
+     if(closed)return;
+     for(const pane of panes){
+      pane.pan=panApi.attach(pane.frame,pane.img,timingFor(pane.entry.id,0));
+     }
+     finish.disabled=false;
+     startSpeech();
+    });
    };
    for(const pane of panes){
     const {entry,img,message,frame}=pane;
     let fallbackUsed=false;
     img.onload=()=>{
      if(closed)return;
+     // Crop each CG to half its natural displayed height, as in open().
+     // CSS aspect-ratio keeps the crop correct when switching between desktop
+     // columns and stacked mobile panels; max-height limits tall screens.
+     frame.style.height='auto';
+     frame.style.aspectRatio=(2*img.naturalWidth)+' / '+img.naturalHeight;
      img.hidden=false;
      message.style.display='none';
      pane.loaded=true;
