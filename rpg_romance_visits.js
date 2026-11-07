@@ -629,8 +629,10 @@
  function path(id){
   return known.has(id)?'/rpg-assets/characters/'+id+'/events/final/'+(id==='akari'?'akari_glasses_parody.png':id+'_sneeze_parody.png'):null;
  }
- function open({id,name,discreet=false,cgLines=[],lineOffset=0,onFinish,onCancel}){
-  const source=path(id),panApi=typeof window!=='undefined'?window.NeoRpgCGPan:null;
+ function open({id,name,discreet=false,cgLines=[],lineOffset=0,artPath=null,onFinish,onCancel}){
+  // Allows a one-time narrative ending to reuse the existing CG motion UI
+  // without making Live or Mia ordinary romance-visit roster characters.
+  const source=(typeof artPath==='string'&&artPath.startsWith('/rpg-assets/characters/')?artPath:null)||path(id),panApi=typeof window!=='undefined'?window.NeoRpgCGPan:null;
   if(!source||!panApi||!document.body||document.getElementById('neoRomanceVisitCG'))return false;
   const dialog=document.createElement('dialog');
   dialog.id='neoRomanceVisitCG';
