@@ -996,18 +996,33 @@ function miaKitchenAction(action){
 }
 
 
+// Fourteen spoken lines plus staging: this is deliberately a long, escalating
+// audio-only misunderstanding. The CG is reserved for the final reveal.
+const MIA_WINE_OVERHEARD_LINES=[
+ ['Narrator','You wake up to muffled voices in the next room. It is much too early for a party... and something keeps clinking.'],
+ ['Mia','Mooom... come on, just a little more!'],
+ ['Live','Hold still, sweetheart! I am trying not to spill it all over you.'],
+ ['Mia','Oooh! That is amazing. What did you put in this?!'],
+ ['Live','A little secret ingredient. I knew you would love it.'],
+ ['Mia','Well, do not stop now! Give me another taste!'],
+ ['Live','Slow down, baby. You have to let it breathe first.'],
+ ['Mia','Let it breathe? Mom, I think it is trying to ESCAPE!'],
+ ['Narrator','A loud POP echoes through the apartment. Something fizzes. A glass clatters onto the carpet.'],
+ ['Live','Oh no! It is everywhere! Quick, grab a towel!'],
+ ['Mia','I cannot! I am laughing too hard! You said it would be gentle!'],
+ ['Live','I said to open it GENTLY. There is a difference!'],
+ ['Mia','Okay, okay... mmm. Wow. That one really is good.'],
+ ['Live','See? I told you this was worth staying up for.'],
+ ['Mia','One more little glass? Please? Pretty please?'],
+ ['Live','Only if you promise not to shake the next bottle.'],
+ ['Mia','That was ONE time! ...Oh. I think the room is spinning a little.'],
+ ['Live','Come here, you. Sit down before you fall down.'],
+ ['Narrator','You hear a soft thump, two helpless giggles, and then absolutely nothing.'],
+ ['Narrator','Fourteen minutes pass. No footsteps. No voices. Not even a suspicious clink. You decide whether to investigate.']
+];
 function renderMiaWine(){
  const stage=state.miaWineStage||'heard';
- const lines=[
-  ['Narrator','You wake to mysterious noises in the other room. Something clinks against a glass.'],
-  ['Mia','Mooom... please, give me a little more!'],
-  ['Live','Careful, baby! It is going to spill everywhere.'],
-  ['Mia','Ahh... mmm! That is so good! What IS this?'],
-  ['Live','I knew you would like it! It is the special sparkling one.'],
-  ['Mia','More, please! Wait—why is it fizzing so much?!'],
-  ['Narrator','A cork pops, a glass rattles, and both women burst into laughter. Then... silence.'],
-  ['Narrator','Fourteen whole minutes pass without another sound. You begin to worry.']
- ];
+ const lines=MIA_WINE_OVERHEARD_LINES;
  if(stage==='heard'){
   const index=Math.max(0,Math.min(lines.length-1,Number(state.miaWineLine)||0));
   const [speaker,line]=lines[index];
@@ -1028,7 +1043,7 @@ function renderMiaWine(){
 }
 function miaWineAction(action){
  if(action==='miaWineNext'){
-  state.miaWineLine=Math.min(7,(Number(state.miaWineLine)||0)+1);
+  state.miaWineLine=Math.min(MIA_WINE_OVERHEARD_LINES.length-1,(Number(state.miaWineLine)||0)+1);
  }else if(action==='miaWineReveal')state.miaWineStage='reveal';
  else if(action==='miaWineIgnore')state.miaWineStage='ignore';
  else if(action==='miaWineBlanket')state.miaWineStage='blanket';
