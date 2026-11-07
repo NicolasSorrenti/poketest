@@ -60,7 +60,7 @@
  "/rpg_arcade_game.js?v=daisy-dialogue-crop-v3-20261107",
  "/rpg_photo_profiles.js?v=photo-80-live-v2-20261107",
  "/rpg_photo_stories.js?v=photo-80-v2-20261107",
- "/rpg_photo_session.js?v=photo-80-v2-20261107",
+ "/rpg_photo_session.js?v=photo-80-v3-20261107",
  "/rpg_planned_dates.js",
  "/rpg_preduel.js?v=restore-original-attacks-20261102",
  "/rpg_situations.js",
