@@ -22010,7 +22010,10 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only live reducer: Broken Ground Gym is installed via classic_trainer_core stadium flow; headless_duel retreatCost adds one Colorless for Baby/Basic via effectiveCard subtypes. Inspect Baby/Basic, Stage 1, simultaneous stadium replacement, zero/insufficient Energy and retreat turn ownership. Runtime and independent ruling unverified."
+          ]
         }
       ]
     },
@@ -22021,7 +22024,10 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only live reducer: EXP.ALL is attached via classic_trainer_core; headless_duel knockOuts attackContext defender Active KO creates optional neo_exp_all choice, moves exactly one Basic Energy to Tool holder and discards Tool. Inspect attack KO vs Poison/checkup, Focus Band survival, multiple Tools, Benched KO, Special Energy exclusion, Prize/promotion. Runtime and independent ruling unverified."
+          ]
         }
       ]
     },
@@ -22032,7 +22038,10 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only live reducer: Invention privateLog reveals opponent Prizes to player, optional oakReplace decision; on acceptance shuffles existing Prizes into deck, replaces same number and clears prizeFaceUp. Inspect low deck size, Here Comes Team Rocket visibility, prize order/identity and opponent ownership. Runtime and independent ruling unverified."
+          ]
         }
       ]
     },
@@ -22043,7 +22052,10 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only live reducer: Radio Tower is Stadium; use_stadium inspects top 2 of current player's deck into privateLog, leaves order intact, stadiumUsedTurn prevents repeat. Inspect both owners, zero/one card decks, private log isolation, stadium replacement and turn transition. Runtime and independent ruling unverified."
+          ]
         }
       ]
     },
@@ -22054,7 +22066,10 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only live reducer: Thought Wave Machine flips until tails in classic_trainer_core, chooses up to heads Energy cards from opposing Active (all if fewer), returns to opponent hand and sets tickleEndsTurn; commit calls finishTurn. Inspect zero heads, all heads until tails, no Energy, multi-selection, Prize/KO/promotion, turn owner. Runtime and independent ruling unverified."
+          ]
         }
       ]
     },
