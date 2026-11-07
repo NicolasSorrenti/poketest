@@ -453,8 +453,8 @@
     '<h3>How to play 📷</h3>'+
     '<p>Barb reacts to what you say. This time, the goal is not to select a pose: it is to <b>cause</b> a reaction and photograph it while it happens.</p>'+
     '<div class="nps-guide-steps">'+
-    '<div><b>1 · Talk to Barb</b><div>Choose an interaction on the right, like telling a joke, walking with her or asking about her designs.</div></div>'+
-    '<div><b>2 · Prepare your shot</b><div>Adjust your zoom and lighting. Barb will change poses and expressions during the interaction.</div></div>'+
+    '<div><b>1 · Talk to Barb</b><div>Choose an interaction below the camera on mobile (or on the right on desktop), such as a joke or asking about her designs.</div></div>'+
+    '<div><b>2 · Prepare your shot</b><div>Pinch or use the camera’s +/− buttons to zoom; drag to frame her. Lighting and other modes are under Settings on mobile.</div></div>'+
     '<div><b>3 · Catch the reaction!</b><div>When Barb shows the requested expression, the bar fills briefly. SNAP before the moment ends! Retry without penalty.</div></div></div>'+
     '<p>There is no countdown between interactions. A reaction itself is brief, but you can trigger it again. Directed and Candid modes remain available for free posing.</p>'+
     '<div class="nps-guide-actions"><button type="button" class="nps-btn nps-primary" data-start-shooting>Got it · Start shooting!</button></div></div>';
