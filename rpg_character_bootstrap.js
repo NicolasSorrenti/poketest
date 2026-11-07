@@ -58,8 +58,8 @@
  "/rpg_dialogue_idle.js?v=native-resolution-v2-20261107",
  "/rpg_dance_pose_controller.js?v=daisy-choreography-v2-20261107",
  "/rpg_arcade_game.js?v=daisy-choreography-v2-20261107",
- "/rpg_photo_profiles.js?v=cast-photo-v1",
- "/rpg_photo_session.js?v=focus-framing-v1-20261107",
+ "/rpg_photo_profiles.js?v=npc-request-v1-20261107",
+ "/rpg_photo_session.js?v=npc-request-v1-20261107",
  "/rpg_planned_dates.js",
  "/rpg_preduel.js?v=restore-original-attacks-20261102",
  "/rpg_situations.js",
@@ -77,7 +77,7 @@
  "/rpg_audio.js",
  "/rpg_time_transitions.js?v=rpg-scene-wipe-20261031-1",
  "/rpg_render_perf.js",
- "/rpg_overworld_stage_view.js?v=stage-presenter-20261104",
+ "/rpg_overworld_stage_view.js?v=npc-photo-choice-v1-20261107",
  "/rpg_overworld_opportunities.js?v=owned-stage-20261104",
  "/rpg_overworld_guide.js?v=recovery-view-20261104",
  "/rpg_overworld_modals.js?v=modal-split-20261104",
@@ -96,7 +96,7 @@
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=photo-direct-action-20261107"
+ "/rpg.js?v=npc-photo-request-v1-20261107"
 ];
   function registry(packs){
     // Normalize the authenticated/API roster too (not just the generated file).
