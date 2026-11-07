@@ -309,7 +309,11 @@
    try{
     session.motion=root.NeoRpgSpriteDeformer.create(motionCanvas,{
      fit:'contain',cropTop:0,cropHeight:1,
-     width:270,height:440,fps:22,tempo:78,speed:.9,
+     // Keep art crisp when the player zooms the camera. Higher raster
+     // resolution is inexpensive here because zones=[] uses direct drawing.
+     width:root.innerWidth<=740?420:600,
+     height:root.innerWidth<=740?700:1000,
+     fps:22,tempo:78,speed:.9,
      baseBounce:1.3,feverBounce:1.9,tilt:.011,zones:[],
      onReady:()=>{
       if(session.closed)return;
