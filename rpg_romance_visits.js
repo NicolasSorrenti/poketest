@@ -724,6 +724,105 @@
   }
   return true;
  }
+
+ // One shared modal, two independently rendered CGs. Desktop uses two columns
+ // and narrow mobile viewports stack them. Existing single-CG visits are intact.
+ // Dialogue is intentionally left blank until the joint script is authored.
+ function openPair({discreet=false,onFinish,onCancel}={}){
+  const doc=typeof document!=='undefined'?document:null;
+  const panApi=typeof window!=='undefined'?window.NeoRpgCGPan:null;
+  if(!doc?.body||!panApi||doc.getElementById('neoRomanceVisitCG'))return false;
+  const dialog=doc.createElement('dialog');
+  dialog.id='neoRomanceVisitCG';
+  dialog.setAttribute('aria-label','Live and Mia · shared private moment');
+  dialog.style.cssText='box-sizing:border-box;border:1px solid #b890bc;border-radius:16px;background:#14121f;color:white;padding:0;width:min(96vw,1100px);max-width:96vw;max-height:94dvh;overflow:auto;box-shadow:0 20px 80px #000e';
+  const style=doc.createElement('style');
+  style.textContent=`
+    #neoRomanceVisitCG .neo-dual-cg-panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}
+    #neoRomanceVisitCG .neo-dual-cg-panel{min-width:0;display:flex;flex-direction:column;gap:7px}
+    #neoRomanceVisitCG .neo-dual-cg-frame{position:relative;overflow:hidden;isolation:isolate;background:#10101c;height:min(55dvh,430px);border-radius:10px}
+    #neoRomanceVisitCG .neo-dual-cg-frame img{position:absolute;top:0;left:0;width:100%;height:auto;max-width:none;max-height:none;pointer-events:none}
+    #neoRomanceVisitCG .neo-dual-cg-message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font:14px system-ui;color:#e1d5ed}
+    #neoRomanceVisitCG .neo-dual-cg-caption{text-align:center;color:#e7daec;font:600 14px system-ui}
+    @media(max-width:640px){
+      #neoRomanceVisitCG .neo-dual-cg-panels{grid-template-columns:minmax(0,1fr);gap:12px}
+      #neoRomanceVisitCG .neo-dual-cg-frame{height:36dvh;min-height:170px}
+    }
+  `;
+  dialog.append(style);
+  const head=doc.createElement('div');
+  head.style.cssText='padding:13px 16px;background:#292139;text-align:center;font:700 17px system-ui';
+  head.textContent='♥ Live & Mia · A quiet moment together';
+  dialog.append(head);
+  const panels=doc.createElement('div');
+  panels.className='neo-dual-cg-panels';
+  dialog.append(panels);
+  const entries=[
+   {id:'live',name:'Live',src:'/rpg-assets/characters/mia/events/final/live_sneeze_parody.png',
+    fallback:'/rpg-assets/characters/live/events/final/live_sneeze_parody.png'},
+   {id:'mia',name:'Mia',src:'/rpg-assets/characters/mia/events/final/mia_sneeze_parody.png'}
+  ];
+  const panes=entries.map(entry=>{
+   const panel=doc.createElement('div');panel.className='neo-dual-cg-panel';
+   const caption=doc.createElement('div');caption.className='neo-dual-cg-caption';caption.textContent=entry.name;
+   const frame=doc.createElement('div');frame.className='neo-dual-cg-frame';
+   const img=doc.createElement('img');img.alt=entry.name+' private scene';img.draggable=false;img.hidden=true;
+   const message=doc.createElement('div');message.className='neo-dual-cg-message';
+   message.textContent=discreet?'Artwork hidden in Discreet Mode.':'Loading illustration…';
+   frame.append(img,message);panel.append(caption,frame);panels.append(panel);
+   return {entry,img,message,frame,pan:null,loaded:false};
+  });
+  const note=doc.createElement('p');
+  note.style.cssText='margin:0;padding:4px 12px 8px;color:#c9badb;text-align:center;font:12px system-ui';
+  note.textContent='Two synchronized scene panels';
+  dialog.append(note);
+  const actions=doc.createElement('div');
+  actions.style.cssText='display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:12px 16px 16px';
+  const finish=doc.createElement('button'),cancel=doc.createElement('button');
+  for(const button of [finish,cancel]){
+   button.type='button';
+   button.style.cssText='padding:10px 17px;border-radius:9px;border:1px solid #b38bb8;background:#45315a;color:#fff;font:600 14px system-ui;cursor:pointer';
+  }
+  finish.textContent='Finish scene';finish.disabled=!discreet;
+  cancel.textContent='Leave for now';actions.append(finish,cancel);dialog.append(actions);
+  doc.body.append(dialog);
+  let closed=false;
+  function close(done){
+   if(closed)return;
+   closed=true;
+   for(const pane of panes){pane.pan?.dispose();pane.pan=null;pane.img.removeAttribute('src');}
+   if(dialog.open)dialog.close();
+   dialog.remove();
+   if(done)onFinish?.();else onCancel?.();
+  }
+  finish.onclick=()=>{if(!finish.disabled)close(true);};
+  cancel.onclick=()=>close(false);
+  dialog.addEventListener('cancel',event=>{event.preventDefault();close(false);});
+  dialog.showModal();
+  if(!discreet){
+   const maybeReady=()=>{finish.disabled=!panes.every(p=>p.loaded);};
+   for(const pane of panes){
+    const {entry,img,message,frame}=pane;
+    let fallbackUsed=false;
+    img.onload=()=>{
+     if(closed)return;
+     pane.pan=panApi.attach(frame,img,timingFor(entry.id,0));
+     img.hidden=false;
+     message.style.display='none';
+     pane.loaded=true;
+     maybeReady();
+    };
+    img.onerror=()=>{
+     if(closed)return;
+     if(entry.fallback&&!fallbackUsed){fallbackUsed=true;img.src=entry.fallback;return;}
+     message.textContent='This illustration is not available yet.';
+     pane.loaded=false;maybeReady();
+    };
+    img.src=entry.src;
+   }
+  }
+  return true;
+ }
  return Object.freeze({characters,cooldownDays,chapterId,eligible,ready,pending,offerable,
-  isFirst,accept,complete,nextDay,path,dialogue,timingFor,open});
+  isFirst,accept,complete,nextDay,path,dialogue,timingFor,open,openPair});
 });
