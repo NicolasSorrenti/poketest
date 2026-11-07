@@ -16,7 +16,7 @@
 .nps-goal{padding:9px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#121b35;color:#dfe6ff;font-size:13px}
 .nps-goal strong{color:#ffe39c}
 .nps-main{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:12px;padding:12px}
-.nps-stage{position:relative;aspect-ratio:16/10;background:#273a57 url('/rpg-assets/locations/panoramas/park-day.webp') center center/cover no-repeat;border:2px solid #90b9df99;border-radius:13px;overflow:hidden;touch-action:none;cursor:grab;min-height:240px;user-select:none}
+.nps-stage{position:relative;aspect-ratio:16/10;background:#273a57 url('/rpg-assets/eye-level/park-eye-level-v2.webp') center center/cover no-repeat;border:2px solid #90b9df99;border-radius:13px;overflow:hidden;touch-action:none;cursor:grab;min-height:240px;user-select:none}
 .nps-stage:active{cursor:grabbing}
 .nps-stage::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(#fff0,#07162a35)}
 .nps-stage[data-light=soft]::after,.nps-stage[data-light=warm]::after,.nps-stage[data-light=bright]::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:3}
@@ -89,7 +89,7 @@
 .nps-guide-actions{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:12px}
 .nps-review-card{width:min(780px,100%)}
 .nps-review-content{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,.8fr);gap:16px;align-items:start}
-.nps-review-preview{position:relative;background:#273a57 url('/rpg-assets/locations/panoramas/park-day.webp') center/cover no-repeat;aspect-ratio:16/10;border:3px solid #eedda6;border-radius:11px;overflow:hidden}
+.nps-review-preview{position:relative;background:#273a57 url('/rpg-assets/eye-level/park-eye-level-v2.webp') center/cover no-repeat;aspect-ratio:16/10;border:3px solid #eedda6;border-radius:11px;overflow:hidden}
 .nps-review-preview img{position:absolute;left:50%;bottom:-2%;height:99%;width:80%;object-fit:contain;object-position:center bottom;transform-origin:center 66%}
 .nps-review-preview[data-light=soft]::after,.nps-review-preview[data-light=warm]::after,.nps-review-preview[data-light=bright]::after{content:"";position:absolute;inset:0;pointer-events:none}
 .nps-review-preview[data-light=soft]::after{background:#eff3fb1b}
@@ -306,4 +306,29 @@
  .nps-react-grid .nps-btn{min-height:42px}
  .nps-bottom{padding:4px 8px 5px}
  .nps-mobile-settings,.nps-snaps [data-album],.nps-primary[data-snap]{min-height:48px}
+}
+
+
+/* Photos are captured once from the live camera, not rebuilt inside the review. */
+.nps-review-preview.nps-captured{
+ background:#101a2d;display:flex;align-items:center;justify-content:center;
+}
+.nps-review-preview.nps-captured::after{display:none!important}
+.nps-review-preview img.nps-photo-capture{
+ display:block;position:static;inset:auto;
+ width:100%;height:100%;max-width:100%;max-height:100%;
+ object-fit:contain;object-position:center;
+ transform:none!important;filter:none;box-shadow:none;
+}
+.nps-photo-thumbnail{
+ display:block;width:160px;max-width:100%;height:102px;
+ object-fit:contain;background:#0e1729;
+ border:1px solid #aabbc977;border-radius:7px;
+ margin:0 auto 8px;
+}
+.nps-photo-legacy{
+ display:grid;place-items:center;width:160px;max-width:100%;
+ height:102px;text-align:center;border:1px dashed #8696b488;
+ border-radius:7px;margin:0 auto 8px;
+ font-size:11px;color:#bfcee7;
 }
