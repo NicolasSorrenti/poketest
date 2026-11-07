@@ -1545,7 +1545,7 @@ function score(a,o,cfg,used){
    (repeatedLock?420:185):0;
   const fixedCost=/Discard.*Energy attached to/i.test(attack?.text||'')?30:0;
   const program=ATTACK.compile(attack);
-  const selfDamage=['recoil','coin-recoil','coin-recoil-bonus'].includes(program?.kind)?
+  const selfDamage=['recoil','coin-recoil','coin-recoil-bonus','bench-both-recoil'].includes(program?.kind)?
    (program.selfDamage||0):0;
   const selfKnockout=selfDamage>=hpRemaining(p.active)&&selfDamage>0?
    (program.kind==='recoil'?1:.5):0;
@@ -1553,9 +1553,19 @@ function score(a,o,cfg,used){
   // abandoning the only Active to self-KO can outright lose the match.
   const selfLoss=cfg.level>=4?selfKnockout*
    (p.bench.length===0?240:100)*(1-koChance*.8)*style.survival:0;
+  // Selfdestruct-style attacks can also wound or KO our own Bench. Account
+  // for that board cost even when a replacement survives, instead of treating
+  // the attack as free damage against the opponent's Active.
+  const ownBenchHit=cfg.level===8&&program?.kind==='bench-both-recoil'?
+   Math.max(0,program.benchDamage||0):0;
+  const ownBenchDamage=ownBenchHit?p.bench.reduce((sum,unit)=>
+   sum+Math.min(hpRemaining(unit),ownBenchHit),0):0;
+  const ownBenchKOs=ownBenchHit?p.bench.filter(unit=>
+   hpRemaining(unit)>0&&hpRemaining(unit)<=ownBenchHit).length:0;
+  const ownBenchLoss=(ownBenchDamage*.55+ownBenchKOs*95)*style.survival;
   return 150+direct*.9+(benchTarget?benchDamage*.55:0)+
    (benchKoOpportunity?95*confusionChance:0)+135*koChance+
-   riskPreference+statusValue-fixedCost-selfLoss-idleLockPenalty;
+   riskPreference+statusValue-fixedCost-selfLoss-ownBenchLoss-idleLockPenalty;
  }
  if(type==='play_trainer'){
   const name=card(p.hand[v.handIndex])?.name||'';
