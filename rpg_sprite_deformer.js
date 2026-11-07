@@ -9,26 +9,26 @@
 // Other modes can provide any portrait, crop, zone shapes and BPM.
 (function(root){
  'use strict';
- if(root.NeoRpgSpriteDeformer?.version===2)return;
+ if(root.NeoRpgSpriteDeformer?.version===3)return;
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  const val=(n,def)=>Number.isFinite(Number(n))?Number(n):def;
  const smooth=n=>{n=clamp(n,0,1);return n*n*(3-2*n);};
  const defaults=Object.freeze({
   width:210,height:280,fps:22,tempo:136,speed:.93,
   cropTop:0,cropHeight:.9,baseBounce:0,feverBounce:0,tilt:0,
-  intensity:1,expansion:1,zones:[]
+  intensity:1,expansion:1,feverInflate:0,zones:[]
  });
  const presets=Object.freeze({
   daisyDance:Object.freeze({
    source:'/rpg-assets/characters/daisy/portraits/primary.png',
    width:210,height:280,fps:22,tempo:136,speed:.93,cropTop:0,cropHeight:.9,
-   baseBounce:0.4,feverBounce:1.2,tilt:.002,
+   baseBounce:0,feverBounce:0,tilt:0,feverInflate:.40,
    // Mid-torso zones. Normalized to the cropped portrait, not full source.
    // Separately adjustable regions; excludes head, neck and waist.
    zones:[
     // Each zone independently expands/contracts on the beat; no neck movement.
-    {x:.385,y:.580,rx:.148,ry:.108,inflateX:.18,inflateY:.15,inflatePhase:-.20,scaleX:0,scaleY:0,moveY:0,phase:0},
-    {x:.620,y:.580,rx:.148,ry:.108,inflateX:.18,inflateY:.15,inflatePhase:-.20,scaleX:0,scaleY:0,moveY:0,phase:0}
+    {x:.385,y:.675,rx:.148,ry:.108,inflateX:.18,inflateY:.15,inflatePhase:-.20,scaleX:0,scaleY:0,moveY:0,phase:0},
+    {x:.620,y:.675,rx:.148,ry:.108,inflateX:.18,inflateY:.15,inflatePhase:-.20,scaleX:0,scaleY:0,moveY:0,phase:0}
    ]
   })
  });
@@ -110,7 +110,8 @@
    const original=pixels.data;
    const output=new ImageData(new Uint8ClampedArray(original),W,H),buffer=output.data;
    const phase=ms*.001*clamp(val(config.tempo,136),1,400)/60*Math.PI*clamp(val(config.speed,.93),.01,5);
-   const power=clamp(val(config.intensity,1)*val(config.expansion,1),0,5);
+   const e=clamp(val(energy,0),0,1);
+   const power=clamp(val(config.intensity,1)*val(config.expansion,1)*(1+e*clamp(val(config.feverInflate,0),0,3)),0,5);
    const regions=config.zones.map(z=>({
     x:val(z.x,.5),y:val(z.y,.5),rx:clamp(val(z.rx,.15),.005,1),
     ry:clamp(val(z.ry,.12),.005,1),scaleX:val(z.scaleX,0),
@@ -159,7 +160,6 @@
     }
    }
    dstCtx.putImageData(output,0,0);
-   const e=clamp(val(energy,0),0,1);
    const bounce=Math.sin(2*phase)*(val(config.baseBounce,0)+val(config.feverBounce,0)*e);
    const tilt=Math.sin(phase)*val(config.tilt,0);
    ctx.clearRect(0,0,W,H);
@@ -174,5 +174,5 @@
   if(config.source)setSource(config.source);
   return Object.freeze({render,configure,setSource,dispose,get ready(){return ready;},get source(){return imageSrc;}});
  }
- root.NeoRpgSpriteDeformer=Object.freeze({version:2,create,presets});
+ root.NeoRpgSpriteDeformer=Object.freeze({version:3,create,presets});
 })(window);
