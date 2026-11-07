@@ -778,6 +778,11 @@ function renderMiaSleep(){
     choices:[['Respect her privacy','miaSleepContinue'],['Leave her to rest','miaSleepLeave']]}
   :{speaker:'Mia',line:'You do not have to whisper so much. I like it when you say what you mean. Can you imagine Mom\'s face if she noticed?',
     choices:[['Ask her to keep the moment private','miaSleepContinue'],['Leave her to rest','miaSleepLeave']]};
+ if(stage==='moment')return who==='live'
+  ?{speaker:'Narrator',line:'Live looks toward the sleeping Mia, then takes your hand. You share a quiet moment before she gently suggests continuing the conversation somewhere more private.',
+    choices:[['Stay a moment longer','miaSleepContinue'],['Leave quietly','miaSleepLeave']]}
+  :{speaker:'Narrator',line:'Mia lowers her voice and smiles. You sit together for a while, sharing a secret conversation while Live sleeps nearby.',
+    choices:[['Stay a moment longer','miaSleepContinue'],['Leave quietly','miaSleepLeave']]};
  if(stage==='end')return who==='live'
   ?{speaker:'Live',line:'Thank you for being discreet. Let us have a proper conversation later, when nobody is trying to sleep.',
     choices:[['Leave quietly','miaSleepFinish']]}
@@ -790,7 +795,7 @@ function miaSleepAction(action){
   state.miaSleepTarget=action==='miaSleepLive'?'live':'mia';
   state.miaSleepStage='wake';
  }else if(action==='miaSleepTalk')state.miaSleepStage='talk';
- else if(action==='miaSleepContinue')state.miaSleepStage='end';
+ else if(action==='miaSleepContinue')state.miaSleepStage=state.miaSleepStage==='talk'?'moment':'end';
  else if(action==='miaSleepLeave')state.miaSleepStage='leave';
  else if(action==='miaSleepFinish'){
   const m=state.mandatoryEventState;
