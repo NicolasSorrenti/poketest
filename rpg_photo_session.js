@@ -64,7 +64,7 @@
   shell.innerHTML='<div class="nps-shell">'+
    '<header class="nps-top"><div><div class="nps-kicker">NEO CAMPUS · '+humanLocation(session.location)+'</div>'+
    '<h2>📷 Photo Session · '+session.name+'</h2></div><div class="nps-top-right">'+
-   '<span data-shotcount>Shot 1 / 3</span><strong data-score>0 pts</strong>'+
+   '<span data-shotcount>Shot 1 / 3</span><strong data-score>0 / 3</strong>'+
    '<button type="button" class="nps-btn nps-help" data-help>❔ Help</button>'+
    '<button type="button" class="nps-btn nps-close" data-close>✕ Close</button></div></header>'+
    '<div class="nps-goal"><div class="nps-brief-copy"><div class="nps-step-tag">PHOTO BRIEF · <span data-brief-index>1 OF 3</span></div>'+
@@ -85,6 +85,12 @@
    '<button type="button" class="nps-btn" data-mobile-zoom-out aria-label="Zoom out">−</button>'+
    '<button type="button" class="nps-btn" data-mobile-face aria-label="Focus on face">FACE</button></div>'+
    '<div class="nps-caption" data-caption>'+session.name+': "Ready when you are!"</div>'+
+   '<div class="nps-story-subtitle" data-story-subtitle aria-live="polite">'+
+   '<div class="nps-subtitle-meta"><span data-story-speaker>'+session.name+'</span>'+
+   '<span data-story-step>PHOTO 1 / 3</span></div>'+
+   '<div class="nps-subtitle-context" data-story-context></div>'+
+   '<div class="nps-subtitle-line" data-story-line>Ready for the first picture?</div>'+
+   '<div class="nps-subtitle-request" data-story-request></div></div>'+
    '<div class="nps-loading" data-loading>Loading '+session.name+'’s artwork…</div></div>'+
    '<div class="nps-controls" id="nps-controls-panel">'+
    '<section class="nps-section" data-style-section><h3>📸 Session style</h3>'+
@@ -115,7 +121,7 @@
    '<div class="nps-snaps"><span class="nps-snap-status" data-next-action>Match the brief, then snap when the meter is full.</span>'+
    '<button type="button" class="nps-btn nps-mobile-settings" data-mobile-settings aria-label="Camera settings" aria-expanded="false" aria-controls="nps-controls-panel">⚙ Settings</button>'+
    '<button class="nps-btn" data-album>View album</button>'+
-   '<button class="nps-btn nps-primary" data-snap>📷 SNAP!</button></div></footer></div>';
+   '<button class="nps-btn nps-primary" data-snap aria-label="Take photograph">📷 <span>SNAP</span></button></div></footer></div>';
   document.body.append(shell);
   session.shell=shell;
   const stage=$(shell,'[data-stage]'),actor=$(shell,'[data-actor]'),
@@ -129,6 +135,19 @@
   backdrop.src=PHOTO_BACKGROUND;
   stage.style.backgroundImage='url("'+PHOTO_BACKGROUND+'")';
   session.backdrop=backdrop;
+
+  function storySubtitle(line='',task=session.tasks[session.shots.length]){
+   if(!session.scripted)return;
+   const panel=$(shell,'[data-story-subtitle]');
+   if(!panel)return;
+   const plain=String(line||'').replace(/^[^:]+:\s*"/,'').replace(/"$/,'').trim();
+   $(panel,'[data-story-speaker]').textContent=session.name;
+   $(panel,'[data-story-step]').textContent='PHOTO '+(Math.min(3,session.shots.length+1))+' / 3';
+   $(panel,'[data-story-context]').textContent=task?.intro||session.narrative?.hook||'';
+   $(panel,'[data-story-line]').textContent=plain||task?.dialogue||'Look toward the camera.';
+   $(panel,'[data-story-request]').textContent=task?.dialogue?
+    'YOUR SHOT  ·  '+task.dialogue:'';
+  }
   const silhouette=$(shell,'.nps-silhouette');
   const cameraLayer=()=>shell.classList.contains('nps-discreet')?silhouette:actor;
   function paintCamera(){
@@ -240,6 +259,7 @@
    drawChoices();
    updateFeedback();
    $(shell,'[data-caption]').textContent=opts.line||captions[target.id];
+   if(session.scripted&&opts.line)storySubtitle(opts.line);
    if(session.motionResolve){session.motionResolve(false);session.motionResolve=null;}
    if(shell.classList.contains('nps-discreet')){
     loading.hidden=true;
@@ -321,13 +341,19 @@
     const started=performance.now();
     session.reaction={id:action.id,pose:frame.pose,highlight:!!frame.highlight,
      start:started,duration:frame.duration};
-    status.textContent=frame.highlight?(session.scripted?'📷 Now! '+session.tasks[session.shots.length]?.dialogue:
+    status.textContent=frame.highlight?(session.scripted?'📷 Frame the detail when ready':
       '📷 PHOTO OPPORTUNITY! Capture '+session.name+' now!'):
-     session.name+': '+(i===0?'Reacting…':'The moment is changing…');
+     session.name+': '+(i===0?'Preparing the pose…':'The moment is changing…');
+    if(session.scripted)storySubtitle(frame.line);
     updateFeedback();
     await new Promise(resolve=>{
      session.reactionCancel=resolve;
-     session.reactionTimer=setTimeout(()=>{session.reactionCancel=null;resolve();},frame.duration);
+     // Narrative poses hold until SNAP. No timed-out dialogue, no forced
+     // neutral sprite while the player is still reading and framing.
+     if(!session.scripted||!frame.highlight){
+      session.reactionTimer=setTimeout(()=>{session.reactionCancel=null;resolve();},
+       session.scripted?Math.max(2600,frame.duration):frame.duration);
+     }
     });
     if(session.closed||serial!==session.reactionSerial)return;
    }
@@ -414,7 +440,8 @@
      if(recommended)actionList.prepend(recommended);
     }
     for(const b of actionList.children){
-     b.disabled=session.reactionBusy||session.reviewOpen;
+     b.disabled=session.reviewOpen||
+      (session.reactionBusy&&(!session.scripted||!session.reaction?.highlight));
      b.classList.toggle('nps-recommended',b.dataset.action===goal?.action);
     }
    }
@@ -445,9 +472,10 @@
     // Lighting is automatically chosen for the character's scene.
     session.light=task.light;
     stage.dataset.light=session.light;
+    storySubtitle(task.intro,task);
     drawChoices();
    }
-   $(shell,'[data-score]').textContent=session.shots.reduce((v,p)=>v+p.score,0)+' pts';
+   $(shell,'[data-score]').textContent=session.shots.length+' / 3';
    updateFeedback();
   }
   function currentMeter(){
@@ -455,8 +483,7 @@
     const r=session.reaction;
     if(!r?.highlight)return 0;
     const t=clamp((performance.now()-r.start)/r.duration,0,1);
-    return session.scripted?
-     clamp(1-Math.abs(t-.5)*.8,0,1):
+    return session.scripted?1:
      clamp(1-Math.abs(t-.47)*2.2,0,1);
    }
    return .5+.5*Math.sin((performance.now()-session.begin)/620);
@@ -524,7 +551,9 @@
      'Choose an interaction to reveal different poses.')+'</div></div>'+
     '<div><b>2 · Prepare your shot</b><div>Pinch or use the camera’s +/− buttons to zoom and drag to frame the character. Lighting and other modes are under Settings on mobile.</div></div>'+
     '<div><b>3 · Photograph the detail!</b><div>Move the requested detail to the center, then press SNAP during the moment. Retakes never cost time.</div></div></div>'+
-    '<p>There is no countdown between interactions. A reaction itself is brief, but you can trigger it again. Directed and Candid modes remain available for free posing.</p>'+
+    '<p>'+(session.scripted?
+     'The requested pose and subtitle stay visible until you take the photo. Results appear together after all three shots. Space takes a photo on PC.':
+     'In free posing you can retry any reaction. Scores appear only after all three photos.')+'</p>'+
     '<div class="nps-guide-actions"><button type="button" class="nps-btn nps-primary" data-start-shooting>Got it · Start shooting!</button></div></div>';
    $(shell,'.nps-shell').append(guide);
    $(guide,'[data-start-shooting]').onclick=()=>{
@@ -701,13 +730,20 @@
    b.onclick=()=>{report.remove();$(shell,'.nps-main').hidden=false;$(shell,'.nps-bottom').hidden=false;$(shell,'.nps-goal').hidden=false;};
   }
   function snap(){
-   if(session.reviewOpen||session.shots.length>=3||!loading.hidden)return;
+   if(session.closed||session.reviewOpen||session.shots.length>=3||
+      !loading.hidden||!!$(shell,'.nps-instructions')||
+      !!$(shell,'.nps-report'))return;
+   // A scripted shot must show the target pose. Preparing dialogue is not a
+   // shutter opportunity, but there is no deadline once the pose is ready.
+   if(session.scripted&&(!session.reaction?.highlight||
+      session.poseId!==session.tasks[session.shots.length]?.pose))return;
    const task=session.tasks[session.shots.length];
    const points=photoScore();
    let capture;
    try{capture=captureStage();}
    catch(error){
     $(shell,'[data-caption]').textContent='Camera: '+error.message;
+    if(session.scripted)storySubtitle('Camera: '+error.message,task);
     console.warn('Photo capture unavailable',error);return;
    }
    const shot={character:session.id,location:session.location,storyId:session.storyId,
@@ -715,8 +751,46 @@
     light:session.light,zoom:Number(session.zoom.toFixed(2)),
     x:Math.round(session.x),y:Math.round(session.y),score:points.score,task:task.name,
     thumbnail:capture.thumbnail};
+   // No single-shot result, numerical score or blocking review between photos.
+   // Keep full frames in memory until the three-shot contact sheet is displayed.
    stopReaction();
-   showReview(shot,points,capture.fullImage);
+   session.shots.push({...shot,snapshot:capture.fullImage,
+    breakdown:points});
+   const mini=$(shell,'[data-mini]');
+   mini.replaceChildren();
+   session.shots.forEach((p,i)=>{
+    const item=document.createElement('div');
+    item.className='nps-mini-photo';
+    item.textContent='✓ Shot '+(i+1)+' captured';
+    mini.append(item);
+   });
+   stage.classList.remove('nps-shutter-flash');
+   void stage.offsetWidth;
+   stage.classList.add('nps-shutter-flash');
+   const done=session.shots.length===3;
+   const spoken=session.narrative?task.successLine:
+    'Got it! '+(done?'Let us review all three.':'Ready for the next one?');
+   $(shell,'[data-caption]').textContent=session.name+': "'+spoken+'"';
+   if(session.scripted)storySubtitle(spoken,task);
+   if(done){
+    session.reviewOpen=true;
+    session.storyTimer=setTimeout(()=>{
+     session.storyTimer=null;
+     if(!session.closed)showResult();
+    },session.scripted?1750:400);
+    return;
+   }
+   taskUI();
+   if(session.scripted){
+    // Let the reaction play as a transition, then cue the next microstory.
+    queueStoryReaction(session.tasks[session.shots.length],
+     spoken,1850,task.followupPose);
+   }else{
+    const next=session.tasks[session.shots.length];
+    const reset=session.mode==='reactions'?'neutral':
+     pose(next.pose).kind==='candid'?'walking':'neutral';
+    void setMood(reset,{fromReaction:session.mode==='reactions',silent:true});
+   }
   }
   function queueStoryReaction(task,line,delay=1250,followupPose=null){
    if(!task||session.closed)return;
@@ -733,109 +807,6 @@
     session.storyTimer=null;
     if(!session.closed&&!session.reviewOpen)void playReaction(task.action);
    },delay);
-  }
-  function showReview(shot,points,snapshot=null){
-   session.reviewOpen=true;
-   const review=document.createElement('div');
-   review.className='nps-review';
-   review.setAttribute('role','dialog');
-   review.setAttribute('aria-label','Review your photo');
-   review.innerHTML='<div class="nps-guide-card nps-review-card">'+
-    '<div class="nps-step-tag">PHOTO REVIEW · SHOT '+(session.shots.length+1)+' OF 3</div>'+
-    '<h3>'+points.score+' / 100 points</h3>'+
-    '<div class="nps-review-content">'+
-    '<div class="nps-review-preview" data-preview></div>'+
-    '<div><div class="nps-review-breakdown" data-breakdown></div>'+
-    '<p class="nps-review-message" data-review-message></p></div></div>'+
-    '<div class="nps-guide-actions">'+
-    '<button type="button" class="nps-btn" data-retry>↻ Try again</button>'+
-    '<button type="button" class="nps-btn nps-primary" data-keep>✓ Keep photo</button>'+
-    '</div></div>';
-   const preview=$(review,'[data-preview]');
-   preview.classList.add('nps-captured');
-   if(!shell.classList.contains('nps-discreet')&&snapshot){
-    const img=document.createElement('img');
-    img.className='nps-photo-capture';
-    img.src=snapshot;
-    img.alt='The exact photograph captured when SNAP was pressed';
-    preview.append(img);
-   }else{
-    const symbol=document.createElement('div');
-    symbol.style.cssText='height:100%;display:grid;place-items:center;font-size:65px;color:#faf7ff';
-    symbol.textContent='◇';
-    preview.append(symbol);
-   }
-   const checks=[['Pose / expression',points.pose,35],
-    [session.scripted?'Requested detail':'Zoom and composition',points.framing,30],
-    ['Lighting',points.light,15],
-    ['Shutter moment',points.moment,20]];
-   const list=$(review,'[data-breakdown]');
-   for(const [label,value,max] of checks){
-    const row=document.createElement('div');
-    const name=document.createElement('span');
-    name.textContent=label;
-    const score=document.createElement('strong');
-    score.textContent=value+' / '+max;
-    row.append(name,score);
-    list.append(row);
-   }
-   const weakest=checks.slice().sort((a,b)=>a[1]/a[2]-b[1]/b[2])[0];
-   const storyTask=session.tasks[session.shots.length];
-   $(review,'[data-review-message]').textContent=session.narrative?
-    session.name+': "'+(points.score>=55?storyTask.successLine:storyTask.retryLine)+'"':
-    points.score>=85?
-     session.name+': "That one is great! Can we keep it?" You can keep it or practice again.':
-    points.score>=65?
-     'Nice shot! You could improve the '+weakest[0].toLowerCase()+' for a higher score.':
-     'Almost there! The biggest improvement would be '+weakest[0].toLowerCase()+'. Try again—there is no penalty.';
-   $(shell,'.nps-shell').append(review);
-   $(review,'[data-retry]').onclick=()=>{
-    session.reviewOpen=false;review.remove();
-    if(session.scripted){
-     const current=session.tasks[session.shots.length];
-     drawChoices();
-     if(session.narrative)queueStoryReaction(current,current.retryLine,1150);
-     else void playReaction(current.action);
-    }else{
-     void setMood('neutral',{fromReaction:session.mode==='reactions',silent:true});
-     drawChoices();updateFeedback();
-    }
-   };
-   $(review,'[data-keep]').onclick=()=>{
-    session.reviewOpen=false;review.remove();
-    session.shots.push({...shot,snapshot});
-    const mini=$(shell,'[data-mini]');
-    mini.replaceChildren();
-    session.shots.forEach((p,i)=>{
-     const label=document.createElement('div');
-     label.className='nps-mini-photo';
-     label.textContent='Photo '+(i+1)+' · '+p.score+'/100';
-     mini.append(label);
-    });
-    const finished=session.tasks[session.shots.length-1];
-    const successLine=session.narrative?(shot.score>=55?finished.successLine:
-     'Let me try that pose again sometime.'):'';
-    $(shell,'[data-caption]').textContent=successLine?
-     session.name+': "'+successLine+'"':shot.score>=85?
-     session.name+': "That looks fantastic! Show me!"':shot.score>=65?
-     session.name+': "Hey, I like that one!"':session.name+': "We can try a new angle next time!"';
-    if(session.shots.length===3){showResult();}
-    else{
-     taskUI();
-     const next=session.tasks[session.shots.length];
-     if(session.scripted){
-      // Let the model react to the last result before automatically
-      // changing pose and beginning the next part of the microstory.
-      drawChoices();
-      if(session.narrative)queueStoryReaction(next,successLine,1700,finished.followupPose);
-      else void playReaction(next.action);
-     }else{
-      const reset=session.mode==='reactions'?'neutral':pose(next.pose).kind==='candid'?'walking':'neutral';
-      void setMood(reset,{fromReaction:session.mode==='reactions',silent:true});
-     }
-    }
-   };
-   $(review,'[data-retry]').focus();
   }
   function showResult(){
    const average=Math.round(session.shots.reduce((n,x)=>n+x.score,0)/3);
@@ -856,6 +827,30 @@
     div.append(strong,small);cards.append(div);
    }
    report.append(cards);
+   // The three photographs and their individual results are revealed together.
+   const gallery=document.createElement('div');
+   gallery.className='nps-final-gallery';
+   session.shots.forEach((shot,index)=>{
+    const item=document.createElement('div');
+    item.className='nps-final-photo';
+    if(!shell.classList.contains('nps-discreet')&&(shot.snapshot||shot.thumbnail)){
+     const photo=document.createElement('img');
+     photo.src=shot.snapshot||shot.thumbnail;
+     photo.alt='Photo '+(index+1)+' of '+session.name;
+     item.append(photo);
+    }else{
+     const hidden=document.createElement('div');
+     hidden.className='nps-photo-legacy';hidden.textContent='Photo hidden';
+     item.append(hidden);
+    }
+    const title=document.createElement('strong');
+    title.textContent='Photo '+(index+1)+' · '+shot.score+'/100';
+    const detail=document.createElement('p');
+    detail.textContent=shot.task;
+    item.append(title,detail);
+    gallery.append(item);
+   });
+   report.append(gallery);
    const note=document.createElement('p');
    note.textContent=session.freePlay?
     'Practice only: no time, focus, credits or affection are changed.':
@@ -872,7 +867,21 @@
      characterId:session.id,storyId:session.storyId};
     close(true,result);
    };
-   buttons.append(cancel,finish);report.append(buttons);
+   const retake=document.createElement('button');
+   retake.className='nps-btn';retake.textContent='↻ Retake all three';
+   retake.onclick=()=>{
+    clearTimeout(session.storyTimer);session.storyTimer=null;
+    session.reviewOpen=false;session.shots=[];
+    report.remove();
+    $(shell,'.nps-main').hidden=false;
+    $(shell,'.nps-bottom').hidden=false;
+    $(shell,'.nps-goal').hidden=false;
+    $(shell,'[data-mini]').replaceChildren();
+    taskUI();
+    if(session.scripted)void playReaction(session.tasks[0].action);
+    else void setMood('neutral',{fromReaction:true,silent:true});
+   };
+   buttons.append(retake,cancel,finish);report.append(buttons);
    $(shell,'.nps-shell').append(report);
    $(shell,'.nps-main').hidden=true;
    $(shell,'.nps-bottom').hidden=true;
@@ -889,6 +898,7 @@
    root.removeEventListener('resize',camera);
    session.preload.clear();
    if(session.interval)clearInterval(session.interval);
+   document.removeEventListener('keydown',onShutterKey,true);
    shell.remove();
    active=null;
    try{if(completed)session.onComplete?.(result);else session.onCancel?.();}
@@ -898,6 +908,19 @@
   $(shell,'[data-close]').onclick=()=>close(false);
   $(shell,'[data-help]').onclick=showGuide;
   $(shell,'[data-snap]').onclick=snap;
+  const onShutterKey=event=>{
+   if(event.code!=='Space'&&event.key!==' ')return;
+   if(session.closed||!document.body.contains(shell)||event.repeat||
+      $(shell,'.nps-instructions')||$(shell,'.nps-report')||
+      $(shell,'.nps-review'))return;
+   const target=event.target;
+   if(target?.isContentEditable||
+      /^(INPUT|TEXTAREA|SELECT)$/.test(target?.tagName||''))return;
+   event.preventDefault();
+   event.stopPropagation();
+   snap();
+  };
+  document.addEventListener('keydown',onShutterKey,true);
   $(shell,'[data-album]').onclick=showAlbum;
   const settingsButton=$(shell,'[data-mobile-settings]');
   function mobileSettings(open){
