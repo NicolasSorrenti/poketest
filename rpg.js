@@ -673,10 +673,11 @@ function livePhotoRequest(active){
 
 function MIA_BASE_PRIVATE_IMAGE(){
  // Later artwork is not used in this non-explicit adaptation.
- const stage=Number(state.miaPrivateStage)||1;
+ const stage=state.miaPrivateStage==='outro'?1:Number(state.miaPrivateStage)||1;
  return '/rpg-assets/characters/lyla/events/mia/part'+Math.min(4,Math.max(1,stage))+'.png';
 }
 function renderMiaPrivate(){
+ if(state.miaPrivateStage==='outro')return {speaker:'Mia',line:'Ah... I guess that\'s fine.',choices:[['Continue ›','miaPrivateClose']]};
  const step=Math.max(1,Math.min(7,Number(state.miaPrivateStage)||1));
  const nodes={
   1:['Mia','Can I ask you something? Do you really see yourself becoming my daddy, or was that just our joke?'],
@@ -717,7 +718,9 @@ function miaPrivateAction(action){
  }else if(action==='miaPrivateAgain'&&step===4){
   // Repeat the point of no return; don't automatically proceed.
   state.miaPrivateStage=4;
- }else if(action==='miaPrivateExit'||action==='miaPrivateFinish'){
+ }else if(action==='miaPrivateExit'){
+  state.miaPrivateStage='outro';
+ }else if(action==='miaPrivateClose'||action==='miaPrivateFinish'){
   // Finish through the authoritative mandatory state machine so reloads
   // cannot reopen this once-per-save scene.
   m.active.phase='choice';m.active.choice=null;
@@ -730,11 +733,6 @@ function miaPrivateAction(action){
   state.liveLastEventDay=state.day;
   state.liveDayScene=null;
   state.liveHomeActivityScene=null;
-  if(action==='miaPrivateExit'){
-   // An explicit final line with part1 CG, shown via the normal story overlay.
-   scene.line='Ah... I guess that\'s fine.';
-   scene.speaker='Mia';
-  }
   log('Mia conversation: '+state.miaPrivateOutcome+'.');
  }else return true;
  persist();render();return true;
