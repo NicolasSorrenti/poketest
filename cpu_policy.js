@@ -352,14 +352,26 @@ function openingReadiness(cardId,hand,apex=false){
  // Their readiness must not depend on finding an attachable Energy card.
  // Apex values a usable free attack as real first-turn tempo, not merely
  // a small consolation bonus for having no Energy in the opening hand.
- const freeReadiness=apex?70:12;
- let readiness=moves.some(move=>(move.cost||[]).length===0)?freeReadiness:0;
+ // A free utility move is not equivalent to a free damaging attack.
+ // Prefer immediate damage in the opening Active, while still recognizing
+ // status/control moves as playable without an Energy card.
+ const freeReadiness=move=>{
+  if(!apex)return 12;
+  const program=ATTACK.compile(move);
+  const raw=parseInt(String(move.damage||'0'),10)||0;
+  const damageKind=['coin-times','coin-failure','coin-bonus','coin-recoil-bonus',
+   'flail-counters','own-counters','defender-counters','bench-count'].includes(program?.kind);
+  if(raw>0||damageKind)return 70;
+  return /poison|paraly|asleep|sleep|confus/i.test(move.text||'')?32:18;
+ };
+ let readiness=moves.reduce((best,move)=>
+  (move.cost||[]).length===0?Math.max(best,freeReadiness(move)):best,0);
  if(!energies.length)return readiness;
  for(const e of energies){
   const provided=energyPool({energies:[e]});
   for(const move of moves){
    const cost=move.cost||[];
-   if(!cost.length)readiness=Math.max(readiness,freeReadiness);
+   if(!cost.length)readiness=Math.max(readiness,freeReadiness(move));
    else if(canPayEnergy(cost,provided))readiness=Math.max(readiness,85);
    else if(cost.some(t=>t!=='Colorless'&&(provided.includes(t)||provided.includes('Any'))))
     readiness=Math.max(readiness,30);
