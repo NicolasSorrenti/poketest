@@ -512,6 +512,7 @@
     (session.scripted?({eyes:'Eyes',hair:'Hair',collar:'Neckline',lips:'Smile',
      'back-detail':'Clothing detail from behind',hands:'Hands',skirt:'Skirt hem',
      shoulders:'Shoulders',waist:'Waist',legs:'Legs',
+     crotch:'Lower front of outfit',rear:'Back of outfit',
      outfit:'Outfit',natural:'Candid moment'}[task.target?.region]||'Detail'):
      ({close:'Close-up',medium:'Medium',full:'Full body'}[task.framing]))+
     (frameGood&&centered?' ✓':(!frameGood?' · now '+myFrame:' · center character')));
