@@ -87,6 +87,35 @@
   const established=Array.isArray(guests)?guests.filter(id=>cast[id]):[];
   const fallback={neighborhood:'elio',regional:'alma',championship:'nereo'}[cup.id];
   const guestAt=i=>established[i]||null;
+  if(key==='wakeup'&&state?.tournamentNarrative?.[cup.id]?.miaWakeup){
+   // Five ordered CGs: sleeping -> realizing the time -> Mia at the
+   // doorway -> turning around -> facing Mia. This replaces, not adds to,
+   // the normal tournament wake-up. The saved deck is never rewarded twice.
+   const sequence=[
+    ['Narrator','You open your eyes to bright morning sunlight. Live is still asleep right beside you.',0],
+    ['You','Live...? What happened? Weren\'t you supposed to wake me up?',0],
+    ['Narrator','You gently call her name. Live stirs, still half asleep.',0],
+    ['Live','Mmm... just five more minutes, sweetheart...',0],
+    ['Narrator','Her eyes snap open when she sees the clock.',1],
+    ['Live','WAIT! I fell asleep too?! I only meant to let you rest for five more minutes!',1],
+    ['You','I think those five minutes got a little out of hand.',1],
+    ['Live','Nine twenty-seven?! Oh no, honey, your tournament! Where is your deck?',1],
+    ['Narrator','The bedroom door swings open before either of you can move.',2],
+    ['Mia','MOM! You promised you would wake him up! Everyone is going to be waiting!',2],
+    ['Live','Mia?! I can explain! I just sat down for a moment and...',2],
+    ['Mia','And somehow fell asleep? In HIS room? Seriously, Mom?',2],
+    ['Narrator','Live turns toward the doorway, suddenly very conscious of how this must look.',3],
+    ['Live','Sweetheart, please lower your voice! We are trying to get ready!',3],
+    ['Mia','Well, it does not look like either of you has started!',3],
+    ['Narrator','Live shifts around to face Mia, trying desperately to recover her dignity.',4],
+    ['Live','The deck is right here! I put it on the desk last night. Nothing is missing!',4],
+    ['Mia','Good. Then both of you get moving! Breakfast is getting cold.',4],
+    ['Live','You heard her, love. Come on. I will cheer twice as loudly to make up for this.',4],
+    ['Narrator','You grab your already-saved deck box and hurry toward the tournament. Live and Mia follow, still bickering about those five minutes.',4]
+   ];
+   sequence.forEach(([speaker,text,frame])=>out.push({speaker,text,frame,miaWakeup:true}));
+   return out;
+  }
   if(key==='wakeup'){
    // Live returns the player's EXISTING deck box; this is not a card reward.
    const variants={
@@ -267,6 +296,10 @@
   if(!doc?.body||!cup)return false;
   mount(doc);overlay.hidden=false;overlay.dataset.cup=cup.id;overlay.dataset.phase=phase;
   overlay.dataset.liveRomance=(phase==='wakeup'&&liveRomance)?'on':'off';
+  const wakeItem=script[Math.max(0,Math.min(index,script.length-1))];
+  const miaSequence=phase==='wakeup'&&!!script[0]?.miaWakeup;
+  overlay.dataset.miaWakeup=miaSequence?'on':'off';
+  overlay.dataset.miaWakeupFrame=miaSequence?String(wakeItem?.frame??0):'0';
   // Discreet Mode must not display or fetch the character illustration.
   overlay.dataset.discreet=(doc.documentElement?.dataset?.rpgDiscreet==='on'||
    (typeof window!=='undefined'&&window.NeoRpgDiscreet?.isEnabled?.()===true))?'on':'off';
