@@ -18351,7 +18351,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Smash Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Smash Kick: printed catalogue is flat 10 for one Colorless; generic flat-damage route must still be executed for cost, weakness, resistance and turn handoff. No reducer execution; independent printed/errata/historical ruling verification pending."
+          ],
+          "scope": "PARTIAL — current live headless engine source only, scenarios unexecuted"
         },
         {
           "kind": "power",
@@ -18359,9 +18363,10 @@
           "name": "Energy Evolution",
           "status": "partial",
           "evidence": [
-            "Source-only current RPG/Classic engine review (2026-11-06): Attachment hook in classic_power_core.js flips on typed Energy and offers an Eevee evolution from deck; evolves and shuffles. Scenarios: heads/tails, decline, empty deck, Energy type and special Energy, Bench/Active, status lock, evolution timing and turn ownership. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending."
+            "Source-only current RPG/Classic engine review (2026-11-06): Attachment hook in classic_power_core.js flips on typed Energy and offers an Eevee evolution from deck; evolves and shuffles. Scenarios: heads/tails, decline, empty deck, Energy type and special Energy, Bench/Active, status lock, evolution timing and turn ownership. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending.",
+            "2026-11-07 live RPG/Classic source-only audit: Smash Kick: printed catalogue is flat 10 for one Colorless; generic flat-damage route must still be executed for cost, weakness, resistance and turn handoff. No reducer execution; independent printed/errata/historical ruling verification pending."
           ],
-          "scope": "Source-only PARTIAL; scenarios specified, not executed"
+          "scope": "PARTIAL — current live headless engine source only, scenarios unexecuted"
         }
       ]
     },
@@ -18374,13 +18379,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Bite",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Bite: catalogue flat 10 for one Colorless; generic damage route requires reducer execution. No reducer execution; independent printed/errata/historical ruling verification pending."
+          ],
+          "scope": "PARTIAL — current live headless engine source only, scenarios unexecuted"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Plunder",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Plunder: neo_attack_batch_v046 registers neo2-39|Plunder and sets discardDefenderTrainers; headless_duel removes defender attached Trainers before damage. Check Defender, Focus Band, EXP.ALL, owner discard, KO/Prize/promotion, zero attachments. No reducer execution; independent printed/errata/historical ruling verification pending."
+          ],
+          "scope": "PARTIAL — current live headless engine source only, scenarios unexecuted"
         }
       ]
     },
@@ -18395,9 +18408,10 @@
           "name": "Gaze",
           "status": "partial",
           "evidence": [
-            "Source-only current RPG/Classic engine review (2026-11-06): Activated Gaze selects opposing Benched Pokémon with a Power; gazeSuppressedUntil blocks it until turn boundary or Bench exit. Scenarios: multiple Powers, moving Active and back, no legal target, repeated activation, turn ownership. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending."
+            "Source-only current RPG/Classic engine review (2026-11-06): Activated Gaze selects opposing Benched Pokémon with a Power; gazeSuppressedUntil blocks it until turn boundary or Bench exit. Scenarios: multiple Powers, moving Active and back, no legal target, repeated activation, turn ownership. No reducer execution; printed card text from imported TCGdex data only, independent errata/historical rulings pending.",
+            "2026-11-07 live RPG/Classic source-only audit: Gaze: classic_power_core selects opposing Benched Pokemon with Power, applies gazeSuppressedUntil turnSerial+1, clears when leaves Bench, once-per-turn registry. Check multiple powers, bench exit and return, Toxic Gas, zero targets, turn ownership. No reducer execution; independent printed/errata/historical ruling verification pending."
           ],
-          "scope": "Source-only PARTIAL; scenarios specified, not executed"
+          "scope": "PARTIAL — current live headless engine source only, scenarios unexecuted"
         }
       ]
     },
@@ -18410,7 +18424,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Secrete Poison",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Secrete Poison: neo_attack_batch_v049 sets neo49SecretePoison; headless_duel reactive branch checks positive damage and poisons attacker plus 10 each opposing Bench. Check fatal damage to Kakuna, attack damage prevention, Bench KOs, simultaneous prizes and turn ownership. No reducer execution; independent printed/errata/historical ruling verification pending."
+          ],
+          "scope": "PARTIAL — current live headless engine source only, scenarios unexecuted"
         }
       ]
     },
@@ -18423,13 +18441,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Harden",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Harden: generic protection pattern requires inspection/execution for <=20 after weakness/resistance, preservation of other effects, duration, KO. No reducer execution; independent printed/errata/historical ruling verification pending."
+          ],
+          "scope": "PARTIAL — current live headless engine source only, scenarios unexecuted"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hatch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Hatch: headless_duel discovery:hatch makes optional evolution selection on heads, heals all damage and shuffles; compare mandatory printed search/evolution when available, empty deck, evolution timing, KO and turn ownership. No reducer execution; independent printed/errata/historical ruling verification pending."
+          ],
+          "scope": "PARTIAL — current live headless engine source only, scenarios unexecuted"
         }
       ]
     },
