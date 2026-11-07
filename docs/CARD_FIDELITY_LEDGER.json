@@ -21860,7 +21860,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Water Gun",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live headless source review: Water Gun 10+ imported text says each extra Energy (not Water-only); verify compiler generic water-extra vs coin and Special Energy. Scenario one Water cost, +0/+1/+2/+3 extra cards, weakness and KO. Historical printed ruling and reducer execution outstanding."
+          ]
         }
       ]
     },
@@ -21873,13 +21876,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live Power core review: [Laugh] registered ACTIVATED and ONCE; coin heads shuffles both decks without drawing, tails no shuffle. Status locks exempted. Scenario both decks, empty deck, once per turn and turn ownership; source-only."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Laugh]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live Power core review: [Laugh] registered ACTIVATED and ONCE; coin heads shuffles both decks without drawing, tails no shuffle. Status locks exempted. Scenario both decks, empty deck, once per turn and turn ownership; source-only."
+          ]
         }
       ]
     },
@@ -21892,13 +21901,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live Power core review: [Search] registered, prompts own Prize index, logs privately and leaves Prize in place. Check privacy, once per turn, status exemption and prizes after KO; source-only."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Search]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live Power core review: [Search] registered, prompts own Prize index, logs privately and leaves Prize in place. Check privacy, once per turn, status exemption and prizes after KO; source-only."
+          ]
         }
       ]
     },
@@ -21911,13 +21926,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live Power core review: [Tell] registered, heads logs opponent hand privately and shows own hand to opponent, tails no reveal; status exemption and once per turn. Check private log exposure and hand mutations; source-only."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Tell]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live Power core review: [Tell] registered, heads logs opponent hand privately and shows own hand to opponent, tails no reveal; status exemption and once per turn. Check private log exposure and hand mutations; source-only."
+          ]
         }
       ]
     },
@@ -21930,13 +21951,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Hidden Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live Power core review: [Vanish] on-play missing in prior ONPLAY registry; fixed directly on main commits 79e9386f and 9ef85f08. Optional flip, heads optional different Unown Active/Bench return with attached cards discarded, Active promotion. No reducer execution; edge cases and historical rulings remain partial."
+          ]
         },
         {
           "kind": "power",
           "index": 0,
           "name": "[Vanish]",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live Power core review: [Vanish] on-play missing in prior ONPLAY registry; fixed directly on main commits 79e9386f and 9ef85f08. Optional flip, heads optional different Unown Active/Bench return with attached cards discarded, Active promotion. No reducer execution; edge cases and historical rulings remain partial."
+          ]
         }
       ]
     },
