@@ -53,7 +53,16 @@
    const sourceH=image.naturalHeight*heightFraction;
    const sourceW=Math.min(image.naturalWidth,sourceH*W/H);
    srcCtx.clearRect(0,0,W,H);
-   srcCtx.drawImage(image,(image.naturalWidth-sourceW)/2,image.naturalHeight*top,sourceW,sourceH,0,0,W,H);
+   if(config.fit==='contain'){
+    // Photo Session needs the entire original pose. Letterbox transparently;
+    // preserve the existing crop/cover behavior for the Daisy dance preset.
+    const ratio=Math.min(W/image.naturalWidth,H/sourceH);
+    const dw=image.naturalWidth*ratio,dh=sourceH*ratio;
+    srcCtx.drawImage(image,0,image.naturalHeight*top,image.naturalWidth,sourceH,
+     (W-dw)/2,(H-dh)/2,dw,dh);
+   }else{
+    srcCtx.drawImage(image,(image.naturalWidth-sourceW)/2,image.naturalHeight*top,sourceW,sourceH,0,0,W,H);
+   }
    pixels=srcCtx.getImageData(0,0,W,H);
    ready=true;last=-Infinity;
    ctx.clearRect(0,0,W,H);ctx.drawImage(srcCanvas,0,0);
