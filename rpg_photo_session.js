@@ -223,7 +223,7 @@
     motionCanvas.style.opacity='0';
    }
    session.motionReady=false;
-   loading.hidden=!!opts.silent && !!actor.src;
+   loading.hidden=!!actor.src; // Keep the previous frame visible; don't flash a loader.
    if(!loading.hidden)loading.textContent='Loading '+labels[target.id]+' pose…';
    return new Promise(resolve=>{
     const done=(okay)=>{
@@ -447,6 +447,8 @@
     session.motion.render(performance.now()-session.begin,energy);
    }
    const moment=currentMeter();
+   stage.dataset.reacting=String(!!session.reactionBusy);
+   stage.dataset.peak=String(!!session.reaction?.highlight&&moment>.64);
    $(shell,'[data-meter]').style.transform='scaleX('+moment.toFixed(3)+')';
    const ready=moment>=.78;
    const label=$(shell,'[data-meter-label]');
@@ -535,7 +537,7 @@
    // stopping the timeline; metadata only is stored in the campaign save.
    let frozen=null;
    if(session.motionReady&&session.motion){
-    session.motion.render(performance.now()-session.begin,session.reaction?.highlight?.75:0);
+    session.motion.render(performance.now()-session.begin,session.reaction?.highlight ? .75 : 0);
     try{frozen=motionCanvas.toDataURL('image/png');}catch{}
    }
    stopReaction();
