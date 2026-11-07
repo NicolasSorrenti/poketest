@@ -2136,18 +2136,15 @@ function act(action,confirmedInvitationHandoff=false){
  }
  if(type==='cup'){
   if(cupToday?.id!==id)return;
-  if(state.deckJourney?.starter){
-   syncDeckStudioSave();
-   if(!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid)
-    return say('Tournament Desk','Save a valid 60-card deck before entering your match.',[['Continue ›','close']]);
-  }
-  try{const match=TOURNAMENTS.begin(state,id);return startDuel(match.npc,null,null,match);}
+  try{return selectTournamentDeck({tournament:TOURNAMENTS.begin(state,id)});}
   catch(err){return say('Tournament Desk',err.message);}
  }
  if(type==='competitive'){
   if(!confirmTimeAdvance())return;
-  try{const match=COMPETE.begin(state,id);return startDuel(match.npc,null,null,null,null,false,match);}
-  catch(err){return say('Circuit Desk',err.message);}
+  try{const match=COMPETE.begin(state,id);
+   return match.kind==='theme'?selectTournamentDeck({competition:match}):
+    startDuel(match.npc,null,null,null,null,false,match);
+  }catch(err){return say('Circuit Desk',err.message);}
  }
  if(type==='event'){const e=scheduleEvent();if(!e)return;return startDuel(exhibitionOpponents[e.day]||'reina',e);}
  if(type==='work')return performActivity('shop_shift');
@@ -2534,13 +2531,77 @@ function launchPreparedDuel(){
  if(presentation?.matchModel)presentation.show(presentation.matchModel(pending,{cast,cups:TOURNAMENTS.cups}));
 }
 
+
+let tournamentDeckPopup=null;
+async function selectTournamentDeck({tournament=null,competition=null}={}){
+ syncDeckStudioSave();
+ if(!state.deckJourney?.starter){showStarterChoice();return;}
+ if(state.pendingDuel)return;
+ const theme=competition?.kind==='theme'?COMPETE.themeForDay(state.day):null;
+ let catalog=null;
+ if(theme){
+  try{
+   if(!themedCataloguePromise)themedCataloguePromise=Promise.all(
+    Object.keys(COLLECT.SETS).map(async set=>{
+     const response=await fetch('/cards/'+set+'.json');
+     if(!response.ok)throw Error('Card catalogue unavailable');
+     return response.json();
+    })
+   ).then(groups=>new Map(groups.flat().filter(c=>c?.id).map(c=>[c.id,c])))
+    .catch(err=>{themedCataloguePromise=null;throw err;});
+   catalog=await themedCataloguePromise;
+  }catch(err){say('Tournament Desk','Could not load card details. Please try again.');return;}
+ }
+ if(state.pendingDuel||
+    tournament&&!TOURNAMENTS.available(state).some(c=>c.id===tournament.tournamentId)||
+    competition&&!COMPETE.available(state).some(e=>e.id===competition.id))return;
+ const viable=COLLECT.slots(state).map((slot,i)=>{
+  if(!slot||!COLLECT.check(slot.cards,state.deckJourney.owned).valid)return null;
+  if(theme&&!COMPETE.legalThemeDeck(slot.cards,theme,COLLECT.packRarity,catalog).valid)return null;
+  return {slot,i};
+ }).filter(Boolean);
+ tournamentDeckPopup?.remove();
+ const overlay=document.createElement('div');tournamentDeckPopup=overlay;
+ overlay.style.cssText='position:fixed;inset:0;z-index:2147483640;background:rgba(4,9,20,.78);display:grid;place-items:center;padding:16px';
+ const panel=document.createElement('section');
+ panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');
+ panel.setAttribute('aria-label','Choose a tournament deck');
+ panel.style.cssText='width:min(480px,100%);max-height:85vh;overflow:auto;background:#172238;color:#fff;border:1px solid #64738b;border-radius:16px;padding:24px;box-shadow:0 12px 45px #0009';
+ const heading=document.createElement('h2');heading.textContent='Choose your tournament deck';panel.append(heading);
+ const details=document.createElement('p');details.textContent=(theme?.description||'Select a saved legal deck.')+' · Only eligible decks are shown.';panel.append(details);
+ const actions=document.createElement('div');actions.style.cssText='display:grid;gap:9px;margin:16px 0';panel.append(actions);
+ const close=()=>{overlay.remove();if(tournamentDeckPopup===overlay)tournamentDeckPopup=null;};
+ const button=(label,run)=>{
+  const el=document.createElement('button');el.type='button';el.textContent=label;
+  el.style.cssText='padding:12px;text-align:left;border-radius:9px;background:#344763;color:#fff;border:1px solid #8496ad;cursor:pointer';
+  el.onclick=run;actions.append(el);return el;
+ };
+ if(!viable.length){
+  const warning=document.createElement('p');warning.textContent='You have no usable decks for this tournament. Prepare a legal deck in one of your five slots before entering.';warning.setAttribute('role','status');panel.append(warning);
+  button('Edit my decks',()=>{close();openDeckWorkshop();});
+ }else for(const {slot,i} of viable)button((i+1)+'. '+slot.name+' · 60 cards',()=>{
+  const latest=state.deckJourney.deckSlots?.[i];
+  if(!latest||state.pendingDuel)return close();
+  const cards=[...latest.cards];
+  if(!COLLECT.check(cards,state.deckJourney.owned).valid||
+      theme&&!COMPETE.legalThemeDeck(cards,theme,COLLECT.packRarity,catalog).valid)return close();
+  close();
+  if(tournament)startDuel(tournament.npc,null,null,{...tournament,selectedDeckCards:cards});
+  else startDuel(competition.npc,null,null,null,null,false,{...competition,selectedDeckCards:cards});
+ });
+ button('Cancel',close);
+ overlay.append(panel);document.body.append(overlay);
+ overlay.addEventListener('click',event=>{if(event.target===overlay)close();});
+ panel.querySelector('button')?.focus();
+}
 let themeDuelPreparing=false;
 let themedCataloguePromise=null;
 async function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false,competition=null){
  if(tournamentDayCup()&&tournament?.tournamentId!==tournamentDayCup().id)return;
  syncDeckStudioSave(); // A new duel always snapshots the latest saved 60-card deck.
  if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
- if(state.deckJourney?.starter&&!COLLECT.check(state.deckJourney.deck,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
+ const selectedDeckCards=tournament?.selectedDeckCards||competition?.selectedDeckCards||state.deckJourney?.deck;
+ if(state.deckJourney?.starter&&!COLLECT.check(selectedDeckCards,state.deckJourney.owned).valid){$('notice').textContent='Save a valid campaign deck before challenging another trainer.';return;}
  if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!competition&&!currentPeople().includes(id)))return;
  if(!tournament&&!competition&&!confirmTimeAdvance())return;
  if(competition&&!COMPETE.available(state).some(e=>e.id===competition.id&&e.npc===id))return;
@@ -2562,7 +2623,7 @@ async function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,side
   }catch(err){say('Tournament Desk','Could not load card details. Please try again.');return;}
   finally{themeDuelPreparing=false;}
   if(state.pendingDuel||!COMPETE.available(state).some(e=>e.id===competition.id))return;
-  const legality=COMPETE.legalThemeDeck(state.deckJourney?.deck,theme,COLLECT.packRarity,themeCatalog);
+  const legality=COMPETE.legalThemeDeck(selectedDeckCards,theme,COLLECT.packRarity,themeCatalog);
   if(!legality.valid){say('Tournament Desk',legality.reason+' Edit your saved deck and try again.');return;}
  }
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
@@ -2582,7 +2643,7 @@ async function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,side
  const npcEditedCards=sharedThemeDeck||PARTNER.snapshot(state,id,c.deck);
  const npcDeckVariant=NPC_DECKS?.variantForDuel?.('npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length)??0;
  const npcDeckTier=NPC_DECKS?.tierForOpponent?.(state,id)??(state.day<=30?1:state.day<=60?2:3);
- state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length+'-'+Math.random().toString(36).slice(2,10),npc:id,day:state.day,slot:state.slot,npcDeckVariant,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge,customOpponentDeck:npcEditedCards,
+ state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length+'-'+Math.random().toString(36).slice(2,10),npc:id,day:state.day,slot:state.slot,npcDeckVariant,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...selectedDeckCards]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge,customOpponentDeck:npcEditedCards,
   competitiveKind:competition?.kind||null,competitiveId:competition?.id||null,
   competitiveWeek:competition?.week??null,competitiveRound:competition?.round??null,
   competitiveTitle:competition?.title||null,competitiveTheme:theme?.day||null,npcDeckTier,
