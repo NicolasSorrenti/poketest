@@ -1272,7 +1272,9 @@ function benchMatchupValue(pokemonId,o){
  // replacement with no Energy in hand has no offensive readiness.
  // Placing this Basic increases our Bench count by one. Forecast
  // Bench-count attacks against the resulting board, not the old board.
- const futureBenchCount=o.self.bench.length+1;
+ // On promotion this candidate LEAVES the Bench. Count the Bench that
+ // remains for Do the Wave and other Bench-count attacks.
+ const futureBenchCount=o.self.bench.length;
  const immediate=handEnergies.reduce((best,id)=>
   Math.max(best,projectedAttackValue({...candidate,energies:[id]},enemy,
    o.turnSerial,futureBenchCount)),
@@ -1381,8 +1383,8 @@ function score(a,o,cfg,used){
   // today's defender. A Bench-only move must not outscore a genuine attack
   // unlock simply because its printed damage is larger.
   const benchReadinessImprovement=cfg.level===8&&v.slot!==-1?
-   Math.max(0,projectedAttackValue(apexAfterUnit,q.active,o.turnSerial,p.bench.length)-
-    projectedAttackValue(unit,q.active,o.turnSerial,p.bench.length)):0;
+   Math.max(0,projectedAttackValue(apexAfterUnit,q.active,o.turnSerial,Math.max(0,p.bench.length-1))-
+    projectedAttackValue(unit,q.active,o.turnSerial,Math.max(0,p.bench.length-1))):0;
   const immediateImprovement=cfg.level===8?
    (v.slot===-1?
     Math.max(0,apexImmediateDamage(apexAfterUnit)-apexImmediateDamage(unit)):
