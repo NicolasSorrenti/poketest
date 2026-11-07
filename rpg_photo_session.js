@@ -5,6 +5,9 @@
 (function(root){
  // Character-specific poses, dialogue and challenges live in rpg_photo_profiles.js.
  const frameZoom={close:1.9,medium:1.42,full:1.06};
+ // Approximate subject focus within a full-body sprite. Actual visual bounds
+ // are derived from the rendered layer, so these work on mobile and desktop.
+ const frameFocus={full:.51,medium:.34,close:.17};
  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
  const $=(el,q)=>el.querySelector(q);
  let active=null;
@@ -67,7 +70,8 @@
    '<div class="nps-meter">✦ SHUTTER MOMENT<div class="nps-meter-track"><span data-meter></span></div><span class="nps-meter-label" data-meter-label>Start an interaction to catch a moment</span></div>'+
    '<div class="nps-mobile-zoom" data-mobile-zoom aria-label="Camera zoom controls">'+
    '<button type="button" class="nps-btn" data-mobile-zoom-in aria-label="Zoom in">+</button>'+
-   '<button type="button" class="nps-btn" data-mobile-zoom-out aria-label="Zoom out">−</button></div>'+
+   '<button type="button" class="nps-btn" data-mobile-zoom-out aria-label="Zoom out">−</button>'+
+   '<button type="button" class="nps-btn" data-mobile-face aria-label="Focus on face">FACE</button></div>'+
    '<div class="nps-caption" data-caption>'+session.name+': "Ready when you are!"</div>'+
    '<div class="nps-loading" data-loading>Loading '+session.name+'’s artwork…</div></div>'+
    '<div class="nps-controls" id="nps-controls-panel">'+
@@ -89,8 +93,11 @@
    '<div class="nps-camerarow"><button class="nps-btn" data-zoom-out type="button">−</button>'+
    '<input aria-label="Camera zoom" data-zoom type="range" min="1" max="2.5" step=".01" value="1.3">'+
    '<button class="nps-btn" data-zoom-in type="button">+</button></div>'+
-   '<div class="nps-framing-guide"><span>Full body</span><span>Medium</span><span>Close-up</span></div>'+
-   '<p class="nps-hint">Use zoom for the requested frame. Drag the character toward the center. When the framing indicator turns green, you are ready.</p>'+
+   '<div class="nps-camera-presets" role="group" aria-label="Framing presets">'+
+   '<button type="button" class="nps-btn" data-frame="full">Full body</button>'+
+   '<button type="button" class="nps-btn" data-frame="medium">Medium</button>'+
+   '<button type="button" class="nps-btn" data-frame="close">Face</button></div>'+
+   '<p class="nps-hint">Choose a framing preset, then fine-tune with pinch, zoom or dragging. The camera follows the area you are viewing when you zoom.</p>'+
    '<button class="nps-btn" data-reset type="button">Reset camera</button></section></div></div>'+
    '<footer class="nps-bottom"><div class="nps-mini-album" data-mini><div class="nps-mini-photo">3 shots to take</div></div>'+
    '<div class="nps-snaps"><span class="nps-snap-status" data-next-action>Match the brief, then snap when the meter is full.</span>'+
@@ -110,22 +117,85 @@
   backdrop.src=PHOTO_BACKGROUND;
   stage.style.backgroundImage='url("'+PHOTO_BACKGROUND+'")';
   session.backdrop=backdrop;
+  const silhouette=$(shell,'.nps-silhouette');
+  const cameraLayer=()=>shell.classList.contains('nps-discreet')?silhouette:actor;
+  function paintCamera(){
+   for(const element of [actor,motionCanvas,silhouette]){
+    element.style.setProperty('--zoom',String(session.zoom));
+    element.style.setProperty('--pan-x',session.x+'px');
+    element.style.setProperty('--pan-y',session.y+'px');
+   }
+  }
+  // Calculate limits from the actually transformed artwork, not a fixed
+  // fraction of the stage. At close zoom, the player must be able to place
+  // the sprite's head at the center without losing the rest of its pan range.
+  function panLimits(){
+   const view=stage.getBoundingClientRect(),sprite=cameraLayer().getBoundingClientRect();
+   if(view.height<2||view.width<2||sprite.height<2||sprite.width<2)return null;
+   const top=sprite.top-session.y,bottom=sprite.bottom-session.y;
+   const left=sprite.left-session.x,right=sprite.right-session.x;
+   return {
+    minY:view.top+view.height*.37-bottom,
+    maxY:view.top+view.height*.64-top,
+    minX:view.left+view.width*.29-right,
+    maxX:view.left+view.width*.71-left
+   };
+  }
   function camera(){
-   actor.style.setProperty('--zoom',String(session.zoom));
-   motionCanvas.style.setProperty('--zoom',String(session.zoom));
-   motionCanvas.style.setProperty('--pan-x',session.x+'px');
-   motionCanvas.style.setProperty('--pan-y',session.y+'px');
-   actor.style.setProperty('--pan-x',session.x+'px');
-   actor.style.setProperty('--pan-y',session.y+'px');
-   const silhouette=$(shell,'.nps-silhouette');
-   silhouette.style.setProperty('--zoom',String(session.zoom));
-   silhouette.style.setProperty('--pan-x',session.x+'px');
-   silhouette.style.setProperty('--pan-y',session.y+'px');
+   paintCamera();
+   const limits=panLimits();
+   if(limits){
+    session.x=clamp(session.x,limits.minX,limits.maxX);
+    session.y=clamp(session.y,limits.minY,limits.maxY);
+    paintCamera();
+   }
    zoomInput.value=String(session.zoom);
    updateFeedback();
   }
+  // Keep the same image point under the viewfinder's center when zooming.
+  // Otherwise the 66%-height CSS transform origin makes faces jump upward.
   function setZoom(value){
-   session.zoom=clamp(Number(value)||1,1,2.5);camera();
+   const next=clamp(Number(value)||1,1,2.5);
+   if(Math.abs(next-session.zoom)<.001)return;
+   const view=stage.getBoundingClientRect(),before=cameraLayer().getBoundingClientRect();
+   const anchorX=view.left+view.width*.5,anchorY=view.top+view.height*.48;
+   const fractionX=before.width?(anchorX-before.left)/before.width:.5;
+   const fractionY=before.height?(anchorY-before.top)/before.height:.5;
+   session.zoom=next;
+   paintCamera();
+   const after=cameraLayer().getBoundingClientRect();
+   if(view.height>2&&after.height>2){
+    session.x+=anchorX-(after.left+fractionX*after.width);
+    session.y+=anchorY-(after.top+fractionY*after.height);
+   }
+   camera();
+  }
+  // Quick-shot presets center the appropriate part of a portrait, rather
+  // than zooming toward the sprite's feet/torso. Users may still drag freely.
+  function framePreset(type){
+   if(!(type in frameZoom))return;
+   session.zoom=frameZoom[type];
+   session.x=0;session.y=0;
+   paintCamera();
+   const view=stage.getBoundingClientRect(),sprite=cameraLayer().getBoundingClientRect();
+   if(view.height>2&&sprite.height>2){
+    session.y=view.top+view.height*.48-
+     (sprite.top+sprite.height*frameFocus[type]);
+   }
+   camera();
+  }
+  function frameAlignment(type){
+   const view=stage.getBoundingClientRect(),sprite=cameraLayer().getBoundingClientRect();
+   if(view.height<2||sprite.height<2)return 1;
+   const subjectX=sprite.left+sprite.width*.5;
+   const subjectY=sprite.top+sprite.height*(frameFocus[type]??.34);
+   const aimX=view.left+view.width*.5;
+   const aimY=view.top+view.height*.48;
+   const error=Math.hypot(
+    (subjectX-aimX)/Math.max(1,view.width*.60),
+    (subjectY-aimY)/Math.max(1,view.height*.65)
+   );
+   return clamp(1-error,0,1);
   }
   // All reaction frames are preloaded before a sequence begins.
   // This avoids surprise blank frames when flipping between overworld and portraits.
@@ -354,7 +424,9 @@
    const reacting=session.mode==='reactions';
    const poseGood=session.poseId===task.pose&&(!reacting||!!session.reaction?.highlight);
    const frameGood=Math.abs(session.zoom-frameZoom[task.framing])<=.22;
-   const centered=Math.hypot(session.x,session.y)<=Math.max(45,stage.clientWidth*.13);
+   // Intentional vertical panning is necessary for close-ups; judge the
+   // subject's actual focal position in the viewfinder instead of raw pan.
+   const centered=frameAlignment(task.framing)>=.72;
    const lightGood=session.light===task.light;
    const momentGood=currentMeter()>=.78;
    const myFrame=session.zoom>=1.66?'Close-up':session.zoom>=1.23?'Medium':'Full body';
@@ -445,8 +517,8 @@
      task.pose===selected.id?12:2):
     (task.pose===selected.id?35:pose(task.pose).kind===selected.kind?14:2);
    const framing=clamp(1-Math.abs(session.zoom-frameZoom[task.framing])/1.1,0,1);
-   const panPenalty=clamp(1-Math.hypot(session.x,session.y)/Math.max(120,stage.clientWidth*.53),0,1);
-   const comp=Math.round(30*framing*(.6+.4*panPenalty));
+   const alignment=frameAlignment(task.framing);
+   const comp=Math.round(30*framing*(.6+.4*alignment));
    const lightPoints=task.light===session.light?15:5;
    const timing=Math.round(20*currentMeter());
    return {score:clamp(posePoints+comp+lightPoints+timing,0,100),
@@ -713,6 +785,7 @@
    stopReaction();
    if(session.motionResolve){session.motionResolve(false);session.motionResolve=null;}
    session.motion?.dispose();
+   root.removeEventListener('resize',camera);
    session.preload.clear();
    if(session.interval)clearInterval(session.interval);
    shell.remove();
@@ -737,7 +810,12 @@
    if(isOpen)stopReaction();
   }
   settingsButton.onclick=()=>mobileSettings(!$(shell,'.nps-shell').classList.contains('nps-mobile-options-open'));
-  $(shell,'[data-reset]').onclick=()=>{session.x=0;session.y=0;setZoom(1.3);};
+  $(shell,'[data-reset]').onclick=()=>framePreset(
+   session.tasks[session.shots.length]?.framing||'medium');
+  for(const b of shell.querySelectorAll('[data-frame]')){
+   b.onclick=()=>framePreset(b.dataset.frame);
+  }
+  $(shell,'[data-mobile-face]').onclick=()=>framePreset('close');
   $(shell,'[data-zoom-out]').onclick=()=>setZoom(session.zoom-.15);
   $(shell,'[data-mobile-zoom-out]').onclick=()=>setZoom(session.zoom-.16);
   $(shell,'[data-mobile-zoom-in]').onclick=()=>setZoom(session.zoom+.16);
@@ -774,8 +852,8 @@
     pinchDist=dist;return;
    }
    pinchDist=0;
-   session.x=clamp(session.x+e.clientX-last.x,-stage.clientWidth*.4,stage.clientWidth*.4);
-   session.y=clamp(session.y+e.clientY-last.y,-stage.clientHeight*.38,stage.clientHeight*.38);
+   session.x+=e.clientX-last.x;
+   session.y+=e.clientY-last.y;
    camera();
   });
   const end=e=>{pointers.delete(e.pointerId);pinchDist=0;};
@@ -788,6 +866,7 @@
     else close(false);
    }
   });
+  root.addEventListener('resize',camera);
   drawChoices();taskUI();camera();void setMood('neutral',{fromReaction:true});startAuto();
   session.clock=requestAnimationFrame(tick);
   showGuide();
