@@ -44,13 +44,51 @@
  }
 
  function create(stage,image,doc){
-  let requestedId=null,visibleId=null,serial=0,pan=null;
+  let requestedId=null,visibleId=null,serial=0,pan=null,focusCleanup=null;
+  const resetFocus=()=>{
+   focusCleanup?.();focusCleanup=null;
+   if(!image?.style)return;
+   for(const k of ['width','height','maxWidth','maxHeight','left','top','right','bottom','objectFit','transform','transformOrigin','transition','position'])
+    image.style[k]='';
+   image.style.transition='opacity 220ms ease';
+  };
+  function attachFocus(crop){
+   if(!crop||!image?.naturalWidth||!image?.naturalHeight)return;
+   const {x,y,width,height}=crop;
+   if(![x,y,width,height].every(Number.isFinite)||width<=0||height<=0)return;
+   let disposed=false;
+   // Pixel coordinates refer to the original full-resolution CG, not a resized
+   // screenshot. Scale uniformly, center the desired crop in any stage ratio.
+   function layout(){
+    if(disposed)return;
+    const w=stage.clientWidth,h=stage.clientHeight;
+    const iw=image.naturalWidth,ih=image.naturalHeight;
+    if(!w||!h||!iw||!ih)return;
+    const scale=Math.max(w/width,h/height);
+    const cx=Math.min(iw,Math.max(0,x+width/2));
+    const cy=Math.min(ih,Math.max(0,y+height/2));
+    image.style.position='absolute';image.style.right='auto';image.style.bottom='auto';
+    image.style.width=(iw*scale)+'px';image.style.height=(ih*scale)+'px';
+    image.style.maxWidth='none';image.style.maxHeight='none';
+    image.style.objectFit='fill';
+    image.style.left=(w/2-cx*scale)+'px';
+    image.style.top=(h/2-cy*scale)+'px';
+   }
+   image.style.transition='left 650ms ease-in-out,top 650ms ease-in-out,width 650ms ease-in-out,height 650ms ease-in-out,opacity 220ms ease';
+   const listener=()=>layout();
+   if(typeof window!=='undefined')window.addEventListener('resize',listener);
+   layout();
+   focusCleanup=()=>{
+    disposed=true;
+    if(typeof window!=='undefined')window.removeEventListener('resize',listener);
+   };
+  }
   const stopPan=()=>{pan?.dispose();pan=null;};
   if(image?.style)image.style.transition='opacity 220ms ease';
   const seen=new Set();
   function clear(){
    if(requestedId===null&&!visibleId)return;
-   ++serial;requestedId=null;visibleId=null;stopPan();
+   ++serial;requestedId=null;visibleId=null;stopPan();resetFocus();
    stage.classList.remove('has-story-cg');
    delete stage.dataset.rpgSafeId;
    stage.querySelector?.('.rpg-safe-avatar')?.remove();
@@ -62,7 +100,7 @@
    if(requestedId===entry.id)return;
    const paths=(candidates||[]).filter(item=>item.kind==='event'&&typeof item.path==='string');
    if(!paths.length){clear();onMissing?.();return;}
-   stopPan();requestedId=entry.id;
+   stopPan();resetFocus();requestedId=entry.id;
    const token=++serial;
    const attempt=index=>{
     if(token!==serial)return;
@@ -84,6 +122,7 @@
      stage.classList.add('has-story-cg');
      if(image?.style)image.style.opacity='1';
      visibleId=entry.id;
+     if(entry.cgFocus)attachFocus(entry.cgFocus);
      if(entry.cgPan&&typeof window!=='undefined'&&window.NeoRpgCGPan&&!window.NeoRpgDiscreet?.enabled){
       pan=window.NeoRpgCGPan.attach(stage,image,entry.cgPan);
      }
