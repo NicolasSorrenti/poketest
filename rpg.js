@@ -112,7 +112,9 @@ function miaDialogueText(value){
  return String(value||'')
   .replace(/\{\{miaPlayerName\}\}/g,miaUsesDaddy()?'Daddy':'you')
   .replace(/\{\{miaNickname\}\}/g,miaUsesDaddy()?'Daddy':'you')
-  .replace(/\bDaddy\b/g,miaUsesDaddy()?'Daddy':'you');
+  // A literal reference to the nickname remains valid in the introductory
+  // gossip, even before that event has been marked seen.
+  .replace(/\bdaddy\b/gi,state.miaDaddyRetired?'you':'Daddy');
 }
 const MIA_GOSSIP_EXTRA='/rpg-assets/characters/lyla/events/mia/a_highly_detailed_anime_style_illustration_of_the.png';
 function miaArt(id){return id==='mia_gossip'&&miaRomanceGossip()?MIA_GOSSIP_EXTRA:MIA_EVENT_ART[id];}
@@ -715,7 +717,7 @@ function renderMiaPrivate(){
   7:['Mia','Thanks for listening. I wanted to tell you for ages... but please, let me be the one to talk to Live when I am ready.']
  };
  const [speaker,originalLine]=nodes[step];
- const line=originalLine.replace('becoming my daddy','being part of my family');
+ const line=originalLine;
 
  const back=['Go back — end the conversation','miaPrivateExit'];
  const choices=step===1?[
