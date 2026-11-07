@@ -21566,7 +21566,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Stun Poison",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only audit: Stun Poison: Fighting+Colorless paid; heads applies both Poison and Paralysis after 10 damage, tails neither; check KO before status and turn handoff. Active RPG bridge -> ClassicLocalService -> headless_duel -> attack_effects_core dispatch inspected; no executable reducer run or independent printed/ruling verification. Do not treat as fully verified."
+          ]
         }
       ]
     },
@@ -21592,13 +21595,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Dodge",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only audit: Dodge: incoming damaging attack during opponent next turn, heads prevents damage but not non-damage effects; tails damage proceeds; compare bench/evolve expiration. Supersonic Jab 40 with three Fighting. Active RPG bridge -> ClassicLocalService -> headless_duel -> attack_effects_core dispatch inspected; no executable reducer run or independent printed/ruling verification. Do not treat as fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Supersonic Jab",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only audit: Dodge: incoming damaging attack during opponent next turn, heads prevents damage but not non-damage effects; tails damage proceeds; compare bench/evolve expiration. Supersonic Jab 40 with three Fighting. Active RPG bridge -> ClassicLocalService -> headless_duel -> attack_effects_core dispatch inspected; no executable reducer run or independent printed/ruling verification. Do not treat as fully verified."
+          ]
         }
       ]
     },
@@ -21611,13 +21620,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Leer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only audit: Leer: heads prevents attack next opponent turn, tails allows it; switching or evolving either Pokemon clears lock. Rock Throw 20 at Fighting+Colorless. Active RPG bridge -> ClassicLocalService -> headless_duel -> attack_effects_core dispatch inspected; no executable reducer run or independent printed/ruling verification. Do not treat as fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Rock Throw",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only audit: Leer: heads prevents attack next opponent turn, tails allows it; switching or evolving either Pokemon clears lock. Rock Throw 20 at Fighting+Colorless. Active RPG bridge -> ClassicLocalService -> headless_duel -> attack_effects_core dispatch inspected; no executable reducer run or independent printed/ruling verification. Do not treat as fully verified."
+          ]
         }
       ]
     },
@@ -21630,7 +21645,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Swift",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only audit: Swift: 20 damage ignoring weakness, resistance, defending Pokemon Powers and other defending effects; check unaffected attacker-side modifiers and KO/prize. Active RPG bridge -> ClassicLocalService -> headless_duel -> attack_effects_core dispatch inspected; no executable reducer run or independent printed/ruling verification. Do not treat as fully verified."
+          ]
         }
       ]
     },
@@ -21643,13 +21661,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Reflected Sunlight",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only audit: Reflected Sunlight: from hand choose up to two Energy cards for one own Pokemon (including zero and one), validate targeting, attach triggers, turn ends after attack; Solarbeam 40 requires three Grass. Active RPG bridge -> ClassicLocalService -> headless_duel -> attack_effects_core dispatch inspected; no executable reducer run or independent printed/ruling verification. Do not treat as fully verified."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Solarbeam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 source-only audit: Reflected Sunlight: from hand choose up to two Energy cards for one own Pokemon (including zero and one), validate targeting, attach triggers, turn ends after attack; Solarbeam 40 requires three Grass. Active RPG bridge -> ClassicLocalService -> headless_duel -> attack_effects_core dispatch inspected; no executable reducer run or independent printed/ruling verification. Do not treat as fully verified."
+          ]
         }
       ]
     },
