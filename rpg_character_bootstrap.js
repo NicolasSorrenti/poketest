@@ -58,7 +58,7 @@
  "/rpg_dialogue_idle.js?v=native-resolution-v2-20261107",
  "/rpg_arcade_game.js?v=daisy-hit-feedback-right-side-20261107",
  "/rpg_photo_profiles.js?v=cast-photo-v1",
- "/rpg_photo_session.js?v=cast-photo-v1",
+ "/rpg_photo_session.js?v=cast-photo-v2",
  "/rpg_planned_dates.js",
  "/rpg_preduel.js?v=restore-original-attacks-20261102",
  "/rpg_situations.js",
