@@ -1107,6 +1107,13 @@ function overworldOpportunities(){
  if(state.location!=='shop'&&state.day<=90&&COMPETE.localDay(state.day)&&
     local.status==='open'&&(local.round>0||state.slot<=1))
   circuit.push({kind:'visitCircuit',id:'shop',label:'↗ Visit today’s Saturday Local at The Lucky Draw · free',disabled:locked});
+ const themeToday=COMPETE.themeForDay(state.day);
+ if(themeToday&&state.location!=='center'&&COMPETE.themeProgress(state).status==='open'&&state.slot<=1)
+  circuit.push({kind:'visitCircuit',id:'center',label:'↗ '+themeToday.title+' at the Community Center · free',
+   description:themeToday.description,disabled:locked});
+ const nextTheme=COMPETE.THEMES.find(theme=>theme.day>=state.day);
+ if(nextTheme)circuit.push({kind:'notice',id:'theme-upcoming',label:'🏆 '+nextTheme.title+' · Day '+nextTheme.day,
+  description:nextTheme.description,disabled:true});
  const nextLocal=COMPETE.upcoming(state);
  const circuitNote=(state.day<=90&&COMPETE.localDay(state.day)&&local.status==='champion'?'You won this week’s local!':
   state.day<=90&&COMPETE.localDay(state.day)&&local.status==='eliminated'?'This week’s local is over for you.':
@@ -2501,16 +2508,29 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  if(state.activeSituation||state.activeStory||state.activeEncounter||(state.activeArc&&state.activeArc.id!==arcEpisode)||(state.activeSideQuest&&state.activeSideQuest.id!==sideQuest?.id)||state.pendingDuel||state.day>90||!cast[id]||(!exhibition&&!tournament&&!competition&&!currentPeople().includes(id)))return;
  if(!tournament&&!competition&&!confirmTimeAdvance())return;
  if(competition&&!COMPETE.available(state).some(e=>e.id===competition.id&&e.npc===id))return;
+ const theme=competition?.kind==='theme'?COMPETE.themeForDay(state.day):null;
+ if(theme){
+  const legality=COMPETE.legalThemeDeck(state.deckJourney?.deck,theme,COLLECT.packRarity);
+  if(!legality.valid){say('Tournament Desk',legality.reason+' Edit your saved deck and try again.');return;}
+ }
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
  if(bondChallenge&&!BONDS.canChallenge(state,id,BOND_PLAN))return;
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
- const c=cast[id],npcEditedCards=PARTNER.snapshot(state,id,c.deck);
+ const c=cast[id];
+ // Reuse existing starter lists and authored NPC recipes. Only compatible decks enter the pool.
+ const themeBank=theme?[
+  ...COLLECT.starters.map(entry=>entry.cards),
+  ...Object.values(NPC_DECKS?.STARTING_RECIPES||{})
+ ].filter(cards=>COMPETE.legalThemeDeck(cards,theme,COLLECT.packRarity).valid):null;
+ const sharedThemeDeck=themeBank?.length?[...themeBank[(state.day+competition.round*3)%themeBank.length]]:null;
+ if(theme&&!sharedThemeDeck){say('Tournament Desk','No legal CPU deck is available for these restrictions.');return;}
+ const npcEditedCards=sharedThemeDeck||PARTNER.snapshot(state,id,c.deck);
  const npcDeckVariant=NPC_DECKS?.variantForDuel?.('npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length)??0;
  const npcDeckTier=NPC_DECKS?.tierForOpponent?.(state,id)??(state.day<=30?1:state.day<=60?2:3);
  state.pendingDuel={id:'npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length+'-'+Math.random().toString(36).slice(2,10),npc:id,day:state.day,slot:state.slot,npcDeckVariant,opponent:c.deck,playerDeck:state.deckJourney?.starter?'custom':state.playerDeck,deckCards:state.deckJourney?.starter?[...state.deckJourney.deck]:null,resolved:false,eventKey:exhibition?exhibition.day+':'+exhibition.title:null,eventReward:exhibition?exhibition.reward:0,eventTitle:exhibition?exhibition.title:null,arcEpisode:arcEpisode||null,tournamentId:tournament?.tournamentId||null,tournamentRound:tournament?.tournamentRound??null,tournamentAttempt:tournament?.tournamentAttempt??null,sideQuestId:sideQuest?.id||null,sideQuestStage:sideQuest?.step??null,bondChallenge:!!bondChallenge,customOpponentDeck:npcEditedCards,
   competitiveKind:competition?.kind||null,competitiveId:competition?.id||null,
   competitiveWeek:competition?.week??null,competitiveRound:competition?.round??null,
-  competitiveTitle:competition?.title||null,npcDeckTier,
+  competitiveTitle:competition?.title||null,competitiveTheme:theme?.day||null,npcDeckTier,
   // Routine encounters are shorter; championship finals and story arcs use full matches.
   prizeCount:(arcEpisode||tournament?.tournamentRound>=2||competition?.round>=2||/final|championship/i.test(competition?.title||''))?6:4};
  if(arcEpisode)state.activeArc=null;
@@ -2563,7 +2583,7 @@ window.addEventListener('message',ev=>{
   if(competitiveOutcome.voucher&&state.deckJourney?.starter){
    const set=COLLECT.shopPacks(state).filter(offer=>offer.unlocked).at(-1)?.set||'base1';
    COLLECT.awardVoucher(state,set);
-   log('Saturday Local prize: one '+COLLECT.SETS[set].name+' booster voucher. Redeem it at The Lucky Draw.');
+   log((competitiveOutcome.kind==='theme'?'Themed cup':'Saturday Local')+' prize: one '+COLLECT.SETS[set].name+' booster voucher. Redeem it at The Lucky Draw.');
   }
  }
  recordCG('after_duel',duel.npc);
