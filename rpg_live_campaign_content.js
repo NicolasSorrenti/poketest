@@ -379,15 +379,40 @@ const LIVE_MIA_NEXT_PERIOD_EVENT={
  kind:'season',priority:116,earliestDay:1,delivery:'world',timeCost:0,
  expiry:'never',fallback:'queue',trigger:{eventSeen:'live_mia_relationship_choice'},
  lines:[
-  {speaker:'Mia',text:'That was such a wonderful time together. I still cannot stop smiling.'},
-  {speaker:'Live',text:'Neither can I, sweetheart. I am so glad we finally talked honestly.'}
+  {speaker:'Narrator',text:'Later, Live and Mia find you together in the apartment. They both look unusually cheerful.'},
+  {speaker:'Mia',text:'Hey! We wanted to tell you something... We had such a wonderful time together.'},
+  {speaker:'Live',text:'We really did, darling. I have not felt this relieved in ages.'},
+  {speaker:'Mia',text:'I keep thinking we should do it again sometime. You make us both so happy.'},
+  {speaker:'Live',text:'I would love that too. No need to hide how much we care about each other now.'},
+  {speaker:'Narrator',text:'Live pulls Mia into a warm hug, holding her close as they both smile.'},
+  {speaker:'Live',text:'I knew my little girl would always make me proud. And seeing you so happy makes me even prouder.'},
+  {speaker:'Mia',text:'Mom... you are going to embarrass me! But... thank you. I love you.'},
+  {speaker:'Live',text:'I love you too, sweetheart. Come on, let us enjoy the rest of the day together.'}
  ],
- choices:[{label:'Spend another moment together',reply:'The three of you share a happy morning.',flag:'live_mia_next_period_complete'}]
+ choices:[{label:'Spend another moment together',reply:'The three of you share a happy moment.',flag:'live_mia_next_period_complete'}]
 };
 const LIVE_MIA_NEXT_PERIOD_ART=Object.freeze({
  together:'/rpg-assets/characters/live/events/mia/next_day.png',
  embrace:'/rpg-assets/characters/live/events/mia/next_day2.png'
 });
 
-window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,MIA_WINE_MISUNDERSTANDING,MIA_WINE_REVEAL_ART,LIVE_MIA_CHOICE_EVENT,LIVE_MIA_CHOICE_ART,LIVE_MIA_NEXT_PERIOD_EVENT,LIVE_MIA_NEXT_PERIOD_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
+// Post-choice afternoon/evening for the Mia-only path.
+const MIA_ONLY_NEXT_PERIOD_EVENT={
+ id:'mia_only_next_period',title:'Just the Two of Us',
+ kind:'season',priority:116,earliestDay:1,delivery:'world',timeCost:0,
+ expiry:'never',fallback:'queue',trigger:{eventSeen:'live_mia_relationship_choice'},
+ lines:[
+  {speaker:'Narrator',text:'Mia finds you alone in the apartment later that day, looking a little shy but very happy.'},
+  {speaker:'Mia',text:'Hey... I was hoping I would catch you on your own.'},
+  {speaker:'Mia',text:'I keep smiling when I remember our time together. I really enjoyed being close to you.'},
+  {speaker:'Protagonist',text:'Me too, Mia. How are you feeling about everything?'},
+  {speaker:'Mia',text:'Honestly? Happy. A little nervous, maybe... but mostly happy that we could finally be honest.'},
+  {speaker:'Mia',text:'I would love to spend time together like that again. No pressure. Just you and me.'},
+  {speaker:'Narrator',text:'You share a warm smile, looking forward to your next moment together.'}
+ ],
+ choices:[{label:'Promise to make time for Mia',reply:'Mia smiles brightly, already looking forward to seeing you again.',flag:'mia_only_next_period_complete'}]
+};
+const MIA_ONLY_NEXT_PERIOD_ART='/rpg-assets/characters/live/events/mia/next_day_mia_only.png.png';
+
+window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,MIA_WINE_MISUNDERSTANDING,MIA_WINE_REVEAL_ART,LIVE_MIA_CHOICE_EVENT,LIVE_MIA_CHOICE_ART,LIVE_MIA_NEXT_PERIOD_EVENT,LIVE_MIA_NEXT_PERIOD_ART,MIA_ONLY_NEXT_PERIOD_EVENT,MIA_ONLY_NEXT_PERIOD_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
 })();
