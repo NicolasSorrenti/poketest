@@ -165,6 +165,10 @@ function powerPlan(g,plan,h){
  }
 
  if(name==='Downpour'&&choose('energy',indices(p.hand,c=>c.name==='Water Energy','hand'),'Discard one Water Energy'))return;
+ if(name==='Softboiled'){
+  if(!have(plan,'accept')&&choose('accept',[{id:'choice:1',label:'Use Softboiled'}],'Blissey: use optional Softboiled Power?',{min:0,max:1,optional:true}))return;
+  if(selected(plan,'accept').length&&!have(plan,'coin'))d.coin=h.flip(g);
+ }
  if(name==='Berserk'&&!have(plan,'coin'))d.coin=h.flip(g);
  if(name==='Fire Recharge'){
   if(!have(plan,'coin'))d.coin=h.flip(g);
@@ -315,6 +319,10 @@ function doPower(g,plan,h){
   (u.powerUsed ||= {})[name]=g.turnSerial;
  }
  switch(name){
+  case 'Softboiled':{
+   if(selected(plan,'accept').length)u.damage=Math.max(0,u.damage-(d.coin?80:40));
+   break;
+  }
   case 'Gaze':{
    const target=f.bench[s('gaze')];
    if(!target||!powerNames(target).length)throw Error('Invalid Gaze target');
@@ -537,7 +545,7 @@ function doPower(g,plan,h){
 }
 const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning','Gaze','Submerge']);
 const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning','Gaze','Submerge']);
-const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team','Berserk','Fire Boost','[Vanish]']);
+const ONPLAY=new Set(['Softboiled','Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team','Berserk','Fire Boost','[Vanish]']);
 const PASSIVE=new Set(['Rebirth','Energy Drain','Scram','Shock Blast','Gaseous Form','Healing Fire','Fortitude','Pollen Defense','Restless Sleep','Strange Barrier','Prehistoric Power','Toxic Gas','Hay Fever','Invisible Wall','Kabuto Armor','Transparency','Transform','Thick Skinned','Retreat Aid','Sticky Goo','Clairvoyance','Frenzy','Strikes Back','Sinkhole','Final Beam','Hydroelectric Power','Anger','Frog Song','Spikes','Energy Evolution','[Normal]','Magma Pool','Hot Plate','Psylink','Flee','Bench Guard','Shell Armor','Photosynthesis','Relaxing Scent','Rebellion','Darkness']);
 const UNSUPPORTED=new Set();
 function begin(g,side,payload,h){
