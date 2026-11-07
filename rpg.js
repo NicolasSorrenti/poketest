@@ -7,7 +7,7 @@ const ROMANCE=window.NeoRpgRomanceVisits||null;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
 const LIVE_NEW=window.NeoRpgLiveEverydayEvents||{events:[],art:{},followups:{},artAt:()=>null,finalArt:()=>null,fallback:()=>null,byId:()=>null};
-const {LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART,MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART}=window.NeoRpgLiveCampaignContent;
+const {LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART,MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART}=window.NeoRpgLiveCampaignContent;
 function startLiveGlanceMilestone(id){
  if(!LIVE_SPECIAL_IDS.has(id)||state.liveSpecialSeen?.[id])return;
  const active=state.mandatoryEventState?.active;
@@ -61,6 +61,7 @@ function liveEventArt(id){
  if(id===MIA_PRIVATE_EVENT.id)return MIA_PRIVATE_ART;
  if(id===MIA_SLEEP_EVENT.id)return MIA_SLEEP_ART;
  if(id===MIA_COUCH_CHOICE_EVENT.id)return MIA_COUCH_CHOICE_ART;
+ if(MIA_KITCHEN_ART[id])return MIA_KITCHEN_ART[id];
  if(miaStoryIds.has(id))return miaArt(id);
  if(id===LIVE_REPEAT_MORNING.id)return state.mandatoryEventState?.active?.index>=1?LIVE_REPEAT_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning;
  if(id===LIVE_DAY_FOLLOWUP.id)return liveFollowupContent().away?null:LIVE_NEW.finalArt(state.liveDayScene?.id)||state.liveDayScene?.cg||LIVE_EVENT_ART[state.liveDayScene?.id]||null;
@@ -121,7 +122,7 @@ const MIA_GOSSIP_EXTRA='/rpg-assets/characters/live/events/mia/a_highly_detailed
 function miaArt(id){return id==='mia_gossip'&&miaRomanceGossip()?MIA_GOSSIP_EXTRA:MIA_EVENT_ART[id];}
 Object.assign(LIVE_EVENT_ART,MIA_EVENT_ART);
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]).map(event=>
- event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,MIA_FIRST_TIME,...MIA_EVENTS,MIA_PRIVATE_EVENT,MIA_SLEEP_EVENT,MIA_COUCH_CHOICE_EVENT,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
+ event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,MIA_FIRST_TIME,...MIA_EVENTS,MIA_PRIVATE_EVENT,MIA_SLEEP_EVENT,MIA_COUCH_CHOICE_EVENT,...MIA_KITCHEN_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -620,6 +621,26 @@ function maybeStartMandatory(){
    state.liveHomeActivityScene=null;
    persist();return;
  }
+ // Three progressively scheduled kitchen vignettes, at most one Mia event
+ // per day. Their dialogue is computed from the CURRENT route and nickname.
+ if(state.location==='home'&&state.day<=90&&
+    state.mandatoryEventState?.seen?.[MIA_FIRST_TIME.id]&&
+    Number(state.miaLastSceneDay)!==state.day){
+  const seen=state.mandatoryEventState.seen;
+  const due=MIA_KITCHEN_EVENTS.find((e,i)=>state.day>=e.earliestDay&&
+    !seen[e.id]&&(!i||seen[MIA_KITCHEN_EVENTS[i-1].id]));
+  if(due){
+   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+   m.active={id:due.id,phase:'lines',index:0,choice:null};
+   state.miaKitchenStage=0;
+   state.miaLastSceneDay=state.day;
+   state.miaLastSceneSlot=state.slot;
+   state.liveLastEventDay=state.day;
+   state.liveDayScene={day:state.day,id:due.id,cg:MIA_KITCHEN_ART[due.id],firstSlot:state.slot,lastSeenSlot:state.slot};
+   state.liveHomeActivityScene=null;
+   persist();return;
+  }
+ }
  // Once Live's daily scene is established, do not reroll it on a return
  // visit. Later periods receive a contextual follow-up with the SAME CG.
  const daily=state.liveDayScene;
@@ -689,7 +710,7 @@ function maybeStartMandatory(){
  // The non-Live scheduler runs only when no Live scene is active.
  // Exclude the replayable pool so it cannot accidentally start on every render.
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
-  !LIVE_EVENTS.includes(e)&&e.id!==MIA_FIRST_TIME.id&&e.id!==MIA_PRIVATE_EVENT.id&&e.id!==MIA_SLEEP_EVENT.id&&e.id!==MIA_COUCH_CHOICE_EVENT.id&&!miaStoryIds.has(e.id)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
+  !LIVE_EVENTS.includes(e)&&e.id!==MIA_FIRST_TIME.id&&e.id!==MIA_PRIVATE_EVENT.id&&e.id!==MIA_SLEEP_EVENT.id&&e.id!==MIA_COUCH_CHOICE_EVENT.id&&!MIA_KITCHEN_ART[e.id]&&!miaStoryIds.has(e.id)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -887,11 +908,81 @@ function miaCouchChoiceAction(action){
  persist();render();return true;
 }
 
+
+function miaKitchenDialogue(){
+ const id=state.mandatoryEventState?.active?.id;
+ const variant=MIA_KITCHEN_EVENTS.findIndex(e=>e.id===id);
+ if(variant<0)return null;
+ // A completed private conversation is the existing route's authoritative
+ // gate. Daddy only appears if its own saved flag permits it.
+ const together=miaSleepCanSpeakToMia();
+ const scenes=[
+  {intro:'Live is checking a pan at the stove while Mia waits beside you.',
+   ordinary:[
+    ['Mia','Hey, {{miaNickname}}! Dinner will be ready soon. Mom says she wants to make sure you leave completely satisfied.'],
+    ['Mia','Wait... why did she turn so red? I meant the food!'],
+    ['Live','Mia, darling, could you please hand me the plates?']
+   ],
+   romantic:[
+    ['Mia','Hey, {{miaNickname}}! Dinner will be ready soon... though I was hoping to steal a little of your attention before it is.'],
+    ['Mia','Mom is working on dinner. I have a few plans for what we could do afterward.'],
+    ['Live','I can hear you two, you know!']
+   ]},
+  {intro:'Warm light fills the kitchen. Live is adding the final seasoning while Mia keeps you company.',
+   ordinary:[
+    ['Mia','Hey, {{miaNickname}}! Mom says she knows exactly how to spoil you. She is making your favorite.'],
+    ['Mia','What? Why are you both smiling like that? It is just a really good recipe!'],
+    ['Live','Yes, sweetheart. Just the recipe.']
+   ],
+   romantic:[
+    ['Mia','Hey, {{miaNickname}}! I saved you a taste of dinner... but I was mostly hoping to get some time alone with you.'],
+    ['Mia','If Mom asks why we disappeared after dessert, I will say we were discussing the menu.'],
+    ['Live','Mia! Please let me finish cooking first.']
+   ]},
+  {intro:'Dinner is almost finished, and Live is arranging the dishes behind Mia.',
+   ordinary:[
+    ['Mia','Hey, {{miaNickname}}! Mom says tonight she is pulling out all the stops for you.'],
+    ['Mia','I am starting to think she is overdoing it. It is only dinner, right?'],
+    ['Live','Dinner, Mia. Yes. Please help me set the table.']
+   ],
+   romantic:[
+    ['Mia','Hey, {{miaNickname}}! I brought you dinner, but I would rather spend the evening with you than talk about recipes.'],
+    ['Mia','I hope you have room for a second helping... of conversation, obviously.'],
+    ['Live','You are being unusually mysterious tonight, Mia.']
+   ]}
+ ];
+ const scene=scenes[variant],lines=together?scene.romantic:scene.ordinary;
+ const step=Math.max(0,Math.min(4,Number(state.miaKitchenStage)||0));
+ if(step===0)return {speaker:'Narrator',line:scene.intro,choices:[['Continue ›','miaKitchenNext'],['Leave quietly','miaKitchenLeave']]};
+ if(step<=3){
+  const [speaker,line]=lines[step-1];
+  return {speaker,line:speaker==='Mia'?miaDialogueText(line):line,
+    choices:[[step===3?'Respond ›':'Continue ›','miaKitchenNext'],['Leave quietly','miaKitchenLeave']]};
+ }
+ return {speaker:'Narrator',line:'The kitchen fills with the smell of dinner as Live calls everyone to the table.',
+  choices:[['Join them for dinner','miaKitchenFinish'],['Leave them to cook','miaKitchenFinish']]};
+}
+function miaKitchenAction(action){
+ if(action==='miaKitchenNext')state.miaKitchenStage=Math.min(4,(Number(state.miaKitchenStage)||0)+1);
+ else if(action==='miaKitchenLeave'||action==='miaKitchenFinish'){
+  const m=state.mandatoryEventState;
+  m.active.phase='choice';m.active.choice=null;
+  MANDATORY.choose(state,MANDATORY_EVENTS,action==='miaKitchenLeave'?1:0);
+  if(!MANDATORY.finish(state,MANDATORY_EVENTS))return true;
+  state.liveDayScene=null;
+  state.liveHomeActivityScene=null;
+  state.liveLastEventDay=state.day;
+  log('Dinner with Live and Mia.');
+ }else return true;
+ persist();render();return true;
+}
+
 function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(a?.id===MIA_PRIVATE_EVENT.id)return renderMiaPrivate();
  if(a?.id===MIA_SLEEP_EVENT.id)return renderMiaSleep();
  if(a?.id===MIA_COUCH_CHOICE_EVENT.id)return renderMiaCouchChoice();
+ if(MIA_KITCHEN_ART[a?.id])return miaKitchenDialogue();
  if(!a||!e)return null;
  if(a.phase==='lines'){
   if(e.id===LIVE_DAY_FOLLOWUP.id){
@@ -982,6 +1073,8 @@ function mandatoryAction(type,id){
   return miaSleepAction(type);
  if(state.mandatoryEventState.active.id===MIA_COUCH_CHOICE_EVENT.id)
   return miaCouchChoiceAction(type);
+ if(MIA_KITCHEN_ART[state.mandatoryEventState.active.id])
+  return miaKitchenAction(type);
  if(type==='mandatoryPhotoLive'){
   const offer=livePhotoRequest(state.mandatoryEventState.active);
   if(!offer||!window.NeoRpgPhotoSession?.open||!confirmTimeAdvance())return true;
@@ -3247,7 +3340,7 @@ function syncSceneCG(){
   cgScenePresenter.clear();
   return;
  }
- const isLiveCg=!!liveEventId&&(liveEventId===MIA_PRIVATE_EVENT.id||liveEventId===MIA_SLEEP_EVENT.id||liveEventId===MIA_COUCH_CHOICE_EVENT.id||!!LIVE_EVENT_ART[liveEventId]||
+ const isLiveCg=!!liveEventId&&(liveEventId===MIA_PRIVATE_EVENT.id||liveEventId===MIA_SLEEP_EVENT.id||liveEventId===MIA_COUCH_CHOICE_EVENT.id||!!MIA_KITCHEN_ART[liveEventId]||!!LIVE_EVENT_ART[liveEventId]||
   LIVE_SPECIAL_IDS.has(liveEventId)||liveEventId===LIVE_HOME_CHECKIN.id||
   liveEventId===LIVE_DAY_FOLLOWUP.id||liveEventId===LIVE_REPEAT_MORNING.id||liveEventId===LIVE_AFTER_EVENT.id);
  const liveArt=isLiveCg?(liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:
