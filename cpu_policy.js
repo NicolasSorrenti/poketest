@@ -1211,7 +1211,7 @@ function benchMatchupValue(pokemonId,o){
  // still available this turn and legal for that specific Pokémon.
  // Miracle Energy on a non-Light Pokémon must not inflate Bench readiness.
  const ownCard=card(pokemonId);
- const handEnergies=o.self.hand.filter(id=>{
+ const handEnergies=o.self.energyUsed?[]:o.self.hand.filter(id=>{
   const energy=card(id);
   return isEnergy(energy)&&legalAttachment({card:energy,unit:candidate,
    energyUsed:o.self.energyUsed,round:o.round,cardName:ownCard?.name||''});
