@@ -1229,7 +1229,7 @@ function benchMatchupValue(pokemonId,o){
  const weakType=(ownCard?.weaknesses||[]).some(w=>
   (card(enemy.id)?.types||[]).includes(w.type));
  return (canBeKnockedOut?-175:0)+(weakType?-45:0)+
-  Math.min(80,immediate*.6)+(handEnergies.length===0?-20:0);
+  Math.min(80,immediate*.6)+(handEnergies.length===0&&immediate<=0?-20:0);
 }
 function score(a,o,cfg,used){
  const p=o.self,q=o.opponent,style=cfg.style,{type,payload:v}=a;
