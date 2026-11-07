@@ -542,14 +542,14 @@ function maybeStartMandatory(){
  }
  // A due meeting takes precedence over a normal story that would relocate the player.
  if(TIME.dueNow(state).length)return;
- // The 30-glance scene is due from the *next* in-game day onward.
+ // The 11-glance relationship scene is due from the *next* in-game day onward.
  // Don't restrict it to slot 0: a scheduled appointment, travel wipe, or
  // resumed dialogue must not permanently make the event missable.
- // Legacy saves may already have 30 glances without liveThirtyGlancesDay;
+ // Legacy saves may already have 11 glances without liveThirtyGlancesDay;
  // treat those as overdue instead of silently suppressing the event.
  const glanceMilestoneDay=Number(state.liveThirtyGlancesDay)||Math.max(1,state.day-1);
  if(state.location==='home'&&state.day<=90&&state.day>glanceMilestoneDay&&
-    Number(state.liveGlanceCount)>=30&&!state.mandatoryEventState?.seen?.live_glance_next_morning){
+    Number(state.liveGlanceCount)>=11&&!state.mandatoryEventState?.seen?.live_glance_next_morning){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   m.active={id:'live_glance_next_morning',phase:'lines',index:0,choice:null};
   // Mark completion only after the scene finishes: reloads must never lose it.
@@ -584,7 +584,9 @@ function maybeStartMandatory(){
  if(state.location==='home'&&state.slot===0&&state.day>=MIA_WINE_MISUNDERSTANDING.earliestDay&&
     state.mandatoryEventState?.seen?.[MIA_FIRST_TIME.id]&&
     !state.mandatoryEventState?.seen?.[MIA_WINE_MISUNDERSTANDING.id]&&
-    Number(state.miaLastSceneDay)!==state.day){
+    Number(state.miaLastSceneDay)!==state.day&&
+    !(miaFirstIntimateDay()!==null&&state.day>=miaFirstIntimateDay()+2&&
+      !state.mandatoryEventState?.seen?.[MIA_PRIVATE_EVENT.id])){
    const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
    m.active={id:MIA_WINE_MISUNDERSTANDING.id,phase:'lines',index:0,choice:null};
    state.miaWineStage='heard';
@@ -602,7 +604,11 @@ function maybeStartMandatory(){
   const seen=state.mandatoryEventState.seen;
   const firstIntimateDay=miaFirstIntimateDay();
   const gossipDue=firstIntimateDay!==null&&state.day>=firstIntimateDay+2&&!seen.mia_gossip;
-  const due=MIA_EVENTS.filter(e=>(e.id==='mia_gossip'?gossipDue:state.day>=e.earliestDay)&&
+  // Keep Mia's post-relationship question on time: the private follow-up
+  // must not be displaced by unrelated daily Mia vignettes.
+  const privateDue=firstIntimateDay!==null&&state.day>=firstIntimateDay+2&&
+   seen.mia_gossip&&!seen[MIA_PRIVATE_EVENT.id]&&!state.miaPrivateConversationFinished;
+  const due=MIA_EVENTS.filter(e=>!privateDue&&(e.id==='mia_gossip'?gossipDue:state.day>=e.earliestDay)&&
    state.slot>=(e.id==='mia_gossip'?0:MIA_SCENE_SLOT[e.id])&&
    (e.id==='mia_gossip'?true:!!seen[MIA_SCENE_PREV[e.id]])&&!seen[e.id]&&
    (e.id==='mia_daytime_nap_return'?
@@ -1566,7 +1572,7 @@ function mandatoryAction(type,id){
    state.liveGlancesByEvent=state.liveGlancesByEvent||{};
    state.liveGlancesByEvent[specialId]=(Number(state.liveGlancesByEvent[specialId])||0)+2;
    state.liveFirstConversationGlanceCount=state.liveGlanceCount;
-   if(state.liveGlanceCount>=30&&!state.liveThirtyGlancesDay)state.liveThirtyGlancesDay=state.day;
+   if(state.liveGlanceCount>=11&&!state.liveThirtyGlancesDay)state.liveThirtyGlancesDay=state.day;
   }
  }
  else if(type==='liveMiaInviteMia'){
@@ -1637,15 +1643,15 @@ function mandatoryAction(type,id){
    state.liveGlancesByEvent[baseId]=(Number(state.liveGlancesByEvent[baseId])||0)+1;
   }
   if(isFirstSpecial)state.liveFirstCouchGlanced=true;
-  if(canCount&&state.liveGlanceCount>=30&&!state.liveThirtyGlancesDay)
+  if(canCount&&state.liveGlanceCount>=11&&!state.liveThirtyGlancesDay)
    state.liveThirtyGlancesDay=state.day;
   const previousMilestone=state.liveFirstConversationGlanceCount||0;
   let milestone=null;
   if(canCount&&!LIVE_SPECIAL_IDS.has(activeId)){
-   if(!state.liveSpecialSeen?.live_glance_talk_one&&state.liveGlanceCount>=6)
+   if(!state.liveSpecialSeen?.live_glance_talk_one&&state.liveGlanceCount>=3)
     milestone='live_glance_talk_one';
    else if(state.liveSpecialSeen?.live_glance_talk_one&&!state.liveSpecialSeen?.live_glance_talk_two&&
-    previousMilestone&&state.liveGlanceCount>=previousMilestone+15)
+    state.liveGlanceCount>=8)
     milestone='live_glance_talk_two';
   }
   persist();
