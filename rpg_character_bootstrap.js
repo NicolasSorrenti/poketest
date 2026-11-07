@@ -56,7 +56,7 @@
  "/rpg_sprite_inflate.js?v=independent-expansion-20261107",
  "/rpg_sprite_deformer.js?v=dance-dialogue-crop-v6-20261107",
  "/rpg_dialogue_idle.js?v=native-resolution-v2-20261107",
- "/rpg_dance_pose_controller.js?v=daisy-pose-specific-framing-v4-20261107",
+ "/rpg_dance_pose_controller.js?v=daisy-pose-aspect-fix-v4-20261107",
  "/rpg_arcade_game.js?v=daisy-restore-primary-v4-20261107",
  "/rpg_photo_profiles.js?v=photo-80-live-v2-20261107",
  "/rpg_photo_stories.js?v=photo-chest-framing-v2-20261107",
