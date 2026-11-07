@@ -53,8 +53,7 @@ function liveFollowupContent(){
 }
 function liveCanRepeat(){
  const last=Number(state.liveRepeatLastDay)||0;
- return !!(state.mandatoryEventState?.seen?.live_glance_next_morning||state.liveSpecialSeen?.live_glance_next_morning)&&state.slot===0&&
-  (!last||state.day>=last+6);
+ return !!(state.mandatoryEventState?.seen?.live_glance_next_morning||state.liveSpecialSeen?.live_glance_next_morning)&&(!last||state.day>=last+6);
 }
 function miaRepeatEligible(){
  const last=Number(state.miaRepeatLastDay)||0;
@@ -633,6 +632,32 @@ function maybeStartMandatory(){
   state.miaLastSceneSlot=state.slot;
   state.liveLastEventDay=state.day;
   state.liveDayScene={day:state.day,id:MIA_PRIVATE_EVENT.id,cg:MIA_PRIVATE_ART,firstSlot:state.slot,lastSeenSlot:state.slot};
+  state.liveHomeActivityScene=null;
+  persist();return;
+ }
+ // A promised meeting with Mia is guaranteed on the next day when the
+ // player asked Live after five days without an appearance. Shared-route
+ // followups wait until the next time period and reuse ONLY next_day.png.
+ const repeatDue=state.liveMiaRepeatFollowup;
+ const afterShared=repeatDue?.mode==='after'&&
+  (state.day>repeatDue.day||(state.day===repeatDue.day&&state.slot>repeatDue.slot));
+ const invitedMia=Number(state.miaVisitRequestedDay)>0&&
+  state.day>=Number(state.miaVisitRequestedDay)&&
+  ['mia','both'].includes(state.liveMiaFinalChoice);
+ if(state.location==='home'&&state.day<=90&&(afterShared||invitedMia)){
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  delete m.seen[LIVE_MIA_REPEAT_EVENT.id];
+  m.active={id:LIVE_MIA_REPEAT_EVENT.id,phase:'lines',index:0,choice:null};
+  state.liveMiaRepeatMode=afterShared?'after':'mia';
+  state.liveMiaRepeatStep=0;
+  state.liveLastEventDay=state.day;
+  state.miaLastSceneDay=state.day;
+  state.miaLastSceneSlot=state.slot;
+  state.liveDayScene={day:state.day,id:LIVE_MIA_REPEAT_EVENT.id,
+   cg:afterShared?LIVE_MIA_REPEAT_ART.together:LIVE_MIA_REPEAT_ART.mia,
+   firstSlot:state.slot,lastSeenSlot:state.slot};
+  if(afterShared)state.liveMiaRepeatFollowup=null;
+  if(invitedMia&&!afterShared)state.miaVisitRequestedDay=null;
   state.liveHomeActivityScene=null;
   persist();return;
  }
@@ -1306,12 +1331,58 @@ function liveMiaNextPeriodAction(type){
  persist();render();return true;
 }
 
+// One safe, affectionate scene used by Mia's repeatable invitation and the
+// shared-route daytime follow-up. The original dual-CG ending is not replayed.
+function renderLiveMiaRepeat(){
+ const mode=state.liveMiaRepeatMode||'mia',n=Math.max(0,Number(state.liveMiaRepeatStep)||0);
+ const script=mode==='mia'?[
+  ['Mia','I am so glad you made time for me today. I missed having a moment just for us.'],
+  ['You','I was looking forward to seeing you, too.'],
+  ['Mia','Then let us keep making time for each other. It makes me happy.']
+ ]:mode==='both'?[
+  ['Live','It is wonderful that we can all be here together and be honest.'],
+  ['Mia','I feel the same way. No more keeping our feelings to ourselves.'],
+  ['Narrator','The three of you share a quiet, affectionate moment together.']
+ ]:[
+  ['Mia','Yesterday meant a lot to me. I am still smiling.'],
+  ['Live','Me too. I am so glad we could share that happiness together.'],
+  ['Narrator','You spend a little more time together before returning to the day.']
+ ];
+ const [speaker,text]=script[Math.min(n,script.length-1)];
+ return {speaker,line:speaker==='Mia'?miaDialogueText(text):text,
+  choices:[[n>=script.length-1?'Continue':'Next ›','liveMiaRepeatNext']]};
+}
+function liveMiaRepeatAction(type){
+ if(type!=='liveMiaRepeatNext')return true;
+ const mode=state.liveMiaRepeatMode||'mia';
+ const m=state.mandatoryEventState;
+ if((Number(state.liveMiaRepeatStep)||0)<2){
+  state.liveMiaRepeatStep=(Number(state.liveMiaRepeatStep)||0)+1;
+ }else{
+  m.active.phase='choice';m.active.choice=null;
+  MANDATORY.choose(state,MANDATORY_EVENTS,0);
+  if(!MANDATORY.finish(state,MANDATORY_EVENTS))return true;
+  if(mode==='mia')state.miaRepeatLastDay=state.day;
+  if(mode==='both'){
+   state.miaRepeatLastDay=state.day;
+   state.liveRepeatLastDay=state.day;
+   state.liveMiaRepeatFollowup={mode:'after',day:state.day,slot:state.slot};
+  }
+  state.liveDayScene=null;
+  state.liveHomeActivityScene=null;
+  state.liveLastEventDay=state.day;
+  state.liveMiaRepeatMode=null;
+  state.liveMiaRepeatStep=0;
+ }
+ persist();render();return true;
+}
 function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(a?.id===MIA_PRIVATE_EVENT.id)return renderMiaPrivate();
  if(a?.id===LIVE_MIA_CHOICE_EVENT.id)return renderLiveMiaChoice();
  if(a?.id===LIVE_MIA_NEXT_PERIOD_EVENT.id)return renderLiveMiaNextPeriod();
  if(a?.id===MIA_ONLY_NEXT_PERIOD_EVENT.id)return renderMiaOnlyNextPeriod();
+ if(a?.id===LIVE_MIA_REPEAT_EVENT.id)return renderLiveMiaRepeat();
  if(a?.id===MIA_SLEEP_EVENT.id)return renderMiaSleep();
  if(a?.id===MIA_COUCH_CHOICE_EVENT.id)return renderMiaCouchChoice();
  if(MIA_KITCHEN_ART[a?.id])return miaKitchenDialogue();
@@ -1408,6 +1479,8 @@ function mandatoryAction(type,id){
   return liveMiaNextPeriodAction(type);
  if(state.mandatoryEventState.active.id===MIA_ONLY_NEXT_PERIOD_EVENT.id)
   return miaOnlyNextPeriodAction(type);
+ if(state.mandatoryEventState.active.id===LIVE_MIA_REPEAT_EVENT.id)
+  return liveMiaRepeatAction(type);
  if(state.mandatoryEventState.active.id===MIA_SLEEP_EVENT.id)
   return miaSleepAction(type);
  if(state.mandatoryEventState.active.id===MIA_COUCH_CHOICE_EVENT.id)
