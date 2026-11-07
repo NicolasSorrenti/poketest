@@ -232,7 +232,7 @@ const MIA_SCENES=[
 ];
 const MIA_EVENT_ART=Object.fromEntries(MIA_SCENES.map(e=>[e.id,MIA_BASE+e.image+'.png']));
 const MIA_EVENTS=MIA_SCENES.map(e=>({
- id:e.id,title:e.title,kind:'season',priority:97,earliestDay:e.day,
+ id:e.id,title:e.title,slot:e.slot,kind:'season',priority:97,earliestDay:e.day,
  delivery:'world',timeCost:0,expiry:'never',fallback:'queue',
  trigger:{eventSeen:e.after},
  lines:e.lines.map(([speaker,text])=>({speaker,text})),
