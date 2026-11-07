@@ -19167,7 +19167,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Dedicated classic_trainer_core.js pre-commit 2 flips; up-to-heads Basic Energy search, deck shuffle; zero/one/two heads, deck empty, multiple selection, reveal/turn timing not executed. Current path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js / classic_trainer_core.js. No reducer execution; TCGdex catalogue wording only, historical errata and printed images not independently verified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios not executed"
         }
       ]
     },
@@ -19180,13 +19184,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Attract Current",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Attract Current requires three flips and per-head Lightning attachment from deck to eligible own Lightning Pokemon; Gigavolt heads +20 or tails Paralysis. No exact named handler identified in inspected attack modules; broader compiler dispatch and reducer effects remain unproven. Current path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js / classic_trainer_core.js. No reducer execution; TCGdex catalogue wording only, historical errata and printed images not independently verified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios not executed"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Gigavolt",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Attract Current requires three flips and per-head Lightning attachment from deck to eligible own Lightning Pokemon; Gigavolt heads +20 or tails Paralysis. No exact named handler identified in inspected attack modules; broader compiler dispatch and reducer effects remain unproven. Current path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js / classic_trainer_core.js. No reducer execution; TCGdex catalogue wording only, historical errata and printed images not independently verified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios not executed"
         }
       ]
     },
@@ -19268,7 +19280,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Present",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Present requires 0/1/2/3 heads four distinct outcomes: full heal defender, 40 damage, heal 3 counters, 60 damage. No exact named handler identified in inspected modules; must inspect complete effect registration before declaring unsupported. Current path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js / classic_trainer_core.js. No reducer execution; TCGdex catalogue wording only, historical errata and printed images not independently verified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios not executed"
         }
       ]
     },
@@ -19307,19 +19323,31 @@
           "kind": "attack",
           "index": 0,
           "name": "Stoke",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Stoke deck Energy attachment, Sacred Fire targeted 40 on heads ignoring Weakness/Resistance, Dive Bomb 90 on heads; target selection and turn ownership unresolved. No exact handler identified in inspected modules. Current path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js / classic_trainer_core.js. No reducer execution; TCGdex catalogue wording only, historical errata and printed images not independently verified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios not executed"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Sacred Fire",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Stoke deck Energy attachment, Sacred Fire targeted 40 on heads ignoring Weakness/Resistance, Dive Bomb 90 on heads; target selection and turn ownership unresolved. No exact handler identified in inspected modules. Current path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js / classic_trainer_core.js. No reducer execution; TCGdex catalogue wording only, historical errata and printed images not independently verified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios not executed"
         },
         {
           "kind": "attack",
           "index": 2,
           "name": "Dive Bomb",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Stoke deck Energy attachment, Sacred Fire targeted 40 on heads ignoring Weakness/Resistance, Dive Bomb 90 on heads; target selection and turn ownership unresolved. No exact handler identified in inspected modules. Current path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js / classic_trainer_core.js. No reducer execution; TCGdex catalogue wording only, historical errata and printed images not independently verified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios not executed"
         }
       ]
     },
@@ -19332,13 +19360,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Dark Flame",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Dark Flame discard Energy and reattach from discard, Black Fang coins equal all attached Energy with +10/head; no exact handler identified in inspected modules; check typed cost, discard order, coin count and KO. Current path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js / classic_trainer_core.js. No reducer execution; TCGdex catalogue wording only, historical errata and printed images not independently verified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios not executed"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Black Fang",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 live RPG/Classic source-only audit: Dark Flame discard Energy and reattach from discard, Black Fang coins equal all attached Energy with +10/head; no exact handler identified in inspected modules; check typed cost, discard order, coin count and KO. Current path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js / classic_trainer_core.js. No reducer execution; TCGdex catalogue wording only, historical errata and printed images not independently verified."
+          ],
+          "scope": "Source-only PARTIAL; scenarios not executed"
         }
       ]
     },
