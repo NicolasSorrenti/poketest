@@ -61,3 +61,54 @@
 @media(max-width:740px){.nps-main{grid-template-columns:minmax(0,1fr);gap:7px;padding:7px}.nps-top{padding:9px}.nps-top-right{gap:7px}.nps-top-right strong{font-size:16px}.nps-goal{font-size:11px;padding:7px 10px}.nps-stage{aspect-ratio:4/3}.nps-controls{display:grid;grid-template-columns:1fr 1fr;gap:7px}.nps-section{padding:8px}.nps-section h3{font-size:12px}.nps-choice-grid button{font-size:10px;min-height:34px}.nps-bottom{padding:2px 7px 10px}.nps-mini-album{max-width:44%}.nps-primary{min-width:118px;font-size:14px}.nps-caption{font-size:11px;max-width:78%}}
 @media(max-width:380px){.nps-controls{grid-template-columns:1fr}.nps-mini-album{display:none}}
 @media(prefers-reduced-motion:reduce){.nps-actor{transition:none}}
+
+
+/* Guided session: the brief and live feedback are part of the game, not a separate menu. */
+.nps-help{padding:7px 10px;min-height:36px;font-size:12px}
+.nps-goal{justify-content:space-between;align-items:center;gap:12px;padding:11px 16px}
+.nps-brief-copy{flex:1;min-width:200px}
+.nps-step-tag{font-size:10px;font-weight:900;color:#f29bd1;letter-spacing:.13em;margin-bottom:3px}
+.nps-brief-copy>strong{display:block;font-size:16px;color:#fff4bd}
+.nps-brief-copy>p{font-size:12px;line-height:1.35;margin:4px 0 0;color:#d6e1f5}
+.nps-checklist{flex:1.25;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.nps-check{border:1px solid #7484a7;background:#1c2944;border-radius:9px;padding:7px 9px;font-size:11px;line-height:1.3;font-weight:720;color:#edecf7}
+.nps-check[data-ready=true]{border-color:#8fdaa9;background:#1b403d;color:#e4ffe8}
+.nps-check[data-ready=false]{border-color:#dfb080;background:#3d3040;color:#ffe7c1}
+.nps-meter-label{display:block;font-size:10px;font-weight:750;color:#e9e7ff;white-space:nowrap;margin-top:3px}
+.nps-framing-guide{display:flex;justify-content:space-between;gap:3px;font-size:10px;color:#aabce0;margin-top:3px}
+.nps-framing-guide b{color:#ffe79d}
+.nps-snap-status{font-size:12px;line-height:1.35;color:#e5d9fb;max-width:195px}
+.nps-primary.nps-ready{border-color:#fff1a7;box-shadow:0 0 22px #fff28c8a,0 5px 25px #ff5c9b55}
+.nps-instructions,.nps-review{position:absolute;inset:0;z-index:30;display:grid;place-items:center;padding:16px;background:#0a1224eb;backdrop-filter:blur(7px)}
+.nps-guide-card{width:min(620px,100%);max-height:90%;overflow:auto;border:2px solid #e697d4;border-radius:18px;background:linear-gradient(145deg,#25224b,#12223a);padding:clamp(17px,3vw,28px);box-shadow:0 22px 55px #000a}
+.nps-guide-card h3{font-size:clamp(24px,4vw,34px);margin:3px 0 10px;color:#fff0ae}
+.nps-guide-card p{color:#e3e5f3;line-height:1.5;margin:6px 0 16px;font-size:14px}
+.nps-guide-steps{display:grid;gap:10px;margin:16px 0}
+.nps-guide-steps>div{border:1px solid #6e80a4;border-radius:12px;background:#132844;padding:11px 12px;font-size:13px;line-height:1.4}
+.nps-guide-steps b{color:#ffe698;font-size:14px}
+.nps-guide-actions{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:12px}
+.nps-review-card{width:min(780px,100%)}
+.nps-review-content{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,.8fr);gap:16px;align-items:start}
+.nps-review-preview{position:relative;background:#273a57 url('/rpg-assets/locations/panoramas/park-day.webp') center/cover no-repeat;aspect-ratio:16/10;border:3px solid #eedda6;border-radius:11px;overflow:hidden}
+.nps-review-preview img{position:absolute;left:50%;bottom:-2%;height:99%;width:80%;object-fit:contain;object-position:center bottom;transform-origin:center 66%}
+.nps-review-preview[data-light=soft]::after,.nps-review-preview[data-light=warm]::after,.nps-review-preview[data-light=bright]::after{content:"";position:absolute;inset:0;pointer-events:none}
+.nps-review-preview[data-light=soft]::after{background:#eff3fb1b}
+.nps-review-preview[data-light=warm]::after{background:#f1a45b26}
+.nps-review-preview[data-light=bright]::after{background:#ffffff21;mix-blend-mode:screen}
+.nps-review-breakdown{display:grid;gap:7px}
+.nps-review-breakdown>div{display:flex;justify-content:space-between;gap:7px;font-size:13px;border-bottom:1px solid #ffffff29;padding:4px 0}
+.nps-review-breakdown strong{color:#ffe6a2}
+.nps-review-message{font-size:13px!important;line-height:1.4!important;color:#e9f1ff!important}
+@media(max-width:740px){
+ .nps-goal{flex-direction:column;align-items:stretch;padding:8px 10px;gap:7px}
+ .nps-brief-copy>strong{font-size:14px}
+ .nps-brief-copy>p{font-size:11px}
+ .nps-checklist{grid-template-columns:1fr 1fr}
+ .nps-check{padding:6px;font-size:10px}
+ .nps-review-content{grid-template-columns:1fr}
+ .nps-review-preview{max-height:190px}
+ .nps-guide-steps{gap:6px;margin:8px 0}
+ .nps-guide-steps>div{padding:7px 9px}
+ .nps-guide-card{padding:13px;max-height:calc(100dvh - 24px)}
+ .nps-snap-status{font-size:10px}
+}
