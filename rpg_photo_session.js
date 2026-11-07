@@ -26,14 +26,16 @@
   const profile=root.NeoRpgPhotoProfiles?.byId(npc);
   if(!profile)return false;
   const PORTRAIT=profile.portraitIds,CANDID=profile.candidIds,labels=profile.labels,
-   captions=profile.captions,POSES=profile.poses,REACTIONS=profile.actions,
-   REACTION_TASKS=profile.tasks;
+   captions=profile.captions,POSES=profile.poses,
+   REACTIONS=options.story?profile.storyActions:profile.actions,
+   REACTION_TASKS=options.story?profile.scripted:profile.tasks;
   const pose=id=>POSES.find(p=>p.id===id)||POSES[0];
   const location=String(options.location||profile.defaultLocation||'park').toLowerCase();
   const PHOTO_BACKGROUND=root.NeoRpgPhotoProfiles.backgroundFor(location);
   ensureStyle();
   const session={
    id:npc,name:profile.name,location,freePlay:!!options.freePlay,
+   scripted:!!options.story,
    savedAlbum:Array.isArray(options.savedAlbum)?options.savedAlbum.slice(-72):[],
    onCancel:options.onCancel,onComplete:options.onComplete,closed:false,
    mode:'reactions',poseId:'neutral',light:'warm',zoom:1.3,x:0,y:0,shots:[],
@@ -46,6 +48,7 @@
   active=session;
   const shell=document.createElement('div');
   shell.className='nps-root';
+  shell.classList.toggle('nps-story',session.scripted);
   shell.classList.toggle('nps-discreet',document.documentElement.dataset.rpgDiscreet==='on');
   shell.setAttribute('role','dialog');shell.setAttribute('aria-modal','true');
   shell.setAttribute('aria-label','Photo Session with '+session.name);
@@ -75,13 +78,13 @@
    '<div class="nps-caption" data-caption>'+session.name+': "Ready when you are!"</div>'+
    '<div class="nps-loading" data-loading>Loading '+session.name+'’s artwork…</div></div>'+
    '<div class="nps-controls" id="nps-controls-panel">'+
-   '<section class="nps-section"><h3>📸 Session style</h3>'+
+   '<section class="nps-section" data-style-section><h3>📸 Session style</h3>'+
    '<div class="nps-mode"><button class="nps-btn" data-mode="reactions">🎭 Reactions</button>'+
    '<button class="nps-btn" data-mode="portrait">Directed</button>'+
    '<button class="nps-btn" data-mode="candid">Candid</button></div>'+
    '<div class="nps-camerarow" data-auto-wrap><button class="nps-btn" data-auto type="button">Auto poses: Off</button></div></section>'+
    '<section class="nps-section nps-react-actions" data-reactions>'+
-   '<h3>💬 Interact with '+session.name+'</h3><p class="nps-hint">Choose an interaction. Watch the reaction and capture the best moment!</p>'+
+   '<h3>💬 '+(session.scripted?'Photo request from ':'Interact with ')+session.name+'</h3><p class="nps-hint">'+(session.scripted?'Your model chooses the poses. Frame each requested detail and press SNAP during the moment.':'Choose an interaction. Watch the reaction and capture the best moment!')+'</p>'+
    '<div class="nps-react-grid" data-reaction-actions></div>'+
    '<p class="nps-react-status" data-reaction-status>Choose an interaction to begin.</p></section>'+
    '<section class="nps-section" data-pose-section><h3>✦ '+session.name+'’s poses / moods</h3><div class="nps-choice-grid" data-poses></div></section>'+
@@ -187,8 +190,9 @@
   function frameAlignment(type){
    const view=stage.getBoundingClientRect(),sprite=cameraLayer().getBoundingClientRect();
    if(view.height<2||sprite.height<2)return 1;
-   const subjectX=sprite.left+sprite.width*.5;
-   const subjectY=sprite.top+sprite.height*(frameFocus[type]??.34);
+   const target=session.scripted?session.tasks[session.shots.length]?.target:null;
+   const subjectX=sprite.left+sprite.width*(target?.x??.5);
+   const subjectY=sprite.top+sprite.height*(target?.y??frameFocus[type]??.34);
    const aimX=view.left+view.width*.5;
    const aimY=view.top+view.height*.48;
    const error=Math.hypot(
@@ -283,7 +287,8 @@
    const serial=session.reactionSerial;
    drawChoices();
    const status=$(shell,'[data-reaction-status]');
-   status.textContent=session.name+' is getting ready…';
+   status.textContent=session.scripted?'Listen to '+session.name+' and frame the shot…':
+    session.name+' is getting ready…';
    loading.hidden=false;
    loading.textContent='Preparing '+session.name+'’s reactions…';
    const prepared=await Promise.all(action.frames.map(frame=>preloadPose(frame.pose)));
@@ -305,7 +310,8 @@
     const started=performance.now();
     session.reaction={id:action.id,pose:frame.pose,highlight:!!frame.highlight,
      start:started,duration:frame.duration};
-    status.textContent=frame.highlight?'📷 PHOTO OPPORTUNITY! Capture '+session.name+' now!':
+    status.textContent=frame.highlight?(session.scripted?'📷 Now! '+session.tasks[session.shots.length]?.dialogue:
+      '📷 PHOTO OPPORTUNITY! Capture '+session.name+' now!'):
      session.name+': '+(i===0?'Reacting…':'The moment is changing…');
     updateFeedback();
     await new Promise(resolve=>{
@@ -357,11 +363,25 @@
    $(shell,'[data-mode=portrait]').classList.toggle('is-selected',session.mode==='portrait');
    $(shell,'[data-mode=candid]').classList.toggle('is-selected',session.mode==='candid');
    const reacting=session.mode==='reactions';
-   $(shell,'[data-pose-section]').hidden=reacting;
+   $(shell,'[data-style-section]').hidden=session.scripted;
+   $(shell,'[data-pose-section]').hidden=reacting||session.scripted;
    $(shell,'[data-reactions]').hidden=!reacting;
-   $(shell,'[data-auto-wrap]').hidden=reacting;
+   $(shell,'[data-auto-wrap]').hidden=reacting||session.scripted;
    const actionList=$(shell,'[data-reaction-actions]');
-   if(actionList&&!actionList.childElementCount){
+   if(session.scripted){
+    // One dialogue-driven pose at a time: the player frames and shoots,
+    // rather than choosing reactions or generating the requested pose.
+    const scene=session.tasks[session.shots.length];
+    if(actionList.firstElementChild?.dataset.action!==scene?.action){
+     actionList.replaceChildren();
+     const b=document.createElement('button');
+     b.type='button';b.className='nps-btn nps-recommended';
+     b.dataset.action=scene?.action||'';
+     b.textContent='↻ Repeat '+(session.shots.length+1)+' / 3 pose';
+     b.onclick=()=>{if(scene)void playReaction(scene.action);};
+     actionList.append(b);
+    }
+   }else if(actionList&&!actionList.childElementCount){
     for(const action of REACTIONS){
      const b=document.createElement('button');
      b.type='button';b.className='nps-btn';
@@ -385,7 +405,7 @@
      b.classList.toggle('nps-recommended',b.dataset.action===goal?.action);
     }
    }
-   const list=session.mode==='portrait'?PORTRAIT:CANDID;
+   const list=session.scripted?[]:session.mode==='portrait'?PORTRAIT:CANDID;
    for(const id of list){
     const b=document.createElement('button');
     b.type='button';b.className='nps-btn';
@@ -423,7 +443,7 @@
    if(!task||session.closed)return;
    const reacting=session.mode==='reactions';
    const poseGood=session.poseId===task.pose&&(!reacting||!!session.reaction?.highlight);
-   const frameGood=Math.abs(session.zoom-frameZoom[task.framing])<=.22;
+   const frameGood=Math.abs(session.zoom-frameZoom[task.framing])<=.25;
    // Intentional vertical panning is necessary for close-ups; judge the
    // subject's actual focal position in the viewfinder instead of raw pan.
    const centered=frameAlignment(task.framing)>=.72;
@@ -438,7 +458,10 @@
    }
    check('pose',poseGood,(reacting?'Reaction: ':'Pose: ')+labels[task.pose]+(poseGood?'':
     (reacting?' · interact':pose(task.pose).kind!==session.mode?' · '+(pose(task.pose).kind==='candid'?'Candid':'Directed'):' · select')));
-   check('framing',frameGood&&centered,'Frame: '+({close:'Close-up',medium:'Medium',full:'Full body'}[task.framing])+
+   check('framing',frameGood&&centered,(session.scripted?'Target: ':'Frame: ')+
+    (session.scripted?({eyes:'Eyes','back-detail':'Clothing detail from behind',hands:'Hands',
+     outfit:'Outfit',natural:'Candid moment'}[task.target?.region]||'Detail'):
+     ({close:'Close-up',medium:'Medium',full:'Full body'}[task.framing]))+
     (frameGood&&centered?' ✓':(!frameGood?' · now '+myFrame:' · center character')));
    check('light',lightGood,'Light: '+({soft:'Soft',warm:'Warm',bright:'Bright'}[task.light]));
    check('moment',momentGood,'Moment: '+(momentGood?'NOW!':reacting?'Trigger reaction':'Wait for bar'));
@@ -449,7 +472,8 @@
     'First: switch to '+(pose(task.pose).kind==='candid'?'Candid':'Directed')+' mode, then choose '+labels[task.pose]+'.':
     'First: choose the '+labels[task.pose]+' pose.';
    else if(!frameGood)next='Next: adjust zoom until Frame turns green.';
-   else if(!centered)next='Next: drag the character toward the center.';
+   else if(!centered)next=session.scripted?'Move the requested detail into the center of the viewfinder.':
+    'Next: drag the character toward the center.';
    else if(!lightGood)next='Next: choose '+task.light+' light.';
    else if(!momentGood)next='Almost ready! Wait for the moment bar to fill.';
    else next='PERFECT SETUP! Press SNAP now!';
@@ -466,15 +490,20 @@
    guide.innerHTML='<div class="nps-guide-card">'+
     '<div class="nps-step-tag">A QUICK GUIDE · THREE PHOTOS</div>'+
     '<h3>How to play 📷</h3>'+
-    '<p>'+session.name+' reacts to what you say. Your goal is to <b>cause</b> a reaction and photograph it while it happens.</p>'+
+    '<p>'+(session.scripted?session.name+' asked you to take three photographs. Your model chooses the poses and tells you which detail to highlight.':'Your goal is to cause a reaction and photograph it while it happens.')+'</p>'+
     '<div class="nps-guide-steps">'+
-    '<div><b>1 · Talk to '+session.name+'</b><div>Choose an interaction below the camera on mobile (or on the right on desktop). Different choices reveal different poses.</div></div>'+
+    '<div><b>1 · Listen to '+session.name+'</b><div>'+(session.scripted?
+     'Watch the short scene. The character will choose a pose and tell you what to photograph. Use Repeat pose as often as needed.':
+     'Choose an interaction to reveal different poses.')+'</div></div>'+
     '<div><b>2 · Prepare your shot</b><div>Pinch or use the camera’s +/− buttons to zoom and drag to frame the character. Lighting and other modes are under Settings on mobile.</div></div>'+
-    '<div><b>3 · Catch the reaction!</b><div>When the requested expression appears, the bar fills briefly. SNAP before the moment ends! Retry without penalty.</div></div></div>'+
+    '<div><b>3 · Photograph the detail!</b><div>Move the requested detail to the center, then press SNAP during the moment. Retakes never cost time.</div></div></div>'+
     '<p>There is no countdown between interactions. A reaction itself is brief, but you can trigger it again. Directed and Candid modes remain available for free posing.</p>'+
     '<div class="nps-guide-actions"><button type="button" class="nps-btn nps-primary" data-start-shooting>Got it · Start shooting!</button></div></div>';
    $(shell,'.nps-shell').append(guide);
-   $(guide,'[data-start-shooting]').onclick=()=>guide.remove();
+   $(guide,'[data-start-shooting]').onclick=()=>{
+    guide.remove();
+    if(session.scripted)void playReaction(session.tasks[session.shots.length].action);
+   };
    $(guide,'[data-start-shooting]').focus();
   }
   function tick(){
@@ -713,9 +742,12 @@
    $(shell,'.nps-shell').append(review);
    $(review,'[data-retry]').onclick=()=>{
     session.reviewOpen=false;review.remove();
-    // The photo was rejected; the player can prompt this character again.
-    void setMood('neutral',{fromReaction:session.mode==='reactions',silent:true});
-    drawChoices();updateFeedback();
+    if(session.scripted){
+     drawChoices();void playReaction(session.tasks[session.shots.length].action);
+    }else{
+     void setMood('neutral',{fromReaction:session.mode==='reactions',silent:true});
+     drawChoices();updateFeedback();
+    }
    };
    $(review,'[data-keep]').onclick=()=>{
     session.reviewOpen=false;review.remove();
@@ -736,8 +768,14 @@
      taskUI();
      // Do not auto-solve the next brief: give the player a reason to choose a new pose.
      const next=session.tasks[session.shots.length];
-     const reset=session.mode==='reactions'?'neutral':pose(next.pose).kind==='candid'?'walking':'neutral';
-     void setMood(reset,{fromReaction:session.mode==='reactions',silent:true});
+     if(session.scripted){
+      // Next character request starts automatically after keeping a photo.
+      drawChoices();
+      void playReaction(next.action);
+     }else{
+      const reset=session.mode==='reactions'?'neutral':pose(next.pose).kind==='candid'?'walking':'neutral';
+      void setMood(reset,{fromReaction:session.mode==='reactions',silent:true});
+     }
     }
    };
    $(review,'[data-retry]').focus();
