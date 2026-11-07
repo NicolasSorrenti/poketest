@@ -21432,13 +21432,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Ink Blast",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Ink Blast extra Energy beyond attack cost, capped +20; Tentacle Wrap heads Paralysis/tails extra retreat cost. Check generic/Neo extension handlers and Energy accounting; no reducer execution.",
+            "Active path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js (with Neo extension dispatch). Source-only PARTIAL; historical rulings not independently verified."
+          ],
+          "scope": "Source review only; battle-state scenarios pending reducer execution."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Tentacle Wrap",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Ink Blast extra Energy beyond attack cost, capped +20; Tentacle Wrap heads Paralysis/tails extra retreat cost. Check generic/Neo extension handlers and Energy accounting; no reducer execution.",
+            "Active path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js (with Neo extension dispatch). Source-only PARTIAL; historical rulings not independently verified."
+          ],
+          "scope": "Source review only; battle-state scenarios pending reducer execution."
         }
       ]
     },
@@ -21451,13 +21461,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Shed",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Shed removes exactly one self damage counter without KO or negative damage; Fury Attack two flips (0/1/2 heads). Generic coin-times pattern exists; no reducer execution.",
+            "Active path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js (with Neo extension dispatch). Source-only PARTIAL; historical rulings not independently verified."
+          ],
+          "scope": "Source review only; battle-state scenarios pending reducer execution."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Fury Attack",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Shed removes exactly one self damage counter without KO or negative damage; Fury Attack two flips (0/1/2 heads). Generic coin-times pattern exists; no reducer execution.",
+            "Active path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js (with Neo extension dispatch). Source-only PARTIAL; historical rulings not independently verified."
+          ],
+          "scope": "Source review only; battle-state scenarios pending reducer execution."
         }
       ]
     },
@@ -21470,13 +21490,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Sleep Power",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Sleep Power Grass cost, 10 and guaranteed Sleep; Psyshock Psychic cost, 10 and coin heads Paralysis. Generic status and coin-status patterns exist; no reducer execution.",
+            "Active path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js (with Neo extension dispatch). Source-only PARTIAL; historical rulings not independently verified."
+          ],
+          "scope": "Source review only; battle-state scenarios pending reducer execution."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Psyshock",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Sleep Power Grass cost, 10 and guaranteed Sleep; Psyshock Psychic cost, 10 and coin heads Paralysis. Generic status and coin-status patterns exist; no reducer execution.",
+            "Active path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js (with Neo extension dispatch). Source-only PARTIAL; historical rulings not independently verified."
+          ],
+          "scope": "Source review only; battle-state scenarios pending reducer execution."
         }
       ]
     },
@@ -21489,7 +21519,12 @@
           "kind": "attack",
           "index": 0,
           "name": "Nightmare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Nightmare Psychic cost, 10 and guaranteed Sleep. Generic status pattern exists; no reducer execution.",
+            "Active path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js (with Neo extension dispatch). Source-only PARTIAL; historical rulings not independently verified."
+          ],
+          "scope": "Source review only; battle-state scenarios pending reducer execution."
         }
       ]
     },
@@ -21502,13 +21537,23 @@
           "kind": "attack",
           "index": 0,
           "name": "Tail Bite",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Tail Bite 10 or 30 after coin; Psychic 10 plus 10 per Energy card on Defending Pokémon, not Energy units. Generic coin-bonus may apply; no reducer execution.",
+            "Active path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js (with Neo extension dispatch). Source-only PARTIAL; historical rulings not independently verified."
+          ],
+          "scope": "Source review only; battle-state scenarios pending reducer execution."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Psychic",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Tail Bite 10 or 30 after coin; Psychic 10 plus 10 per Energy card on Defending Pokémon, not Energy units. Generic coin-bonus may apply; no reducer execution.",
+            "Active path: rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> attack_effects_core.js (with Neo extension dispatch). Source-only PARTIAL; historical rulings not independently verified."
+          ],
+          "scope": "Source review only; battle-state scenarios pending reducer execution."
         }
       ]
     },
