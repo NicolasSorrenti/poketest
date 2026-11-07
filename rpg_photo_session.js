@@ -14,7 +14,7 @@
   if(document.getElementById('neo-photo-session-style'))return;
   const link=document.createElement('link');
   link.id='neo-photo-session-style';link.rel='stylesheet';
-  link.href='/rpg_photo_session.css?v=barb-photo-snapshot-v6';
+  link.href='/rpg_photo_session.css?v=cast-photo-v1';
   document.head.append(link);
  }
  function open(options={}){
@@ -31,7 +31,7 @@
   ensureStyle();
   const session={
    id:npc,name:profile.name,location,freePlay:!!options.freePlay,
-   savedAlbum:Array.isArray(options.savedAlbum)?options.savedAlbum.slice(-24):[],
+   savedAlbum:Array.isArray(options.savedAlbum)?options.savedAlbum.slice(-72):[],
    onCancel:options.onCancel,onComplete:options.onComplete,closed:false,
    mode:'reactions',poseId:'neutral',light:'warm',zoom:1.3,x:0,y:0,shots:[],
    tasks:REACTION_TASKS.slice(),auto:false,imageSequence:0,clock:null,interval:null,
@@ -516,17 +516,17 @@
    // Save a bounded copy in campaign metadata to avoid bloating cloud saves.
    const fullImage=full.toDataURL('image/webp',.87);
    let thumbnail='';
-   for(const targetWidth of [480,360,280]){
+   for(const targetWidth of [320,260,220,180]){
     const thumb=document.createElement('canvas');
     thumb.width=Math.round(Math.min(targetWidth,full.width));
     thumb.height=Math.max(1,Math.round(thumb.width*full.height/full.width));
     const tc=thumb.getContext('2d',{alpha:false});
     if(!tc)continue;
     tc.drawImage(full,0,0,thumb.width,thumb.height);
-    thumbnail=thumb.toDataURL('image/webp',.63);
+    thumbnail=thumb.toDataURL('image/webp',.52);
     if(!thumbnail.startsWith('data:image/webp'))
-     thumbnail=thumb.toDataURL('image/jpeg',.65);
-    if(thumbnail.length<51000)break;
+     thumbnail=thumb.toDataURL('image/jpeg',.55);
+    if(thumbnail.length<21000)break;
    }
    return {fullImage,thumbnail};
   }
