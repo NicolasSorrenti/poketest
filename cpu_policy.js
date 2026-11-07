@@ -1107,10 +1107,14 @@ function energyHorizonBonus(action,o,cfg){
  const futureHand=p.hand.filter((_,i)=>i!==v.handIndex);
  const futureRound=(Number(o.round)||0)+1;
  // Defaulting to serial zero makes expired public locks look active.
- const before=horizonAttackValue(u,q.active,futureHand,1,futureRound,o.turnSerial,p.bench.length,v.slot===-1);
- const changed=horizonAttackValue(after,q.active,futureHand,1,futureRound,o.turnSerial,p.bench.length,v.slot===-1);
- const direct=projectedAttackValue(after,q.active,o.turnSerial,p.bench.length)-
-  projectedAttackValue(u,q.active,o.turnSerial,p.bench.length);
+ // Apex forecasts a Bench attacker after promotion: it no longer counts
+ // toward its own Bench-count attack damage. Keep lower tiers unchanged.
+ const forecastBenchCount=cfg.level===8&&v.slot!==-1?
+  Math.max(0,p.bench.length-1):p.bench.length;
+ const before=horizonAttackValue(u,q.active,futureHand,1,futureRound,o.turnSerial,forecastBenchCount,v.slot===-1);
+ const changed=horizonAttackValue(after,q.active,futureHand,1,futureRound,o.turnSerial,forecastBenchCount,v.slot===-1);
+ const direct=projectedAttackValue(after,q.active,o.turnSerial,forecastBenchCount)-
+  projectedAttackValue(u,q.active,o.turnSerial,forecastBenchCount);
  // Reward immediate Energy unlocks, but value two-card lines only insofar as
  // they are possible with cards that are ALREADY visible in our own hand.
  const expected=Math.max(0,changed-before)*1.15+Math.max(0,direct)*.35;
