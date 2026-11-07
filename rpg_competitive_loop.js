@@ -108,10 +108,12 @@
   const primaryTypes=[...typeFrequency].sort((a,b)=>b[1]-a[1]).map(entry=>entry[0]);
   const dualTypes=new Set([primaryTypes[0]||'Water',primaryTypes[1]||'Lightning']);
   if(dualTypes.size===1)dualTypes.add(primaryTypes[0]==='Water'?'Lightning':'Water');
+  const focusTypes=new Set(primaryTypes.slice(0,2).length?primaryTypes.slice(0,2):['Water','Lightning']);
   const permittedPokemon=c=>c.supertype==='Pokémon'&&
    !(c.evolvesFrom&&(c.subtypes||[]).includes('Basic'))&&
    (theme.format!=='monotype'||(c.types||[]).every(t=>t===theme.type||t==='Colorless'))&&
-   (theme.format!=='dual'||(c.types||[]).every(t=>t==='Colorless'||dualTypes.has(t)));
+   (theme.format!=='dual'||(c.types||[]).every(t=>t==='Colorless'||dualTypes.has(t)))&&
+   (theme.format==='dual'||theme.format==='monotype'||(c.types||[]).every(t=>t==='Colorless'||focusTypes.has(t)));
   const pokemonPool=pool.filter(permittedPokemon).sort(preferred);
   const basics=pokemonPool.filter(c=>(c.subtypes||[]).some(t=>t==='Basic'||t==='Baby'));
   const out=[],counts=new Map();
@@ -126,12 +128,21 @@
   if(theme.format==='dual'){
    for(const type of dualTypes){
     const candidate=basics.find(c=>(c.types||[]).includes(type));
-    if(add(candidate))chosen.add(candidate.name);
+    if(candidate){for(let copies=0;copies<2;copies++)add(candidate);chosen.add(candidate.name);}
+   }
+  }
+  if(theme.format==='evolutions'){
+   for(const evo of pokemonPool.filter(c=>c.evolvesFrom)){
+    if(chosen.size>=3)break;
+    const base=basics.find(c=>c.name===evo.evolvesFrom);
+    if(base&&!chosen.has(base.name)){for(let copies=0;copies<2;copies++)add(base);chosen.add(base.name);}
    }
   }
   for(const c of basics){
    if(out.length>=12)break;
-   if(add(c))chosen.add(c.name);
+   if(chosen.has(c.name))continue;
+   for(let copies=0;copies<(theme.format==='singleton'?1:3)&&out.length<12;copies++)add(c);
+   chosen.add(c.name);
   }
   if(theme.format!=='basics'){
    const evolutions=pokemonPool.filter(c=>c.evolvesFrom);
