@@ -354,5 +354,23 @@ const MIA_WINE_MISUNDERSTANDING={
 };
 const MIA_WINE_REVEAL_ART=MIA_BASE+'42_a_highly_detailed_anime_style_illustration_vibran.png';
 
-window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,MIA_WINE_MISUNDERSTANDING,MIA_WINE_REVEAL_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
+// Once-only choice between Live, Mia, or an honest shared relationship.
+// The three dialogue CGs belong to Live's apartment collection.
+const LIVE_MIA_CHOICE_EVENT={
+ id:'live_mia_relationship_choice',title:'A Choice Made Together',
+ kind:'season',priority:115,earliestDay:1,delivery:'world',timeCost:0,
+ expiry:'never',fallback:'queue',trigger:{eventSeen:'mia_private_conversation'},
+ lines:[{speaker:'Live',text:'Wake up, honey. There is something we need to discuss.'}],
+ choices:[
+  {label:'Stay with Live',reply:'Live is relieved.',flag:'live_mia_choice_live'},
+  {label:'Talk to both',reply:'Mia joins the conversation.',flag:'live_mia_choice_talk'}
+ ]
+};
+const LIVE_MIA_CHOICE_ART=Object.freeze({
+ live:MIA_BASE+'68_a_highly_detailed_polished_anime_illustration_ide.png',
+ both:MIA_BASE+'72_a_highly_detailed_anime_style_cg_close_up_same_co.png',
+ mia:MIA_BASE+'73_a_detailed_sharp_anime_style_close_up_cozy_indoo(1).png'
+});
+
+window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,MIA_WINE_MISUNDERSTANDING,MIA_WINE_REVEAL_ART,LIVE_MIA_CHOICE_EVENT,LIVE_MIA_CHOICE_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
 })();
