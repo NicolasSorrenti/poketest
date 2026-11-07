@@ -56,8 +56,8 @@
  "/rpg_sprite_inflate.js?v=independent-expansion-20261107",
  "/rpg_sprite_deformer.js?v=dance-dialogue-crop-v6-20261107",
  "/rpg_dialogue_idle.js?v=native-resolution-v2-20261107",
- "/rpg_dance_pose_controller.js?v=daisy-pose-aspect-fix-v4-20261107",
- "/rpg_arcade_game.js?v=daisy-restore-primary-v4-20261107",
+ "/rpg_dance_pose_controller.js?v=rina-dance-poses-v5-20261107",
+ "/rpg_arcade_game.js?v=rina-dance-mode-20261107",
  "/rpg_photo_profiles.js?v=photo-80-live-v2-20261107",
  "/rpg_photo_stories.js?v=photo-99-wardrobe-v1-20261107",
  "/rpg_photo_session.js?v=photo-lower-outfit-v3-20261107",
@@ -97,7 +97,7 @@
  "/rpg_cloud_save.js?v=degraded-loading-fix-20261101-1",
  "/rpg_outfits.js?v=1",
  "/rpg_phone_messages.js?v=phone-selfie-chat-20261031-3",
- "/rpg.js?v=photo-80-trust-v2-20261107"
+ "/rpg.js?v=rina-dance-freeplay-20261107"
 ];
   function registry(packs){
     // Normalize the authenticated/API roster too (not just the generated file).
