@@ -279,7 +279,7 @@
    return {...offer,name:info.name,total:info.size,owned:unique,completion:Math.round(100*unique/info.size),unlocked,vouchers,unlockHint:hint};
   });
  }
- function fresh(){return {starter:null,owned:{},deck:[],draft:null,packs:0,rewards:0,lastPack:null,pendingPacks:[],vouchers:{},welcomePacks:0,weeklyWins:{},weeklyPacks:{},rewardedDuels:{}};}
+ function fresh(){return {starter:null,owned:{},deck:[],deckSlots:null,activeDeckSlot:0,draft:null,packs:0,rewards:0,lastPack:null,pendingPacks:[],vouchers:{},welcomePacks:0,weeklyWins:{},weeklyPacks:{},rewardedDuels:{}};}
  function hydrate(state){
   const x=state.deckJourney;if(x===null||x===undefined)return state;
   if(!x||typeof x!=='object'||Array.isArray(x)){state.deckJourney=fresh();return state}
@@ -288,7 +288,23 @@
   for(const id of Object.keys(x.owned))if(!allAllowed.has(id)||!Number.isInteger(x.owned[id])||x.owned[id]<0||x.owned[id]>999)delete x.owned[id];
   x.deck=Array.isArray(x.deck)&&x.deck.length===60?x.deck.filter(id=>allAllowed.has(id)):byId.get(x.starter).cards.slice();
   if(x.deck.length!==60)x.deck=byId.get(x.starter).cards.slice();
-  for(const [id,n] of Object.entries(rank(x.deck)))x.owned[id]=Math.max(n,x.owned[id]||0);
+  // Migrate old single-deck saves into slot 1 while preserving x.deck for combat.
+   if(!Array.isArray(x.deckSlots)){
+    x.deckSlots=[{name:'Deck 1',cards:[...x.deck]},null,null,null,null];
+    x.activeDeckSlot=0;
+   }
+   x.deckSlots=Array.from({length:5},(_,i)=>{
+    const entry=x.deckSlots[i];
+    if(!entry||!Array.isArray(entry.cards)||entry.cards.length!==60||
+       entry.cards.some(id=>!allAllowed.has(id)))return null;
+    return {name:typeof entry.name==='string'&&entry.name.trim()?
+     entry.name.trim().slice(0,36):'Deck '+(i+1),cards:[...entry.cards]};
+   });
+   if(!x.deckSlots.some(Boolean))x.deckSlots[0]={name:'Deck 1',cards:[...x.deck]};
+   if(!Number.isInteger(x.activeDeckSlot)||x.activeDeckSlot<0||x.activeDeckSlot>=5||
+      !x.deckSlots[x.activeDeckSlot])x.activeDeckSlot=x.deckSlots.findIndex(Boolean);
+   x.deck=[...x.deckSlots[x.activeDeckSlot].cards];
+   for(const [id,n] of Object.entries(rank(x.deck)))x.owned[id]=Math.max(n,x.owned[id]||0);
   if(!Array.isArray(x.draft)||x.draft.length>60||x.draft.some(id=>!allAllowed.has(id)))x.draft=null;
   if(!x.lastPack||!Array.isArray(x.lastPack.cards)||![5,10].includes(x.lastPack.cards.length)||x.lastPack.cards.some(id=>!allAllowed.has(id)))x.lastPack=null;
   else{x.lastPack.source=['win','shop','gift'].includes(x.lastPack.source)?x.lastPack.source:'shop';x.lastPack.opened=x.lastPack.opened===true;}
@@ -328,7 +344,26 @@
   if(!Object.keys(counts).some(id=>basics.has(id)))errors.push('You need at least one Basic Pokémon.');
   return {valid:errors.length===0,errors,counts};
  }
- function draft(state){hydrate(state);const x=state.deckJourney;if(!x?.starter)throw Error('Choose a starter first');
+ function selectDeckSlot(state,index,{copyCurrent=false}={}){
+   hydrate(state);const x=state.deckJourney;
+   if(!x?.starter||!Number.isInteger(index)||index<0||index>=5)throw Error('Invalid deck slot');
+   if(!x.deckSlots[index]){
+    if(!copyCurrent)throw Error('This slot is empty. Create a deck first.');
+    x.deckSlots[index]={name:'Deck '+(index+1),cards:[...x.deck]};
+   }
+   if(x.draft&&x.draft.join('|')!==x.deck.join('|'))throw Error('Save or discard your deck edits before switching.');
+   x.activeDeckSlot=index;x.deck=[...x.deckSlots[index].cards];x.draft=null;
+   return x.deck;
+  }
+  function renameDeckSlot(state,index,name){
+   hydrate(state);const x=state.deckJourney;
+   if(!Number.isInteger(index)||index<0||index>=5||!x.deckSlots[index])throw Error('Invalid deck slot');
+   if(typeof name!=='string'||!name.trim())throw Error('Enter a deck name');
+   x.deckSlots[index].name=name.trim().slice(0,36);
+   return x.deckSlots[index].name;
+  }
+  function slots(state){hydrate(state);return state.deckJourney?.deckSlots||[];}
+  function draft(state){hydrate(state);const x=state.deckJourney;if(!x?.starter)throw Error('Choose a starter first');
   if(!x.draft)x.draft=[...x.deck];return x.draft;
  }
  function change(state,remove,add){const x=state.deckJourney;draft(state);
@@ -355,7 +390,7 @@
   x.draft=updated;return updated;
  }
  function save(state){const x=state.deckJourney;draft(state);const v=check(x.draft,x.owned);
-  if(!v.valid)throw Error(v.errors.join(' '));x.deck=[...x.draft];x.draft=null;return x.deck;
+  if(!v.valid)throw Error(v.errors.join(' '));x.deck=[...x.draft];x.deckSlots[x.activeDeckSlot].cards=[...x.deck];x.draft=null;return x.deck;
  }
  function cancel(state){if(state.deckJourney)state.deckJourney.draft=null}
  function grant(x,ids,source,set,giver,kind=null,theme=null){
@@ -444,5 +479,5 @@
   x.vouchers[set]--;x.packs++;
   return grant(x,ids,'gift',set,null);
  }
- return Object.freeze({starters,upgrade,ENERGY,SETS,SHOP_OFFERS,packRarity,shopPacks,THEMED_PACKS,themedPacks,themeContains,randomThemedPack,selectThemePool,themeForCharacter,buyThemedPack,canOwn:id=>allAllowed.has(id),awardSignature,awardVoucher,redeemVoucher,CHARACTER_SETS,setForCharacter,randomPack,packRarity,PACK_POOLS,byId:id=>byId.get(id),fresh,hydrate,choose,check,cardName,isBasicEnergyId,draft,edit,change,save,cancel,reward,buyPack,rank});
+ return Object.freeze({starters,upgrade,ENERGY,SETS,SHOP_OFFERS,packRarity,shopPacks,selectDeckSlot,renameDeckSlot,slots,THEMED_PACKS,themedPacks,themeContains,randomThemedPack,selectThemePool,themeForCharacter,buyThemedPack,canOwn:id=>allAllowed.has(id),awardSignature,awardVoucher,redeemVoucher,CHARACTER_SETS,setForCharacter,randomPack,packRarity,PACK_POOLS,byId:id=>byId.get(id),fresh,hydrate,choose,check,cardName,isBasicEnergyId,draft,edit,change,save,cancel,reward,buyPack,rank});
 });
