@@ -26,7 +26,7 @@
  let defaults=clone(posesApi.previewConfig(characterId,poseId)||PRESET);
  const specs={
   x:['Centro X',.15,.85,.005,'pct','Coordenada horizontal en el retrato.'],
-  y:['Centro Y',.25,.85,.005,'pct','Bajá este valor solo si la zona sigue demasiado arriba.'],
+  y:['Centro Y',.20,.95,.005,'pct','Bajá este valor solo si la zona sigue demasiado arriba.'],
   rx:['Radio horizontal',.04,.35,.005,'pct','Ancho del área afectada.'],
   ry:['Radio vertical',.03,.3,.005,'pct','Alto del área afectada.'],
   inflateX:['Expandir ancho',0,.8,.005,'pct','Aumenta el tamaño horizontal y vuelve al original al compás.'],
