@@ -1409,3 +1409,16 @@ Active route: RPG UI → rpg_duel_bridge.js → classic_local_service.js → hea
 - **neo4-89 Unown [V] — [Vanish]:** Confirmed live-engine omission: on-play Power absent from ONPLAY and powerPlan. Fixed directly on main in commits 79e9386f and 9ef85f08. Optional flip, heads optional return of another Unown, discard attached cards, support Active promotion. State sequence: Bench-from-hand, no other Unown, heads/tails, selected Active or Benched Unown with attached Energy, KO and promotion; reducer execution and historical ruling verification pending. **PARTIAL**.
 
 No new tests, CI, PRs, legacy changes or Apex changes. GitHub connector source access does not provide a runnable checkout; zero reducer scenarios executed. Historical printed/errata rulings have not been independently corroborated. Current ledger: 1 fully verified, 521 partial, 601 unreviewed; 1,122 not fully verified.
+
+
+## 2026-11-07 — Neo Destiny Trainers 92–96 (live-engine source review)
+
+Entry paths inspected: RPG `rpg_duel_bridge.js` and Classic `classic_local_service.js` → `headless_duel.js` → `classic_trainer_core.js`; no legacy engine. Current catalog `cards/neo4.json` provides TCGdex-imported printed text; independent errata and historical rulings not corroborated. Source-only PARTIAL: no executable checkout/reducer scenarios run. No test files, scripts, CI, or new PRs.
+
+- **neo4-92 Broken Ground Gym — PARTIAL.** Stadium install/replacement in Trainer core, retreat surcharge in headless_duel.js. Scenario: both players Basic/Baby Active, Stage 1 control, Energy cost 0/1/2, replacing Stadium and turn ownership.
+- **neo4-93 EXP.ALL — PARTIAL.** Attach Tool, opponent attack KO context, optional Basic Energy transfer from Active to Benched Tool holder, Tool discarded, KO and Prize resolution. Scenario: opposing attack KO with Basic and Special Energy, Focus Band survival, Poison KO between turns, two Tool holders, decline/accept, promotion.
+- **neo4-94 Impostor Professor Oak's Invention — PARTIAL.** Private Prize reveal, optional replacement, shuffle original Prizes into opponent deck and draw equal number as new face-down Prizes. Scenario: accept/decline, Here Comes Team Rocket! visibility, low-deck edge, opponent ownership, subsequent Prize choice.
+- **neo4-95 Radio Tower — PARTIAL.** Once-per-turn current-player private top-two inspection; deck order unchanged. Scenario: each player uses in own turn, repeat rejection, empty/single-card deck, stadium replacement, private information.
+- **neo4-96 Thought Wave Machine — PARTIAL.** Repeated coin flips until tails, return one opposing Active Energy *card* per heads (all if fewer), end current turn after Trainer resolves. Scenario: zero/one/many heads, mixed Basic/Special Energy, forced multiple choice, zero attached Energy, next player's turn.
+
+No conclusively established live-engine defect from source inspection alone; no gameplay code changed. Prior PRs #440 and #507 are closed; their merge state not independently verified. Open audit PR titled “Complete historical Pokémon Power fidelity audit (38 registry gaps)” was identified but not merged because its source diff was not reviewed in this run. Ledger: 1 verified, 526 partial, 596 unreviewed; 1,122 not fully verified.
