@@ -18685,13 +18685,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Energy Cycle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source-only audit: Energy Cycle exact discovery compiler rolls one coin; on heads with attached defending Energy and opposing Bench, headless_duel prompts attacker to select source Energy and recipient opposing Bench Pokémon, then moves Energy. Super Psy generic flat 50. Source-only; inspect no Bench/no Energy, protected Energy, KO/Prize and decision ownership. Printed text inspected in imported TCGdex catalogue only; independent errata/historical rulings pending. Zero reducer executions (no executable checkout)."
+          ],
+          "scope": "PARTIAL source-only; no runtime execution or historical ruling certification"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Super Psy",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source-only audit: Energy Cycle exact discovery compiler rolls one coin; on heads with attached defending Energy and opposing Bench, headless_duel prompts attacker to select source Energy and recipient opposing Bench Pokémon, then moves Energy. Super Psy generic flat 50. Source-only; inspect no Bench/no Energy, protected Energy, KO/Prize and decision ownership. Printed text inspected in imported TCGdex catalogue only; independent errata/historical rulings pending. Zero reducer executions (no executable checkout)."
+          ],
+          "scope": "PARTIAL source-only; no runtime execution or historical ruling certification"
         }
       ]
     },
@@ -18704,7 +18712,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Spin Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source-only audit: Spin Tackle generic recoil program (20 damage plus 10 self-damage); headless_duel self-damage path includes Metal Energy and Defender modifiers. Check lethal recoil, weakness, simultaneous KOs, Prize/promotion. Printed text inspected in imported TCGdex catalogue only; independent errata/historical rulings pending. Zero reducer executions (no executable checkout)."
+          ],
+          "scope": "PARTIAL source-only; no runtime execution or historical ruling certification"
         }
       ]
     },
@@ -18717,7 +18729,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Glare",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source-only audit: Glare generic coin-status program (10 damage, heads Paralyzed); check heads/tails, prevention, KO and turn ownership. Printed text inspected in imported TCGdex catalogue only; independent errata/historical rulings pending. Zero reducer executions (no executable checkout)."
+          ],
+          "scope": "PARTIAL source-only; no runtime execution or historical ruling certification"
         }
       ]
     },
@@ -18730,7 +18746,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Rolling Tackle",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source-only audit: Rolling Tackle generic flat 20; check Grass Energy payment, weakness/resistance, KO, prizes, turn. Printed text inspected in imported TCGdex catalogue only; independent errata/historical rulings pending. Zero reducer executions (no executable checkout)."
+          ],
+          "scope": "PARTIAL source-only; no runtime execution or historical ruling certification"
         }
       ]
     },
@@ -18743,7 +18763,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Work Together",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current live RPG/Classic source-only audit: Work Together exact neo_attack_batch_v049 handler: heads adds 10 per own Benched Omanyte/Omastar/Kabuto/Kabutops; tails stays 10. Revive Friends in classic_power_core.js: once-per-turn coin, optional Kabuto deck search and Bench placement, shuffles on heads. Check empty/full Bench, no Kabuto in deck, status locks, selected card, new Kabuto treated as Basic, attack turn and prize flow. Printed text inspected in imported TCGdex catalogue only; independent errata/historical rulings pending. Zero reducer executions (no executable checkout)."
+          ],
+          "scope": "PARTIAL source-only; no runtime execution or historical ruling certification"
         },
         {
           "kind": "power",
@@ -18751,9 +18775,9 @@
           "name": "Revive Friends",
           "status": "partial",
           "evidence": [
-            "Source-only: classic_power_core.js Revive Friends flips coin, offers optional Kabuto deck choice, benches as Basic unit and shuffles on heads. Verify tails shuffle ruling, target/bench capacity and KO/prize sequences."
+            "2026-11-07 current live RPG/Classic source-only audit: Work Together exact neo_attack_batch_v049 handler: heads adds 10 per own Benched Omanyte/Omastar/Kabuto/Kabutops; tails stays 10. Revive Friends in classic_power_core.js: once-per-turn coin, optional Kabuto deck search and Bench placement, shuffles on heads. Check empty/full Bench, no Kabuto in deck, status locks, selected card, new Kabuto treated as Basic, attack turn and prize flow. Printed text inspected in imported TCGdex catalogue only; independent errata/historical rulings pending. Zero reducer executions (no executable checkout)."
           ],
-          "scope": "Current-engine source inspection only; no executable reducer scenarios; independent printed/errata/ruling verification pending."
+          "scope": "PARTIAL source-only; no runtime execution or historical ruling certification"
         }
       ]
     },
