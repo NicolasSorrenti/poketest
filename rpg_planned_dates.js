@@ -29,12 +29,12 @@
  }
  function choices(s,npc,place,activityId,social,cast={}){
   const activity=social.activities.find(x=>x.id===activityId&&x.place===place);
-  if(!activity)return [];
+  if(!activity||activity.noDate||(activity.npc&&activity.npc!==npc))return [];
   return TONES.map(t=>({...t,disabledReason:allowedTone(s,npc,t.id,activity,cast)}));
  }
  function options(s,npc,place,social,cast={}){
   if(!cast[npc])return [];
-  return social.activities.filter(a=>a.place===place).map(a=>({
+  return social.activities.filter(a=>a.place===place&&!a.noDate&&(!a.npc||a.npc===npc)).map(a=>({
    ...a,affinity:social.affinity(npc,a.tag,cast)
   }));
  }
@@ -56,7 +56,7 @@
   const {npc,day,slot,place,activityId,tone}=request||{};
   if(!cast[npc])throw Error('Unknown trainer');
   const activity=social.activities.find(a=>a.id===activityId&&a.place===place);
-  if(!activity)throw Error('Selected activity is not available at that venue');
+  if(!activity||activity.noDate||(activity.npc&&activity.npc!==npc))throw Error('Selected activity is not available at that venue');
   const why=allowedTone(s,npc,tone,activity,cast);
   if(why)throw Error(why);
   // The appointment provider performs final availability checks. No costs are
