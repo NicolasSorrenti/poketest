@@ -34,6 +34,7 @@
     <label for="photoCharacter">Character</label><select id="photoCharacter" aria-label="Photography character"></select>
     <label for="photoPlace">Location</label><select id="photoPlace" aria-label="Photography location"></select>
     <label for="storyMode">Play style</label><label class="photo-demo-story"><input id="storyMode" type="checkbox" checked> Character-directed photos</label>
+    <label for="photoStory">Microstory</label><select id="photoStory" aria-label="Choose photo story"></select>
    </div>
    <p>The demo is free play: it does not change your campaign. In the RPG, use <strong>Spend time → Take photos together</strong> when you meet a supported character.</p>
    <button id="start" type="button">📷 Start photo session</button>
@@ -41,13 +42,15 @@
   </section>
  </main>
  <script src="/rpg_sprite_deformer.js?v=hires-motion-20261106"></script>
- <script src="/rpg_photo_profiles.js?v=npc-request-v1-20261107"></script>
- <script src="/rpg_photo_session.js?v=npc-request-v1-20261107"></script>
+ <script src="/rpg_photo_profiles.js?v=photo-80-live-v1-20261107"></script>
+ <script src="/rpg_photo_stories.js?v=photo-80-v1-20261107"></script>
+ <script src="/rpg_photo_session.js?v=photo-80-v1-20261107"></script>
  <script>
   (function(){
    const api=window.NeoRpgPhotoProfiles;
    const selected=document.getElementById('photoCharacter');
    const location=document.getElementById('photoPlace');
+   const stories=document.getElementById('photoStory');
    const hero=document.getElementById('photoHero');
    const heroImg=document.getElementById('photoHeroImg');
    const title=document.getElementById('photoTitle');
@@ -72,6 +75,21 @@
     heroImg.src=picture.src;
     heroImg.alt=character.name+' posing';
     title.textContent='Photo Session with '+character.name;
+    if(updatePlace){
+     stories.replaceChildren();
+     const authored=window.NeoRpgPhotoStories?.all(character.id,character)||[];
+     for(const entry of authored){
+      const option=document.createElement('option');
+      option.value=entry.id;
+      option.textContent=entry.title+' · Trust '+entry.trustMin+'+';
+      stories.append(option);
+     }
+     if(!authored.length){
+      const option=document.createElement('option');
+      option.value='';option.textContent='Standard character reactions';
+      stories.append(option);
+     }
+    }
     hero.style.backgroundImage='linear-gradient(180deg,#e6bedb42,#0b10225c),url("'+
      api.backgroundFor(location.value)+'")';
    }
@@ -87,6 +105,8 @@
     window.NeoRpgPhotoSession?.open({
      characterId:character.id,location:location.value,freePlay:true,
      story:document.getElementById('storyMode').checked,
+     storyId:document.getElementById('storyMode').checked?(stories.value||null):null,
+     trust:99,
      onComplete:result=>console.info('Photo practice:',result.characterId,result.average+'/100')
     });
    };
