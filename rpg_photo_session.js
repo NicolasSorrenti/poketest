@@ -145,8 +145,13 @@
    $(panel,'[data-story-step]').textContent='PHOTO '+(Math.min(3,session.shots.length+1))+' / 3';
    $(panel,'[data-story-context]').textContent=task?.intro||session.narrative?.hook||'';
    $(panel,'[data-story-line]').textContent=plain||task?.dialogue||'Look toward the camera.';
+   const targetLabels={eyes:'EYES',hair:'HAIR',collar:'NECKLINE / COLLAR',
+    hands:'HANDS',skirt:'SKIRT HEM','back-detail':'BACK OF OUTFIT',
+    outfit:'FULL OUTFIT',shoulders:'SHOULDERS',waist:'WAIST / CLOTHING',
+    legs:'LEGS / POSE',lips:'SMILE',natural:'CANDID MOMENT'};
    $(panel,'[data-story-request]').textContent=task?.dialogue?
-    'YOUR SHOT  ·  '+task.dialogue:'';
+    'FOCUS  ·  '+(targetLabels[task.target?.region]||'PHOTO DETAIL')+
+    '  ·  Take your time':'';
   }
   const silhouette=$(shell,'.nps-silhouette');
   const cameraLayer=()=>shell.classList.contains('nps-discreet')?silhouette:actor;
@@ -345,6 +350,8 @@
       '📷 PHOTO OPPORTUNITY! Capture '+session.name+' now!'):
      session.name+': '+(i===0?'Preparing the pose…':'The moment is changing…');
     if(session.scripted)storySubtitle(frame.line);
+    // Once the model holds the requested pose, re-enable Repeat pose.
+    if(session.scripted&&frame.highlight)drawChoices();
     updateFeedback();
     await new Promise(resolve=>{
      session.reactionCancel=resolve;
@@ -509,7 +516,9 @@
    check('pose',poseGood,(reacting?'Reaction: ':'Pose: ')+labels[task.pose]+(poseGood?'':
     (reacting?' · interact':pose(task.pose).kind!==session.mode?' · '+(pose(task.pose).kind==='candid'?'Candid':'Directed'):' · select')));
    check('framing',frameGood&&centered,(session.scripted?'Target: ':'Frame: ')+
-    (session.scripted?({eyes:'Eyes','back-detail':'Clothing detail from behind',hands:'Hands',
+    (session.scripted?({eyes:'Eyes',hair:'Hair',collar:'Neckline',lips:'Smile',
+     'back-detail':'Clothing detail from behind',hands:'Hands',skirt:'Skirt hem',
+     shoulders:'Shoulders',waist:'Waist',legs:'Legs',
      outfit:'Outfit',natural:'Candid moment'}[task.target?.region]||'Detail'):
      ({close:'Close-up',medium:'Medium',full:'Full body'}[task.framing]))+
     (frameGood&&centered?' ✓':(!frameGood?' · now '+myFrame:' · center character')));
