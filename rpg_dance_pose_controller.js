@@ -23,7 +23,7 @@
   const beatsPerBar=Math.max(2,Math.round(Number(options.beatsPerBar)||4));
   const barTime=60000/fps*beatsPerBar;
   const transitionMs=clamp(Number(options.transitionMs)||260,120,650);
-  const defaultPoses=options.characterId==='daisy'||!options.poses?DAISY_POSES:options.poses;
+  const defaultPoses=Array.isArray(options.poses)?options.poses:(options.characterId==='daisy'?DAISY_POSES:[{id:'primary',type:'base'}]);
   const entries=(defaultPoses||[]).map((item,i)=>({...item,index:i,loaded:item.type==='base',failed:false,image:null,frame:null,bounds:null})); 
   const base=entries.find(p=>p.type==='base')||{id:'primary',type:'base',loaded:true};
   let current=base,disposed=false,paused=false,lastMeasureW=0,lastMeasureH=0,reactionUntil=-1,reactionId=null;
