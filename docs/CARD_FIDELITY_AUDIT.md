@@ -1383,3 +1383,17 @@ GitHub connector source read does not supply a Node checkout; **zero reducer sce
 - **neo4-66 Girafarig — Tail Bite / Psychic:** Tail Bite costs two Colorless, heads 30/tails 10; generic `coin-bonus` pattern potentially applies. Psychic costs two Psychic, 10 plus 10 per *Energy card* on Defending Pokémon (not units); check Double Colorless and mixed Special Energy, no Energy, Weakness/Resistance, KO/Prize. Named handler not found at top level; Neo extension dispatch may implement. Scenarios unexecuted.
 
 The active `attack_effects_core.js` has broad generic patterns and numerous Neo batch dispatches, so **absence of named attack strings in the top-level modules is not evidence of missing gameplay implementation**. Full cross-module compilation and runtime coverage remain pending. Ledger: 1 fully verified, 511 partial, 611 unreviewed; 1,122 not fully verified.
+
+## 2026-11-07 — Neo Destiny five-printing source-only pass
+
+Active route: RPG UI integration via `rpg_duel_bridge.js` hands duel settlement to the RPG, while the playable Classic session adapter `classic_local_service.js` imports `createGame`/`reduce` from `headless_duel.js`; the reducer imports `attack_effects_core.js`, which dispatches exact-match Neo attack extension modules. Legacy engines excluded.
+
+| Printing | Battle-state scenario / source-only evidence | Result |
+| --- | --- | --- |
+| neo4-67 | Stun Poison: Fighting+Colorless paid; heads applies both Poison and Paralysis after 10 damage, tails neither; check KO before status and turn handoff. | PARTIAL: source-only; no reducer execution or independently confirmed historical ruling |
+| neo4-69 | Dodge: incoming damaging attack during opponent next turn, heads prevents damage but not non-damage effects; tails damage proceeds; compare bench/evolve expiration. Supersonic Jab 40 with three Fighting. | PARTIAL: source-only; no reducer execution or independently confirmed historical ruling |
+| neo4-70 | Leer: heads prevents attack next opponent turn, tails allows it; switching or evolving either Pokemon clears lock. Rock Throw 20 at Fighting+Colorless. | PARTIAL: source-only; no reducer execution or independently confirmed historical ruling |
+| neo4-71 | Swift: 20 damage ignoring weakness, resistance, defending Pokemon Powers and other defending effects; check unaffected attacker-side modifiers and KO/prize. | PARTIAL: source-only; no reducer execution or independently confirmed historical ruling |
+| neo4-72 | Reflected Sunlight: from hand choose up to two Energy cards for one own Pokemon (including zero and one), validate targeting, attach triggers, turn ends after attack; Solarbeam 40 requires three Grass. | PARTIAL: source-only; no reducer execution or independently confirmed historical ruling |
+
+These five records are not certified. Current import text is TCGdex-derived, not independent print/errata proof. Exact behavior of Neo extension dispatch and reducer decisions remains to be verified in an executable Node environment. No gameplay code or tests were changed.
