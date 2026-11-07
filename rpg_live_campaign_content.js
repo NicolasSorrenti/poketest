@@ -255,6 +255,19 @@ const MIA_PRIVATE_EVENT={
 };
 const MIA_PRIVATE_ART=MIA_BASE+'part1.png';
 
+const MIA_SLEEP_EVENT={
+ id:'mia_live_sleeping_whispers',title:'Whispers in the Living Room',
+ kind:'season',priority:96,earliestDay:1,delivery:'world',timeCost:0,
+ expiry:'never',fallback:'queue',trigger:{eventSeen:'live_glance_next_morning'},
+ lines:[{speaker:'Narrator',text:'You find Live and Mia asleep together in the living room.'}],
+ choices:[
+  {label:'Leave them to rest',reply:'You quietly leave the living room.',flag:'mia_sleep_left'},
+  {label:'Share a quiet moment',reply:'The house stays peaceful.',flag:'mia_sleep_whispered'}
+ ]
+};
+const MIA_SLEEP_ART=MIA_BASE+'37_a_highly_detailed_colorful_anime_style_illustrati.png';
 
-window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
+
+
+window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
 })();
