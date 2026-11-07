@@ -1582,7 +1582,7 @@ function mandatoryAction(type,id){
  }
  else if(type==='mandatoryRepeatLive'){
   const activeId=state.mandatoryEventState.active.id;
-  if(!liveCanRepeat()&&!(activeId===LIVE_DAY_FOLLOWUP.id&&state.slot!==0)||
+  if(!liveCanRepeat()||
      !(LIVE_ROTATING_IDS.has(activeId)||activeId===LIVE_DAY_FOLLOWUP.id)||
      state.mandatoryEventState.active.phase!=='response')return true;
   const outcome=MANDATORY.finish(state,MANDATORY_EVENTS);
