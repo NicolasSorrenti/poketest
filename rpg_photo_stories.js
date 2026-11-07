@@ -27,7 +27,8 @@
   const names=profile.poses.map(p=>p.id);
   const byId=id=>names.includes(id)?id:null;
   const byRegex=regex=>match(cand,regex);
-  if(hint==='front')return byRegex(/standing-front|phone-standing|front|standing|idle|casual/)||byId('neutral')||names[0];
+  if(hint==='front')return byRegex(/^(?:standing-front|front|phone-standing|standing|idle)$/)||
+    byRegex(/^standing-(?!back)/)||byRegex(/^casual(?!-back)/)||byId('neutral')||names[0];
   if(hint==='back')return byRegex(/(?:back|over-shoulder|looking-back)/)||byId('neutral')||names[0];
   if(hint==='side')return byRegex(/(?:side|over-shoulder|looking-back)/)||byId('neutral')||names[0];
   if(hint==='walking')return byRegex(/walking|casual|standing/ )||byId('neutral')||names[0];
