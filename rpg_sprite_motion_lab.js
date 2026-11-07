@@ -57,7 +57,7 @@
    }
   }
   if(raw.cameraMode==='viewport'||raw.cameraMode==='crop')result.cameraMode=raw.cameraMode;
-  if(raw.cameraFit==='full-width'||raw.cameraFit==='cover')result.cameraFit=raw.cameraFit;
+  if(['full-width','cover','dialogue-bust'].includes(raw.cameraFit))result.cameraFit=raw.cameraFit;
   if(typeof raw.source==='string'&&raw.source.startsWith('/rpg-assets/'))result.source=raw.source;
   return result;
  }
@@ -111,14 +111,14 @@
  const cameraInput=$('motionCameraMode');
  cameraInput.addEventListener('change',()=>{state.cameraMode=cameraInput.value;changed();});
  const widthControl=document.createElement('div');widthControl.className='control';
- widthControl.innerHTML='<label for="motionCameraFit">Ajuste horizontal</label><select id="motionCameraFit" style="width:100%;padding:9px;margin-top:8px;border:1px solid #94629f;border-radius:8px;background:#141124;color:#fff"><option value="full-width">Mostrar todo el ancho (recomendado)</option><option value="cover">Priorizar zoom vertical (recorta los lados)</option></select><small>Mostrar todo el ancho evita cortar brazos, pelo y bordes del PNG.</small>';
+ widthControl.innerHTML='<label for="motionCameraFit">Ajuste horizontal</label><select id="motionCameraFit" style="width:100%;padding:9px;margin-top:8px;border:1px solid #94629f;border-radius:8px;background:#141124;color:#fff"><option value="dialogue-bust">Encuadre de diálogo (278% — Dance Battle)</option><option value="full-width">Mostrar todo el ancho</option><option value="cover">Priorizar zoom vertical (recorta los lados)</option></select><small>Mostrar todo el ancho evita cortar brazos, pelo y bordes del PNG.</small>';
  $('globalControls').prepend(widthControl);
  const widthInput=$('motionCameraFit');
  widthInput.addEventListener('change',()=>{state.cameraFit=widthInput.value;changed();});
  slider($('previewControls'),'energy','preview');
  function syncSliders(){
   cameraInput.value=state.cameraMode==='crop'?'crop':'viewport';
-  widthInput.value=state.cameraFit==='cover'?'cover':'full-width';
+  widthInput.value=['full-width','cover','dialogue-bust'].includes(state.cameraFit)?state.cameraFit:'full-width';
   for(const {input,output,key,scope,side} of sliderInputs.values()){
    const v=scope==='zone'?state.zones[side][key]:scope==='preview'?energy:state[key];
    input.value=String(Number.isFinite(Number(v))?v:0);
@@ -216,7 +216,7 @@
   const allowed={};
   for(const key of globalFields)allowed[key]=state[key];
   allowed.cameraMode=state.cameraMode==='crop'?'crop':'viewport';
-  allowed.cameraFit=state.cameraFit==='cover'?'cover':'full-width';
+  allowed.cameraFit=['full-width','cover','dialogue-bust'].includes(state.cameraFit)?state.cameraFit:'full-width';
   allowed.zones=clone(state.zones);
   if(storageWrite(ACTIVE,allowed))message('Configuración aplicada a Dance Battle en este navegador. Abrí Free Play para verla.');
   else message('No se pudieron guardar los parámetros; copiá el JSON para conservarlos.',true);
