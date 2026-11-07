@@ -6,7 +6,7 @@
 // Never owns gameplay, affinity, scoring, RPG time or saves.
 (function(root){
  'use strict';
- if(root.NeoRpgDancePoseController?.version===4)return;
+ if(root.NeoRpgDancePoseController?.version===5)return;
  const DAISY_POSES=Object.freeze([
   {id:'primary',type:'base'},
   {id:'happy',src:'/rpg-assets/characters/daisy/expressionsv2/happy.png'},
@@ -16,6 +16,23 @@
   {id:'victory',src:'/rpg-assets/characters/daisy/expressionsv2/battle-victory.png'},
   {id:'surprised',src:'/rpg-assets/characters/daisy/expressionsv2/surprised.png',reactionOnly:true}
  ]);
+ const RINA_POSES=Object.freeze([
+  {id:'primary',type:'base'},
+  {id:'happy',src:'/rpg-assets/characters/rina/expressionsv2/happy.png'},
+  {id:'idol',src:'/rpg-assets/characters/rina/overworld/alternate-idol-pose.png',framing:'overworld',cropTop:0},
+  {id:'determined',src:'/rpg-assets/characters/rina/expressionsv2/determined.png'},
+  {id:'reaching',src:'/rpg-assets/characters/rina/overworld/reaching-idol.png',framing:'overworld',cropTop:0},
+  {id:'victory',src:'/rpg-assets/characters/rina/expressionsv2/battle-victory.png'},
+  {id:'surprised',src:'/rpg-assets/characters/rina/expressionsv2/surprised.png',reactionOnly:true}
+ ]);
+ const RINA_REGIONS=Object.freeze({
+  happy:{left:[.34,.67,.145,.115],right:[.67,.67,.145,.115]},
+  idol:{left:[.36,.59,.13,.10],right:[.64,.59,.13,.10]},
+  determined:{left:[.34,.67,.145,.12],right:[.67,.67,.145,.12]},
+  reaching:{left:[.36,.59,.12,.10],right:[.64,.59,.12,.10]},
+  victory:{left:[.34,.67,.14,.11],right:[.67,.67,.14,.11]},
+  surprised:{left:[.34,.67,.14,.115],right:[.67,.67,.14,.115]}
+ });
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  // Tunable pose-local bust regions. These are intentionally gentler than the
  // calibrated primary portrait; other artwork has distinct anatomy and poses.
@@ -28,12 +45,13 @@
   victory:{left:[.33,.70,.15,.13],right:[.71,.70,.15,.13]},
   surprised:{left:[.34,.70,.16,.13],right:[.70,.70,.16,.13]}
  });
- function motionZones(entry){
-  const pair=entry.zones||DAISY_REGIONS[entry.id]||DAISY_REGIONS.happy;
+ function motionZones(entry,characterId){
+  const regions=characterId==='rina'?RINA_REGIONS:DAISY_REGIONS;
+  const pair=entry.zones||regions[entry.id]||regions.happy;
   if(!pair)return [];
   const toZone=(p,side)=>({
    x:p[0],y:p[1],rx:p[2],ry:p[3],
-   inflateX:.13,inflateY:.075,inflatePhase:side===0?-.2:-3.14,
+   inflateX:characterId==='rina'?.095:.13,inflateY:characterId==='rina'?.05:.075,inflatePhase:side===0?-.2:-3.14,
    scaleX:0,scaleY:0,moveY:.014,phase:side===0?0:-.04
   });
   return [toZone(pair.left,0),toZone(pair.right,1)];
@@ -48,8 +66,9 @@
   const barTime=60000/bpm*beatsPerBar;
   const leadMs=Math.max(0,Number(options.leadMs)||0);
   const transitionMs=clamp(Number(options.transitionMs)||280,120,650);
+  const characterId=String(options.characterId||'').toLowerCase();
   const poses=Array.isArray(options.poses)?options.poses:
-   options.characterId==='daisy'?DAISY_POSES:[{id:'primary',type:'base'}];
+   characterId==='daisy'?DAISY_POSES:characterId==='rina'?RINA_POSES:[{id:'primary',type:'base'}];
   const entries=poses.map((item,i)=>({
    ...item,index:i,loaded:item.type==='base',failed:false,frame:null,motion:null
   }));
@@ -93,7 +112,7 @@
      tilt:0,
      intensity:Math.min(.58,Number(animationPreset.intensity)||.65),
      feverInflate:Number.isFinite(Number(animationPreset.feverInflate))?Number(animationPreset.feverInflate):1.2,
-     zones:motionZones(entry),
+     zones:motionZones(entry,characterId),
      onReady:()=>{
       if(disposed)return;
       entry.loaded=true;readyMap.set(entry.id,entry);totalReady++;
@@ -132,7 +151,9 @@
    const highFever=fever>=.7;
    // One transition every 8 beats, or 4 beats during high Fever.
    const bar=Math.floor(musicTime/(barTime*(highFever?1:2)));
-   const sequence=['primary','happy','walking','determined','happy','victory','kneeling','walking','determined'];
+   const sequence=characterId==='rina'
+     ? ['primary','happy','idol','determined','reaching','victory','happy','idol','determined']
+     : ['primary','happy','walking','determined','happy','victory','kneeling','walking','determined'];
    let wanted=sequence[(bar+Math.floor(bar/5))%sequence.length];
    if(combo>=12&&bar%4===3)wanted='victory';
    return readyMap.get(wanted)|| (current.loaded?current:base);
@@ -187,6 +208,6 @@
   });
  }
  root.NeoRpgDancePoseController=Object.freeze({
-  version:4,create:make,presets:Object.freeze({daisy:DAISY_POSES})
+  version:5,create:make,presets:Object.freeze({daisy:DAISY_POSES,rina:RINA_POSES})
  });
 })(window);
