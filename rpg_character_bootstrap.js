@@ -56,7 +56,7 @@
  "/rpg_sprite_inflate.js?v=independent-expansion-20261107",
  "/rpg_sprite_deformer.js?v=calibrated-inflate-v3-20261107",
  "/rpg_arcade_game.js?v=daisy-motion-lab-v2-20261107",
- "/rpg_photo_session.js?v=barb-photo-mobile-v5",
+ "/rpg_photo_session.js?v=barb-photo-mobile-v5a",
  "/rpg_planned_dates.js",
  "/rpg_preduel.js?v=restore-original-attacks-20261102",
  "/rpg_situations.js",
