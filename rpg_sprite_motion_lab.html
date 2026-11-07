@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#170c26">
-<title>Neo Campus · Laboratorio de Movimiento</title>
+<title>Neo Campus · Motion Lab — cámara no destructiva</title>
 <style>
 :root{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#f9efff;background:#090819;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 43% 13%,#3e1b50 0,#151126 41%,#070815 94%);min-height:100vh}
@@ -62,7 +62,7 @@ details{border-top:1px solid #8f50944d;padding:12px 15px}summary{cursor:pointer;
 <header><div><strong>♡ NEO CAMPUS · MOTION LAB</strong><small>Ajustá la animación por zonas, en vivo y sin reiniciar</small></div><a class="back" href="/rpg-overworld.html">← Volver al RPG</a></header>
 <main>
 <section class="panel preview-panel" aria-label="Visualizador de movimiento">
-<div class="panel-head"><h2>Vista previa · Daisy</h2><p>Arrastrá el centro de cada zona para ubicarlo sobre la imagen. Las elipses son guías: no aparecen en el juego.</p></div>
+<div class="panel-head"><h2>Vista previa · Daisy</h2><p>Arrastrá el centro de cada zona para ubicarlo sobre la imagen. El encuadre ahora funciona como una cámara: al rebotar Daisy se revela el resto del sprite. Las elipses no aparecen en el juego.</p></div>
 <div class="scene"><div id="motionStage"><canvas id="motionPreview" width="210" height="280" aria-label="Retrato animado"></canvas>
 <svg id="zoneOverlay" viewBox="0 0 210 280" preserveAspectRatio="none" aria-hidden="true">
 <ellipse id="zoneLeft"/><ellipse id="zoneRight"/>
@@ -107,7 +107,7 @@ details{border-top:1px solid #8f50944d;padding:12px 15px}summary{cursor:pointer;
 </section>
 </main>
 <script src="/rpg_sprite_inflate.js?v=motion-lab-20261107"></script>
-<script src="/rpg_sprite_deformer.js?v=motion-lab-v3-20261107"></script>
-<script src="/rpg_sprite_motion_lab.js?v=motion-lab-v2-20261107"></script>
+<script src="/rpg_sprite_deformer.js?v=motion-lab-v4-camera-20261107"></script>
+<script src="/rpg_sprite_motion_lab.js?v=motion-lab-v3-camera-20261107"></script>
 </body>
 </html>
