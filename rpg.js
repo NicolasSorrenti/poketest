@@ -7,7 +7,7 @@ const ROMANCE=window.NeoRpgRomanceVisits||null;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
 const LIVE_NEW=window.NeoRpgLiveEverydayEvents||{events:[],art:{},followups:{},artAt:()=>null,finalArt:()=>null,fallback:()=>null,byId:()=>null};
-const {LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART,MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART}=window.NeoRpgLiveCampaignContent;
+const {LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART,MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART}=window.NeoRpgLiveCampaignContent;
 function startLiveGlanceMilestone(id){
  if(!LIVE_SPECIAL_IDS.has(id)||state.liveSpecialSeen?.[id])return;
  const active=state.mandatoryEventState?.active;
@@ -59,6 +59,7 @@ function liveCanRepeat(){
 function liveEventArt(id){
  if(id===LIVE_AFTER_EVENT.id)return LIVE_AFTER_ART;
  if(id===MIA_PRIVATE_EVENT.id)return MIA_PRIVATE_ART;
+ if(id===MIA_SLEEP_EVENT.id)return MIA_SLEEP_ART;
  if(miaStoryIds.has(id))return miaArt(id);
  if(id===LIVE_REPEAT_MORNING.id)return state.mandatoryEventState?.active?.index>=1?LIVE_REPEAT_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning;
  if(id===LIVE_DAY_FOLLOWUP.id)return liveFollowupContent().away?null:LIVE_NEW.finalArt(state.liveDayScene?.id)||state.liveDayScene?.cg||LIVE_EVENT_ART[state.liveDayScene?.id]||null;
@@ -109,7 +110,7 @@ const MIA_GOSSIP_EXTRA='/rpg-assets/characters/lyla/events/mia/a_highly_detailed
 function miaArt(id){return id==='mia_gossip'&&miaRomanceGossip()?MIA_GOSSIP_EXTRA:MIA_EVENT_ART[id];}
 Object.assign(LIVE_EVENT_ART,MIA_EVENT_ART);
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]).map(event=>
- event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,MIA_FIRST_TIME,...MIA_EVENTS,MIA_PRIVATE_EVENT,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
+ event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,MIA_FIRST_TIME,...MIA_EVENTS,MIA_PRIVATE_EVENT,MIA_SLEEP_EVENT,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -573,6 +574,23 @@ function maybeStartMandatory(){
   state.liveHomeActivityScene=null;
   persist();return;
  }
+ // One quiet living-room encounter. Mia becomes an available confidante only
+ // if her earlier personal conversation was completed; otherwise only Live.
+ if(state.location==='home'&&state.day<=90&&state.slot>=1&&
+    miaFirstIntimateDay()!==null&&state.day>=miaFirstIntimateDay()+3&&
+    !state.mandatoryEventState?.seen?.[MIA_SLEEP_EVENT.id]&&
+    Number(state.miaLastSceneDay)!==state.day){
+   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+   m.active={id:MIA_SLEEP_EVENT.id,phase:'lines',index:0,choice:null};
+   state.miaSleepStage='choose';
+   state.miaSleepTarget=null;
+   state.miaLastSceneDay=state.day;
+   state.miaLastSceneSlot=state.slot;
+   state.liveLastEventDay=state.day;
+   state.liveDayScene={day:state.day,id:MIA_SLEEP_EVENT.id,cg:MIA_SLEEP_ART,firstSlot:state.slot,lastSeenSlot:state.slot};
+   state.liveHomeActivityScene=null;
+   persist();return;
+ }
  // Once Live's daily scene is established, do not reroll it on a return
  // visit. Later periods receive a contextual follow-up with the SAME CG.
  const daily=state.liveDayScene;
@@ -642,7 +660,7 @@ function maybeStartMandatory(){
  // The non-Live scheduler runs only when no Live scene is active.
  // Exclude the replayable pool so it cannot accidentally start on every render.
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
-  !LIVE_EVENTS.includes(e)&&e.id!==MIA_FIRST_TIME.id&&e.id!==MIA_PRIVATE_EVENT.id&&!miaStoryIds.has(e.id)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
+  !LIVE_EVENTS.includes(e)&&e.id!==MIA_FIRST_TIME.id&&e.id!==MIA_PRIVATE_EVENT.id&&e.id!==MIA_SLEEP_EVENT.id&&!miaStoryIds.has(e.id)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -738,9 +756,59 @@ function miaPrivateAction(action){
  persist();render();return true;
 }
 
+
+function miaSleepCanSpeakToMia(){
+ return state.miaPrivateOutcome==='confided'&&!!state.mandatoryEventState?.seen?.[MIA_PRIVATE_EVENT.id];
+}
+function renderMiaSleep(){
+ const stage=state.miaSleepStage||'choose';
+ const who=state.miaSleepTarget;
+ if(stage==='choose')return {speaker:'Narrator',
+  line:'Live and Mia have fallen asleep on the sofa. The room is quiet except for their breathing.',
+  choices:[['Whisper to Live','miaSleepLive'],
+   ...(miaSleepCanSpeakToMia()?[['Whisper to Mia','miaSleepMia']]:[]),
+   ['Let them sleep','miaSleepLeave']]};
+ if(stage==='wake')return who==='live'
+  ?{speaker:'Live',line:'Mmm... honey? Shhh. Mia is sleeping right beside us. Did you need something?',
+    choices:[['Ask her to talk somewhere quieter','miaSleepTalk'],['Let her sleep','miaSleepLeave']]}
+  :{speaker:'Mia',line:'Huh? You picked me? Why are we whispering? Mom sleeps like a rock.',
+    choices:[['Ask for a moment together','miaSleepTalk'],['Let her sleep','miaSleepLeave']]};
+ if(stage==='talk')return who==='live'
+  ?{speaker:'Live',line:'Shhh... a little quieter, darling. She knows me too well. One look and she will start asking questions!',
+    choices:[['Respect her privacy','miaSleepContinue'],['Leave her to rest','miaSleepLeave']]}
+  :{speaker:'Mia',line:'You do not have to whisper so much. I like it when you say what you mean. Can you imagine Mom\'s face if she noticed?',
+    choices:[['Ask her to keep the moment private','miaSleepContinue'],['Leave her to rest','miaSleepLeave']]};
+ if(stage==='end')return who==='live'
+  ?{speaker:'Live',line:'Thank you for being discreet. Let us have a proper conversation later, when nobody is trying to sleep.',
+    choices:[['Leave quietly','miaSleepFinish']]}
+  :{speaker:'Mia',line:'Part of me wants Mom to find out about our little talk... but I would rather tell her myself. Thanks for listening.',
+    choices:[['Leave quietly','miaSleepFinish']]};
+ return {speaker:'Narrator',line:'You leave the room as quietly as you entered.',choices:[['Continue','miaSleepFinish']]};
+}
+function miaSleepAction(action){
+ if(action==='miaSleepLive'||(action==='miaSleepMia'&&miaSleepCanSpeakToMia())){
+  state.miaSleepTarget=action==='miaSleepLive'?'live':'mia';
+  state.miaSleepStage='wake';
+ }else if(action==='miaSleepTalk')state.miaSleepStage='talk';
+ else if(action==='miaSleepContinue')state.miaSleepStage='end';
+ else if(action==='miaSleepLeave')state.miaSleepStage='leave';
+ else if(action==='miaSleepFinish'){
+  const m=state.mandatoryEventState;
+  m.active.phase='choice';m.active.choice=null;
+  MANDATORY.choose(state,MANDATORY_EVENTS,0);
+  if(!MANDATORY.finish(state,MANDATORY_EVENTS))return true;
+  state.miaSleepOutcome=state.miaSleepStage==='leave'?'left':state.miaSleepTarget;
+  state.liveDayScene=null;state.liveHomeActivityScene=null;
+  state.liveLastEventDay=state.day;
+  log('A quiet moment at home with Live and Mia.');
+ }else return true;
+ persist();render();return true;
+}
+
 function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(a?.id===MIA_PRIVATE_EVENT.id)return renderMiaPrivate();
+ if(a?.id===MIA_SLEEP_EVENT.id)return renderMiaSleep();
  if(!a||!e)return null;
  if(a.phase==='lines'){
   if(e.id===LIVE_DAY_FOLLOWUP.id){
@@ -827,6 +895,8 @@ function mandatoryAction(type,id){
  if(!MANDATORY||!state.mandatoryEventState?.active)return false;
  if(state.mandatoryEventState.active.id===MIA_PRIVATE_EVENT.id)
   return miaPrivateAction(type);
+ if(state.mandatoryEventState.active.id===MIA_SLEEP_EVENT.id)
+  return miaSleepAction(type);
  if(type==='mandatoryPhotoLive'){
   const offer=livePhotoRequest(state.mandatoryEventState.active);
   if(!offer||!window.NeoRpgPhotoSession?.open||!confirmTimeAdvance())return true;
@@ -3085,7 +3155,7 @@ function syncSceneCG(){
   cgScenePresenter.clear();
   return;
  }
- const isLiveCg=!!liveEventId&&(liveEventId===MIA_PRIVATE_EVENT.id||!!LIVE_EVENT_ART[liveEventId]||
+ const isLiveCg=!!liveEventId&&(liveEventId===MIA_PRIVATE_EVENT.id||liveEventId===MIA_SLEEP_EVENT.id||!!LIVE_EVENT_ART[liveEventId]||
   LIVE_SPECIAL_IDS.has(liveEventId)||liveEventId===LIVE_HOME_CHECKIN.id||
   liveEventId===LIVE_DAY_FOLLOWUP.id||liveEventId===LIVE_REPEAT_MORNING.id||liveEventId===LIVE_AFTER_EVENT.id);
  const liveArt=isLiveCg?(liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:
