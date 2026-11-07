@@ -199,7 +199,7 @@ function powerPlan(g,plan,h){
  }
  if(name==='[Vanish]'){
   if(choose('vanishUse',[{id:'choice:0',label:'Do not use Vanish'},{id:'choice:1',label:'Flip for Vanish'}],'Unown V: use Vanish?'))return;
-  if(s('vanishUse')===1){
+  if(selected(plan,'vanishUse')[0]===1){
    if(!have(plan,'vanishHeads'))d.vanishHeads=h.flip(g);
    if(d.vanishHeads){
     const options=slotList(p,x=>x!==u&&card(x.id).name.startsWith('Unown'));
