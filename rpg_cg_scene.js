@@ -45,42 +45,43 @@
 
  function create(stage,image,doc){
   let requestedId=null,visibleId=null,serial=0,pan=null,focusCleanup=null;
-  const resetFocus=()=>{
+  function releaseFocus(){
    focusCleanup?.();focusCleanup=null;
+  }
+  function resetFocus(){
+   releaseFocus();
    if(!image?.style)return;
-   for(const k of ['width','height','maxWidth','maxHeight','left','top','right','bottom','objectFit','transform','transformOrigin','transition','position'])
-    image.style[k]='';
-   image.style.transition='opacity 220ms ease';
-  };
+   image.style.transition='transform 650ms ease-in-out,opacity 220ms ease';
+   image.style.transform='none';
+   image.style.transformOrigin='center center';
+  }
   function attachFocus(crop){
-   if(!crop||!image?.naturalWidth||!image?.naturalHeight)return;
+   releaseFocus();
+   if(!image?.style)return;
+   if(!crop){resetFocus();return;}
    const {x,y,width,height}=crop;
    if(![x,y,width,height].every(Number.isFinite)||width<=0||height<=0)return;
    let disposed=false;
-   // Pixel coordinates refer to the original full-resolution CG, not a resized
-   // screenshot. Scale uniformly, center the desired crop in any stage ratio.
    function layout(){
     if(disposed)return;
     const w=stage.clientWidth,h=stage.clientHeight;
     const iw=image.naturalWidth,ih=image.naturalHeight;
     if(!w||!h||!iw||!ih)return;
-    const scale=Math.max(w/width,h/height);
-    const cx=Math.min(iw,Math.max(0,x+width/2));
-    const cy=Math.min(ih,Math.max(0,y+height/2));
-    image.style.position='absolute';image.style.right='auto';image.style.bottom='auto';
-    image.style.width=(iw*scale)+'px';image.style.height=(ih*scale)+'px';
-    image.style.maxWidth='none';image.style.maxHeight='none';
-    image.style.objectFit='fill';
-    image.style.left=(w/2-cx*scale)+'px';
-    image.style.top=(h/2-cy*scale)+'px';
+    // object-fit:contain paints the original full CG at fitScale.
+    // Uniformly magnify that same bitmap and center the specified source crop.
+    const fitScale=Math.min(w/iw,h/ih);
+    const zoom=Math.max(w/width,h/height)/fitScale;
+    const dx=(iw/2-(x+width/2))*fitScale*zoom;
+    const dy=(ih/2-(y+height/2))*fitScale*zoom;
+    image.style.transition='transform 650ms ease-in-out,opacity 220ms ease';
+    image.style.transformOrigin='center center';
+    image.style.transform='translate('+dx+'px,'+dy+'px) scale('+zoom+')';
    }
-   image.style.transition='left 650ms ease-in-out,top 650ms ease-in-out,width 650ms ease-in-out,height 650ms ease-in-out,opacity 220ms ease';
-   const listener=()=>layout();
-   if(typeof window!=='undefined')window.addEventListener('resize',listener);
+   if(typeof window!=='undefined')window.addEventListener('resize',layout);
    layout();
    focusCleanup=()=>{
     disposed=true;
-    if(typeof window!=='undefined')window.removeEventListener('resize',listener);
+    if(typeof window!=='undefined')window.removeEventListener('resize',layout);
    };
   }
   const stopPan=()=>{pan?.dispose();pan=null;};
@@ -100,6 +101,17 @@
    if(requestedId===entry.id)return;
    const paths=(candidates||[]).filter(item=>item.kind==='event'&&typeof item.path==='string');
    if(!paths.length){clear();onMissing?.();return;}
+   // A focus change on the same CG must not reload or downsample the bitmap.
+   const sameImage=visibleId&&image.complete&&image.naturalWidth&&paths.some(p=>{
+    try{return new URL(p.path,doc.baseURI).href===image.src;}catch{return p.path===image.src;}
+   });
+   if(sameImage){
+    stopPan();requestedId=entry.id;++serial;
+    attachFocus(entry.cgFocus||null);
+    visibleId=entry.id;
+    onShown?.(entry);
+    return;
+   }
    stopPan();resetFocus();requestedId=entry.id;
    const token=++serial;
    const attempt=index=>{
