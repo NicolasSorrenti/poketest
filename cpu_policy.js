@@ -358,10 +358,22 @@ function openingReadiness(cardId,hand,apex=false){
  const freeReadiness=move=>{
   if(!apex)return 12;
   const program=ATTACK.compile(move);
+  // A fresh opening Basic has no damage counters. Flail-style free
+  // attacks can be legally declared but deal zero damage on turn one;
+  // do not rate them like a damaging free attack until counters exist.
+  // Likewise, use expected damage rather than a printed multiplier alone.
   const raw=parseInt(String(move.damage||'0'),10)||0;
-  const damageKind=['coin-times','coin-failure','coin-bonus','coin-recoil-bonus',
-   'flail-counters','own-counters','defender-counters','bench-count'].includes(program?.kind);
-  if(raw>0||damageKind)return 70;
+  let expected=raw;
+  if(program?.kind==='flail-counters')expected=0;
+  else if(program?.kind==='own-counters')expected=program.base;
+  else if(program?.kind==='minus-counters')expected=program.base;
+  else if(program?.kind==='defender-counters')expected=program.base;
+  else if(program?.kind==='bench-count')expected=program.base;
+  else if(program?.kind==='coin-times')expected=program.flips*program.each*.5;
+  else if(program?.kind==='coin-failure')expected=program.damage*.5;
+  else if(['coin-bonus','coin-recoil-bonus'].includes(program?.kind))
+   expected=program.base+program.bonus*.5;
+  if(expected>0)return 70;
   return /poison|paraly|asleep|sleep|confus/i.test(move.text||'')?32:18;
  };
  let readiness=moves.reduce((best,move)=>
