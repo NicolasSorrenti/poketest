@@ -376,6 +376,14 @@ function openingReadiness(cardId,hand,apex=false){
   // Bench-only damage cannot threaten the opposing opening Active.
   // Keep the move playable without treating it as immediate offense.
   if(program?.kind==='bench-target')return 18;
+  // During opening selection, the chosen Active is still represented in
+  // hand. A mandatory self-switch needs ANOTHER Basic to occupy the Bench;
+  // otherwise its printed damage is not executable on the opening board.
+  // Count card instances rather than IDs, since duplicate Basics are legal.
+  if(program?.kind==='switch-self'){
+   const otherBasics=hand.filter(id=>isBasicPokemon(card(id))).length-1;
+   if(otherBasics<=0)return 18;
+  }
   if(expected>0)return 70;
   return /poison|paraly|asleep|sleep|confus/i.test(move.text||'')?32:18;
  };
