@@ -471,7 +471,7 @@ function queueMandatory(){
  // invalidates an active Live event on every render and restarts it.
  MANDATORY.queue(state,MANDATORY_EVENTS);
  const m=state.mandatoryEventState;
- if(m?.pending)m.pending=m.pending.filter(item=>item.id!==LIVE_AFTER_EVENT.id&&!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id&&item.id!==LIVE_LYLA_PHOTO_EVENT.id&&item.id!==LIVE_DAY_FOLLOWUP.id&&item.id!==LIVE_REPEAT_MORNING.id);
+ if(m?.pending)m.pending=m.pending.filter(item=>item.id!==LIVE_AFTER_EVENT.id&&item.id!==LIVE_MIA_CHOICE_EVENT.id&&!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id&&item.id!==LIVE_LYLA_PHOTO_EVENT.id&&item.id!==LIVE_DAY_FOLLOWUP.id&&item.id!==LIVE_REPEAT_MORNING.id);
 }
 function autoTravelForEvent(place){
  if(!place||!places[place]||state.location===place)return false;
@@ -3574,6 +3574,13 @@ function syncSceneCG(){
   // Until the new approved CG pack is uploaded, existing Live art stays visible.
   const sourceId=liveEventId===LIVE_DAY_FOLLOWUP.id?state.liveDayScene?.id:liveEventId;
   const fallbackArt=LIVE_NEW.fallback(sourceId);
+  if(liveEventId===LIVE_MIA_CHOICE_EVENT.id){
+   const alternatives=[
+    '/rpg-assets/characters/live/events/mia/47_a_highly_detailed_anime_style_illustration_tightl.png',
+    '/rpg-assets/characters/live/events/live_couch_sweater.png'
+   ];
+   for(const art of alternatives)if(!paths.includes(art))paths.push(art);
+  }
   if(liveEventId==='live_workout_wake_scare'||liveEventId==='live_cleaning_wake'){
    // Both new CGs may be uploaded later; never leave an empty scene.
    const existing='/rpg-assets/characters/live/events/live_waking_up_casual.png';
