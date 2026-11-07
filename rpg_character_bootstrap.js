@@ -55,6 +55,7 @@
  "/rpg_social_activities.js",
  "/rpg_sprite_inflate.js?v=independent-expansion-20261107",
  "/rpg_sprite_deformer.js?v=viewport-camera-daisy-preset-v4-20261107",
+ "/rpg_dialogue_idle.js?v=breathing-v1-20261107",
  "/rpg_arcade_game.js?v=viewport-camera-forwarding-20261107",
  "/rpg_photo_session.js?v=barb-photo-snapshot-v6",
  "/rpg_planned_dates.js",
