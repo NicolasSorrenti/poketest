@@ -11,7 +11,7 @@
  }
  const DRAFT='neoRpgMotionLabDraftV1';
  const ACTIVE='neoRpgDaisyMotionTuningV1';
- const globalFields=['tempo','speed','fps','baseBounce','feverBounce','tilt','intensity','cropTop','cropHeight'];
+ const globalFields=['tempo','speed','fps','baseBounce','feverBounce','tilt','intensity','feverInflate','cropTop','cropHeight'];
  const zoneFields=['x','y','rx','ry','inflateX','inflateY','inflatePhase','scaleX','scaleY','moveY','phase'];
  const clone=o=>JSON.parse(JSON.stringify(o));
  const defaults=clone(PRESET);
@@ -34,6 +34,7 @@
   feverBounce:['Rebote extra por Fever',0,12,.1,'px','Solo se aplica con Fever.'],
   tilt:['Giro del cuerpo',0,.05,.001,'rad','0 impide que cuello y cabeza se inclinen.'],
   intensity:['Intensidad local',0,3,.05,'factor','Escala la expansión y los otros efectos locales.'],
+  feverInflate:['Más expansión con Fever',0,2,.05,'factor','0 = mismo tamaño siempre; 0.4 = hasta 40% extra de expansión con Fever completo.'],
   cropTop:['Recorte desde arriba',0,.25,.005,'pct','Porción recortada de la parte superior de la imagen.'],
   cropHeight:['Alto del recorte',.50,1,.005,'pct','Fracción vertical usada del archivo.'],
   energy:['Simular Fever',0,1,.01,'pct','Solo cambia la vista previa; no se exporta como ajuste.']
