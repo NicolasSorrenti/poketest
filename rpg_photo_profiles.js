@@ -99,6 +99,51 @@
     {name:'An unexpected reaction',pose:shy,framing:'medium',light:'warm',action:'compliment',
     hint:'Give '+name+' a compliment and capture the reaction.'}
   ];
+
+  // Character-requested, three-shot sequences built only from existing art.
+  const backPose=candidKeys.find(k=>/(?:back|shoulder|looking-back|over-shoulder)/.test(k));
+  const handPose=candidKeys.find(k=>/(?:card|writing|sketch|clipboard|book|tray|bag|presenting|reaching|arcade)/.test(k));
+  const naturalPose=featured||choose('determined','neutral');
+  const scripted=[];
+  const makeScene=(id,poseId,region,framing,light,intro,request,focus,closing)=>{
+   const action='story_'+id;
+   scripted.push({
+    name:region==='eyes'?'Focus on the eyes':region==='back-detail'?'Clothing detail from behind':
+      region==='hands'?'A candid detail':'The perfect moment',
+    pose:poseId,framing,light,action,target:{...focus,region},
+    hint:request,dialogue:request,intro,
+    frames:[
+     {pose:'neutral',duration:1350,line:say(intro)},
+     {pose:poseId,duration:5700,highlight:true,line:say(request)},
+     {pose:choose('happy','neutral'),duration:1250,line:say(closing)}
+    ]
+   });
+  };
+  makeScene('eyes',happy,'eyes','close','warm',
+   flavor.style==='reserved'?'I have an idea for a portrait.':'Could you take a picture of me? Let us try something!',
+   'Focus on my eyes. Wait until I look toward the camera.',
+   {x:.5,y:.17},'Did you catch that look?');
+  if(backPose){
+   makeScene('back',backPose,'back-detail','close','soft',
+    'I want to try one from behind. Watch how I turn.',
+    'Get a close shot of the lower back of my jacket or shirt. I want the clothing detail.',
+    {x:.5,y:.56},'Let me see how the fabric looks.');
+  }else if(handPose){
+   makeScene('hands',handPose,'hands','medium','soft',
+    'Here is something I like doing.',
+    'Frame my hands and what I am doing, not just my face.',
+    {x:.5,y:.62},'That is a nice little detail.');
+  }else{
+   makeScene('posture',focus,'outfit','medium','soft',
+    'Can you try a different angle?',
+    'Center my outfit and posture for this one.',
+    {x:.5,y:.48},'That feels like a proper portrait.');
+  }
+  makeScene('natural',naturalPose,'natural','medium','bright',
+   flavor.style==='competitive'?'Try to keep up with this pose.':'One more, something a little more natural.',
+   naturalPose===focus?'Catch my expression while I talk.':'Catch the moment while I move. You choose the best framing.',
+   {x:.5,y:.39},'That was fun. Can I see all three?');
+  const storyActions=scripted.map(task=>({id:task.action,label:'📷 '+task.name,frames:task.frames}));
   // Keep Barb's familiar rhythm and poses while moving its data out of the engine.
   if(id==='barb'){
    actions[0].frames[1].line=say('Pfft—okay, that was actually funny!');
@@ -111,7 +156,13 @@
     action:'topic',hint:'Ask about her designs. Catch her confident expression.'};
   }
   const profile=Object.freeze({id,name,portraitIds:Object.keys(E),candidIds:Object.keys(C),
-   labels,captions,poses,actions,tasks,defaultLocation:flavor.place,style:flavor.style});
+   labels,captions,poses,actions,tasks,scripted,storyActions,
+   invitation:say(flavor.style==='reserved'?
+    'Would you mind taking a few photos of me? I have some ideas.':
+    flavor.style==='competitive'?
+    'Hey, think you can take some really good pictures of me? I have a challenge.':
+    'Hey, could you take a few pictures for me? I want to try some poses!'),
+   defaultLocation:flavor.place,style:flavor.style});
   cache[id]=profile;
   return profile;
  }
