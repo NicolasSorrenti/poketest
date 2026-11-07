@@ -1,7 +1,7 @@
 
 /* Neo Campus Photo Session — self-contained, no overworld rerenders. */
 .nps-root{position:fixed;inset:0;z-index:100800;display:grid;place-items:center;background:#050717ed;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:clamp(6px,1.5vw,18px);isolation:isolate}
-.nps-root *{box-sizing:border-box}
+.nps-root *{box-sizing:border-box}.nps-root [hidden]{display:none!important}
 .nps-shell{position:relative;width:min(1300px,100%);max-height:calc(100dvh - 12px);overflow:auto;background:linear-gradient(140deg,#1a193a,#0c1932 60%,#171429);border:1px solid #ff90d5a0;border-radius:18px;box-shadow:0 0 0 4px #47215c55,0 28px 90px #000b}
 .nps-top{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid #ffffff2b}
 .nps-kicker{font-size:11px;letter-spacing:.15em;font-weight:850;color:#ff9ad6}
