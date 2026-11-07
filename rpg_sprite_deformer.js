@@ -91,6 +91,22 @@
    ms=Math.max(0,val(ms,0));
    if(ms>=last&&ms-last<1000/clamp(val(config.fps,22),1,60))return true;
    last=ms;
+   // Non-deforming modes (e.g. Photo Session) only need whole-sprite
+   // movement. Render the cached image directly at canvas resolution:
+   // avoid allocating/copying every pixel 22 times per second.
+   if(!config.zones.length){
+    const phase=ms*.001*clamp(val(config.tempo,136),1,400)/60*Math.PI*clamp(val(config.speed,.93),.01,5);
+    const energy01=clamp(val(energy,0),0,1);
+    const bounce=Math.sin(2*phase)*(val(config.baseBounce,0)+val(config.feverBounce,0)*energy01);
+    const tilt=Math.sin(phase)*val(config.tilt,0);
+    ctx.clearRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2,H*.54+bounce);
+    ctx.rotate(tilt);
+    ctx.drawImage(srcCanvas,-W/2,-H*.54,W,H);
+    ctx.restore();
+    return true;
+   }
    const original=pixels.data;
    const output=new ImageData(new Uint8ClampedArray(original),W,H),buffer=output.data;
    const phase=ms*.001*clamp(val(config.tempo,136),1,400)/60*Math.PI*clamp(val(config.speed,.93),.01,5);
