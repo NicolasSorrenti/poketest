@@ -82,7 +82,7 @@
   if(document.getElementById('neo-photo-session-style'))return;
   const link=document.createElement('link');
   link.id='neo-photo-session-style';link.rel='stylesheet';
-  link.href='/rpg_photo_session.css?v=barb-photo-v3';
+  link.href='/rpg_photo_session.css?v=barb-photo-mobile-v5';
   document.head.append(link);
  }
  function pickTasks(){
@@ -130,9 +130,12 @@
    '<div class="nps-silhouette" aria-label="Character artwork hidden">◇</div>'+
    '<div class="nps-frame" aria-hidden="true"></div><div class="nps-cross" aria-hidden="true"></div>'+
    '<div class="nps-meter">✦ SHUTTER MOMENT<div class="nps-meter-track"><span data-meter></span></div><span class="nps-meter-label" data-meter-label>Start an interaction to catch a moment</span></div>'+
+   '<div class="nps-mobile-zoom" data-mobile-zoom aria-label="Camera zoom controls">'+
+   '<button type="button" class="nps-btn" data-mobile-zoom-in aria-label="Zoom in">+</button>'+
+   '<button type="button" class="nps-btn" data-mobile-zoom-out aria-label="Zoom out">−</button></div>'+
    '<div class="nps-caption" data-caption>Barb: "Ready when you are!"</div>'+
    '<div class="nps-loading" data-loading>Loading Barb’s artwork…</div></div>'+
-   '<div class="nps-controls">'+
+   '<div class="nps-controls" id="nps-controls-panel">'+
    '<section class="nps-section"><h3>📸 Session style</h3>'+
    '<div class="nps-mode"><button class="nps-btn" data-mode="reactions">🎭 Reactions</button>'+
    '<button class="nps-btn" data-mode="portrait">Directed</button>'+
@@ -156,6 +159,7 @@
    '<button class="nps-btn" data-reset type="button">Reset camera</button></section></div></div>'+
    '<footer class="nps-bottom"><div class="nps-mini-album" data-mini><div class="nps-mini-photo">3 shots to take</div></div>'+
    '<div class="nps-snaps"><span class="nps-snap-status" data-next-action>Match the brief, then snap when the meter is full.</span>'+
+   '<button type="button" class="nps-btn nps-mobile-settings" data-mobile-settings aria-label="Camera settings" aria-expanded="false" aria-controls="nps-controls-panel">⚙ Settings</button>'+
    '<button class="nps-btn" data-album>View album</button>'+
    '<button class="nps-btn nps-primary" data-snap>📷 SNAP!</button></div></footer></div>';
   document.body.append(shell);
@@ -349,11 +353,25 @@
      const b=document.createElement('button');
      b.type='button';b.className='nps-btn';
      b.textContent=action.label;
+     b.dataset.action=action.id;
      b.onclick=()=>{void playReaction(action.id);};
      actionList.append(b);
     }
    }
-   if(actionList)for(const b of actionList.children)b.disabled=session.reactionBusy||session.reviewOpen;
+   if(actionList){
+    const goal=session.tasks[session.shots.length];
+    const best=REACTIONS.find(a=>a.id===goal?.action);
+    // Reorder without destroying event handlers or resetting scrolling during a reaction.
+    if(best&&actionList.firstElementChild?.dataset.action!==best.id){
+     const buttons=[...actionList.children];
+     const recommended=buttons.find(b=>b.dataset.action===best.id);
+     if(recommended)actionList.prepend(recommended);
+    }
+    for(const b of actionList.children){
+     b.disabled=session.reactionBusy||session.reviewOpen;
+     b.classList.toggle('nps-recommended',b.dataset.action===goal?.action);
+    }
+   }
    const list=session.mode==='portrait'?PORTRAIT:CANDID;
    for(const id of list){
     const b=document.createElement('button');
@@ -685,16 +703,33 @@
   $(shell,'[data-help]').onclick=showGuide;
   $(shell,'[data-snap]').onclick=snap;
   $(shell,'[data-album]').onclick=showAlbum;
+  const settingsButton=$(shell,'[data-mobile-settings]');
+  function mobileSettings(open){
+   const isOpen=!!open;
+   $(shell,'.nps-shell').classList.toggle('nps-mobile-options-open',isOpen);
+   settingsButton.setAttribute('aria-expanded',String(isOpen));
+   settingsButton.textContent=isOpen?'✓ Done':'⚙ Settings';
+   settingsButton.setAttribute('aria-label',isOpen?'Close camera settings':'Open camera settings');
+   // Keep the visible camera and shutter in place; never hide them under
+   // a scrollable control list during the short photo opportunity.
+   if(isOpen)stopReaction();
+  }
+  settingsButton.onclick=()=>mobileSettings(!$(shell,'.nps-shell').classList.contains('nps-mobile-options-open'));
   $(shell,'[data-reset]').onclick=()=>{session.x=0;session.y=0;setZoom(1.3);};
   $(shell,'[data-zoom-out]').onclick=()=>setZoom(session.zoom-.15);
+  $(shell,'[data-mobile-zoom-out]').onclick=()=>setZoom(session.zoom-.16);
+  $(shell,'[data-mobile-zoom-in]').onclick=()=>setZoom(session.zoom+.16);
+  // Overlay zoom buttons must not start the camera's drag/pinch handler.
+  $(shell,'[data-mobile-zoom]').addEventListener('pointerdown',e=>e.stopPropagation());
   $(shell,'[data-zoom-in]').onclick=()=>setZoom(session.zoom+.15);
   zoomInput.oninput=()=>setZoom(zoomInput.value);
   $(shell,'[data-mode=reactions]').onclick=()=>{
    stopReaction();session.mode='reactions';drawChoices();
    void setMood('neutral',{fromReaction:true,silent:true});
+   mobileSettings(false);
   };
-  $(shell,'[data-mode=portrait]').onclick=()=>{session.mode='portrait';void setMood('neutral');};
-  $(shell,'[data-mode=candid]').onclick=()=>{session.mode='candid';void setMood('walking');};
+  $(shell,'[data-mode=portrait]').onclick=()=>{session.mode='portrait';void setMood('neutral');mobileSettings(false);};
+  $(shell,'[data-mode=candid]').onclick=()=>{session.mode='candid';void setMood('walking');mobileSettings(false);};
   $(shell,'[data-auto]').onclick=()=>{session.auto=!session.auto;drawChoices();};
   for(const b of shell.querySelectorAll('button[data-light]')){
    b.onclick=()=>{session.light=b.dataset.light;stage.dataset.light=session.light;drawChoices();updateFeedback();};
@@ -724,7 +759,13 @@
   const end=e=>{pointers.delete(e.pointerId);pinchDist=0;};
   stage.addEventListener('pointerup',end);stage.addEventListener('pointercancel',end);
   stage.addEventListener('wheel',e=>{e.preventDefault();setZoom(session.zoom+(e.deltaY>0?-.08:.08));},{passive:false});
-  shell.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close(false);}});
+  shell.addEventListener('keydown',e=>{
+   if(e.key==='Escape'){
+    e.preventDefault();
+    if($(shell,'.nps-shell').classList.contains('nps-mobile-options-open'))mobileSettings(false);
+    else close(false);
+   }
+  });
   drawChoices();taskUI();camera();void setMood('neutral',{fromReaction:true});startAuto();
   session.clock=requestAnimationFrame(tick);
   showGuide();
