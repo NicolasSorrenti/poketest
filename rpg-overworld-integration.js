@@ -719,6 +719,7 @@
           const alreadyCropped=/\/(?:expression-portraits|expression-faces|vn-expressions)\//.test(source);
           person.style.setProperty('--neo-ow-dialogue-bust-height',
             fullBody?'278%':alreadyCropped?'165%':'190%');
+          window.NeoRpgDialogueIdle?.attach?.(person,image);
         });
         // A missing portrait must never display a different character's face.
         // The original game's avatar loader already resolves outfit-specific art.
