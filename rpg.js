@@ -7,7 +7,7 @@ const ROMANCE=window.NeoRpgRomanceVisits||null;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
 const LIVE_NEW=window.NeoRpgLiveEverydayEvents||{events:[],art:{},followups:{},artAt:()=>null,finalArt:()=>null,fallback:()=>null,byId:()=>null};
-const {LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART,MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART}=window.NeoRpgLiveCampaignContent;
+const {LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART,MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,MIA_WINE_MISUNDERSTANDING,MIA_WINE_REVEAL_ART}=window.NeoRpgLiveCampaignContent;
 function startLiveGlanceMilestone(id){
  if(!LIVE_SPECIAL_IDS.has(id)||state.liveSpecialSeen?.[id])return;
  const active=state.mandatoryEventState?.active;
@@ -62,6 +62,7 @@ function liveEventArt(id){
  if(id===MIA_SLEEP_EVENT.id)return MIA_SLEEP_ART;
  if(id===MIA_COUCH_CHOICE_EVENT.id)return MIA_COUCH_CHOICE_ART;
  if(MIA_KITCHEN_ART[id])return MIA_KITCHEN_ART[id];
+ if(id===MIA_WINE_MISUNDERSTANDING.id)return state.miaWineStage==='reveal'?MIA_WINE_REVEAL_ART:null;
  if(miaStoryIds.has(id))return miaArt(id);
  if(id===LIVE_REPEAT_MORNING.id)return state.mandatoryEventState?.active?.index>=1?LIVE_REPEAT_FINAL_ART_2:LIVE_SPECIAL_ART.live_glance_next_morning;
  if(id===LIVE_DAY_FOLLOWUP.id)return liveFollowupContent().away?null:LIVE_NEW.finalArt(state.liveDayScene?.id)||state.liveDayScene?.cg||LIVE_EVENT_ART[state.liveDayScene?.id]||null;
@@ -122,7 +123,7 @@ const MIA_GOSSIP_EXTRA='/rpg-assets/characters/live/events/mia/a_highly_detailed
 function miaArt(id){return id==='mia_gossip'&&miaRomanceGossip()?MIA_GOSSIP_EXTRA:MIA_EVENT_ART[id];}
 Object.assign(LIVE_EVENT_ART,MIA_EVENT_ART);
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]).map(event=>
- event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,MIA_FIRST_TIME,...MIA_EVENTS,MIA_PRIVATE_EVENT,MIA_SLEEP_EVENT,MIA_COUCH_CHOICE_EVENT,...MIA_KITCHEN_EVENTS,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
+ event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,MIA_FIRST_TIME,...MIA_EVENTS,MIA_PRIVATE_EVENT,MIA_SLEEP_EVENT,MIA_COUCH_CHOICE_EVENT,...MIA_KITCHEN_EVENTS,MIA_WINE_MISUNDERSTANDING,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -547,6 +548,23 @@ function maybeStartMandatory(){
   persist();
   return;
  }
+ // The one-time wine misunderstanding belongs to a quiet morning after
+ // Mia's introduction. No CG is displayed during the overheard dialogue.
+ if(state.location==='home'&&state.slot===0&&state.day>=MIA_WINE_MISUNDERSTANDING.earliestDay&&
+    state.mandatoryEventState?.seen?.[MIA_FIRST_TIME.id]&&
+    !state.mandatoryEventState?.seen?.[MIA_WINE_MISUNDERSTANDING.id]&&
+    Number(state.miaLastSceneDay)!==state.day){
+   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+   m.active={id:MIA_WINE_MISUNDERSTANDING.id,phase:'lines',index:0,choice:null};
+   state.miaWineStage='heard';
+   state.miaWineLine=0;
+   state.miaLastSceneDay=state.day;
+   state.miaLastSceneSlot=state.slot;
+   state.liveLastEventDay=state.day;
+   state.liveDayScene={day:state.day,id:MIA_WINE_MISUNDERSTANDING.id,cg:null,firstSlot:state.slot,lastSeenSlot:state.slot};
+   state.liveHomeActivityScene=null;
+   persist();return;
+ }
  // Mia's scenes are CG-only, save-stable apartment encounters.
  // One first-time scene per day, except the later-sofa follow-up in a later period.
  if(state.location==='home'&&state.day<=90&&state.mandatoryEventState?.seen?.[MIA_FIRST_TIME.id]){
@@ -710,7 +728,7 @@ function maybeStartMandatory(){
  // The non-Live scheduler runs only when no Live scene is active.
  // Exclude the replayable pool so it cannot accidentally start on every render.
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
-  !LIVE_EVENTS.includes(e)&&e.id!==MIA_FIRST_TIME.id&&e.id!==MIA_PRIVATE_EVENT.id&&e.id!==MIA_SLEEP_EVENT.id&&e.id!==MIA_COUCH_CHOICE_EVENT.id&&!MIA_KITCHEN_ART[e.id]&&!miaStoryIds.has(e.id)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
+  !LIVE_EVENTS.includes(e)&&e.id!==MIA_FIRST_TIME.id&&e.id!==MIA_PRIVATE_EVENT.id&&e.id!==MIA_SLEEP_EVENT.id&&e.id!==MIA_COUCH_CHOICE_EVENT.id&&e.id!==MIA_WINE_MISUNDERSTANDING.id&&!MIA_KITCHEN_ART[e.id]&&!miaStoryIds.has(e.id)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -977,12 +995,63 @@ function miaKitchenAction(action){
  persist();render();return true;
 }
 
+
+function renderMiaWine(){
+ const stage=state.miaWineStage||'heard';
+ const lines=[
+  ['Narrator','You wake to mysterious noises in the other room. Something clinks against a glass.'],
+  ['Mia','Mooom... please, give me a little more!'],
+  ['Live','Careful, baby! It is going to spill everywhere.'],
+  ['Mia','Ahh... mmm! That is so good! What IS this?'],
+  ['Live','I knew you would like it! It is the special sparkling one.'],
+  ['Mia','More, please! Wait—why is it fizzing so much?!'],
+  ['Narrator','A cork pops, a glass rattles, and both women burst into laughter. Then... silence.'],
+  ['Narrator','Fourteen whole minutes pass without another sound. You begin to worry.']
+ ];
+ if(stage==='heard'){
+  const index=Math.max(0,Math.min(lines.length-1,Number(state.miaWineLine)||0));
+  const [speaker,line]=lines[index];
+  return {speaker,line:speaker==='Mia'?miaDialogueText(line):line,
+   choices:index===lines.length-1?[
+    ['Go see what happened','miaWineReveal'],
+    ['Go back to sleep','miaWineIgnore']
+   ]:[['Keep listening ›','miaWineNext']]};
+ }
+ if(stage==='reveal')return {speaker:'Narrator',
+  line:'You peek inside. Live and Mia are asleep on the floor beside an empty bottle of sparkling wine, a couple of tipped-over glasses, and a bowl of snacks. So THAT was all the excitement.',
+  choices:[['Cover them with a blanket','miaWineBlanket'],['Leave them sleeping','miaWineFinish']]};
+ if(stage==='blanket')return {speaker:'Narrator',
+  line:'You drape a blanket over them. Mia murmurs something about the bubbles, and Live smiles in her sleep.',
+  choices:[['Leave quietly','miaWineFinish']]};
+ return {speaker:'Narrator',line:'You decide the mystery can wait. The house is quiet again.',
+  choices:[['Go back to sleep','miaWineFinish']]};
+}
+function miaWineAction(action){
+ if(action==='miaWineNext'){
+  state.miaWineLine=Math.min(7,(Number(state.miaWineLine)||0)+1);
+ }else if(action==='miaWineReveal')state.miaWineStage='reveal';
+ else if(action==='miaWineIgnore')state.miaWineStage='ignore';
+ else if(action==='miaWineBlanket')state.miaWineStage='blanket';
+ else if(action==='miaWineFinish'){
+  const m=state.mandatoryEventState;
+  m.active.phase='choice';m.active.choice=null;
+  MANDATORY.choose(state,MANDATORY_EVENTS,state.miaWineStage==='ignore'?1:0);
+  if(!MANDATORY.finish(state,MANDATORY_EVENTS))return true;
+  state.miaWineOutcome=state.miaWineStage==='ignore'?'ignored':state.miaWineStage==='blanket'?'blanket':'discovered';
+  state.liveDayScene=null;state.liveHomeActivityScene=null;
+  state.liveLastEventDay=state.day;
+  log('A sparkling wine mystery at home.');
+ }else return true;
+ persist();render();return true;
+}
+
 function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
  if(a?.id===MIA_PRIVATE_EVENT.id)return renderMiaPrivate();
  if(a?.id===MIA_SLEEP_EVENT.id)return renderMiaSleep();
  if(a?.id===MIA_COUCH_CHOICE_EVENT.id)return renderMiaCouchChoice();
  if(MIA_KITCHEN_ART[a?.id])return miaKitchenDialogue();
+ if(a?.id===MIA_WINE_MISUNDERSTANDING.id)return renderMiaWine();
  if(!a||!e)return null;
  if(a.phase==='lines'){
   if(e.id===LIVE_DAY_FOLLOWUP.id){
@@ -1075,6 +1144,8 @@ function mandatoryAction(type,id){
   return miaCouchChoiceAction(type);
  if(MIA_KITCHEN_ART[state.mandatoryEventState.active.id])
   return miaKitchenAction(type);
+ if(state.mandatoryEventState.active.id===MIA_WINE_MISUNDERSTANDING.id)
+  return miaWineAction(type);
  if(type==='mandatoryPhotoLive'){
   const offer=livePhotoRequest(state.mandatoryEventState.active);
   if(!offer||!window.NeoRpgPhotoSession?.open||!confirmTimeAdvance())return true;
@@ -3340,7 +3411,10 @@ function syncSceneCG(){
   cgScenePresenter.clear();
   return;
  }
- const isLiveCg=!!liveEventId&&(liveEventId===MIA_PRIVATE_EVENT.id||liveEventId===MIA_SLEEP_EVENT.id||liveEventId===MIA_COUCH_CHOICE_EVENT.id||!!MIA_KITCHEN_ART[liveEventId]||!!LIVE_EVENT_ART[liveEventId]||
+ if(liveEventId===MIA_WINE_MISUNDERSTANDING.id&&state.miaWineStage!=='reveal'&&state.miaWineStage!=='blanket'){
+  cgScenePresenter.clear();return;
+ }
+ const isLiveCg=!!liveEventId&&(liveEventId===MIA_PRIVATE_EVENT.id||liveEventId===MIA_SLEEP_EVENT.id||liveEventId===MIA_COUCH_CHOICE_EVENT.id||liveEventId===MIA_WINE_MISUNDERSTANDING.id||!!MIA_KITCHEN_ART[liveEventId]||!!LIVE_EVENT_ART[liveEventId]||
   LIVE_SPECIAL_IDS.has(liveEventId)||liveEventId===LIVE_HOME_CHECKIN.id||
   liveEventId===LIVE_DAY_FOLLOWUP.id||liveEventId===LIVE_REPEAT_MORNING.id||liveEventId===LIVE_AFTER_EVENT.id);
  const liveArt=isLiveCg?(liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:
