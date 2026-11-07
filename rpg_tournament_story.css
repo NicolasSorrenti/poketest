@@ -166,6 +166,37 @@
  background-position:center center;
  background-repeat:no-repeat;
 }
+/* Alternative one-time tournament wake-up: concern, realization, deck handoff.
+   Full-resolution approved CGs can be installed without changing the logic. */
+.neo-cup-story[data-phase="wakeup"][data-discreet="off"][data-mia-deck-wakeup="on"][data-mia-deck-wakeup-frame="0"] .neo-cup-story__backdrop{
+ background-image:
+  linear-gradient(180deg,rgba(9,12,28,.08) 0%,rgba(9,12,28,.02) 60%,rgba(9,12,28,.36) 100%),
+  url('/rpg-assets/characters/live/events/mia/06_a_highly_detailed_anime_style_illustration_same_s.png'),
+  url('/rpg-assets/characters/live/events/live_tournament_morning.webp');
+ background-size:cover;
+ background-position:center center;
+ background-repeat:no-repeat;
+}
+
+.neo-cup-story[data-phase="wakeup"][data-discreet="off"][data-mia-deck-wakeup="on"][data-mia-deck-wakeup-frame="1"] .neo-cup-story__backdrop{
+ background-image:
+  linear-gradient(180deg,rgba(9,12,28,.08) 0%,rgba(9,12,28,.02) 60%,rgba(9,12,28,.36) 100%),
+  url('/rpg-assets/characters/live/events/mia/05_a_highly_detailed_anime_style_glossy_brightly_li.png'),
+  url('/rpg-assets/characters/live/events/live_tournament_morning.webp');
+ background-size:cover;
+ background-position:center center;
+ background-repeat:no-repeat;
+}
+
+.neo-cup-story[data-phase="wakeup"][data-discreet="off"][data-mia-deck-wakeup="on"][data-mia-deck-wakeup-frame="2"] .neo-cup-story__backdrop{
+ background-image:
+  linear-gradient(180deg,rgba(9,12,28,.08) 0%,rgba(9,12,28,.02) 60%,rgba(9,12,28,.36) 100%),
+  url('/rpg-assets/characters/live/events/mia/04_regalo_de_torneo_al_amanecer.png'),
+  url('/rpg-assets/characters/live/events/live_tournament_morning.webp');
+ background-size:cover;
+ background-position:center center;
+ background-repeat:no-repeat;
+}
 .neo-cup-story[data-phase="wakeup"][data-discreet="off"] .neo-cup-story__spotlights,
 .neo-cup-story[data-phase="wakeup"][data-discreet="off"] .neo-cup-story__actors{
  display:none;
