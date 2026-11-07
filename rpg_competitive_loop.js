@@ -65,7 +65,7 @@
   if(typeof rarityOf!=='function')return {valid:false,reason:'Card rarities are not available.'};
   const pokemon=[],seen=new Map(),types=new Set(),families=new Set();
   for(const id of cards){
-   if(!/^(base[1-5]|gym[12]|neo[1-4])-\\d+$/.test(id))return {valid:false,reason:'Unknown card '+id};
+   if(!/^(base[1-5]|gym[12]|neo[1-4])-\d+$/.test(id))return {valid:false,reason:'Unknown card '+id};
    const set=id.slice(0,id.lastIndexOf('-')),rarity=rarityOf(id),c=catalog?.get(id);
    if(rarity==='energy')continue;
    if(!theme.sets.includes(set))return {valid:false,reason:'This cup does not allow cards from '+set+'.'};
