@@ -641,14 +641,16 @@ function maybeStartMandatory(){
  const repeatDue=state.liveMiaRepeatFollowup;
  const afterShared=repeatDue?.mode==='after'&&
   (state.day>repeatDue.day||(state.day===repeatDue.day&&state.slot>repeatDue.slot));
+ const afterMia=repeatDue?.mode==='afterMia'&&
+  (state.day>repeatDue.day||(state.day===repeatDue.day&&state.slot>repeatDue.slot));
  const invitedMia=Number(state.miaVisitRequestedDay)>0&&
   state.day>=Number(state.miaVisitRequestedDay)&&
   ['mia','both'].includes(state.liveMiaFinalChoice);
- if(state.location==='home'&&state.day<=90&&(afterShared||invitedMia)){
+ if(state.location==='home'&&state.day<=90&&(afterShared||afterMia||invitedMia)){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   delete m.seen[LIVE_MIA_REPEAT_EVENT.id];
   m.active={id:LIVE_MIA_REPEAT_EVENT.id,phase:'lines',index:0,choice:null};
-  state.liveMiaRepeatMode=afterShared?'after':'mia';
+  state.liveMiaRepeatMode=afterShared?'after':afterMia?'afterMia':'mia';
   state.liveMiaRepeatStep=0;
   state.liveLastEventDay=state.day;
   state.miaLastSceneDay=state.day;
@@ -656,7 +658,7 @@ function maybeStartMandatory(){
   state.liveDayScene={day:state.day,id:LIVE_MIA_REPEAT_EVENT.id,
    cg:afterShared?LIVE_MIA_REPEAT_ART.together:LIVE_MIA_REPEAT_ART.mia,
    firstSlot:state.slot,lastSeenSlot:state.slot};
-  if(afterShared)state.liveMiaRepeatFollowup=null;
+  if(afterShared||afterMia)state.liveMiaRepeatFollowup=null;
   if(invitedMia&&!afterShared)state.miaVisitRequestedDay=null;
   state.liveHomeActivityScene=null;
   persist();return;
@@ -1335,7 +1337,7 @@ function liveMiaNextPeriodAction(type){
 // shared-route daytime follow-up. The original dual-CG ending is not replayed.
 function renderLiveMiaRepeat(){
  const mode=state.liveMiaRepeatMode||'mia',n=Math.max(0,Number(state.liveMiaRepeatStep)||0);
- const script=mode==='mia'?[
+ const script=(mode==='mia'||mode==='afterMia')?[
   ['Mia','I am so glad you made time for me today. I missed having a moment just for us.'],
   ['You','I was looking forward to seeing you, too.'],
   ['Mia','Then let us keep making time for each other. It makes me happy.']
@@ -1362,7 +1364,10 @@ function liveMiaRepeatAction(type){
   m.active.phase='choice';m.active.choice=null;
   MANDATORY.choose(state,MANDATORY_EVENTS,0);
   if(!MANDATORY.finish(state,MANDATORY_EVENTS))return true;
-  if(mode==='mia')state.miaRepeatLastDay=state.day;
+  if(mode==='mia'){
+   state.miaRepeatLastDay=state.day;
+   state.liveMiaRepeatFollowup={mode:'afterMia',day:state.day,slot:state.slot};
+  }
   if(mode==='both'){
    state.miaRepeatLastDay=state.day;
    state.liveRepeatLastDay=state.day;
@@ -1374,7 +1379,17 @@ function liveMiaRepeatAction(type){
   state.liveMiaRepeatMode=null;
   state.liveMiaRepeatStep=0;
  }
- persist();render();return true;
+ persist();render();
+ if(mode==='mia'&&state.liveMiaFinalChoice!=='live'&&ROMANCE?.open){
+  ROMANCE.open({
+   id:'mia',name:'Mia',discreet:liveDiscreetEnabled(),
+   artPath:'/rpg-assets/characters/mia/events/final/mia_sneeze_parody.png',
+   cgLines:['I am so happy we made time for each other.','I love being close to you.','Let us do this again someday.'],
+   onFinish:()=>{state.miaRepeatViewerSeen=true;persist();render();},
+   onCancel:()=>{persist();render();}
+  });
+ }
+ return true;
 }
 function renderMandatory(){
  const a=state.mandatoryEventState?.active,e=MANDATORY_EVENTS.find(x=>x.id===a?.id);
