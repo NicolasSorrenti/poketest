@@ -19211,7 +19211,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Body Slam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 active-source audit: Generic 30 damage + heads Paralysis candidate; four Colorless requirement, status/KO ordering and promotion remain unexecuted. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         },
         {
           "kind": "power",
@@ -19219,8 +19223,10 @@
           "name": "Softboiled",
           "status": "partial",
           "evidence": [
-            "Source-only: Softboiled absent from classic_power_core ONPLAY/ACTIVATED/PASSIVE and no name or printing ID in headless_duel.js. Evolution into previously damaged Chansey should offer optional flip and heal 80/40 (capped at damage); cannot confirm runtime. TCGdex imported text only; independent ruling verification pending."
-          ]
+            "Source-only: Softboiled absent from classic_power_core ONPLAY/ACTIVATED/PASSIVE and no name or printing ID in headless_duel.js. Evolution into previously damaged Chansey should offer optional flip and heal 80/40 (capped at damage); cannot confirm runtime. TCGdex imported text only; independent ruling verification pending.",
+            "2026-11-07 active-source audit: Source defect fixed in c3f0c805: classic_power_core ONPLAY now offers optional Softboiled on Blissey evolution, flips once if accepted and heals 80 on heads or 40 on tails, capped at existing damage. Not runtime executed; suppression and evolution chain still need reducer validation. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         }
       ]
     },
@@ -19233,7 +19239,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Psychic Damage",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 active-source audit: Exact neo_attack_batch_v040 psychic-damage handler flips 3 coins and places one counter per heads. Need verify counter placement bypasses Weakness/Resistance and KO/Prize ordering. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         },
         {
           "kind": "power",
@@ -19241,8 +19251,10 @@
           "name": "Time Travel",
           "status": "partial",
           "evidence": [
-            "Source-only: Time Travel absent from current Power registry and no name/printing ID in headless_duel.js. Opponent attack lethal KO should flip; heads shuffle Celebi plus attachments into owner's deck without Prize, tails normal KO/Prize, status locks. Runtime and independent rulings pending."
-          ]
+            "Source-only: Time Travel absent from current Power registry and no name/printing ID in headless_duel.js. Opponent attack lethal KO should flip; heads shuffle Celebi plus attachments into owner's deck without Prize, tails normal KO/Prize, status locks. Runtime and independent rulings pending.",
+            "2026-11-07 active-source audit: No Time Travel entry in classic_power_core ONPLAY/ACTIVATED/PASSIVE; headless_duel has no named Time Travel trigger. Opponent lethal attack heads shuffle Celebi and attachments without Prize, tails normal KO; status locks and promotion unresolved. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         }
       ]
     },
@@ -19257,8 +19269,10 @@
           "name": "Triggered Poison",
           "status": "partial",
           "evidence": [
-            "2026-11-06 current-engine source-only review: Triggered Poison: next-turn Energy attachment to the same Defending Pokémon, status timing, switching, and Cross Attack four coin outcomes/Confusion; no named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
-          ]
+            "2026-11-06 current-engine source-only review: Triggered Poison: next-turn Energy attachment to the same Defending Pokémon, status timing, switching, and Cross Attack four coin outcomes/Confusion; no named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created.",
+            "2026-11-07 active-source audit: No dedicated named registration found in attack_effects_core imports or v040–v093 modules. Need same Defending Pokémon next-turn Energy-attachment poison, switch and target identity handling. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         },
         {
           "kind": "attack",
@@ -19266,8 +19280,10 @@
           "name": "Cross Attack",
           "status": "partial",
           "evidence": [
-            "2026-11-06 current-engine source-only review: Triggered Poison: next-turn Energy attachment to the same Defending Pokémon, status timing, switching, and Cross Attack four coin outcomes/Confusion; no named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
-          ]
+            "2026-11-06 current-engine source-only review: Triggered Poison: next-turn Energy attachment to the same Defending Pokémon, status timing, switching, and Cross Attack four coin outcomes/Confusion; no named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created.",
+            "2026-11-07 active-source audit: Exact neo_attack_batch_v040 cross-attack rolls four coins, 20 per heads, Confuses on >=2 heads; KO before status and Energy requirements unexecuted. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         }
       ]
     },
@@ -19300,8 +19316,10 @@
           "status": "partial",
           "evidence": [
             "test_typed_energy_missing_icons.js: requires and auto-discards two Fire Energy from equivalent candidates while preserving non-Fire Energy.",
-            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js"
-          ]
+            "test_typed_energy_discard_audit.js / test_typed_energy_missing_icons.js",
+            "2026-11-07 active-source audit: Exact attack_effects_core Searing Flames compiler emits energy-discard damage 60, quantity 2 onlyType Fire; reducer selection and insufficient Fire case need execution. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         },
         {
           "kind": "power",
@@ -19309,8 +19327,10 @@
           "name": "Howl",
           "status": "partial",
           "evidence": [
-            "Source-only: Howl absent from current ONPLAY registry and no name/printing ID in headless_duel.js. Play Basic from hand, optionally mill up to 5, assign milled Fire Energy to Fire Pokemon, then end turn; deck short/full target scenarios unresolved. Runtime and independent rulings pending."
-          ]
+            "Source-only: Howl absent from current ONPLAY registry and no name/printing ID in headless_duel.js. Play Basic from hand, optionally mill up to 5, assign milled Fire Energy to Fire Pokemon, then end turn; deck short/full target scenarios unresolved. Runtime and independent rulings pending.",
+            "2026-11-07 active-source audit: No Howl in current classic_power_core ONPLAY set; Basic from-hand optional top-five mill, Fire Energy distribution, and turn-ending effect currently lack registered on-play path. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         }
       ]
     },
@@ -19389,8 +19409,10 @@
           "name": "Evolutionary Spore",
           "status": "partial",
           "evidence": [
-            "2026-11-06 current-engine source-only review: Evolutionary Spore: multiple chosen Hoppip/Skiploom, separate deck searches, legal evolutions and shuffle; Solarbeam cost/damage. No named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
-          ]
+            "2026-11-06 current-engine source-only review: Evolutionary Spore: multiple chosen Hoppip/Skiploom, separate deck searches, legal evolutions and shuffle; Solarbeam cost/damage. No named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created.",
+            "2026-11-07 active-source audit: No named handler found in inspected attack modules. Multiple Hoppip/Skiploom targets, sequential deck searches, evolution legality and shuffle need active reducer execution. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         },
         {
           "kind": "attack",
@@ -19398,8 +19420,10 @@
           "name": "Solarbeam",
           "status": "partial",
           "evidence": [
-            "2026-11-06 current-engine source-only review: Evolutionary Spore: multiple chosen Hoppip/Skiploom, separate deck searches, legal evolutions and shuffle; Solarbeam cost/damage. No named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created."
-          ]
+            "2026-11-06 current-engine source-only review: Evolutionary Spore: multiple chosen Hoppip/Skiploom, separate deck searches, legal evolutions and shuffle; Solarbeam cost/damage. No named active reducer handler found. Live authority traced via rpg_duel_bridge.js -> classic_local_service.js -> headless_duel.js -> classic_power_core.js/attack_effects_core.js. TCGdex-imported cards/neo3.json text checked; independent printed errata/rulings and reducer execution not completed. No tests created.",
+            "2026-11-07 active-source audit: Printed 30 flat for one Grass; generic flat compiler candidate; Energy cost, KO, Prize and turn ownership not executed. Printed text from TCGdex-imported cards/neo3.json; independent card-image/errata/historical ruling verification pending. GitHub connector has no executable Node checkout: no reducer execution."
+          ],
+          "scope": "Source-level cross-module inspection only; unexecuted realistic state scenarios documented in CARD_FIDELITY_AUDIT.md."
         }
       ]
     },
