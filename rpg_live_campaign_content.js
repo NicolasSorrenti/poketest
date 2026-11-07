@@ -283,5 +283,25 @@ const MIA_COUCH_CHOICE_ART='/rpg-assets/characters/live/events/mia/47_a_highly_d
 
 
 
-window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
+// Three ordered kitchen encounters. Each has distinct banter and a separate
+// CG, but the actual lines are selected at render time by the Mia route.
+const MIA_KITCHEN_SCENES=[
+ {id:'mia_kitchen_59',title:'Almost Ready',day:15,
+  art:MIA_BASE+'59_a_highly_detailed_anime_style_illustration_in_a_co.png'},
+ {id:'mia_kitchen_60',title:'A Little More Seasoning',day:23,
+  art:MIA_BASE+'60_a_detailed_anime_style_illustration_in_warm_gold.png'},
+ {id:'mia_kitchen_61',title:'The Finishing Touch',day:31,
+  art:MIA_BASE+'61_a_detailed_high_quality_anime_style_cel_shaded_il.png'}
+];
+const MIA_KITCHEN_EVENTS=MIA_KITCHEN_SCENES.map((s,i)=>({
+ id:s.id,title:s.title,kind:'season',priority:96,
+ earliestDay:s.day,delivery:'world',timeCost:0,expiry:'never',fallback:'queue',
+ trigger:{eventSeen:i?MIA_KITCHEN_SCENES[i-1].id:'mia_first_time'},
+ lines:[{speaker:'Narrator',text:'Live is preparing dinner while Mia keeps you company nearby.'}],
+ choices:[{label:'Enjoy the conversation',reply:'You stay a moment longer.',flag:s.id+'_talk'},
+          {label:'Give them space',reply:'You leave the kitchen.',flag:s.id+'_leave'}]
+}));
+const MIA_KITCHEN_ART=Object.fromEntries(MIA_KITCHEN_SCENES.map(s=>[s.id,s.art]));
+
+window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
 })();
