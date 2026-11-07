@@ -17948,13 +17948,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Detect",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit (no reducer execution): Detect: heads prevents all effects of attacks including damage on next opposing turn; tails no shield. Triple Kick: 3 flips x30, 0/1/2/3 heads, typed cost, weakness/resistance, KO/prizes. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Triple Kick",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit (no reducer execution): Detect: heads prevents all effects of attacks including damage on next opposing turn; tails no shield. Triple Kick: 3 flips x30, 0/1/2/3 heads, typed cost, weakness/resistance, KO/prizes. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
+          ]
         }
       ]
     },
@@ -17967,7 +17973,10 @@
           "kind": "attack",
           "index": 0,
           "name": "Crunch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit (no reducer execution): Crunch: 30 and +20 to later attacks that damage same Defending Pokemon until end of next turn; track switching, status, damage prevention and source ownership. Flamethrower: mandatory typed Fire discard or no damage. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
+          ]
         },
         {
           "kind": "attack",
@@ -17975,7 +17984,8 @@
           "name": "Flamethrower",
           "status": "partial",
           "evidence": [
-            "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership."
+            "test_flamethrower_typed_discard.js: typed Fire requirement, automatic discard among equivalent Basic Fire cards, Rainbow-vs-Basic choice, rejection of Grass without mutation, damage, notification, and private decision ownership.",
+            "2026-11-07 current-engine source-only audit (no reducer execution): Crunch: 30 and +20 to later attacks that damage same Defending Pokemon until end of next turn; track switching, status, damage prevention and source ownership. Flamethrower: mandatory typed Fire discard or no damage. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
           ]
         }
       ]
@@ -17989,13 +17999,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Smog",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit (no reducer execution): Smog: 10 plus heads Poison; tails no status. Collect Fire: 20 then choose Energy from own discard and attach to Houndour; empty discard, Special Energy, KO and attachment timing. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Collect Fire",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit (no reducer execution): Smog: 10 plus heads Poison; tails no status. Collect Fire: 20 then choose Energy from own discard and attach to Houndour; empty discard, Special Energy, KO and attachment timing. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
+          ]
         }
       ]
     },
@@ -18008,13 +18024,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Slash",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit (no reducer execution): Slash: 20 with Colorless cost. Hydrocutter: one flip per attached Energy CARD, max three flips, 40 per heads, including DCE/multi-unit cards, zero/one/two/three heads. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Hydrocutter",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit (no reducer execution): Slash: 20 with Colorless cost. Hydrocutter: one flip per attached Energy CARD, max three flips, 40 per heads, including DCE/multi-unit cards, zero/one/two/three heads. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
+          ]
         }
       ]
     },
@@ -18027,13 +18049,19 @@
           "kind": "attack",
           "index": 0,
           "name": "Lock-on",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit (no reducer execution): Lock-on: next-turn tails converted to heads only for Electric Bolt against same defender, bench/evolution clears. Electric Bolt: two flips, both heads 50 and Paralysis, any tails zero damage and no status; check turn and KO. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Electric Bolt",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only audit (no reducer execution): Lock-on: next-turn tails converted to heads only for Electric Bolt against same defender, bench/evolution clears. Electric Bolt: two flips, both heads 50 and Paralysis, any tails zero damage and no status; check turn and KO. Imported TCGdex text reviewed; independent print/errata and historical rulings not confirmed."
+          ]
         }
       ]
     },
