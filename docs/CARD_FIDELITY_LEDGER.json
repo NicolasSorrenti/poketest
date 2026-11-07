@@ -19081,9 +19081,13 @@
           "kind": "attack",
           "index": 0,
           "name": "Spike Stab",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Spike Stab printed catalogue: Grass cost, 20 damage only on heads with Poison; tails prevents even damage. Generic coin-status and coin-failure regexes separately do not match combined text. neo_discovery_attack_core and neo_attack_batch_v048 have no explicit signature. Need inspect remaining exact compiler modules and execute heads/tails, prevention, KO and turn cases; no runtime execution or historical ruling certification."
+          ]
         }
-      ]
+      ],
+      "scope": "Live RPG/Classic source-only trace through classic_local_service.js, rpg_duel_bridge.js, headless_duel.js, attack_effects_core.js and relevant effect modules; zero executed reducer scenarios, independent historical rulings pending."
     },
     {
       "id": "neo2-71",
@@ -19094,15 +19098,22 @@
           "kind": "attack",
           "index": 0,
           "name": "Slime",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Slime has exact neo48:slime registration in neo_attack_batch_v048 and damage prevention branch in headless_duel: opponent flips on next-turn attack damage; tails prevents damage, not other effects. Tail Slap is 20 flat damage. Check expiration, opponent coin ownership, status effects despite damage prevention, switching and turn serial; source only."
+          ]
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Tail Slap",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Slime has exact neo48:slime registration in neo_attack_batch_v048 and damage prevention branch in headless_duel: opponent flips on next-turn attack damage; tails prevents damage, not other effects. Tail Slap is 20 flat damage. Check expiration, opponent coin ownership, status effects despite damage prevention, switching and turn serial; source only."
+          ]
         }
-      ]
+      ],
+      "scope": "Live RPG/Classic source-only trace through classic_local_service.js, rpg_duel_bridge.js, headless_duel.js, attack_effects_core.js and relevant effect modules; zero executed reducer scenarios, independent historical rulings pending."
     },
     {
       "id": "neo2-72",
@@ -19111,9 +19122,13 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Fossil Egg has dedicated classic_trainer_core coin and hand/deck choice, Bench-full guard, shuffle only on deck search. Source shows optional selection after heads; confirm historical mandatory-vs-optional treatment, eligibility and decision ownership. Check 0/5 Bench, tails, deck and hand branches, on-play powers, turn ownership; no runtime."
+          ]
         }
-      ]
+      ],
+      "scope": "Live RPG/Classic source-only trace through classic_local_service.js, rpg_duel_bridge.js, headless_duel.js, attack_effects_core.js and relevant effect modules; zero executed reducer scenarios, independent historical rulings pending."
     },
     {
       "id": "neo2-73",
@@ -19122,9 +19137,13 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Hyper Devolution Spray has classic_trainer_core selection and removal of top evolution to hand, sets playedTurn and clears status/bench effects. Inspect evolution stack and whether devolution damage creates KO and Prize/promotion correctly; verify same-turn re-evolution lock. Source only."
+          ]
         }
-      ]
+      ],
+      "scope": "Live RPG/Classic source-only trace through classic_local_service.js, rpg_duel_bridge.js, headless_duel.js, attack_effects_core.js and relevant effect modules; zero executed reducer scenarios, independent historical rulings pending."
     },
     {
       "id": "neo2-74",
@@ -19133,9 +19152,13 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Ruin Wall has dedicated classic_trainer_core search for Basic Unown, Bench-full guard, optional selection and deck shuffle. Check historical text requirement versus optional no-selection, on-play Unown Powers, deck empty, Bench 4/5, private choice and turn ownership. Source only."
+          ]
         }
-      ]
+      ],
+      "scope": "Live RPG/Classic source-only trace through classic_local_service.js, rpg_duel_bridge.js, headless_duel.js, attack_effects_core.js and relevant effect modules; zero executed reducer scenarios, independent historical rulings pending."
     },
     {
       "id": "neo2-75",
