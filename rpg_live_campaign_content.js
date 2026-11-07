@@ -303,5 +303,19 @@ const MIA_KITCHEN_EVENTS=MIA_KITCHEN_SCENES.map((s,i)=>({
 }));
 const MIA_KITCHEN_ART=Object.fromEntries(MIA_KITCHEN_SCENES.map(s=>[s.id,s.art]));
 
-window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
+// The player overhears a wine-tasting mishap. No illustration is shown
+// until the player opens the door and discovers the two asleep on the floor.
+const MIA_WINE_MISUNDERSTANDING={
+ id:'mia_live_wine_misunderstanding',title:'What Was That Noise?',
+ kind:'season',priority:97,earliestDay:5,delivery:'world',timeCost:0,
+ expiry:'never',fallback:'queue',trigger:{eventSeen:'mia_first_time'},
+ lines:[{speaker:'Narrator',text:'You awaken to strange sounds from the next room.'}],
+ choices:[
+  {label:'Investigate',reply:'You discover the empty sparkling-wine bottle.',flag:'mia_wine_discovered'},
+  {label:'Go back to bed',reply:'The mystery can wait until morning.',flag:'mia_wine_ignored'}
+ ]
+};
+const MIA_WINE_REVEAL_ART=MIA_BASE+'42_a_highly_detailed_anime_style_illustration_vibran.png';
+
+window.NeoRpgLiveCampaignContent=Object.freeze({MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,MIA_WINE_MISUNDERSTANDING,MIA_WINE_REVEAL_ART,LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART});
 })();
