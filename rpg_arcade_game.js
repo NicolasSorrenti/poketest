@@ -315,7 +315,7 @@ function open(options={}){
  function keydown(e){if(active!==session)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cleanup(true);return;}if(e.repeat||!session.playing)return;const key=e.key.length===1?e.key.toLowerCase():e.key;const lane=(isDaisy?{' ':0,Enter:0,w:1,ArrowUp:1,d:2,ArrowRight:2,s:3,ArrowDown:3,a:4,ArrowLeft:4}:{a:0,s:1,d:2,ArrowLeft:0,ArrowDown:1,ArrowRight:2})[key];if(lane!==undefined){e.preventDefault();e.stopPropagation();press(lane);}}
  function resize(){if(active===session&&!session.playing)scene(0);}
  document.addEventListener('keydown',keydown,true);root.addEventListener('resize',resize);
- $('.nc-pad').forEach(p=>p.addEventListener('pointerdown',e=>{e.preventDefault();press(Number(p.dataset.lane));}));
+ $$('.nc-pad').forEach(p=>p.addEventListener('pointerdown',e=>{e.preventDefault();press(Number(p.dataset.lane));}));
  if(isDaisy){
   // Touchscreen controls: tap for ● notes and swipe in the arrow direction.
   // Pointer capture avoids losing the gesture if the finger crosses the stage.
