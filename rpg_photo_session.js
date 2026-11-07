@@ -587,7 +587,7 @@
   function captureStage(){
    const sceneRect=stage.getBoundingClientRect();
    if(!sceneRect.width||!sceneRect.height)throw Error('Camera is not visible');
-   if(!backdrop.complete||!backdrop.naturalWidth)
+   if(!profile.precomposed&&(!backdrop.complete||!backdrop.naturalWidth))
     throw Error('The location background is still loading. Please try SNAP again.');
    const ratio=Math.min(2,root.devicePixelRatio||1,1600/sceneRect.width);
    const full=document.createElement('canvas');
@@ -600,9 +600,11 @@
    context.fillStyle='#273a57';
    context.fillRect(0,0,w,h);
    // The stage CSS uses background-position:center and background-size:cover.
-   const bgScale=Math.max(w/backdrop.naturalWidth,h/backdrop.naturalHeight);
-   const bgW=backdrop.naturalWidth*bgScale,bgH=backdrop.naturalHeight*bgScale;
-   context.drawImage(backdrop,(w-bgW)/2,(h-bgH)/2,bgW,bgH);
+   if(!profile.precomposed){
+    const bgScale=Math.max(w/backdrop.naturalWidth,h/backdrop.naturalHeight);
+    const bgW=backdrop.naturalWidth*bgScale,bgH=backdrop.naturalHeight*bgScale;
+    context.drawImage(backdrop,(w-bgW)/2,(h-bgH)/2,bgW,bgH);
+   }
    // Use each element's *actual rendered DOM rectangle*. This includes zoom,
    // pan, canvas sizing and CSS transforms in the original camera stage.
    // Crucially, the captured image will never be transformed a second time.
