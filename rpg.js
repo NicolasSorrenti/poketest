@@ -4144,7 +4144,17 @@ function tournamentNarrativeView(){
    !record.seen.includes('arrival')?'arrival':
    progress.state==='open'&&!record.seen.includes('round-'+progress.round)?'round-'+progress.round:
    progress.state!=='open'&&!record.seen.includes('closing')?'closing':null;
-  if(key){record.active={key,index:0};persist();}
+  if(key){
+   // Pick the interruption only once per campaign, on the first eligible
+   // tournament morning after Live's intimacy scene and Mia's introduction.
+   if(key==='wakeup'&&!Object.prototype.hasOwnProperty.call(record,'miaWakeup')){
+    record.miaWakeup=!!(state.mandatoryEventState?.seen?.live_glance_next_morning||
+      state.liveSpecialSeen?.live_glance_next_morning)&&
+      !!state.mandatoryEventState?.seen?.mia_first_time&&
+      !state.tournamentMiaWakeupSeen;
+   }
+   record.active={key,index:0};persist();
+  }
  }
  if(record.active){
   const active=record.active;
@@ -4159,6 +4169,7 @@ function tournamentNarrativeView(){
     if(active.index<script.length-1)active.index++;
     else{
      if(!record.seen.includes(active.key))record.seen.push(active.key);
+     if(active.key==='wakeup'&&record.miaWakeup)state.tournamentMiaWakeupSeen=true;
      record.active=null;
     }
     persist();render();
