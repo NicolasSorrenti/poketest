@@ -332,8 +332,24 @@
   }
   function drawChoices(){
    poseBox.replaceChildren();
+   $(shell,'[data-mode=reactions]').classList.toggle('is-selected',session.mode==='reactions');
    $(shell,'[data-mode=portrait]').classList.toggle('is-selected',session.mode==='portrait');
    $(shell,'[data-mode=candid]').classList.toggle('is-selected',session.mode==='candid');
+   const reacting=session.mode==='reactions';
+   $(shell,'[data-pose-section]').hidden=reacting;
+   $(shell,'[data-reactions]').hidden=!reacting;
+   $(shell,'[data-auto-wrap]').hidden=reacting;
+   const actionList=$(shell,'[data-reaction-actions]');
+   if(actionList&&!actionList.childElementCount){
+    for(const action of REACTIONS){
+     const b=document.createElement('button');
+     b.type='button';b.className='nps-btn';
+     b.textContent=action.label;
+     b.onclick=()=>{void playReaction(action.id);};
+     actionList.append(b);
+    }
+   }
+   if(actionList)for(const b of actionList.children)b.disabled=session.reactionBusy||session.reviewOpen;
    const list=session.mode==='portrait'?PORTRAIT:CANDID;
    for(const id of list){
     const b=document.createElement('button');
@@ -359,12 +375,19 @@
    updateFeedback();
   }
   function currentMeter(){
+   if(session.mode==='reactions'){
+    const r=session.reaction;
+    if(!r?.highlight)return 0;
+    const t=clamp((performance.now()-r.start)/r.duration,0,1);
+    return clamp(1-Math.abs(t-.47)*2.2,0,1);
+   }
    return .5+.5*Math.sin((performance.now()-session.begin)/620);
   }
   function updateFeedback(){
    const task=session.tasks[session.shots.length];
    if(!task||session.closed)return;
-   const poseGood=session.poseId===task.pose;
+   const reacting=session.mode==='reactions';
+   const poseGood=session.poseId===task.pose&&(!reacting||!!session.reaction?.highlight);
    const frameGood=Math.abs(session.zoom-frameZoom[task.framing])<=.22;
    const centered=Math.hypot(session.x,session.y)<=Math.max(45,stage.clientWidth*.13);
    const lightGood=session.light===task.light;
@@ -376,14 +399,16 @@
     el.dataset.ready=String(good);
     el.textContent=(good?'✓ ':'○ ')+message;
    }
-   check('pose',poseGood,'Pose: '+labels[task.pose]+(poseGood?'':
-    (pose(task.pose).kind!==session.mode?' · '+(pose(task.pose).kind==='candid'?'Candid':'Directed'):' · select')));
+   check('pose',poseGood,(reacting?'Reaction: ':'Pose: ')+labels[task.pose]+(poseGood?'':
+    (reacting?' · interact':pose(task.pose).kind!==session.mode?' · '+(pose(task.pose).kind==='candid'?'Candid':'Directed'):' · select')));
    check('framing',frameGood&&centered,'Frame: '+({close:'Close-up',medium:'Medium',full:'Full body'}[task.framing])+
     (frameGood&&centered?' ✓':(!frameGood?' · now '+myFrame:' · center Barb')));
    check('light',lightGood,'Light: '+({soft:'Soft',warm:'Warm',bright:'Bright'}[task.light]));
-   check('moment',momentGood,'Moment: '+(momentGood?'Now!':'Wait for bar'));
+   check('moment',momentGood,'Moment: '+(momentGood?'NOW!':reacting?'Trigger reaction':'Wait for bar'));
    let next;
-   if(!poseGood)next=pose(task.pose).kind!==session.mode?
+   if(reacting&&!poseGood)next=session.reactionBusy?'Wait for '+labels[task.pose]+' to appear…':
+    'Interact with Barb! Try '+REACTIONS.find(a=>a.id===task.action)?.label+'.';
+   else if(!poseGood)next=pose(task.pose).kind!==session.mode?
     'First: switch to '+(pose(task.pose).kind==='candid'?'Candid':'Directed')+' mode, then choose '+labels[task.pose]+'.':
     'First: choose the '+labels[task.pose]+' pose.';
    else if(!frameGood)next='Next: adjust zoom until Frame turns green.';
@@ -417,13 +442,19 @@
   }
   function tick(){
    if(session.closed)return;
+   if(session.motionReady&&session.motion&&!shell.classList.contains('nps-discreet')){
+    const energy=session.reaction?.highlight?.75:session.reactionBusy?.35:0;
+    session.motion.render(performance.now()-session.begin,energy);
+   }
    const moment=currentMeter();
    $(shell,'[data-meter]').style.transform='scaleX('+moment.toFixed(3)+')';
    const ready=moment>=.78;
    const label=$(shell,'[data-meter-label]');
    if(label.dataset.ready!==String(ready)){
     label.dataset.ready=String(ready);
-    label.textContent=ready?'✨ NOW! Take the shot!':'Wait for the bar to fill…';
+    label.textContent=ready?'✨ NOW! Take the shot!':session.mode==='reactions'?
+     (session.reactionBusy?'Watch Barb’s expression…':'Start an interaction to catch a moment'):
+     'Wait for the bar to fill…';
     updateFeedback();
    }
    session.clock=requestAnimationFrame(tick);
@@ -442,8 +473,10 @@
   function photoScore(){
    const task=session.tasks[session.shots.length];
    const selected=pose(session.poseId);
-   const posePoints=task.pose===selected.id?35:
-    pose(task.pose).kind===selected.kind?14:2;
+   const posePoints=session.mode==='reactions'?
+    (task.pose===selected.id&&session.reaction?.highlight?35:
+     task.pose===selected.id?12:2):
+    (task.pose===selected.id?35:pose(task.pose).kind===selected.kind?14:2);
    const framing=clamp(1-Math.abs(session.zoom-frameZoom[task.framing])/1.1,0,1);
    const panPenalty=clamp(1-Math.hypot(session.x,session.y)/Math.max(120,stage.clientWidth*.53),0,1);
    const comp=Math.round(30*framing*(.6+.4*panPenalty));
