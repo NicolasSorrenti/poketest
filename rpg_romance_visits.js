@@ -800,13 +800,20 @@
   dialog.addEventListener('cancel',event=>{event.preventDefault();close(false);});
   dialog.showModal();
   if(!discreet){
-   const maybeReady=()=>{finish.disabled=!panes.every(p=>p.loaded);};
+   const maybeReady=()=>{
+    if(!panes.every(p=>p.loaded))return;
+    // Start both native pan animations in the same event-loop turn, after
+    // both full-resolution images are ready. Independent layouts, shared start.
+    for(const pane of panes){
+     pane.pan=panApi.attach(pane.frame,pane.img,timingFor(pane.entry.id,0));
+    }
+    finish.disabled=false;
+   };
    for(const pane of panes){
     const {entry,img,message,frame}=pane;
     let fallbackUsed=false;
     img.onload=()=>{
      if(closed)return;
-     pane.pan=panApi.attach(frame,img,timingFor(entry.id,0));
      img.hidden=false;
      message.style.display='none';
      pane.loaded=true;
