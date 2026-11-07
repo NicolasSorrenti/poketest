@@ -4153,6 +4153,13 @@ function tournamentNarrativeView(){
       !!state.mandatoryEventState?.seen?.mia_first_time&&
       !state.tournamentMiaWakeupSeen;
    }
+   // Another one-time variation, only when the five-minute interruption is
+   // not scheduled. Preserve the already selected variant on save/reload.
+   if(key==='wakeup'&&!Object.prototype.hasOwnProperty.call(record,'miaDeckWakeup')){
+    record.miaDeckWakeup=!record.miaWakeup&&
+      !!state.mandatoryEventState?.seen?.mia_first_time&&
+      !state.tournamentMiaDeckWakeupSeen;
+   }
    record.active={key,index:0};persist();
   }
  }
@@ -4170,6 +4177,7 @@ function tournamentNarrativeView(){
     else{
      if(!record.seen.includes(active.key))record.seen.push(active.key);
      if(active.key==='wakeup'&&record.miaWakeup)state.tournamentMiaWakeupSeen=true;
+     if(active.key==='wakeup'&&record.miaDeckWakeup)state.tournamentMiaDeckWakeupSeen=true;
      record.active=null;
     }
     persist();render();
