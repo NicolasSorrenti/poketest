@@ -1,5 +1,6 @@
 'use strict';
-// Reusable cropped-portrait deformation. Independent of rhythm/gameplay/CG UI.
+// Reusable portrait deformation with non-destructive viewport camera support.
+// Independent of rhythm/gameplay/CG UI.
 // Usage:
 // const motion=NeoRpgSpriteDeformer.create(canvas,{preset:'daisyDance'});
 // motion.render(elapsedMilliseconds,fever01);
@@ -9,26 +10,27 @@
 // Other modes can provide any portrait, crop, zone shapes and BPM.
 (function(root){
  'use strict';
- if(root.NeoRpgSpriteDeformer?.version===3)return;
+ if(root.NeoRpgSpriteDeformer?.version===4)return;
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  const val=(n,def)=>Number.isFinite(Number(n))?Number(n):def;
  const smooth=n=>{n=clamp(n,0,1);return n*n*(3-2*n);};
  const defaults=Object.freeze({
   width:210,height:280,fps:22,tempo:136,speed:.93,
-  cropTop:0,cropHeight:.9,baseBounce:0,feverBounce:0,tilt:0,
+  cropTop:0,cropHeight:.9,cameraMode:'crop',baseBounce:0,feverBounce:0,tilt:0,
   intensity:1,expansion:1,feverInflate:0,zones:[]
  });
  const presets=Object.freeze({
   daisyDance:Object.freeze({
    source:'/rpg-assets/characters/daisy/portraits/primary.png',
-   width:210,height:280,fps:22,tempo:136,speed:.93,cropTop:0,cropHeight:.9,
-   baseBounce:0,feverBounce:0,tilt:0,feverInflate:.40,
-   // Mid-torso zones. Normalized to the cropped portrait, not full source.
-   // Separately adjustable regions; excludes head, neck and waist.
+   width:210,height:280,fps:22,tempo:119,speed:.9,
+   cameraMode:'viewport',cropTop:.11,cropHeight:.78,
+   baseBounce:0,feverBounce:5.1,tilt:0,
+   feverInflate:1.2,intensity:.65,expansion:1,
+   // Calibrated directly in Motion Lab. Coordinates stay relative to the
+   // *visible camera window* even while the full portrait moves behind it.
    zones:[
-    // Each zone independently expands/contracts on the beat; no neck movement.
-    {x:.385,y:.675,rx:.148,ry:.108,inflateX:.18,inflateY:.15,inflatePhase:-.20,scaleX:0,scaleY:0,moveY:0,phase:0},
-    {x:.620,y:.675,rx:.148,ry:.108,inflateX:.18,inflateY:.15,inflatePhase:-.20,scaleX:0,scaleY:0,moveY:0,phase:0}
+    {x:.33,y:.675,rx:.19,ry:.175,inflateX:.18,inflateY:.095,inflatePhase:-.2,scaleX:0,scaleY:0,moveY:.027,phase:0},
+    {x:.725,y:.695,rx:.195,ry:.17,inflateX:.175,inflateY:.11,inflatePhase:-3.14,scaleX:0,scaleY:0,moveY:.023,phase:-.04}
    ]
   })
  });
@@ -40,34 +42,63 @@
   const image=new Image(),srcCanvas=document.createElement('canvas'),dstCanvas=document.createElement('canvas');
   const srcCtx=srcCanvas.getContext('2d',{willReadFrequently:true}),dstCtx=dstCanvas.getContext('2d');
   if(!srcCtx||!dstCtx)throw Error('2D canvas unavailable');
-  let W=0,H=0,pixels=null,ready=false,disposed=false,last=-Infinity,imageSrc='';
+  let W=0,H=0,surfaceW=0,surfaceH=0,cameraX=0,cameraY=0,pixels=null,ready=false,disposed=false,last=-Infinity,imageSrc='';
   const size=()=>{
    W=Math.round(clamp(val(config.width,210),32,720));H=Math.round(clamp(val(config.height,280),32,1000));
    canvas.width=srcCanvas.width=dstCanvas.width=W;
    canvas.height=srcCanvas.height=dstCanvas.height=H;
    last=-Infinity;
   };
+  // Keep the FULL source inside a virtual canvas for viewport mode. The
+  // camera is only the final output window; bouncing reveals pixels that
+  // would otherwise have been destroyed by an early crop.
   const snapshot=()=>{
    if(disposed||!image.naturalWidth)return;
    const top=clamp(val(config.cropTop,0),0,.89);
    const heightFraction=clamp(val(config.cropHeight,1),.08,1-top);
-   const sourceH=image.naturalHeight*heightFraction;
-   const sourceW=Math.min(image.naturalWidth,sourceH*W/H);
-   srcCtx.clearRect(0,0,W,H);
-   if(config.fit==='contain'){
-    // Photo Session needs the entire original pose. Letterbox transparently;
-    // preserve the existing crop/cover behavior for the Daisy dance preset.
-    const ratio=Math.min(W/image.naturalWidth,H/sourceH);
-    const dw=image.naturalWidth*ratio,dh=sourceH*ratio;
-    srcCtx.drawImage(image,0,image.naturalHeight*top,image.naturalWidth,sourceH,
-     (W-dw)/2,(H-dh)/2,dw,dh);
+   const cameraMode=config.cameraMode==='viewport'?'viewport':'crop';
+   if(cameraMode==='viewport'){
+    const scale=Math.max(W/image.naturalWidth,H/(image.naturalHeight*heightFraction));
+    surfaceW=Math.max(W,Math.ceil(image.naturalWidth*scale));
+    surfaceH=Math.max(H,Math.ceil(image.naturalHeight*scale));
+    cameraX=(surfaceW-W)/2;
+    cameraY=clamp(top*surfaceH,0,surfaceH-H);
+    srcCanvas.width=dstCanvas.width=surfaceW;
+    srcCanvas.height=dstCanvas.height=surfaceH;
+    srcCtx.clearRect(0,0,surfaceW,surfaceH);
+    srcCtx.drawImage(image,0,0,surfaceW,surfaceH);
    }else{
-    srcCtx.drawImage(image,(image.naturalWidth-sourceW)/2,image.naturalHeight*top,sourceW,sourceH,0,0,W,H);
+    surfaceW=W;surfaceH=H;cameraX=0;cameraY=0;
+    srcCanvas.width=dstCanvas.width=W;
+    srcCanvas.height=dstCanvas.height=H;
+    const sourceH=image.naturalHeight*heightFraction;
+    const sourceW=Math.min(image.naturalWidth,sourceH*W/H);
+    srcCtx.clearRect(0,0,W,H);
+    if(config.fit==='contain'){
+     // Keep existing Photo Session behavior unchanged.
+     const ratio=Math.min(W/image.naturalWidth,H/sourceH);
+     const dw=image.naturalWidth*ratio,dh=sourceH*ratio;
+     srcCtx.drawImage(image,0,image.naturalHeight*top,image.naturalWidth,sourceH,
+      (W-dw)/2,(H-dh)/2,dw,dh);
+    }else{
+     srcCtx.drawImage(image,(image.naturalWidth-sourceW)/2,image.naturalHeight*top,sourceW,sourceH,0,0,W,H);
+    }
    }
-   pixels=srcCtx.getImageData(0,0,W,H);
+   pixels=srcCtx.getImageData(0,0,surfaceW,surfaceH);
    ready=true;last=-Infinity;
-   ctx.clearRect(0,0,W,H);ctx.drawImage(srcCanvas,0,0);
+   ctx.clearRect(0,0,W,H);
+   ctx.drawImage(srcCanvas,-cameraX,-cameraY,surfaceW,surfaceH);
    config.onReady?.();
+  };
+  // Always draw the entire deformed sprite behind the fixed camera window.
+  // canvas clipping hides pixels only at presentation, never in source data.
+  const drawFrame=(layer,bounce,tilt)=>{
+   ctx.clearRect(0,0,W,H);
+   ctx.save();
+   ctx.translate(W/2,H*.54+bounce);
+   ctx.rotate(tilt);
+   ctx.drawImage(layer,-cameraX-W/2,-cameraY-H*.54,surfaceW,surfaceH);
+   ctx.restore();
   };
   image.onload=()=>{try{snapshot();}catch(err){ready=false;config.onError?.(err);}};
   image.onerror=()=>{ready=false;config.onError?.(new Error('Portrait failed to load: '+imageSrc));};
@@ -79,11 +110,11 @@
   }
   function configure(update={}){
    if(disposed)return;
-   const oldWidth=W,oldHeight=H,oldTop=config.cropTop,oldCrop=config.cropHeight,oldFit=config.fit;
+   const oldWidth=W,oldHeight=H,oldTop=config.cropTop,oldCrop=config.cropHeight,oldFit=config.fit,oldMode=config.cameraMode;
    config={...config,...update,zones:(update.zones??config.zones).map(z=>({...z}))};
    if(Math.round(val(config.width,210))!==W||Math.round(val(config.height,280))!==H)size();
    if(update.source!==undefined&&String(update.source)!==imageSrc)setSource(update.source);
-   else if(ready&&(W!==oldWidth||H!==oldHeight||oldTop!==config.cropTop||oldCrop!==config.cropHeight||oldFit!==config.fit))snapshot();
+   else if(ready&&(W!==oldWidth||H!==oldHeight||oldTop!==config.cropTop||oldCrop!==config.cropHeight||oldFit!==config.fit||oldMode!==config.cameraMode))snapshot();
    last=-Infinity;
   }
   function render(ms=0,energy=0){
@@ -99,43 +130,50 @@
     const energy01=clamp(val(energy,0),0,1);
     const bounce=Math.sin(2*phase)*(val(config.baseBounce,0)+val(config.feverBounce,0)*energy01);
     const tilt=Math.sin(phase)*val(config.tilt,0);
-    ctx.clearRect(0,0,W,H);
-    ctx.save();
-    ctx.translate(W/2,H*.54+bounce);
-    ctx.rotate(tilt);
-    ctx.drawImage(srcCanvas,-W/2,-H*.54,W,H);
-    ctx.restore();
+    drawFrame(srcCanvas,bounce,tilt);
     return true;
    }
    const original=pixels.data;
-   const output=new ImageData(new Uint8ClampedArray(original),W,H),buffer=output.data;
+   const output=new ImageData(new Uint8ClampedArray(original),surfaceW,surfaceH),buffer=output.data;
    const phase=ms*.001*clamp(val(config.tempo,136),1,400)/60*Math.PI*clamp(val(config.speed,.93),.01,5);
    const e=clamp(val(energy,0),0,1);
    const power=clamp(val(config.intensity,1)*val(config.expansion,1)*(1+e*clamp(val(config.feverInflate,0),0,3)),0,5);
-   const regions=config.zones.map(z=>({
-    x:val(z.x,.5),y:val(z.y,.5),rx:clamp(val(z.rx,.15),.005,1),
-    ry:clamp(val(z.ry,.12),.005,1),scaleX:val(z.scaleX,0),
-    scaleY:val(z.scaleY,0),moveY:val(z.moveY,0),phase:val(z.phase,0)
+   // Motion Lab coordinates describe the visible 210x280 viewport; map
+   // them into virtual source-surface space without changing the JSON.
+   const fx=W/surfaceW,fy=H/surfaceH;
+   const mappedZones=config.zones.map(z=>({
+    ...z,
+    x:(cameraX+val(z.x,.5)*W)/surfaceW,
+    y:(cameraY+val(z.y,.5)*H)/surfaceH,
+    rx:clamp(val(z.rx,.15)*fx,.005,1),
+    ry:clamp(val(z.ry,.12)*fy,.005,1),
+    scaleX:val(z.scaleX,0)*fx,
+    scaleY:val(z.scaleY,0)*fy,
+    moveY:val(z.moveY,0)*fy
+   }));
+   const regions=mappedZones.map(z=>({
+    x:z.x,y:z.y,rx:z.rx,ry:z.ry,
+    scaleX:z.scaleX,scaleY:z.scaleY,moveY:z.moveY,phase:val(z.phase,0)
    }));
    // Expansion is a separate optional module; legacy motion remains compatible.
    const inflationEngine=root.NeoRpgSpriteInflate?.version===1?root.NeoRpgSpriteInflate:null;
-   const expansions=inflationEngine?config.zones.map(z=>inflationEngine.prepare(z,phase,power)):null;
+   const expansions=inflationEngine?mappedZones.map(z=>inflationEngine.prepare(z,phase,power)):null;
    const displacement={dx:0,dy:0};
    if(power>0&&regions.length){
-    let xmin=W,xmax=0,ymin=H,ymax=0;
+    let xmin=surfaceW,xmax=0,ymin=surfaceH,ymax=0;
     for(const z of regions){
-     xmin=Math.min(xmin,Math.floor((z.x-z.rx)*W));
-     xmax=Math.max(xmax,Math.ceil((z.x+z.rx)*W));
-     ymin=Math.min(ymin,Math.floor((z.y-z.ry)*H));
-     ymax=Math.max(ymax,Math.ceil((z.y+z.ry)*H));
+     xmin=Math.min(xmin,Math.floor((z.x-z.rx)*surfaceW));
+     xmax=Math.max(xmax,Math.ceil((z.x+z.rx)*surfaceW));
+     ymin=Math.min(ymin,Math.floor((z.y-z.ry)*surfaceH));
+     ymax=Math.max(ymax,Math.ceil((z.y+z.ry)*surfaceH));
     }
-    xmin=clamp(xmin,0,W);xmax=clamp(xmax,0,W);
-    ymin=clamp(ymin,0,H);ymax=clamp(ymax,0,H);
+    xmin=clamp(xmin,0,surfaceW);xmax=clamp(xmax,0,surfaceW);
+    ymin=clamp(ymin,0,surfaceH);ymax=clamp(ymax,0,surfaceH);
     const pulse=Math.sin(2*phase-.5);
     for(let y=ymin;y<ymax;y++){
-     const ny=(y+.5)/H;
+     const ny=(y+.5)/surfaceH;
      for(let x=xmin;x<xmax;x++){
-      const nx=(x+.5)/W;let dx=0,dy=0;
+      const nx=(x+.5)/surfaceW;let dx=0,dy=0;
       for(const z of regions){
        const ux=(nx-z.x)/z.rx,uy=(ny-z.y)/z.ry,r2=ux*ux+uy*uy;
        if(r2>=1)continue;
@@ -149,10 +187,10 @@
        dx+=displacement.dx;dy+=displacement.dy;
       }
       if(Math.abs(dx)+Math.abs(dy)<1e-6)continue;
-      const sx=clamp((nx-dx)*W,0,W-1),sy=clamp((ny-dy)*H,0,H-1);
-      const x0=Math.floor(sx),x1=Math.min(W-1,x0+1),y0=Math.floor(sy),y1=Math.min(H-1,y0+1);
-      const tx=sx-x0,ty=sy-y0,index=(y*W+x)*4;
-      const a=(y0*W+x0)*4,b=(y0*W+x1)*4,c=(y1*W+x0)*4,d=(y1*W+x1)*4;
+      const sx=clamp((nx-dx)*surfaceW,0,surfaceW-1),sy=clamp((ny-dy)*surfaceH,0,surfaceH-1);
+      const x0=Math.floor(sx),x1=Math.min(surfaceW-1,x0+1),y0=Math.floor(sy),y1=Math.min(surfaceH-1,y0+1);
+      const tx=sx-x0,ty=sy-y0,index=(y*surfaceW+x)*4;
+      const a=(y0*surfaceW+x0)*4,b=(y0*surfaceW+x1)*4,c=(y1*surfaceW+x0)*4,d=(y1*surfaceW+x1)*4;
       for(let k=0;k<4;k++)
        buffer[index+k]=(original[a+k]*(1-tx)+original[b+k]*tx)*(1-ty)
           +(original[c+k]*(1-tx)+original[d+k]*tx)*ty;
@@ -162,9 +200,7 @@
    dstCtx.putImageData(output,0,0);
    const bounce=Math.sin(2*phase)*(val(config.baseBounce,0)+val(config.feverBounce,0)*e);
    const tilt=Math.sin(phase)*val(config.tilt,0);
-   ctx.clearRect(0,0,W,H);
-   ctx.save();ctx.translate(W/2,H*.54+bounce);ctx.rotate(tilt);
-   ctx.drawImage(dstCanvas,-W/2,-H*.54,W,H);ctx.restore();
+   drawFrame(dstCanvas,bounce,tilt);
    return true;
   }
   function dispose(){
@@ -174,5 +210,5 @@
   if(config.source)setSource(config.source);
   return Object.freeze({render,configure,setSource,dispose,get ready(){return ready;},get source(){return imageSrc;}});
  }
- root.NeoRpgSpriteDeformer=Object.freeze({version:3,create,presets});
+ root.NeoRpgSpriteDeformer=Object.freeze({version:4,create,presets});
 })(window);
