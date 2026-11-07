@@ -1228,10 +1228,13 @@ function benchMatchupValue(pokemonId,o){
  // A zero-cost attack is already available without a manual attachment.
  // Start from the actual uncharged candidate rather than assuming that a
  // replacement with no Energy in hand has no offensive readiness.
+ // Placing this Basic increases our Bench count by one. Forecast
+ // Bench-count attacks against the resulting board, not the old board.
+ const futureBenchCount=o.self.bench.length+1;
  const immediate=handEnergies.reduce((best,id)=>
   Math.max(best,projectedAttackValue({...candidate,energies:[id]},enemy,
-   o.turnSerial,o.self.bench.length)),
-  projectedAttackValue(candidate,enemy,o.turnSerial,o.self.bench.length));
+   o.turnSerial,futureBenchCount)),
+  projectedAttackValue(candidate,enemy,o.turnSerial,futureBenchCount));
  const weakType=(ownCard?.weaknesses||[]).some(w=>
   (card(enemy.id)?.types||[]).includes(w.type));
  return (canBeKnockedOut?-175:0)+(weakType?-45:0)+
