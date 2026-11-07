@@ -3,82 +3,13 @@
 // Neo Campus Photo Session. Render-only minigame. Only the RPG controller
 // awards credits, advances time, and saves metadata after a completed session.
 (function(root){
- const BASE='/rpg-assets/characters/barb/';
- const PORTRAIT=['neutral','happy','surprised','determined','irritated','vulnerable'];
- const CANDID=['walking','chatting','lounge','back-view'];
- const labels={
-  neutral:'Relaxed',happy:'Happy',surprised:'Surprised',determined:'Confident',
-  irritated:'Teasing',vulnerable:'Shy',walking:'Walking',chatting:'Chatting',
-  lounge:'Relaxing','back-view':'Looking away'
- };
- const captions={
-  neutral:'Barb: "How do you want me to stand?"',
-  happy:'Barb: "That is a smile you can keep!"',
-  surprised:'Barb: "You really surprised me there!"',
-  determined:'Barb: "Okay, serious model face. Got it!"',
-  irritated:'Barb: "That angle? You are kidding!"',
-  vulnerable:'Barb: "This one feels a little more personal."',
-  walking:'Barb: "I will walk by. Catch me when you are ready!"',
-  chatting:'Barb: "It is easier when we just talk!"',
-  lounge:'Barb: "Now this is how I like to relax."',
-  'back-view':'Barb: "The river looks lovely from here."'
- };
- const POSES=[...PORTRAIT.map(id=>({id,kind:'portrait',src:BASE+'expressionsv2/'+id+'.png'})),
-  ...CANDID.map(id=>({id,kind:'candid',src:BASE+'overworld/'+id+'.png'}))];
- const TASKS=[
-  {name:'A joyful portrait',pose:'happy',framing:'close',light:'warm',
-   hint:'Catch a genuine smile up close with warm lighting.'},
-  {name:'A walk by the river',pose:'walking',framing:'full',light:'bright',
-   hint:'Capture Barb in motion, showing her full pose.'},
-  {name:'A relaxed afternoon',pose:'lounge',framing:'medium',light:'soft',
-   hint:'A calm medium shot, gently lit.'},
-  {name:'An unexpected reaction',pose:'surprised',framing:'close',light:'bright',
-   hint:'Get close and capture her surprise.'},
-  {name:'Casual conversation',pose:'chatting',framing:'medium',light:'warm',
-   hint:'Catch Barb chatting naturally in a medium shot.'},
-  {name:'Quiet confidence',pose:'determined',framing:'medium',light:'soft',
-   hint:'A composed portrait with soft lighting.'},
-  {name:'Riverside silhouette',pose:'back-view',framing:'full',light:'warm',
-   hint:'A scenic full-body shot from behind.'}
- ];
-
- // Each prompt is a short performance with a genuine photo window.
- // The requested pose appears only after the player's action, not from a checklist.
- const REACTIONS=[
-  {id:'joke',label:'😄 Tell a joke',name:'Make her laugh',
-   frames:[{pose:'surprised',duration:1050,line:'Barb: "Wait, what?"'},
-    {pose:'happy',duration:1850,highlight:true,line:'Barb: "Pfft—okay, that was actually funny!"'},
-    {pose:'irritated',duration:1050,line:'Barb: "Don’t get too proud of yourself!"'}]},
-  {id:'walk',label:'🚶 Walk together',name:'A walk by the river',
-   frames:[{pose:'chatting',duration:1150,line:'Barb: "You set the pace!"'},
-    {pose:'walking',duration:2050,highlight:true,line:'Barb: "Quick, this is a good spot!"'},
-    {pose:'back-view',duration:1150,line:'Barb: "Look at the water from here."'}]},
-  {id:'designs',label:'✏️ Ask about designs',name:'A focused designer',
-   frames:[{pose:'neutral',duration:900,line:'Barb: "My latest idea?"'},
-    {pose:'determined',duration:1850,highlight:true,line:'Barb: "I know exactly how I want it to look."'},
-    {pose:'happy',duration:1250,line:'Barb: "Thanks for listening."'}]},
-  {id:'relax',label:'☕ Take a break',name:'Unposed and relaxed',
-   frames:[{pose:'chatting',duration:1000,line:'Barb: "We have time for a break, right?"'},
-    {pose:'lounge',duration:1950,highlight:true,line:'Barb: "This is actually pretty nice."'},
-    {pose:'neutral',duration:1200,line:'Barb: "One more photo?"'}]},
-  {id:'compliment',label:'💬 Compliment her',name:'A shy smile',
-   frames:[{pose:'surprised',duration:900,line:'Barb: "You mean that?"'},
-    {pose:'vulnerable',duration:1900,highlight:true,line:'Barb: "Okay… now I’m embarrassed."'},
-    {pose:'happy',duration:1200,line:'Barb: "You make this difficult!"'}]}
- ];
- const REACTION_TASKS=[
-  {name:'Catch a genuine laugh',pose:'happy',framing:'close',light:'warm',
-   hint:'Make Barb laugh. Get close and capture the smile before it fades.',action:'joke'},
-  {name:'A spontaneous riverside shot',pose:'walking',framing:'full',light:'bright',
-   hint:'Ask Barb to walk. Catch her mid-step in a wide frame.',action:'walk'},
-  {name:'The focused designer',pose:'determined',framing:'medium',light:'soft',
-   hint:'Ask about her designs. Catch her confident expression.',action:'designs'}
- ];
- const PHOTO_BACKGROUND='/rpg-assets/eye-level/park-eye-level-v2.webp';
+ // Character-specific poses, dialogue and challenges live in rpg_photo_profiles.js.
  const frameZoom={close:1.9,medium:1.42,full:1.06};
  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
  const $=(el,q)=>el.querySelector(q);
  let active=null;
+ const humanLocation=id=>({park:'RIVERSIDE PARK',arcade:'PIXEL PALACE',shop:'LUCKY DRAW',
+  cafe:'REST STOP CAFÉ',library:'LIBRARY',center:'TOURNAMENT HALL',home:'APARTMENT'})[id]||'NEO CAMPUS';
  function ensureStyle(){
   if(document.getElementById('neo-photo-session-style'))return;
   const link=document.createElement('link');
@@ -86,18 +17,20 @@
   link.href='/rpg_photo_session.css?v=barb-photo-snapshot-v6';
   document.head.append(link);
  }
- function pickTasks(){
-  const sorted=[TASKS[0],TASKS[1],TASKS[2+Math.floor(Math.random()*(TASKS.length-2))]];
-  return sorted.sort(()=>Math.random()-.5);
- }
- function pose(id){return POSES.find(p=>p.id===id)||POSES[0];}
  function open(options={}){
   if(active||typeof document==='undefined')return false;
   const npc=String(options.characterId||'barb').toLowerCase();
-  if(npc!=='barb')return false; // Only use assets inspected and approved for this character.
+  const profile=root.NeoRpgPhotoProfiles?.byId(npc);
+  if(!profile)return false;
+  const PORTRAIT=profile.portraitIds,CANDID=profile.candidIds,labels=profile.labels,
+   captions=profile.captions,POSES=profile.poses,REACTIONS=profile.actions,
+   REACTION_TASKS=profile.tasks;
+  const pose=id=>POSES.find(p=>p.id===id)||POSES[0];
+  const location=String(options.location||profile.defaultLocation||'park').toLowerCase();
+  const PHOTO_BACKGROUND=root.NeoRpgPhotoProfiles.backgroundFor(location);
   ensureStyle();
   const session={
-   name:options.name||'Barb',freePlay:!!options.freePlay,
+   id:npc,name:profile.name,location,freePlay:!!options.freePlay,
    savedAlbum:Array.isArray(options.savedAlbum)?options.savedAlbum.slice(-24):[],
    onCancel:options.onCancel,onComplete:options.onComplete,closed:false,
    mode:'reactions',poseId:'neutral',light:'warm',zoom:1.3,x:0,y:0,shots:[],
@@ -112,10 +45,10 @@
   shell.className='nps-root';
   shell.classList.toggle('nps-discreet',document.documentElement.dataset.rpgDiscreet==='on');
   shell.setAttribute('role','dialog');shell.setAttribute('aria-modal','true');
-  shell.setAttribute('aria-label','Photo Session with Barb');
+  shell.setAttribute('aria-label','Photo Session with '+session.name);
   shell.innerHTML='<div class="nps-shell">'+
-   '<header class="nps-top"><div><div class="nps-kicker">NEO CAMPUS · RIVERSIDE PARK</div>'+
-   '<h2>📷 Photo Session · Barb</h2></div><div class="nps-top-right">'+
+   '<header class="nps-top"><div><div class="nps-kicker">NEO CAMPUS · '+humanLocation(session.location)+'</div>'+
+   '<h2>📷 Photo Session · '+session.name+'</h2></div><div class="nps-top-right">'+
    '<span data-shotcount>Shot 1 / 3</span><strong data-score>0 pts</strong>'+
    '<button type="button" class="nps-btn nps-help" data-help>❔ Help</button>'+
    '<button type="button" class="nps-btn nps-close" data-close>✕ Close</button></div></header>'+
@@ -127,16 +60,16 @@
    '<span class="nps-check" data-check-light>Lighting</span>'+
    '<span class="nps-check" data-check-moment>Moment</span></div></div>'+
    '<div class="nps-main"><div class="nps-stage" data-stage data-light="warm">'+
-   '<img class="nps-actor" data-actor alt="Barb posing for the camera">'+
-   '<canvas class="nps-actor nps-motion-actor" data-motion aria-label="Barb animated pose"></canvas>'+
+   '<img class="nps-actor" data-actor alt="'+session.name+' posing for the camera">'+
+   '<canvas class="nps-actor nps-motion-actor" data-motion aria-label="'+session.name+' animated pose"></canvas>'+
    '<div class="nps-silhouette" aria-label="Character artwork hidden">◇</div>'+
    '<div class="nps-frame" aria-hidden="true"></div><div class="nps-cross" aria-hidden="true"></div>'+
    '<div class="nps-meter">✦ SHUTTER MOMENT<div class="nps-meter-track"><span data-meter></span></div><span class="nps-meter-label" data-meter-label>Start an interaction to catch a moment</span></div>'+
    '<div class="nps-mobile-zoom" data-mobile-zoom aria-label="Camera zoom controls">'+
    '<button type="button" class="nps-btn" data-mobile-zoom-in aria-label="Zoom in">+</button>'+
    '<button type="button" class="nps-btn" data-mobile-zoom-out aria-label="Zoom out">−</button></div>'+
-   '<div class="nps-caption" data-caption>Barb: "Ready when you are!"</div>'+
-   '<div class="nps-loading" data-loading>Loading Barb’s artwork…</div></div>'+
+   '<div class="nps-caption" data-caption>'+session.name+': "Ready when you are!"</div>'+
+   '<div class="nps-loading" data-loading>Loading '+session.name+'’s artwork…</div></div>'+
    '<div class="nps-controls" id="nps-controls-panel">'+
    '<section class="nps-section"><h3>📸 Session style</h3>'+
    '<div class="nps-mode"><button class="nps-btn" data-mode="reactions">🎭 Reactions</button>'+
@@ -144,7 +77,7 @@
    '<button class="nps-btn" data-mode="candid">Candid</button></div>'+
    '<div class="nps-camerarow" data-auto-wrap><button class="nps-btn" data-auto type="button">Auto poses: Off</button></div></section>'+
    '<section class="nps-section nps-react-actions" data-reactions>'+
-   '<h3>💬 Interact with Barb</h3><p class="nps-hint">Choose what to say. Barb reacts in a short sequence. Capture the perfect expression!</p>'+
+   '<h3>💬 Interact with '+session.name+'</h3><p class="nps-hint">Choose an interaction. Watch the reaction and capture the best moment!</p>'+
    '<div class="nps-react-grid" data-reaction-actions></div>'+
    '<p class="nps-react-status" data-reaction-status>Choose an interaction to begin.</p></section>'+
    '<section class="nps-section" data-pose-section><h3>✦ Barb’s poses / moods</h3><div class="nps-choice-grid" data-poses></div></section>'+
@@ -175,6 +108,7 @@
   const backdrop=new Image();
   backdrop.decoding='async';
   backdrop.src=PHOTO_BACKGROUND;
+  stage.style.backgroundImage='url("'+PHOTO_BACKGROUND+'")';
   session.backdrop=backdrop;
   function camera(){
    actor.style.setProperty('--zoom',String(session.zoom));
@@ -279,9 +213,9 @@
    const serial=session.reactionSerial;
    drawChoices();
    const status=$(shell,'[data-reaction-status]');
-   status.textContent='Barb is getting ready…';
+   status.textContent=session.name+' is getting ready…';
    loading.hidden=false;
-   loading.textContent='Preparing Barb’s reactions…';
+   loading.textContent='Preparing '+session.name+'’s reactions…';
    const prepared=await Promise.all(action.frames.map(frame=>preloadPose(frame.pose)));
    if(session.closed||serial!==session.reactionSerial)return;
    loading.hidden=true;
@@ -301,7 +235,7 @@
     const started=performance.now();
     session.reaction={id:action.id,pose:frame.pose,highlight:!!frame.highlight,
      start:started,duration:frame.duration};
-    status.textContent=frame.highlight?'📷 PHOTO OPPORTUNITY! Capture Barb now!':
+    status.textContent=frame.highlight?'📷 PHOTO OPPORTUNITY! Capture '+session.name+' now!':
      'Barb: '+(i===0?'Reacting…':'The moment is changing…');
     updateFeedback();
     await new Promise(resolve=>{
@@ -460,11 +394,11 @@
    guide.innerHTML='<div class="nps-guide-card">'+
     '<div class="nps-step-tag">A QUICK GUIDE · THREE PHOTOS</div>'+
     '<h3>How to play 📷</h3>'+
-    '<p>Barb reacts to what you say. This time, the goal is not to select a pose: it is to <b>cause</b> a reaction and photograph it while it happens.</p>'+
+    '<p>'+session.name+' reacts to what you say. Your goal is to <b>cause</b> a reaction and photograph it while it happens.</p>'+
     '<div class="nps-guide-steps">'+
-    '<div><b>1 · Talk to Barb</b><div>Choose an interaction below the camera on mobile (or on the right on desktop), such as a joke or asking about her designs.</div></div>'+
-    '<div><b>2 · Prepare your shot</b><div>Pinch or use the camera’s +/− buttons to zoom; drag to frame her. Lighting and other modes are under Settings on mobile.</div></div>'+
-    '<div><b>3 · Catch the reaction!</b><div>When Barb shows the requested expression, the bar fills briefly. SNAP before the moment ends! Retry without penalty.</div></div></div>'+
+    '<div><b>1 · Talk to '+session.name+'</b><div>Choose an interaction below the camera on mobile (or on the right on desktop). Different choices reveal different poses.</div></div>'+
+    '<div><b>2 · Prepare your shot</b><div>Pinch or use the camera’s +/− buttons to zoom and drag to frame the character. Lighting and other modes are under Settings on mobile.</div></div>'+
+    '<div><b>3 · Catch the reaction!</b><div>When the requested expression appears, the bar fills briefly. SNAP before the moment ends! Retry without penalty.</div></div></div>'+
     '<p>There is no countdown between interactions. A reaction itself is brief, but you can trigger it again. Directed and Candid modes remain available for free posing.</p>'+
     '<div class="nps-guide-actions"><button type="button" class="nps-btn nps-primary" data-start-shooting>Got it · Start shooting!</button></div></div>';
    $(shell,'.nps-shell').append(guide);
@@ -597,11 +531,11 @@
    return {fullImage,thumbnail};
   }
   function showAlbum(){
-   const stored=session.savedAlbum.filter(p=>p?.character==='barb');
+   const stored=session.savedAlbum.filter(p=>p?.character===session.id);
    const combined=[...stored,...session.shots].slice(-24).reverse();
    const report=document.createElement('div');
    report.className='nps-report';
-   const title=document.createElement('h3');title.textContent='📸 Barb’s photo album';
+   const title=document.createElement('h3');title.textContent='📸 '+session.name+'’s photo album';
    const subtitle=document.createElement('p');
    subtitle.textContent=combined.length?'Saved compositions and photographs from this session.':'No photos yet. Start shooting!';
    report.append(title,subtitle);
@@ -617,7 +551,7 @@
      const img=document.createElement('img');
      img.className='nps-photo-thumbnail';
      img.src=p.snapshot||p.thumbnail;
-     img.alt='Camera photo of Barb: '+(labels[p.pose]||'pose');
+     img.alt='Camera photo of '+session.name+': '+(labels[p.pose]||'pose');
      img.loading='lazy';card.prepend(img);
     }else{
      const older=document.createElement('div');older.className='nps-photo-legacy';
@@ -646,7 +580,7 @@
     $(shell,'[data-caption]').textContent='Camera: '+error.message;
     console.warn('Photo capture unavailable',error);return;
    }
-   const shot={character:'barb',day:null,pose:session.poseId,framing:task.framing,
+   const shot={character:session.id,location:session.location,day:null,pose:session.poseId,framing:task.framing,
     light:session.light,zoom:Number(session.zoom.toFixed(2)),
     x:Math.round(session.x),y:Math.round(session.y),score:points.score,task:task.name,
     thumbnail:capture.thumbnail};
@@ -700,7 +634,7 @@
    }
    const weakest=checks.slice().sort((a,b)=>a[1]/a[2]-b[1]/b[2])[0];
    $(review,'[data-review-message]').textContent=points.score>=85?
-    'Barb: "That one is great! Can we keep it?" You can keep it or practice again.':
+    session.name+': "That one is great! Can we keep it?" You can keep it or practice again.':
     points.score>=65?
     'Nice shot! You could improve the '+weakest[0].toLowerCase()+' for a higher score.':
     'Almost there! The biggest improvement would be '+weakest[0].toLowerCase()+'. Try again—there is no penalty.';
@@ -723,8 +657,8 @@
      mini.append(label);
     });
     $(shell,'[data-caption]').textContent=shot.score>=85?
-     'Barb: "That looks fantastic! Show me!"':shot.score>=65?
-     'Barb: "Hey, I like that one!"':'Barb: "We can try a new angle next time!"';
+     session.name+': "That looks fantastic! Show me!"':shot.score>=65?
+     session.name+': "Hey, I like that one!"':session.name+': "We can try a new angle next time!"';
     if(session.shots.length===3){showResult();}
     else{
      taskUI();
@@ -741,7 +675,7 @@
    const creditReward=average>=85?14:average>=65?10:6;
    const report=document.createElement('div');
    report.className='nps-report';
-   report.innerHTML='<h3>Photo Session complete!</h3><p>Barb looks over the photos with you. Every picture has its own personality.</p>';
+   report.innerHTML='<h3>Photo Session complete!</h3><p>'+session.name+' looks over the photos with you. Every picture has its own personality.</p>';
    const cards=document.createElement('div');cards.className='nps-report-items';
    for(const [label,value] of [['Average score',average+'/100'],['Best photo',Math.max(...session.shots.map(p=>p.score))+'/100'],
     ['RPG reward',session.freePlay?'Free play':creditReward+' credits']]){
@@ -763,7 +697,7 @@
    finish.textContent=session.freePlay?'Finish practice':'Save session and collect';
    finish.onclick=()=>{
     const result={average,credits:session.freePlay?0:creditReward,
-     photos:session.shots.map(({snapshot,...saved})=>saved),characterId:'barb'};
+     photos:session.shots.map(({snapshot,...saved})=>saved),characterId:session.id};
     close(true,result);
    };
    buttons.append(cancel,finish);report.append(buttons);
@@ -859,5 +793,7 @@
   showGuide();
   return true;
  }
- root.NeoRpgPhotoSession=Object.freeze({open,isOpen:()=>!!active,poses:POSES.map(p=>({id:p.id,kind:p.kind,path:p.src}))});
+ root.NeoRpgPhotoSession=Object.freeze({open,isOpen:()=>!!active,
+  characters:()=>root.NeoRpgPhotoProfiles?.list()||[],
+  posesFor:id=>root.NeoRpgPhotoProfiles?.byId(id)?.poses||[]});
 })(typeof window==='undefined'?null:window);
