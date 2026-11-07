@@ -2534,7 +2534,9 @@ function launchPreparedDuel(){
  if(presentation?.matchModel)presentation.show(presentation.matchModel(pending,{cast,cups:TOURNAMENTS.cups}));
 }
 
-function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false,competition=null){
+let themeDuelPreparing=false;
+let themedCataloguePromise=null;
+async function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=null,bondChallenge=false,competition=null){
  if(tournamentDayCup()&&tournament?.tournamentId!==tournamentDayCup().id)return;
  syncDeckStudioSave(); // A new duel always snapshots the latest saved 60-card deck.
  if(state.deckJourney&&!state.deckJourney.starter){showStarterChoice();return;}
@@ -2543,22 +2545,40 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  if(!tournament&&!competition&&!confirmTimeAdvance())return;
  if(competition&&!COMPETE.available(state).some(e=>e.id===competition.id&&e.npc===id))return;
  const theme=competition?.kind==='theme'?COMPETE.themeForDay(state.day):null;
+ let themeCatalog=null;
  if(theme){
-  const legality=COMPETE.legalThemeDeck(state.deckJourney?.deck,theme,COLLECT.packRarity);
+  if(themeDuelPreparing)return;
+  themeDuelPreparing=true;
+  try{
+   if(!themedCataloguePromise)themedCataloguePromise=Promise.all(
+    Object.keys(COLLECT.SETS).map(async set=>{
+     const response=await fetch('/cards/'+set+'.json');
+     if(!response.ok)throw Error('Card catalogue unavailable');
+     return response.json();
+    })
+   ).then(groups=>new Map(groups.flat().filter(card=>card?.id).map(card=>[card.id,card])))
+    .catch(err=>{themedCataloguePromise=null;throw err;});
+   themeCatalog=await themedCataloguePromise;
+  }catch(err){say('Tournament Desk','Could not load card details. Please try again.');return;}
+  finally{themeDuelPreparing=false;}
+  if(state.pendingDuel||!COMPETE.available(state).some(e=>e.id===competition.id))return;
+  const legality=COMPETE.legalThemeDeck(state.deckJourney?.deck,theme,COLLECT.packRarity,themeCatalog);
   if(!legality.valid){say('Tournament Desk',legality.reason+' Edit your saved deck and try again.');return;}
  }
  if(sideQuest&&(!SIDE.canDuel(state,sideQuest.id,currentPeople())||SIDE.byId(sideQuest.id)?.stages[sideQuest.step]?.npc!==id))return;
  if(bondChallenge&&!BONDS.canChallenge(state,id,BOND_PLAN))return;
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
  const c=cast[id];
- // Reuse existing starter lists and authored NPC recipes. Only compatible decks enter the pool.
- const eligibleThemeRecipes=theme?Object.values(NPC_DECKS?.STARTING_RECIPES||{})
-  .filter(cards=>COMPETE.legalThemeDeck(cards,theme,COLLECT.packRarity).valid):[];
- const themeBank=theme?(eligibleThemeRecipes.length>=3?eligibleThemeRecipes:
-  COLLECT.starters.map(entry=>entry.cards)
-   .filter(cards=>COMPETE.legalThemeDeck(cards,theme,COLLECT.packRarity).valid)):null;
- const sharedThemeDeck=themeBank?.length?[...themeBank[(state.day+competition.round*3)%themeBank.length]]:null;
- if(theme&&!sharedThemeDeck){say('Tournament Desk','No legal CPU deck is available for these restrictions.');return;}
+ // Shared deckbuilding recipes, adapted to the event rules. No per-character
+ // tournament deck files: every round picks an existing profile as a template.
+ const sourceBank=theme?[...Object.values(NPC_DECKS?.STARTING_RECIPES||{}),
+  ...COLLECT.starters.map(entry=>entry.cards)]:null;
+ const template=theme?sourceBank[(state.day+competition.round*3)%sourceBank.length]:null;
+ const sharedThemeDeck=theme?COMPETE.buildThemeDeck(theme,template,COLLECT.packRarity,themeCatalog,
+  state.day+competition.round):null;
+ if(theme&&(!sharedThemeDeck||!NPC_DECKS.validateRecipe(sharedThemeDeck,themeCatalog).valid)){
+  say('Tournament Desk','The themed opponent deck could not be prepared. Please try again.');return;
+ }
  const npcEditedCards=sharedThemeDeck||PARTNER.snapshot(state,id,c.deck);
  const npcDeckVariant=NPC_DECKS?.variantForDuel?.('npc-'+id+'-'+state.day+'-'+state.slot+'-'+state.results.length)??0;
  const npcDeckTier=NPC_DECKS?.tierForOpponent?.(state,id)??(state.day<=30?1:state.day<=60?2:3);
