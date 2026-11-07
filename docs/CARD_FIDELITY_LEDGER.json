@@ -22244,7 +22244,11 @@
           "kind": "attack",
           "index": 0,
           "name": "White-Hot Flame",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Active headless_duel.js calls ATTACK.compile; neo_attack_batch_v092.js registers White-Hot Flame. Typed Fire+Lightning discard selection, missing-payment no-damage route, and coin recoil branches exist. Source only; no reducer execution or independent historical ruling validation."
+          ],
+          "scope": "Source-only live headless reducer and registered compiler trace; unexecuted, historical rulings unverified."
         }
       ]
     },
@@ -22257,13 +22261,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Lightning Cut",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Lightning Cut and Water Slash not found in any registered named attack-extension modules inspected; generic exact-text patterns do not match multi-part coin/bench splash or excess Energy/Resistance clauses. ATTACK.compile null would reject attack in headless_duel.js. Source only; requires implementation and reducer execution."
+          ],
+          "scope": "Source-only live headless reducer and registered compiler trace; unexecuted, historical rulings unverified."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Water Slash",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Lightning Cut and Water Slash not found in any registered named attack-extension modules inspected; generic exact-text patterns do not match multi-part coin/bench splash or excess Energy/Resistance clauses. ATTACK.compile null would reject attack in headless_duel.js. Source only; requires implementation and reducer execution."
+          ],
+          "scope": "Source-only live headless reducer and registered compiler trace; unexecuted, historical rulings unverified."
         }
       ]
     },
@@ -22276,7 +22288,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Reflect Shield",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Psyburst registered in neo_attack_batch_v048.js and energy-discard decision in headless_duel.js. Reflect Shield has no named implementation in inspected registered extension modules; generic pattern cannot express next-turn retaliation on attack damage. Source only; historical rulings pending."
+          ],
+          "scope": "Source-only live headless reducer and registered compiler trace; unexecuted, historical rulings unverified."
         },
         {
           "kind": "attack",
@@ -22285,8 +22301,10 @@
           "status": "partial",
           "evidence": [
             "test_typed_energy_discard_audit.js: Psyburst auto-discards one of four identical Fire Energy cards, preserves ineligible Energy and logs the discard. Reflect Shield remains unreviewed.",
-            "https://www.tcgcollector.com/cards/4927/mewtwo-neo-destiny-109-105"
-          ]
+            "https://www.tcgcollector.com/cards/4927/mewtwo-neo-destiny-109-105",
+            "Psyburst registered in neo_attack_batch_v048.js and energy-discard decision in headless_duel.js. Reflect Shield has no named implementation in inspected registered extension modules; generic pattern cannot express next-turn retaliation on attack damage. Source only; historical rulings pending."
+          ],
+          "scope": "Source-only live headless reducer and registered compiler trace; unexecuted, historical rulings unverified."
         }
       ]
     },
@@ -22299,7 +22317,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Flashing Eyes",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Flashing Eyes not found in registered named attack modules; generic status patterns do not match three flips/exact heads mapping. ATTACK.compile null would reject. Source only; requires implementation and execution."
+          ],
+          "scope": "Source-only live headless reducer and registered compiler trace; unexecuted, historical rulings unverified."
         }
       ]
     },
@@ -22312,7 +22334,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Thundersquall",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Thundersquall explicitly registered in neo_attack_batch_v090.js as bench-target with energyBenchMultiplier 10. Need verify downstream bench-target selection, count of attached Energy cards versus units, Bench protection, KOs and turn ownership. Source only."
+          ],
+          "scope": "Source-only live headless reducer and registered compiler trace; unexecuted, historical rulings unverified."
         }
       ]
     },
