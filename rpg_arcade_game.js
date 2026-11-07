@@ -197,25 +197,52 @@ function startArcadeAudio(bpm,leadMs){
 function open(options={}){
  if(active||typeof options.onComplete!=='function')return false;
  if(!document.getElementById('neo-circuit-v2-style')){const st=document.createElement('style');st.id='neo-circuit-v2-style';st.textContent=CSS;document.head.append(st);}
- const isDaisy=String(options.characterId||options.id||options.name||'').toLowerCase().includes('daisy');
- const host=document.createElement('section');host.className='nc-mask'+(isDaisy?' nc-daisy':'');host.setAttribute('role','dialog');host.setAttribute('aria-modal','true');host.setAttribute('aria-label',isDaisy?'Daisy Dance Battle rhythm game':'Neon Circuit arcade rhythm game');
+ const characterId=String(options.characterId||options.id||options.name||'').toLowerCase();
+ const isRina=characterId==='rina';
+ const isDance=characterId==='daisy'||isRina;
+ const host=document.createElement('section');host.className='nc-mask'+(isDance?(isRina?' nc-daisy nc-rina':' nc-daisy'):'');host.setAttribute('role','dialog');host.setAttribute('aria-modal','true');host.setAttribute('aria-label',isDance?(isRina?'Rina':'Daisy')+' Dance Battle rhythm game':'Neon Circuit arcade rhythm game');
  host.innerHTML='<div class="nc-cabinet"><header class="nc-bar"><div class="nc-logo">◈ &nbsp; PIXEL PALACE / NEON CIRCUIT</div><button class="nc-close" type="button">EXIT ×</button></header><div class="nc-layout"><div class="nc-main"><div class="nc-heading"><div><span class="nc-overline">ARCADE RUSH · RHYTHM CHALLENGE</span><h1 class="nc-title">NEON CIRCUIT</h1><div class="nc-sub">Playing against <span class="nc-rival"></span></div></div><span class="nc-progress-text">0:00 / 0:16</span></div><div class="nc-stage"><canvas class="nc-canvas" aria-label="Three-lane rhythm track"></canvas><canvas class="nc-note-canvas" aria-hidden="true"></canvas><div class="nc-dance-actor"><canvas class="nc-actor-canvas" aria-label="Daisy rhythmic animation"></canvas></div><div class="nc-dance-hud"><span class="nc-dance-tag">♫ DAISY · DANCE BATTLE</span><div class="nc-dance-fever"><div class="nc-fever-fill"></div></div></div><div class="nc-dance-comment" aria-live="polite">Come on, keep up! ♥</div><div class="nc-eval"></div><div class="nc-overlay"><div class="nc-overlay-inner"><div class="nc-chip">PIXEL PALACE · ARCADE RUSH</div><h2>BEAT THE CIRCUIT</h2><p>Hit notes as they meet the glowing line. Press <b>A / S / D</b> or tap the three colored buttons. Build a combo and beat your rival’s score.</p><button type="button" class="nc-action nc-start">START CHALLENGE</button><button type="button" class="nc-action nc-secondary nc-cancel">NOT NOW</button></div></div></div><div class="nc-pads"><button class="nc-pad" data-lane="0" style="--c:#40dafa" type="button">A · LEFT</button><button class="nc-pad" data-lane="1" style="--c:#ffbd55" type="button">S · CENTER</button><button class="nc-pad" data-lane="2" style="--c:#ff55cb" type="button">D · RIGHT</button></div></div><aside class="nc-side"><div class="nc-stat"><small>SCORE</small><strong class="nc-score">000000</strong></div><div class="nc-stat"><small>COMBO</small><strong class="nc-combo">× 0</strong></div><div class="nc-stat"><small>ACCURACY</small><strong class="nc-accuracy">100%</strong></div></aside></div><footer class="nc-foot"><span>⌨ A · S · D &nbsp; / &nbsp; TAP</span><div class="nc-meter"><div class="nc-meter-fill"></div></div><span>ESC TO EXIT</span></footer></div>';
- if(isDaisy)host.innerHTML="<div class=\"nc-cabinet\"><header class=\"nc-bar\"><div class=\"nc-logo\">◈ NEO CAMPUS &nbsp; / &nbsp; ♥ PIXEL PALACE</div><button class=\"nc-close\" type=\"button\">EXIT ×</button></header>\n<div class=\"nc-layout\"><main class=\"nc-main\"><div class=\"nc-heading\"><div><span class=\"nc-overline\">✦ DAISY / PIXEL PALACE</span><h1 class=\"nc-title\">DANCE BATTLE ♡</h1><div class=\"nc-sub\">RHYTHM MINI-GAME · CENTER STAGE</div></div><div class=\"nc-track-meta\"><strong class=\"nc-song-title\">♫ Electric Heart</strong><small class=\"nc-song-sub\">Daisy · 136 BPM</small><div class=\"nc-track-progress\"><div class=\"nc-meter\"><div class=\"nc-meter-fill\"></div></div><span class=\"nc-progress-text\">0:00 / 1:47</span></div></div></div>\n<div class=\"nc-stage\"><canvas class=\"nc-canvas\" aria-label=\"Neon dance stage\"></canvas><div class=\"nc-dance-actor\"><canvas class=\"nc-actor-canvas\" aria-label=\"Daisy dancing\"></canvas></div><div class=\"nc-dance-comment\"><small>DAISY ♡</small><span class=\"nc-dance-comment-text\">Nice! Keep that rhythm! ♥</span></div><canvas class=\"nc-note-canvas\" aria-label=\"Horizontal rhythm timing line\"></canvas><div class=\"nc-eval\"></div><div class=\"nc-overlay\"><div class=\"nc-overlay-inner\"><div class=\"nc-chip\">♫ ELECTRIC HEART · 136 BPM</div><h2>DANCE WITH DAISY</h2><p>Hit <b>●</b> notes as they reach the <b>single center circle</b> (Space or HIT). For <b>arrow notes</b>, swipe the indicated direction or press W/A/S/D. On mobile, tap or swipe directly on the stage.</p><button class=\"nc-action nc-start\" type=\"button\">START DANCE BATTLE</button><a class=\"nc-action nc-secondary nc-motion-lab-link\" href=\"/rpg_sprite_motion_lab.html\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-block;text-decoration:none\">⚙ AJUSTAR MOVIMIENTO</a><button class=\"nc-action nc-secondary nc-cancel\" type=\"button\">NOT NOW</button></div></div></div>\n<div class=\"nc-pads\" aria-label=\"Tap and swipe rhythm controls\"><button class=\"nc-pad nc-hit-pad\" data-lane=\"0\" style=\"--c:#ff76df\" type=\"button\"><span class=\"nc-key\">●</span> HIT</button><button class=\"nc-pad\" data-lane=\"1\" style=\"--c:#8bddff\" type=\"button\"><span class=\"nc-key\">↑</span> W</button><button class=\"nc-pad\" data-lane=\"2\" style=\"--c:#8bddff\" type=\"button\"><span class=\"nc-key\">→</span> D</button><button class=\"nc-pad\" data-lane=\"3\" style=\"--c:#8bddff\" type=\"button\"><span class=\"nc-key\">↓</span> S</button><button class=\"nc-pad\" data-lane=\"4\" style=\"--c:#8bddff\" type=\"button\"><span class=\"nc-key\">←</span> A</button></div></main>\n<aside class=\"nc-side\"><div class=\"nc-stat\"><small>SCORE</small><strong class=\"nc-score\">000000</strong></div><div class=\"nc-stat\"><small>COMBO</small><strong class=\"nc-combo\">× 0</strong></div><div class=\"nc-stat\"><small>ACCURACY</small><strong class=\"nc-accuracy\">100%</strong></div><div class=\"nc-stat nc-fever-stat\"><small>🔥 FEVER</small><strong class=\"nc-fever-value\">0%</strong><div class=\"nc-fever-track\"><div class=\"nc-fever-fill\"></div></div></div></aside></div>\n<footer class=\"nc-foot\"><span>INPUT · ● SPACE / TAP &nbsp; · &nbsp; ↑ W &nbsp; → D &nbsp; ↓ S &nbsp; ← A / SWIPE</span><div class=\"nc-meter\"><div class=\"nc-meter-fill\"></div></div><span>ESC TO EXIT</span></footer></div>";
+ if(isDance)host.innerHTML="<div class=\"nc-cabinet\"><header class=\"nc-bar\"><div class=\"nc-logo\">◈ NEO CAMPUS &nbsp; / &nbsp; ♥ PIXEL PALACE</div><button class=\"nc-close\" type=\"button\">EXIT ×</button></header>\n<div class=\"nc-layout\"><main class=\"nc-main\"><div class=\"nc-heading\"><div><span class=\"nc-overline\">✦ DAISY / PIXEL PALACE</span><h1 class=\"nc-title\">DANCE BATTLE ♡</h1><div class=\"nc-sub\">RHYTHM MINI-GAME · CENTER STAGE</div></div><div class=\"nc-track-meta\"><strong class=\"nc-song-title\">♫ Electric Heart</strong><small class=\"nc-song-sub\">Daisy · 136 BPM</small><div class=\"nc-track-progress\"><div class=\"nc-meter\"><div class=\"nc-meter-fill\"></div></div><span class=\"nc-progress-text\">0:00 / 1:47</span></div></div></div>\n<div class=\"nc-stage\"><canvas class=\"nc-canvas\" aria-label=\"Neon dance stage\"></canvas><div class=\"nc-dance-actor\"><canvas class=\"nc-actor-canvas\" aria-label=\"Daisy dancing\"></canvas></div><div class=\"nc-dance-comment\"><small>DAISY ♡</small><span class=\"nc-dance-comment-text\">Nice! Keep that rhythm! ♥</span></div><canvas class=\"nc-note-canvas\" aria-label=\"Horizontal rhythm timing line\"></canvas><div class=\"nc-eval\"></div><div class=\"nc-overlay\"><div class=\"nc-overlay-inner\"><div class=\"nc-chip\">♫ ELECTRIC HEART · 136 BPM</div><h2>DANCE WITH DAISY</h2><p>Hit <b>●</b> notes as they reach the <b>single center circle</b> (Space or HIT). For <b>arrow notes</b>, swipe the indicated direction or press W/A/S/D. On mobile, tap or swipe directly on the stage.</p><button class=\"nc-action nc-start\" type=\"button\">START DANCE BATTLE</button><a class=\"nc-action nc-secondary nc-motion-lab-link\" href=\"/rpg_sprite_motion_lab.html\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-block;text-decoration:none\">⚙ AJUSTAR MOVIMIENTO</a><button class=\"nc-action nc-secondary nc-cancel\" type=\"button\">NOT NOW</button></div></div></div>\n<div class=\"nc-pads\" aria-label=\"Tap and swipe rhythm controls\"><button class=\"nc-pad nc-hit-pad\" data-lane=\"0\" style=\"--c:#ff76df\" type=\"button\"><span class=\"nc-key\">●</span> HIT</button><button class=\"nc-pad\" data-lane=\"1\" style=\"--c:#8bddff\" type=\"button\"><span class=\"nc-key\">↑</span> W</button><button class=\"nc-pad\" data-lane=\"2\" style=\"--c:#8bddff\" type=\"button\"><span class=\"nc-key\">→</span> D</button><button class=\"nc-pad\" data-lane=\"3\" style=\"--c:#8bddff\" type=\"button\"><span class=\"nc-key\">↓</span> S</button><button class=\"nc-pad\" data-lane=\"4\" style=\"--c:#8bddff\" type=\"button\"><span class=\"nc-key\">←</span> A</button></div></main>\n<aside class=\"nc-side\"><div class=\"nc-stat\"><small>SCORE</small><strong class=\"nc-score\">000000</strong></div><div class=\"nc-stat\"><small>COMBO</small><strong class=\"nc-combo\">× 0</strong></div><div class=\"nc-stat\"><small>ACCURACY</small><strong class=\"nc-accuracy\">100%</strong></div><div class=\"nc-stat nc-fever-stat\"><small>🔥 FEVER</small><strong class=\"nc-fever-value\">0%</strong><div class=\"nc-fever-track\"><div class=\"nc-fever-fill\"></div></div></div></aside></div>\n<footer class=\"nc-foot\"><span>INPUT · ● SPACE / TAP &nbsp; · &nbsp; ↑ W &nbsp; → D &nbsp; ↓ S &nbsp; ← A / SWIPE</span><div class=\"nc-meter\"><div class=\"nc-meter-fill\"></div></div><span>ESC TO EXIT</span></footer></div>";
 
  document.body.append(host);
  const $=q=>host.querySelector(q),$$=q=>Array.from(host.querySelectorAll(q));
+ if(isRina){
+  // Reuse all the proven Dance Battle UI and controls without a second copy.
+  $('.nc-overline').textContent='✦ RINA / PIXEL PALACE';
+  $('.nc-song-sub').textContent='Rina · 136 BPM';
+  $('.nc-dance-tag').textContent='♫ RINA · DANCE BATTLE';
+  $('.nc-dance-comment small').textContent='RINA ♡';
+  $('.nc-dance-comment-text').textContent='Follow the beat with me! ♡';
+  $('.nc-overlay .nc-chip').textContent='♫ ELECTRIC HEART · RINA · 136 BPM';
+  $('.nc-overlay h2').textContent='DANCE WITH RINA';
+  $('.nc-actor-canvas').setAttribute('aria-label','Rina dancing');
+  $('.nc-motion-lab-link')?.remove(); // Daisy-only calibrated editor
+ }
  // Center Stage intentionally has no rival label; the classic cabinet still does.
  const rivalLabel=$('.nc-rival');
  if(rivalLabel)rivalLabel.textContent=options.name||'your rival';
  const canvas=$('.nc-canvas'),ctx=canvas.getContext('2d'),notesCanvas=$('.nc-note-canvas'),notesCtx=notesCanvas.getContext('2d');
  if(!ctx||!notesCtx){host.remove();return false;}
  const previous=document.activeElement;
- const session={host,frame:0,playing:false,finished:false,audio:null,start:0,notes:(isDaisy?LONG_DAISY_PATTERN:LONG_PATTERN).map((lane,i)=>({lane,at:LEAD+i*(isDaisy?DAISY_STEP:STEP),done:false})),duration:LEAD+((isDaisy?LONG_DAISY_PATTERN:LONG_PATTERN).length-1)*(isDaisy?DAISY_STEP:STEP)+WINDOW+200,fever:0,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],judgeFx:null,fxUntil:0,feedbackTimer:0,lastTime:0};
+ const session={host,frame:0,playing:false,finished:false,audio:null,start:0,notes:(isDance?LONG_DAISY_PATTERN:LONG_PATTERN).map((lane,i)=>({lane,at:LEAD+i*(isDance?DAISY_STEP:STEP),done:false})),duration:LEAD+((isDance?LONG_DAISY_PATTERN:LONG_PATTERN).length-1)*(isDance?DAISY_STEP:STEP)+WINDOW+200,fever:0,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],judgeFx:null,fxUntil:0,feedbackTimer:0,lastTime:0};
  active=session;
  const asClock=ms=>{const n=Math.floor(ms/1000);return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
  $('.nc-progress-text').textContent='0:00 / '+asClock(session.duration);
  // Use the local motion-lab tuning only in Daisy Dance Battle.
- function daisyMotionConfig(){
+ function danceMotionConfig(){
+  if(isRina)return {
+   source:'/rpg-assets/characters/rina/expressionsv2/neutral.png',
+   width:210,height:280,fps:22,tempo:119,speed:.9,
+   cameraMode:'viewport',cameraFit:'dialogue-bust',dialogueBustScale:2.78,
+   cropTop:0,cropHeight:1,
+   baseBounce:0,feverBounce:3.2,tilt:0,
+   intensity:.52,feverInflate:.65,
+   // Independent, conservative starting profile for Rina's standing portrait.
+   zones:[
+    {x:.34,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-.2,scaleX:0,scaleY:0,moveY:.012,phase:0},
+    {x:.67,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-3.14,scaleX:0,scaleY:0,moveY:.012,phase:-.04}
+   ]
+  };
   const config={preset:'daisyDance'};
   try{
    const saved=JSON.parse(localStorage.getItem('neoRpgDaisyMotionTuningV1')||'null');
@@ -239,18 +266,18 @@ function open(options={}){
  // Keep Daisy's PRIMARY illustration at the previously approved Motion Lab
  // framing. Only alternate dialogue expressions use the 278% bust crop;
 // overworld and crouching poses select their own wider, pose-specific camera.
- const danceMotionSettings=isDaisy?daisyMotionConfig():null;
- const dancer=isDaisy?root.NeoRpgSpriteDeformer?.create?.($('.nc-actor-canvas'),{
-  ...danceMotionSettings,cameraMode:'viewport',cameraFit:'full-width'
+ const danceMotionSettings=isDance?danceMotionConfig():null;
+ const dancer=isDance?root.NeoRpgSpriteDeformer?.create?.($('.nc-actor-canvas'),{
+  ...danceMotionSettings,cameraMode:'viewport',cameraFit:isRina?'dialogue-bust':'full-width'
  }):null;
- const dancePoses=isDaisy?root.NeoRpgDancePoseController?.create?.($('.nc-dance-actor'),{
-  characterId:'daisy',baseCanvas:$('.nc-actor-canvas'),bpm:136,leadMs:LEAD,
+ const dancePoses=isDance?root.NeoRpgDancePoseController?.create?.($('.nc-dance-actor'),{
+  characterId:isRina?'rina':'daisy',baseCanvas:$('.nc-actor-canvas'),bpm:136,leadMs:LEAD,
   beatsPerBar:4,transitionMs:280,motionConfig:danceMotionSettings
  }):null;
 
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
  function resetCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(2,root.devicePixelRatio||1);const w=Math.max(1,Math.floor(r.width*dpr)),h=Math.max(1,Math.floor(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}if(notesCanvas.width!==w||notesCanvas.height!==h){notesCanvas.width=w;notesCanvas.height=h;}ctx.setTransform(w/800,0,0,h/445,0,0);notesCtx.setTransform(w/800,0,0,h/445,0,0);}
- const project=(lane,p)=>{if(isDaisy)return{x:400,y:346,w:68};const y=73+Math.pow(Math.max(0,Math.min(1,p)),1.27)*304;const width=110+Math.pow(p,1.1)*474;const center=400;const left=center-width/2;return{x:left+width*(lane+.5)/3,y,w:width/3};};
+ const project=(lane,p)=>{if(isDance)return{x:400,y:346,w:68};const y=73+Math.pow(Math.max(0,Math.min(1,p)),1.27)*304;const width=110+Math.pow(p,1.1)*474;const center=400;const left=center-width/2;return{x:left+width*(lane+.5)/3,y,w:width/3};};
  function glowLine(x1,y1,x2,y2,color,width=2){ctx.save();ctx.strokeStyle=color;ctx.shadowColor=color;ctx.shadowBlur=15;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();}
 
  function drawDaisyStage(time){
@@ -331,7 +358,7 @@ function open(options={}){
  }
  function scene(time){
   resetCanvas();
-  if(isDaisy){
+  if(isDance){
    dancePoses?.render(time||0,{combo:session.combo,fever:session.fever/100});
    // Only deform the base portrait when it is actually visible, including
    // its brief outgoing crossfade. Alternate poses animate in their module.
@@ -357,7 +384,7 @@ function open(options={}){
   for(let i=0;i<=3;i++){glowLine(345+i*110/3,horizon,108+i*584/3,base,['#34dffe','#a052f2','#f59a5e','#f44bc7'][i],i===0||i===3?3:2);}
   for(let j=0;j<9;j++){const p=(j/9+((time||0)*.00009)%1)%1;const y=73+p*p*304;const w=110+p*474;glowLine(400-w/2,y,400+w/2,y,'#928eff30',1);}
   const lineY=377;glowLine(156,lineY,644,lineY,'#ffffff',5);
-  if(!isDaisy){const renderCtx=ctx;
+  if(!isDance){const renderCtx=ctx;
   for(const n of session.notes){if(n.done)continue;const p=1-(n.at-(time||0))/TRAVEL;if(p<0||p>1.08)continue;const pos=project(n.lane,p),w=Math.max(14,pos.w*.72),h=Math.max(7,11+20*p),col=COLORS[n.lane];renderCtx.save();renderCtx.shadowColor=col;renderCtx.shadowBlur=18+12*p;renderCtx.fillStyle=col;RG(pos.x-w/2,pos.y-h/2,w,h,5);renderCtx.fill();renderCtx.strokeStyle='#fffc';renderCtx.lineWidth=1.5;renderCtx.stroke();renderCtx.restore();}
   // Projected hit zone and hardware symbols.
   for(let lane=0;lane<3;lane++){const p=project(lane,1),x=p.x;renderCtx.save();renderCtx.fillStyle='#13102bcc';renderCtx.strokeStyle=COLORS[lane];renderCtx.shadowColor=COLORS[lane];renderCtx.shadowBlur=22;renderCtx.lineWidth=3;RG(x-29,390,58,44,10);renderCtx.fill();renderCtx.stroke();renderCtx.fillStyle='#fff';renderCtx.font='900 24px system-ui';renderCtx.textAlign='center';renderCtx.fillText('ASD'[lane],x,419);renderCtx.restore();}
@@ -367,7 +394,7 @@ function open(options={}){
  }
  function renderNoteOverlay(time){
   notesCtx.clearRect(0,0,800,445);
-  if(!isDaisy)return;
+  if(!isDance)return;
   const renderCtx=notesCtx;
   for(const n of session.notes){
    if(n.done)continue;
@@ -389,9 +416,9 @@ function open(options={}){
  }
  function RGOverlay(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r);}
  function cleanup(cancel){if(active!==session)return;session.audio?.stop();dancePoses?.dispose();if(dancer)dancer.dispose();cancelAnimationFrame(session.frame);clearTimeout(session.feedbackTimer);document.removeEventListener('keydown',keydown,true);root.removeEventListener('resize',resize);host.remove();active=null;if(previous?.isConnected&&previous.focus)previous.focus({preventScroll:true});if(cancel)options.onCancel?.();}
- function hud(){if(isDaisy){$('.nc-fever-fill').style.width=session.fever+'%';$('.nc-fever-value').textContent=session.fever+'%';}$('.nc-score').textContent=String(session.score).padStart(6,'0');$('.nc-combo').textContent='× '+session.combo;$('.nc-accuracy').textContent=(session.hits+session.misses?Math.round(session.quality/(session.hits+session.misses)):100)+'%';}
+ function hud(){if(isDance){$('.nc-fever-fill').style.width=session.fever+'%';$('.nc-fever-value').textContent=session.fever+'%';}$('.nc-score').textContent=String(session.score).padStart(6,'0');$('.nc-combo').textContent='× '+session.combo;$('.nc-accuracy').textContent=(session.hits+session.misses?Math.round(session.quality/(session.hits+session.misses)):100)+'%';}
  function feedback(message,good=true,lane=1){
-  if(isDaisy){
+  if(isDance){
    const songTime=performance.now()-session.start;
    if(!good&&message==='MISS')dancePoses?.react('miss',songTime);
    else if(good&&session.combo>=12&&session.combo%12===0)dancePoses?.react('perfect',songTime);
@@ -406,15 +433,15 @@ function open(options={}){
     button.ncJudgeTimer=setTimeout(()=>button.classList.remove(klass),540);
    }
   }
-  const x=$('.nc-eval');x.textContent=message;x.style.color=good?'#ffe7a0':'#ff7cbb';x.style.opacity='1';clearTimeout(session.feedbackTimer);session.feedbackTimer=setTimeout(()=>{if(host.isConnected)x.style.opacity='0';},330);if(isDaisy&&good){$('.nc-dance-comment-text').textContent=session.combo>=12?'You really can dance! ♥':session.combo>=5?'That’s the rhythm! Keep going!':'Nice move!';}else if(isDaisy&&!good){$('.nc-dance-comment-text').textContent='You’ve got this — follow my lead!';}if(good){const pos=project(lane,1);for(let i=0;i<15;i++){const a=Math.PI*2*i/15;session.particles.push({x:pos.x,y:377,vx:Math.cos(a)*(28+(i%3)*17),vy:Math.sin(a)*(25+(i%4)*12),born:performance.now(),duration:410+(i%3)*110,color:(isDaisy?DAISY_COLORS[lane]:COLORS[lane]),radius:2+(i%3)});}session.particles=session.particles.slice(-100);}}
+  const x=$('.nc-eval');x.textContent=message;x.style.color=good?'#ffe7a0':'#ff7cbb';x.style.opacity='1';clearTimeout(session.feedbackTimer);session.feedbackTimer=setTimeout(()=>{if(host.isConnected)x.style.opacity='0';},330);if(isDance&&good){$('.nc-dance-comment-text').textContent=isRina?(session.combo>=12?'We are in sync! ♡':session.combo>=5?'Keep that combo going!':'Nice timing!'):session.combo>=12?'You really can dance! ♥':session.combo>=5?'That’s the rhythm! Keep going!':'Nice move!';}else if(isDance&&!good){$('.nc-dance-comment-text').textContent=isRina?'No worries — find the next beat!':'You’ve got this — follow my lead!';}if(good){const pos=project(lane,1);for(let i=0;i<15;i++){const a=Math.PI*2*i/15;session.particles.push({x:pos.x,y:377,vx:Math.cos(a)*(28+(i%3)*17),vy:Math.sin(a)*(25+(i%4)*12),born:performance.now(),duration:410+(i%3)*110,color:(isDance?DAISY_COLORS[lane]:COLORS[lane]),radius:2+(i%3)});}session.particles=session.particles.slice(-100);}}
  function press(lane){if(!session.playing)return;const elapsed=performance.now()-session.start;let target=null,closest=Infinity;for(const n of session.notes){const d=Math.abs(n.at-elapsed);if(!n.done&&n.lane===lane&&d<closest){closest=d;target=n;}}
  const pad=$$('.nc-pad')[lane];pad.classList.add('nc-lit');setTimeout(()=>{if(pad.isConnected)pad.classList.remove('nc-lit');},110);
  if(!target||closest>WINDOW){feedback('OFF BEAT',false,lane);return;}target.done=true;session.hits++;session.combo++;session.fever=Math.min(100,session.fever+5);session.best=Math.max(session.best,session.combo);const pts=closest<75?100:closest<135?75:45;session.quality+=pts;session.score+=(pts===100?1000:pts===75?650:350)+Math.min(500,session.combo*20);feedback(pts===100?'PERFECT ✦':pts===75?'GREAT!':'GOOD',true,lane);hud();}
- function keydown(e){if(active!==session)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cleanup(true);return;}if(e.repeat||!session.playing)return;const key=e.key.length===1?e.key.toLowerCase():e.key;const lane=(isDaisy?{' ':0,Enter:0,w:1,ArrowUp:1,d:2,ArrowRight:2,s:3,ArrowDown:3,a:4,ArrowLeft:4}:{a:0,s:1,d:2,ArrowLeft:0,ArrowDown:1,ArrowRight:2})[key];if(lane!==undefined){e.preventDefault();e.stopPropagation();press(lane);}}
+ function keydown(e){if(active!==session)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cleanup(true);return;}if(e.repeat||!session.playing)return;const key=e.key.length===1?e.key.toLowerCase():e.key;const lane=(isDance?{' ':0,Enter:0,w:1,ArrowUp:1,d:2,ArrowRight:2,s:3,ArrowDown:3,a:4,ArrowLeft:4}:{a:0,s:1,d:2,ArrowLeft:0,ArrowDown:1,ArrowRight:2})[key];if(lane!==undefined){e.preventDefault();e.stopPropagation();press(lane);}}
  function resize(){if(active===session&&!session.playing)scene(0);}
  document.addEventListener('keydown',keydown,true);root.addEventListener('resize',resize);
  $$('.nc-pad').forEach(p=>p.addEventListener('pointerdown',e=>{e.preventDefault();press(Number(p.dataset.lane));}));
- if(isDaisy){
+ if(isDance){
   // Touchscreen controls: tap for ● notes and swipe in the arrow direction.
   // Pointer capture avoids losing the gesture if the finger crosses the stage.
   const stage=$('.nc-stage');let pointerStart=null;
@@ -435,13 +462,13 @@ function open(options={}){
  }
  $('.nc-close').addEventListener('click',()=>cleanup(true));$('.nc-cancel').addEventListener('click',()=>cleanup(true));
  function finish(){session.playing=false;session.finished=true;session.audio?.stop();cancelAnimationFrame(session.frame);const accuracy=Math.round(session.quality/session.notes.length),grade=accuracy>=93?'S':accuracy>=80?'A':accuracy>=65?'B':accuracy>=45?'C':'D',win=session.score>=155000;const result={game:'arcade_highscore',score:session.score,accuracy,bestCombo:session.best,grade,win};
- $('.nc-overlay').hidden=false;$('.nc-overlay').innerHTML='<div class="nc-overlay-inner"><div class="nc-chip">'+(isDaisy?'DANCE BATTLE · SHOW COMPLETE':'NEON CIRCUIT · RUN COMPLETE')+'</div><h2>'+(win?'NEW HIGH SCORE!':'CHALLENGE COMPLETE')+'</h2><div class="nc-grade">'+grade+'</div><div class="nc-resultscore">'+String(session.score).padStart(6,'0')+'</div><p>Accuracy <b>'+accuracy+'%</b> · Max Combo <b>'+session.best+'×</b><br>'+(win?'You beat the arcade target!':'Your rival keeps the record for now.')+'</p><button type="button" class="nc-action nc-claim">'+(options.freePlay?'BACK TO PIXEL PALACE':'SEE CHARACTER REACTION')+'</button></div>';
+ $('.nc-overlay').hidden=false;$('.nc-overlay').innerHTML='<div class="nc-overlay-inner"><div class="nc-chip">'+(isDance?'DANCE BATTLE · SHOW COMPLETE':'NEON CIRCUIT · RUN COMPLETE')+'</div><h2>'+(win?'NEW HIGH SCORE!':'CHALLENGE COMPLETE')+'</h2><div class="nc-grade">'+grade+'</div><div class="nc-resultscore">'+String(session.score).padStart(6,'0')+'</div><p>Accuracy <b>'+accuracy+'%</b> · Max Combo <b>'+session.best+'×</b><br>'+(win?'You beat the arcade target!':'Your rival keeps the record for now.')+'</p><button type="button" class="nc-action nc-claim">'+(options.freePlay?'BACK TO PIXEL PALACE':'SEE CHARACTER REACTION')+'</button></div>';
  $('.nc-claim').addEventListener('click',()=>{if(active!==session)return;cleanup(false);options.onComplete(result);},{once:true});$('.nc-claim').focus();}
  function frame(now){if(!session.playing||active!==session)return;const elapsed=now-session.start;for(const n of session.notes){if(!n.done&&elapsed>n.at+WINDOW){n.done=true;session.combo=0;session.fever=Math.max(0,session.fever-25);session.misses++;feedback('MISS',false,n.lane);hud();}}
  scene(elapsed);session.particles=session.particles.filter(p=>now-p.born<p.duration);
  $('.nc-meter-fill').style.width=Math.min(100,elapsed/session.duration*100)+'%';$('.nc-progress-text').textContent=asClock(Math.min(elapsed,session.duration))+' / '+asClock(session.duration);
  if(elapsed>=session.duration){finish();return;}session.frame=requestAnimationFrame(frame);}
- $('.nc-start').addEventListener('click',()=>{if(session.playing||session.finished)return;session.playing=true;dancePoses?.reset();$('.nc-overlay').hidden=true;session.start=performance.now();session.audio=startArcadeAudio(isDaisy?136:60000/STEP,LEAD);session.frame=requestAnimationFrame(frame);hud();},{once:true});
+ $('.nc-start').addEventListener('click',()=>{if(session.playing||session.finished)return;session.playing=true;dancePoses?.reset();$('.nc-overlay').hidden=true;session.start=performance.now();session.audio=startArcadeAudio(isDance?136:60000/STEP,LEAD);session.frame=requestAnimationFrame(frame);hud();},{once:true});
  scene(0);$('.nc-start').focus();return true;
 }
 // Character deformation is owned by rpg_sprite_deformer.js. The arcade
