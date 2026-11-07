@@ -75,11 +75,11 @@ const CSS=String.raw`
 .nc-daisy .nc-stage{flex:1;min-height:220px;aspect-ratio:auto;background:#12091f;border:1px solid #cb70ce78;touch-action:none;user-select:none;-webkit-user-select:none}
 .nc-daisy .nc-stage canvas.nc-canvas{position:absolute;inset:0;width:100%;height:100%}
 .nc-daisy .nc-stage canvas.nc-note-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
-.nc-daisy .nc-dance-actor{display:block;position:absolute;z-index:2;left:23%;top:0;width:54%;height:98%;filter:drop-shadow(0 0 22px #eb58c87f);pointer-events:none}
+.nc-daisy .nc-dance-actor{display:block;position:absolute;z-index:2;left:54%;top:0;width:44%;height:98%;filter:drop-shadow(0 0 22px #eb58c87f);pointer-events:none}
 .nc-daisy .nc-dance-actor canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .nc-daisy .nc-dance-comment{position:absolute;display:flex;flex-direction:column;z-index:6;left:2%;top:47%;bottom:auto;right:auto;min-width:115px;max-width:27%;padding:11px 12px;border:1px solid #f7a6e8;border-radius:16px;background:#310b40d9;color:#fff;font-size:clamp(10px,1.1vw,14px);line-height:1.3}
 .nc-daisy .nc-dance-comment small{font-size:10px;color:#ff9edd;font-weight:900}
-.nc-daisy .nc-eval{z-index:6;top:58%}
+.nc-daisy .nc-eval{display:none} /* All Daisy judgements are rendered on the hit circle. */
 .nc-daisy .nc-side{min-width:0;padding-top:89px;gap:10px}
 .nc-daisy .nc-stat{padding:12px 7px;border:1px solid #bf63c2;background:#220e37e8;border-radius:13px}
 .nc-daisy .nc-stat small{color:#f8c9f4;font-size:10px}
@@ -95,6 +95,16 @@ const CSS=String.raw`
 .nc-daisy .nc-pad{min-width:0;padding:7px 2px;font-size:clamp(12px,1.5vw,19px);border-radius:11px;min-height:49px}
 .nc-daisy .nc-pad .nc-key{font-size:clamp(18px,2vw,26px);margin-right:5px}
 .nc-daisy .nc-hit-pad{background:linear-gradient(180deg,#683054,#240f32);border-color:#ff76df;box-shadow:0 0 16px #ff6dc659}
+.nc-daisy .nc-pad{position:relative;overflow:visible;transition:box-shadow .1s,border-color .1s,background-color .1s}
+.nc-daisy .nc-pad.nc-judge-good{border-color:#fff4b2;background:linear-gradient(#573b64,#25142f);box-shadow:0 0 26px 7px #f5e19ba6,inset 0 0 20px #fff3b688;animation:nc-pad-tap .23s ease-out}
+.nc-daisy .nc-pad.nc-judge-bad{border-color:#ff5a94;background:linear-gradient(#743044,#2c1127);box-shadow:0 0 24px 6px #ff3a7b92,inset 0 0 18px #ff3a7b64;animation:nc-pad-tap .23s ease-out}
+.nc-daisy .nc-pad.nc-judge-good::after,.nc-daisy .nc-pad.nc-judge-bad::after{position:absolute;z-index:3;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);padding:3px 8px;border-radius:20px;white-space:nowrap;font-size:12px;font-weight:1000;pointer-events:none;animation:nc-judge-label .52s ease-out both}
+.nc-daisy .nc-pad.nc-judge-good::after{content:"✦ NICE";color:#271027;background:#fff2ae;box-shadow:0 0 12px #ffdb91}
+.nc-daisy .nc-pad.nc-judge-bad::after{content:"× MISS";color:white;background:#dd3865;box-shadow:0 0 12px #ff528c}
+@keyframes nc-pad-tap{0%{transform:scale(.96)}55%{transform:scale(1.045)}100%{transform:scale(1)}}
+@keyframes nc-judge-label{0%{opacity:0;translate:0 8px;scale:.7}25%{opacity:1;translate:0 -5px;scale:1.15}75%{opacity:1;translate:0 -8px;scale:1}100%{opacity:0;translate:0 -14px;scale:1}}
+@media(prefers-reduced-motion:reduce){.nc-daisy .nc-pad.nc-judge-good,.nc-daisy .nc-pad.nc-judge-bad,.nc-daisy .nc-pad.nc-judge-good::after,.nc-daisy .nc-pad.nc-judge-bad::after{animation:none}}
+
 .nc-daisy .nc-foot{flex:0 0 auto;padding:7px 15px 9px;border-top:1px solid #c847ae45}
 .nc-daisy .nc-foot .nc-meter{display:none}
 .nc-daisy .nc-overlay{background:linear-gradient(140deg,#170c29f4,#270a40f0)}
@@ -113,7 +123,7 @@ const CSS=String.raw`
  .nc-daisy .nc-song-sub{font-size:9px;margin:2px 0 4px}
  .nc-daisy .nc-progress-text{font-size:9px}
  .nc-daisy .nc-stage{flex:1;min-height:330px}
- .nc-daisy .nc-dance-actor{left:13%;width:74%;height:95%}
+ .nc-daisy .nc-dance-actor{left:47%;width:52%;height:95%}
  .nc-daisy .nc-dance-comment{left:1%;top:50%;max-width:33%;min-width:0;padding:7px;font-size:10px}
  .nc-daisy .nc-dance-comment small{font-size:9px}
  .nc-daisy .nc-side{order:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:3px 0}
@@ -198,7 +208,7 @@ function open(options={}){
  const canvas=$('.nc-canvas'),ctx=canvas.getContext('2d'),notesCanvas=$('.nc-note-canvas'),notesCtx=notesCanvas.getContext('2d');
  if(!ctx||!notesCtx){host.remove();return false;}
  const previous=document.activeElement;
- const session={host,frame:0,playing:false,finished:false,audio:null,start:0,notes:(isDaisy?LONG_DAISY_PATTERN:LONG_PATTERN).map((lane,i)=>({lane,at:LEAD+i*(isDaisy?DAISY_STEP:STEP),done:false})),duration:LEAD+((isDaisy?LONG_DAISY_PATTERN:LONG_PATTERN).length-1)*(isDaisy?DAISY_STEP:STEP)+WINDOW+200,fever:0,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],fxUntil:0,feedbackTimer:0,lastTime:0};
+ const session={host,frame:0,playing:false,finished:false,audio:null,start:0,notes:(isDaisy?LONG_DAISY_PATTERN:LONG_PATTERN).map((lane,i)=>({lane,at:LEAD+i*(isDaisy?DAISY_STEP:STEP),done:false})),duration:LEAD+((isDaisy?LONG_DAISY_PATTERN:LONG_PATTERN).length-1)*(isDaisy?DAISY_STEP:STEP)+WINDOW+200,fever:0,score:0,combo:0,best:0,hits:0,misses:0,quality:0,particles:[],judgeFx:null,fxUntil:0,feedbackTimer:0,lastTime:0};
  active=session;
  const asClock=ms=>{const n=Math.floor(ms/1000);return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
  $('.nc-progress-text').textContent='0:00 / '+asClock(session.duration);
@@ -273,6 +283,38 @@ function open(options={}){
    c.shadowBlur=0;c.fillStyle=color;c.font='900 34px system-ui';c.textAlign='center';c.textBaseline='middle';
    c.fillText(icons[n.lane]||'●',x,y-2);c.restore();
   }
+  // The judgement belongs to the note's hit circle, not the character.
+  // Hit: expanding golden ring, sparks and a check. Miss: magenta-red X.
+  const fx=session.judgeFx;
+  if(fx){
+   const age=performance.now()-fx.started;
+   if(age>=0&&age<700){
+    const p=age/700,fade=Math.max(0,1-p),good=fx.good;
+    const color=good?(fx.label.startsWith('PERFECT')?'#fff2b1':'#8fe9ff'):'#ff567f';
+    c.save();
+    c.globalAlpha=fade;
+    c.strokeStyle=color;c.lineWidth=(good?8:6)*(1-p*.5);
+    c.shadowColor=color;c.shadowBlur=32;
+    c.beginPath();c.arc(targetX,y,42+p*(good?65:43),0,Math.PI*2);c.stroke();
+    c.fillStyle=color;
+    const count=good?16:9;
+    for(let i=0;i<count;i++){
+     const a=Math.PI*2*i/count+(.15*i),r=43+80*p+(i%3)*7;
+     const px=targetX+Math.cos(a)*r,py=y+Math.sin(a)*r;
+     c.save();c.translate(px,py);c.rotate(a);
+     c.fillRect(-Math.max(1,4*(1-p)),-Math.max(1,9*(1-p)),Math.max(2,8*(1-p)),Math.max(2,18*(1-p)));
+     c.restore();
+    }
+    const pop=Math.min(1,age/120);
+    c.textAlign='center';c.textBaseline='middle';
+    c.font='1000 '+Math.round((good?42:46)*(.75+.3*pop))+'px system-ui';
+    c.shadowBlur=20;c.fillStyle=good?'#fff8d6':'#ff728c';
+    c.fillText(good?'✓':'×',targetX,y-3);
+    c.font='italic 1000 '+Math.round(20+8*pop)+'px system-ui';
+    c.fillText(fx.label,targetX,y-78-16*p);
+    c.restore();
+   }
+  }
  }
  function scene(time){
   resetCanvas();
@@ -329,7 +371,20 @@ function open(options={}){
  function RGOverlay(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r);}
  function cleanup(cancel){if(active!==session)return;session.audio?.stop();if(dancer)dancer.dispose();cancelAnimationFrame(session.frame);clearTimeout(session.feedbackTimer);document.removeEventListener('keydown',keydown,true);root.removeEventListener('resize',resize);host.remove();active=null;if(previous?.isConnected&&previous.focus)previous.focus({preventScroll:true});if(cancel)options.onCancel?.();}
  function hud(){if(isDaisy){$('.nc-fever-fill').style.width=session.fever+'%';$('.nc-fever-value').textContent=session.fever+'%';}$('.nc-score').textContent=String(session.score).padStart(6,'0');$('.nc-combo').textContent='× '+session.combo;$('.nc-accuracy').textContent=(session.hits+session.misses?Math.round(session.quality/(session.hits+session.misses)):100)+'%';}
- function feedback(message,good=true,lane=1){const x=$('.nc-eval');x.textContent=message;x.style.color=good?'#ffe7a0':'#ff7cbb';x.style.opacity='1';clearTimeout(session.feedbackTimer);session.feedbackTimer=setTimeout(()=>{if(host.isConnected)x.style.opacity='0';},330);if(isDaisy&&good){$('.nc-dance-comment-text').textContent=session.combo>=12?'You really can dance! ♥':session.combo>=5?'That’s the rhythm! Keep going!':'Nice move!';}else if(isDaisy&&!good){$('.nc-dance-comment-text').textContent='You’ve got this — follow my lead!';}if(good){const pos=project(lane,1);for(let i=0;i<15;i++){const a=Math.PI*2*i/15;session.particles.push({x:pos.x,y:377,vx:Math.cos(a)*(28+(i%3)*17),vy:Math.sin(a)*(25+(i%4)*12),born:performance.now(),duration:410+(i%3)*110,color:(isDaisy?DAISY_COLORS[lane]:COLORS[lane]),radius:2+(i%3)});}session.particles=session.particles.slice(-100);}}
+ function feedback(message,good=true,lane=1){
+  if(isDaisy){
+   session.judgeFx={started:performance.now(),good,label:message,lane};
+   const button=$$('.nc-pad')[lane];
+   if(button){
+    const klass=good?'nc-judge-good':'nc-judge-bad';
+    button.classList.remove('nc-judge-good','nc-judge-bad');
+    // Reflow only this single button to restart the short judgement burst.
+    void button.offsetWidth;button.classList.add(klass);
+    clearTimeout(button.ncJudgeTimer);
+    button.ncJudgeTimer=setTimeout(()=>button.classList.remove(klass),540);
+   }
+  }
+  const x=$('.nc-eval');x.textContent=message;x.style.color=good?'#ffe7a0':'#ff7cbb';x.style.opacity='1';clearTimeout(session.feedbackTimer);session.feedbackTimer=setTimeout(()=>{if(host.isConnected)x.style.opacity='0';},330);if(isDaisy&&good){$('.nc-dance-comment-text').textContent=session.combo>=12?'You really can dance! ♥':session.combo>=5?'That’s the rhythm! Keep going!':'Nice move!';}else if(isDaisy&&!good){$('.nc-dance-comment-text').textContent='You’ve got this — follow my lead!';}if(good){const pos=project(lane,1);for(let i=0;i<15;i++){const a=Math.PI*2*i/15;session.particles.push({x:pos.x,y:377,vx:Math.cos(a)*(28+(i%3)*17),vy:Math.sin(a)*(25+(i%4)*12),born:performance.now(),duration:410+(i%3)*110,color:(isDaisy?DAISY_COLORS[lane]:COLORS[lane]),radius:2+(i%3)});}session.particles=session.particles.slice(-100);}}
  function press(lane){if(!session.playing)return;const elapsed=performance.now()-session.start;let target=null,closest=Infinity;for(const n of session.notes){const d=Math.abs(n.at-elapsed);if(!n.done&&n.lane===lane&&d<closest){closest=d;target=n;}}
  const pad=$$('.nc-pad')[lane];pad.classList.add('nc-lit');setTimeout(()=>{if(pad.isConnected)pad.classList.remove('nc-lit');},110);
  if(!target||closest>WINDOW){feedback('OFF BEAT',false,lane);return;}target.done=true;session.hits++;session.combo++;session.fever=Math.min(100,session.fever+5);session.best=Math.max(session.best,session.combo);const pts=closest<75?100:closest<135?75:45;session.quality+=pts;session.score+=(pts===100?1000:pts===75?650:350)+Math.min(500,session.combo*20);feedback(pts===100?'PERFECT ✦':pts===75?'GREAT!':'GOOD',true,lane);hud();}
