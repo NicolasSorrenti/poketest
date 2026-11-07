@@ -189,7 +189,9 @@ function open(options={}){
 
  document.body.append(host);
  const $=q=>host.querySelector(q),$$=q=>Array.from(host.querySelectorAll(q));
- $('.nc-rival').textContent=options.name||'your rival';
+ // Center Stage intentionally has no rival label; the classic cabinet still does.
+ const rivalLabel=$('.nc-rival');
+ if(rivalLabel)rivalLabel.textContent=options.name||'your rival';
  const canvas=$('.nc-canvas'),ctx=canvas.getContext('2d'),notesCanvas=$('.nc-note-canvas'),notesCtx=notesCanvas.getContext('2d');
  if(!ctx||!notesCtx){host.remove();return false;}
  const previous=document.activeElement;
