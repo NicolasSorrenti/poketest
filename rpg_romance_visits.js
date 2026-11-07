@@ -629,8 +629,10 @@
  function path(id){
   return known.has(id)?'/rpg-assets/characters/'+id+'/events/final/'+(id==='akari'?'akari_glasses_parody.png':id+'_sneeze_parody.png'):null;
  }
- function open({id,name,discreet=false,cgLines=[],lineOffset=0,onFinish,onCancel}){
-  const source=path(id),panApi=typeof window!=='undefined'?window.NeoRpgCGPan:null;
+ function open({id,name,discreet=false,cgLines=[],lineOffset=0,artPath=null,onFinish,onCancel}){
+  // Allows a one-time narrative ending to reuse the existing CG motion UI
+  // without making Live or Mia ordinary romance-visit roster characters.
+  const source=(typeof artPath==='string'&&artPath.startsWith('/rpg-assets/characters/')?artPath:null)||path(id),panApi=typeof window!=='undefined'?window.NeoRpgCGPan:null;
   if(!source||!panApi||!document.body||document.getElementById('neoRomanceVisitCG'))return false;
   const dialog=document.createElement('dialog');
   dialog.id='neoRomanceVisitCG';
@@ -722,6 +724,147 @@
   }
   return true;
  }
+
+ // One shared modal, two independently rendered CGs. Desktop uses two columns
+ // and narrow mobile viewports stack them. Existing single-CG visits are intact.
+ // Dialogue is intentionally left blank until the joint script is authored.
+ function openPair({discreet=false,miaNickname='you',onFinish,onCancel}={}){
+  const doc=typeof document!=='undefined'?document:null;
+  const panApi=typeof window!=='undefined'?window.NeoRpgCGPan:null;
+  if(!doc?.body||!panApi||doc.getElementById('neoRomanceVisitCG'))return false;
+  const dialog=doc.createElement('dialog');
+  dialog.id='neoRomanceVisitCG';
+  dialog.setAttribute('aria-label','Live and Mia · shared private moment');
+  dialog.style.cssText='box-sizing:border-box;border:1px solid #b890bc;border-radius:16px;background:#14121f;color:white;padding:0;width:min(96vw,1100px);max-width:96vw;max-height:94dvh;overflow:auto;box-shadow:0 20px 80px #000e';
+  const style=doc.createElement('style');
+  style.textContent=`
+    #neoRomanceVisitCG .neo-dual-cg-panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}
+    #neoRomanceVisitCG .neo-dual-cg-panel{min-width:0;display:flex;flex-direction:column;gap:7px}
+    #neoRomanceVisitCG .neo-dual-cg-frame{position:relative;overflow:hidden;isolation:isolate;background:#10101c;height:min(55dvh,430px);border-radius:10px}
+    #neoRomanceVisitCG .neo-dual-cg-frame img{position:absolute;top:0;left:0;width:100%;height:auto;max-width:none;max-height:none;pointer-events:none}
+    #neoRomanceVisitCG .neo-dual-cg-message{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font:14px system-ui;color:#e1d5ed}
+    #neoRomanceVisitCG .neo-dual-cg-caption{text-align:center;color:#e7daec;font:600 14px system-ui}
+    #neoRomanceVisitCG .neo-dual-cg-panel.is-speaking .neo-dual-cg-frame{outline:2px solid #e8badc;outline-offset:-2px}
+    #neoRomanceVisitCG .neo-dual-cg-dialogue{min-height:48px;padding:12px 18px;background:#221b30;color:#f8e7f8;text-align:center;font:600 clamp(14px,2vw,17px)/1.4 system-ui}
+    @media(max-width:640px){
+      #neoRomanceVisitCG .neo-dual-cg-panels{grid-template-columns:minmax(0,1fr);gap:12px}
+      #neoRomanceVisitCG .neo-dual-cg-frame{height:36dvh;min-height:170px}
+    }
+  `;
+  dialog.append(style);
+  const head=doc.createElement('div');
+  head.style.cssText='padding:13px 16px;background:#292139;text-align:center;font:700 17px system-ui';
+  head.textContent='♥ Live & Mia · A quiet moment together';
+  dialog.append(head);
+  const panels=doc.createElement('div');
+  panels.className='neo-dual-cg-panels';
+  dialog.append(panels);
+  const entries=[
+   {id:'live',name:'Live',src:'/rpg-assets/characters/mia/events/final/live_sneeze_parody.png',
+    fallback:'/rpg-assets/characters/live/events/final/live_sneeze_parody.png'},
+   {id:'mia',name:'Mia',src:'/rpg-assets/characters/mia/events/final/mia_sneeze_parody.png'}
+  ];
+  const panes=entries.map(entry=>{
+   const panel=doc.createElement('div');panel.className='neo-dual-cg-panel';
+   const caption=doc.createElement('div');caption.className='neo-dual-cg-caption';caption.textContent=entry.name;
+   const frame=doc.createElement('div');frame.className='neo-dual-cg-frame';
+   const img=doc.createElement('img');img.alt=entry.name+' private scene';img.draggable=false;img.hidden=true;
+   const message=doc.createElement('div');message.className='neo-dual-cg-message';
+   message.textContent=discreet?'Artwork hidden in Discreet Mode.':'Loading illustration…';
+   frame.append(img,message);panel.append(caption,frame);panels.append(panel);
+   return {entry,img,message,frame,pan:null,loaded:false};
+  });
+  const dialogue=doc.createElement('p');
+  dialogue.className='neo-dual-cg-dialogue';
+  dialogue.setAttribute('role','status');
+  dialogue.setAttribute('aria-live','off');
+  dialog.append(dialogue);
+  const spoken=[
+   {speaker:'live',text:'ahhh... finally... i can be.. ah.. honest...'},
+   {speaker:'mia',text:'mom,,, yes... i think this is great... {you/daddy} make us so happy... ahhh'},
+   {speaker:'live',text:'ahhh yes, you both... i love you so much AHH'},
+   {speaker:'mia',text:'AHHH AHHH YES'}
+  ];
+  const nickname=miaNickname==='Daddy'?'Daddy':'you';
+  let speechIndex=0,speechTimer=null;
+  function showSpeech(index){
+   const line=spoken[index];
+   dialogue.textContent=(line.speaker==='live'?'Live: ':'Mia: ')+line.text.replace(/\{you\/daddy\}/g,nickname);
+   for(const pane of panes){
+    pane.frame.parentElement.classList.toggle('is-speaking',pane.entry.id===line.speaker);
+    pane.pan?.smoothUpdateConfig?.(timingFor(pane.entry.id,index),550);
+   }
+  }
+  const note=doc.createElement('p');
+  note.style.cssText='margin:0;padding:4px 12px 8px;color:#c9badb;text-align:center;font:12px system-ui';
+  note.textContent='Two synchronized scene panels';
+  dialog.append(note);
+  const actions=doc.createElement('div');
+  actions.style.cssText='display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:12px 16px 16px';
+  const finish=doc.createElement('button'),cancel=doc.createElement('button');
+  for(const button of [finish,cancel]){
+   button.type='button';
+   button.style.cssText='padding:10px 17px;border-radius:9px;border:1px solid #b38bb8;background:#45315a;color:#fff;font:600 14px system-ui;cursor:pointer';
+  }
+  finish.textContent='Finish scene';finish.disabled=!discreet;
+  cancel.textContent='Leave for now';actions.append(finish,cancel);dialog.append(actions);
+  doc.body.append(dialog);
+  let closed=false;
+  function startSpeech(){
+   if(speechTimer)return;
+   showSpeech(speechIndex);
+   speechTimer=setInterval(()=>{
+    if(closed)return;
+    speechIndex=(speechIndex+1)%spoken.length;
+    showSpeech(speechIndex);
+   },2400);
+  }
+  function close(done){
+   if(closed)return;
+   closed=true;
+   if(speechTimer!==null){clearInterval(speechTimer);speechTimer=null;}
+   for(const pane of panes){pane.pan?.dispose();pane.pan=null;pane.img.removeAttribute('src');}
+   if(dialog.open)dialog.close();
+   dialog.remove();
+   if(done)onFinish?.();else onCancel?.();
+  }
+  finish.onclick=()=>{if(!finish.disabled)close(true);};
+  cancel.onclick=()=>close(false);
+  dialog.addEventListener('cancel',event=>{event.preventDefault();close(false);});
+  dialog.showModal();
+  if(discreet)startSpeech();
+  if(!discreet){
+   const maybeReady=()=>{
+    if(!panes.every(p=>p.loaded))return;
+    // Start both native pan animations in the same event-loop turn, after
+    // both full-resolution images are ready. Independent layouts, shared start.
+    for(const pane of panes){
+     pane.pan=panApi.attach(pane.frame,pane.img,timingFor(pane.entry.id,0));
+    }
+    finish.disabled=false;
+    startSpeech();
+   };
+   for(const pane of panes){
+    const {entry,img,message,frame}=pane;
+    let fallbackUsed=false;
+    img.onload=()=>{
+     if(closed)return;
+     img.hidden=false;
+     message.style.display='none';
+     pane.loaded=true;
+     maybeReady();
+    };
+    img.onerror=()=>{
+     if(closed)return;
+     if(entry.fallback&&!fallbackUsed){fallbackUsed=true;img.src=entry.fallback;return;}
+     message.textContent='This illustration is not available yet.';
+     pane.loaded=false;maybeReady();
+    };
+    img.src=entry.src;
+   }
+  }
+  return true;
+ }
  return Object.freeze({characters,cooldownDays,chapterId,eligible,ready,pending,offerable,
-  isFirst,accept,complete,nextDay,path,dialogue,timingFor,open});
+  isFirst,accept,complete,nextDay,path,dialogue,timingFor,open,openPair});
 });

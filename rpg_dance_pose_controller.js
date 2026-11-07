@@ -6,7 +6,7 @@
 // Never owns gameplay, affinity, scoring, RPG time or saves.
 (function(root){
  'use strict';
- if(root.NeoRpgDancePoseController?.version===7)return;
+ if(root.NeoRpgDancePoseController?.version===8)return;
  const DAISY_POSES=Object.freeze([
   {id:'primary',type:'base'},
   {id:'happy',src:'/rpg-assets/characters/daisy/expressionsv2/happy.png'},
@@ -33,6 +33,19 @@
   victory:{left:[.34,.67,.14,.11],right:[.67,.67,.14,.11]},
   surprised:{left:[.34,.67,.14,.115],right:[.67,.67,.14,.115]}
  });
+ // Character-specific calibrated masks in viewport coordinates.
+ // Happy is exactly the approved Motion Lab export. Determined and Surprised
+ // inherit Primary's movement (not its image) so their chest follows the same
+ // region. Idol and Reaching retain their approved original positions.
+ const RINA_PRIMARY_ZONES=Object.freeze([
+  Object.freeze({x:.34,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-.2,scaleX:0,scaleY:0,moveY:.012,phase:0}),
+  Object.freeze({x:.67,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-3.14,scaleX:0,scaleY:0,moveY:.012,phase:-.04})
+ ]);
+ const RINA_HAPPY_ZONES=Object.freeze([
+  Object.freeze({x:.485,y:.85,rx:.22,ry:.155,inflateX:.095,inflateY:.05,inflatePhase:-.2,scaleX:0,scaleY:0,moveY:.014,phase:1.34}),
+  Object.freeze({x:.77,y:.835,rx:.17,ry:.15,inflateX:.28,inflateY:.345,inflatePhase:-3.14,scaleX:0,scaleY:0,moveY:.014,phase:-.04})
+ ]);
+ const copyZones=zones=>zones.map(z=>({...z}));
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  // Tunable pose-local bust regions. These are intentionally gentler than the
  // calibrated primary portrait; other artwork has distinct anatomy and poses.
@@ -46,6 +59,10 @@
   surprised:{left:[.34,.70,.16,.13],right:[.70,.70,.16,.13]}
  });
  function motionZones(entry,characterId){
+  if(characterId==='rina'){
+   if(entry.id==='happy')return copyZones(RINA_HAPPY_ZONES);
+   if(entry.id==='determined'||entry.id==='surprised'||entry.id==='primary')return copyZones(RINA_PRIMARY_ZONES);
+  }
   const regions=characterId==='rina'?RINA_REGIONS:DAISY_REGIONS;
   const pair=entry.zones||regions[entry.id]||regions.happy;
   if(!pair)return [];
@@ -71,10 +88,7 @@
    cameraMode:'viewport',cameraFit:'dialogue-bust',dialogueBustScale:2.78,
    cropTop:0,cropHeight:1,baseBounce:0,feverBounce:3.2,tilt:0,
    intensity:.52,feverInflate:.65,expansion:1,
-   zones:[
-    {x:.34,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-.2,scaleX:0,scaleY:0,moveY:.012,phase:0},
-    {x:.67,y:.67,rx:.145,ry:.118,inflateX:.10,inflateY:.055,inflatePhase:-3.14,scaleX:0,scaleY:0,moveY:.012,phase:-.04}
-   ]
+   zones:copyZones(RINA_PRIMARY_ZONES)
   };
   if(id==='daisy'&&poseId==='primary'){
    const base=root.NeoRpgSpriteDeformer?.presets?.daisyDance;
@@ -273,6 +287,6 @@
   });
  }
  root.NeoRpgDancePoseController=Object.freeze({
-  version:7,create:make,previewConfig,presets:Object.freeze({daisy:DAISY_POSES,rina:RINA_POSES})
+  version:8,create:make,previewConfig,presets:Object.freeze({daisy:DAISY_POSES,rina:RINA_POSES})
  });
 })(window);
