@@ -920,7 +920,7 @@ function openRomanceVisit(id){
    [['Close','close']]);
  }
 }
-function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null,creditBond=false,photoOffer=null){
+function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,memory=null,casual=null,creditBond=false,photoOffer=null,photoStoryId=null){
  if(!Array.isArray(lines)||!lines.length)return;
  const script=lines.filter(x=>x&&typeof x.text==='string'&&typeof x.speaker==='string');
  if(!script.length)return;
@@ -929,7 +929,7 @@ function sayConversation(lines,afterChoices=[],reactionId=null,invitation=null,m
   line:first.text,choices:script.length>1?[['Continue ›','chatNext']]:afterChoices,
   dialogue:script,index:0,afterChoices,reactionId,invitation,bondConversation:creditBond,
    memoryId:memory?.kind==='followup'?memory.id:null,memoryOfferId:memory?.kind==='intro'?memory.id:null,
-   casualId:casual?.id||null,asideId:casual?.asideId||null,photoOffer};
+   casualId:casual?.id||null,asideId:casual?.asideId||null,photoOffer,photoStoryId};
  state.scene=scene;persist();render();
 }
 function advanceConversation(){
@@ -1495,18 +1495,26 @@ function selectPerson(id,{skipInvitation=false}={}){
   const photo=SOCIAL.options(state,id,currentPeople(),cast)
    .find(activity=>activity.photoSession&&!activity.disabledReason);
   const photoProfile=window.NeoRpgPhotoProfiles?.byId(id);
+  const trust=Math.max(0,Number(state.relationships?.[id]?.trust)||0,Number(state.bonds?.[id]?.trust)||0);
+  // Four individually authored, trust-locked microstories per female cast member.
+  // Prefer stories not previously completed, with a stable daily selection.
+  // Male cast members continue using the original lightweight photo sequences.
+  const authored=window.NeoRpgPhotoStories?.ids.includes(id);
+  const photoStory=authored?window.NeoRpgPhotoStories.select(id,photoProfile,trust,state):null;
   const photoChance=(state.day*23+[...id].reduce((sum,ch)=>sum+ch.charCodeAt(0)*7,0))%5<2;
   const photoOffer=!!(!first&&fresh&&!invite&&!context&&!memory&&!invitations.length&&
-   casual?.lines?.length&&photo&&photoProfile&&photoChance);
+   casual?.lines?.length&&photo&&photoProfile&&photoChance&&(!authored||photoStory));
+  const prompt=photoStory?.hook||
+   photoProfile?.invitation?.replace(/^[^:]+:\s*"/,'').replace(/"$/,'');
   const talkLines=photoOffer?[...casual.lines,{
-   speaker:id,text:photoProfile.invitation.replace(/^[^:]+:\s*"/,'').replace(/"$/,'')
+   speaker:id,text:prompt
   }]:context?.lines||memory?.lines||casual?.lines;
   const talkChoices=photoOffer?[
-   ["Sure, I'd love to take your photos",'photoAccept:'+id],
+   ["Sure, I'll take the pictures",'photoAccept:'+id],
    ['Maybe another time','photoLater:'+id]
   ]:memory?.choices||invitations;
   sayConversation(talkLines,talkChoices,context?.id||null,null,memory,
-   casual?.record,true,photoOffer?id:null);
+   casual?.record,true,photoOffer?id:null,photoOffer?photoStory?.id||null:null);
  }
  tutorialEvent('conversation');showCGMoment(memories[0]);
 }
@@ -1966,6 +1974,14 @@ function act(action,confirmedInvitationHandoff=false){
    if(!window.NeoRpgPhotoSession?.open)return sayCharacterChoiceMenu(id,'SPEND TIME','The camera is temporarily unavailable.',sharedActivityChoices(id));
    if(!confirmTimeAdvance())return;
    const fromConversation=scene?.photoOffer===id;
+   const storyId=fromConversation?scene.photoStoryId||null:null;
+   const photoProfile=window.NeoRpgPhotoProfiles?.byId(id);
+   const story=storyId?window.NeoRpgPhotoStories?.byId(id,storyId,photoProfile):null;
+   const currentTrust=Math.max(0,Number(state.relationships?.[id]?.trust)||0,
+    Number(state.bonds?.[id]?.trust)||0);
+   if(storyId&&(!story||currentTrust<story.trustMin))
+    return say(cast[id].name,'I think we should get to know each other a little better first.',
+     [['Continue ›','close']]);
    if(fromConversation){
     // Clear the invitation only after accepting and passing the clock check.
     scene={speaker:'Narrator',line:'',choices:[]};state.scene=scene;
@@ -1973,12 +1989,14 @@ function act(action,confirmedInvitationHandoff=false){
    }
    const opened=window.NeoRpgPhotoSession.open({
     name:cast[id].name,characterId:id,location:state.location,savedAlbum:state.photoAlbum,
-    story:fromConversation,onCancel:()=>{},
+    story:fromConversation,storyId,trust:currentTrust,day:state.day,slot:state.slot,
+    onCancel:()=>{},
     onComplete:result=>{
      try{
       if(!SOCIAL.options(state,id,currentPeople(),cast).some(x=>x.id===part&&!x.disabledReason))
        throw Error('The photoshoot is no longer available.');
-      if(result.characterId!==id||!Array.isArray(result.photos)||result.photos.length!==3)
+      if(result.characterId!==id||!Array.isArray(result.photos)||result.photos.length!==3||
+         (storyId&&result.storyId!==storyId))
        throw Error('The photo session result is incomplete.');
       const before=activityBalance(id);
       const outcome=SOCIAL.complete(state,id,part,currentPeople(),cast);
@@ -2002,10 +2020,16 @@ function act(action,confirmedInvitationHandoff=false){
       state.photoRecords[id]={lastDay:state.day,sessions:(previous.sessions||0)+1,
        bestAverage:Math.max(previous.bestAverage||0,result.average||0),
        lastAverage:result.average||0};
+      if(storyId){
+       state.photoStoryDone=state.photoStoryDone||{};
+       const completed=Array.isArray(state.photoStoryDone[id])?state.photoStoryDone[id]:[];
+       if(!completed.includes(storyId))state.photoStoryDone[id]=[...completed,storyId];
+      }
       log('Photographed '+cast[id].name+' at '+places[state.location][0]+': '+(result.average||0)+'/100 average.');
       recordIntention('hangout');
       const memories=recordCG('hangout',id);
-      activityOutcome(cast[id].name,'Your three photos averaged '+result.average+
+      activityOutcome(cast[id].name,
+       (story?.title?story.title+'. ':'')+'Your three photos averaged '+result.average+
        '/100. '+(award?'Your photography earned '+award+' credits. ':'')+
        outcome.line,before,id);
       showCGMoment(memories[0]);
