@@ -46,7 +46,28 @@
   $('saveStatus').textContent=!check.valid?(check.errors[0]||'Deck needs attention'):
    notice||(changed?'Changes not saved. Save to use this deck in your next duel.':'Saved deck is ready for the next duel.');
  }
+ function renderDeckSlots(){
+  const root=$('deckSlotButtons');root.replaceChildren();
+  const journey=state.deckJourney,active=journey.activeDeckSlot||0;
+  Core.slots(state).forEach((slot,i)=>{
+   const el=document.createElement('button');el.type='button';
+   el.textContent=(i+1)+'. '+(slot?.name||'Empty · create');
+   el.setAttribute('aria-pressed',String(i===active));el.style.cssText=
+    'padding:9px 12px;border-radius:8px;'+(i===active?'outline:2px solid #66b8ff;':'');
+   el.onclick=()=>{
+    if(i===active)return;
+    if(dirty()){notice='Save or discard edits before changing slots.';status();return;}
+    try{
+     Core.selectDeckSlot(state,i,{copyCurrent:true});persist();
+     notice='Now editing '+state.deckJourney.deckSlots[i].name+'.';
+     render();
+    }catch(err){notice=err.message;status();}
+   };root.append(el);
+  });
+  $('deckSlotName').value=journey.deckSlots[active]?.name||'';
+ }
  function render(){
+  renderDeckSlots();
   builder.update({drafted:catalog,ownedCounts:owned(),deck:draft()});
   $('collectionSize').textContent=Object.values(owned()).reduce((sum,n)=>sum+n,0)+' cards owned';
   status();renderStrategy();
@@ -186,6 +207,11 @@
      description:'Build with the cards you own. Save your changes to use them in the next duel.',
      collectionLabel:'owned cards',nameLimit:true,unlimitedIds:allCards.filter(c=>Core.isBasicEnergyId(c.id)).map(c=>c.id),
      validate:next=>Core.check(next,owned())}});
+   $('renameDeckSlot').onclick=()=>{
+    try{Core.renameDeckSlot(state,state.deckJourney.activeDeckSlot,$('deckSlotName').value);
+     persist();notice='Deck renamed.';render();}
+    catch(err){notice=err.message;status();}
+   };
    $('strategySearch').oninput=renderSearch;
    $('saveDeck').onclick=()=>{
     try{Core.save(state);persist();notice='Deck saved! Your next duel will use these 60 cards.';render();}
