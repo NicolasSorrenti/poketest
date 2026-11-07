@@ -529,7 +529,7 @@ function maybeStartMandatory(){
   const due=MIA_EVENTS.filter(e=>state.day>=e.earliestDay&&state.slot>=(e.id==='mia_daytime_nap_return'?2:MIA_SCENE_SLOT[e.id])&&
    !!seen[MIA_SCENE_PREV[e.id]]&&!seen[e.id]&&
    (e.id==='mia_daytime_nap_return'?
-      state.day>=Number(state.miaLastSceneDay)&&state.slot===2&&state.day<=Number(state.miaLastSceneDay)+2:
+      state.day>=Number(state.miaLastSceneDay)&&state.slot===2:
       Number(state.miaLastSceneDay)!==state.day)).sort((a,b)=>a.earliestDay-b.earliestDay);
   if(due.length){
    const event=due[0],m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
