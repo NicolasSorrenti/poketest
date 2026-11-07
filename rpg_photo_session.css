@@ -332,3 +332,22 @@
  border-radius:7px;margin:0 auto 8px;
  font-size:11px;color:#bfcee7;
 }
+
+
+/* Zoom-aware photo framing presets */
+.nps-camera-presets{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:6px;margin:9px 0 7px;
+}
+.nps-camera-presets .nps-btn{padding:9px 4px;font-size:11px;min-height:43px}
+.nps-mobile-zoom [data-mobile-face]{
+ font-size:11px;line-height:1.05;font-weight:900;letter-spacing:.025em;
+ background:#4a3154ed;color:#fff1b4;
+}
+@media(max-width:740px),(max-height:530px) and (pointer:coarse){
+ .nps-camera-presets .nps-btn{min-height:46px;font-size:12px}
+ .nps-mobile-zoom [data-mobile-face]{
+  display:grid;place-items:center;min-height:46px;min-width:46px;
+  font-size:11px;padding:4px;touch-action:manipulation;
+ }
+}
