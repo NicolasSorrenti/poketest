@@ -22155,7 +22155,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_trainer_core.js prompts owner for Stage 1/2 Evolution and opponent for Light/Dark/neither, then draws 3 for correct guesser or player on wrong guess. Check privacy, reveal, return, empty deck and turn ownership; no reducer execution or independent historical rulings."
+          ],
+          "scope": "Live headless/Trainer source review only; runtime and independent historical rulings pending"
         }
       ]
     },
@@ -22166,7 +22170,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_trainer_core.js chooses opponent hand card, shuffles it into their deck, then opponent may draw 0–2. Confirmed missing empty-opponent-hand legality guard fixed in main commit 31abbb20776c411c14b767c4d0158d3eb88900fe for normal/proxy plays. Check selection privacy, hand indexes, deck-out and turn ownership; not executed."
+          ],
+          "scope": "Live headless/Trainer source review only; runtime and independent historical rulings pending"
         }
       ]
     },
@@ -22177,7 +22185,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_trainer_core.js coin flip on play; heads clears Active Special Conditions and heals 20, tails no effect. Check heads/tails, no damage, overlapping statuses, KO and turn ownership; not executed."
+          ],
+          "scope": "Live headless/Trainer source review only; runtime and independent historical rulings pending"
         }
       ]
     },
@@ -22188,7 +22200,11 @@
       "effects": [
         {
           "kind": "trainer",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: classic_trainer_core.js rejects starting with >=5 hand cards including Trainer, then draws until 4 after playing; check 1–4 starting hand sizes, zero deck, proxy play and turn ownership; not executed."
+          ],
+          "scope": "Live headless/Trainer source review only; runtime and independent historical rulings pending"
         }
       ]
     },
@@ -22201,13 +22217,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Healing Water",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Shining Celebi Healing Water heals Benched Pokémon based on number of attached Energy cards; Miracle Leaf flips once per Energy on defender, and on >=1 heads chooses Asleep/Confused/Poisoned. Full active reducer decision/attack dispatch not proven; likely missing special handlers, check target selection, zero Energy, special Energy card counting, coin outcomes, KO/Prize and turn ownership; not executed."
+          ],
+          "scope": "Live headless/Trainer source review only; runtime and independent historical rulings pending"
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Miracle Leaf",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Source-only: Shining Celebi Healing Water heals Benched Pokémon based on number of attached Energy cards; Miracle Leaf flips once per Energy on defender, and on >=1 heads chooses Asleep/Confused/Poisoned. Full active reducer decision/attack dispatch not proven; likely missing special handlers, check target selection, zero Energy, special Energy card counting, coin outcomes, KO/Prize and turn ownership; not executed."
+          ],
+          "scope": "Live headless/Trainer source review only; runtime and independent historical rulings pending"
         }
       ]
     },
