@@ -4152,6 +4152,7 @@ function tournamentNarrativeView(){
   if(!script.length){record.seen.push(active.key);record.active=null;persist();return;}
   const index=Math.min(script.length-1,Math.max(0,active.index||0));
   TOURNAMENT_STORY.show({cup,mode:'scene',phase:active.key==='wakeup'?'wakeup':'arena',script,index,progress,cast,
+   liveRomance:!!(state.mandatoryEventState?.seen?.live_glance_next_morning||state.liveSpecialSeen?.live_glance_next_morning),
    portraits:(id,expression)=>stagePortraitPaths(id,expression),
    onNext:()=>{
     if(state.tournamentNarrative?.[cup.id]?.active!==active)return;
