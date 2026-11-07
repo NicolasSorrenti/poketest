@@ -2021,14 +2021,18 @@ function chooseAction(game,raw={},memo={}){
   if(!['recoil','bench-both-recoil'].includes(program?.kind))return true;
   if(!(program.selfDamage>=hpRemaining(o.self.active)))return true;
   const ownBenchHit=program.kind==='bench-both-recoil'?program.benchDamage||0:0;
-  if(o.self.bench.some(unit=>hpRemaining(unit)>ownBenchHit))return true;
+  const ownBoardWiped=!o.self.bench.some(unit=>hpRemaining(unit)>ownBenchHit);
+  // A self-KO gives away a Prize even when a Bench replacement survives.
+  if(!ownBoardWiped&&o.opponent.prizeCount>1)return true;
   // Preserve a certain immediate win from taking the final Prize.
   const winning=(o.self.prizeCount<=1||o.opponent.bench.length===0)&&
    knockoutChance(attack,o.self.active,o.opponent.active,o.self.bench.length,
     livePlusPowerBonus(o))>=.999&&o.self.active.status!=='Confused';
   return winning;
  }):safeActions;
- const viableActions=survivableActions.length?survivableActions:safeActions;
+ // Never reintroduce a rejected suicidal attack merely because no safe attack remains.
+ const viableActions=survivableActions.length?survivableActions:
+  safeActions.filter(action=>action.type!=='attack');
  const preparedActions=energyPreparationActions(o,cfg,viableActions);
  const ranked=preparedActions.map((action,i)=>({action,
   score:score(action,o,cfg,used)+planningBonus(action,o,cfg)+prizeRaceBonus(action,o,cfg)+knockoutTempoBonus(action,o,cfg)+opponentResponseBonus(action,o,cfg)+energyHorizonBonus(action,o,cfg),tie:i}))
