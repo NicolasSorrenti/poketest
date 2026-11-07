@@ -1,70 +1,53 @@
 'use strict';
-// Subtle, opt-in VN idle breathing built on the shared sprite deformer.
-// Portrait image remains authoritative for cropping, loading and discreet mode.
+// Native-resolution VN idle breathing. Never replace or downsample the source
+// <img>: browser draws the original pixels with the existing RPG crop.
+// A feathered, locally transformed duplicate supplies extremely subtle motion.
 (function(root){
  const instances=new WeakMap();
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
  function attach(person,img){
-  const old=instances.get(person);
-  if(old)old.dispose();
-  if(!person?.isConnected||!img?.complete||!img.naturalWidth||!root.NeoRpgSpriteDeformer)return;
-  if(reduced.matches)return;
-  const src=img.currentSrc||img.src;
-  if(!src||/^(?:data:|blob:)/i.test(src))return;
-  // Only animate actual artwork. Discreet replacements must never be captured.
-  if(img.classList.contains('rpg-safe-avatar'))return;
-  const canvas=document.createElement('canvas');
-  canvas.className='neo-ow-idle-canvas';
-  canvas.hidden=true;
-  canvas.setAttribute('aria-hidden','true');
-  person.append(canvas);
-  let active=true,shown=false,handle=0;
-  const ratio=img.naturalWidth/img.naturalHeight;
-  const h=clamp(Math.round(340/Math.max(.65,ratio)),260,540);
-  const w=clamp(Math.round(h*ratio),160,540);
-  // Regions relative to the original portrait, not to the dialog crop.
-  // Avoid the head/face: gentle chest expansion and shoulders' vertical lift.
-  const zones=[
-   {x:.5,y:.37,rx:.31,ry:.19,inflateX:.006,inflateY:.008,moveY:-.002,phase:0},
-   {x:.5,y:.54,rx:.39,ry:.19,inflateX:.002,inflateY:.002,moveY:.001,phase:.25}
-  ];
-  const motion=root.NeoRpgSpriteDeformer.create(canvas,{
-   source:src,width:w,height:h,fps:18,tempo:60,speed:.285,
-   cameraMode:'crop',cropTop:0,cropHeight:1,fit:'contain',
-   baseBounce:0,feverBounce:0,tilt:0,intensity:.8,
-   zones,
-   onReady:()=>{
-    if(!active||!person.isConnected)return;
-    if(img.classList.contains('rpg-safe-avatar'))return;
-    // Don't expose an unrendered canvas while the deformer prepares.
-    motion.render(performance.now(),0);
-    shown=true;canvas.hidden=false;person.classList.add('neo-ow-idle-active');
-   },
-   onError:()=>{canvas.hidden=true;person.classList.remove('neo-ow-idle-active');}
-  });
-  function dispose(){
-   if(!active)return;
-   active=false;cancelAnimationFrame(handle);
-   motion.dispose();canvas.remove();person.classList.remove('neo-ow-idle-active');
-   if(instances.get(person)?.dispose===dispose)instances.delete(person);
-  }
-  function tick(now){
-   if(!active)return;
+  instances.get(person)?.dispose();
+  if(!person?.isConnected||!img?.complete||!img.naturalWidth||reduced.matches)return;
+  if(img.hidden||img.classList.contains('rpg-safe-avatar'))return;
+  const source=img.currentSrc||img.src;
+  if(!source||/^(?:data:|blob:)/i.test(source))return;
+  const layer=document.createElement('div');
+  layer.className='neo-ow-idle-layer';
+  layer.setAttribute('aria-hidden','true');
+  layer.hidden=true;
+  const copy=document.createElement('img');
+  copy.alt='';
+  copy.setAttribute('aria-hidden','true');
+  copy.draggable=false;
+  copy.decoding='async';
+  copy.src=source;
+  layer.append(copy);
+  person.append(layer);
+  let disposed=false;
+  let watcher=null;
+  const update=()=>{
+   if(disposed)return;
    if(!person.isConnected){dispose();return;}
-   const discreet=img.classList.contains('rpg-safe-avatar')||
-     img.hidden||getComputedStyle(img).display==='none';
-   const visible=shown&&!discreet&&!document.hidden&&
-     person.getClientRects().length>0&&
-     !!person.closest('#neoOverworldStoryDock:not([hidden])')&&
-     !person.closest('#scene:has(#rpgSceneCG:not([hidden]))');
-   person.classList.toggle('neo-ow-idle-active',!!visible);
-   canvas.hidden=!visible;
-   if(visible)motion.render(now,0);
-   handle=requestAnimationFrame(tick);
-  }
+   const safe=document.documentElement.getAttribute('data-rpg-discreet')==='on'||
+    img.hidden||img.classList.contains('rpg-safe-avatar');
+   layer.hidden=safe||!copy.complete||!copy.naturalWidth||reduced.matches;
+  };
+  const dispose=()=>{
+   if(disposed)return;
+   disposed=true;
+   watcher?.disconnect();
+   copy.removeEventListener('load',update);
+   layer.remove();
+   if(instances.get(person)?.dispose===dispose)instances.delete(person);
+  };
+  copy.addEventListener('load',update);
+  copy.addEventListener('error',()=>{layer.hidden=true;});
+  // Only watch accessibility/discreet toggles; no JS animation loop.
+  watcher=new MutationObserver(update);
+  watcher.observe(document.documentElement,{attributes:true,attributeFilter:['data-rpg-discreet']});
+  watcher.observe(img,{attributes:true,attributeFilter:['class','hidden']});
   instances.set(person,{dispose});
-  handle=requestAnimationFrame(tick);
+  update();
  }
  root.NeoRpgDialogueIdle=Object.freeze({attach});
 })(window);
