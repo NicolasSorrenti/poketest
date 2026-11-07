@@ -102,8 +102,16 @@
   const frequency=new Map();for(const c of starters)frequency.set(c.id,(frequency.get(c.id)||0)+1);
   const preferred=(a,b)=>(frequency.get(b.id)||0)-(frequency.get(a.id)||0)||
     ((a.id.length+seed)%7)-((b.id.length+seed)%7)||a.id.localeCompare(b.id);
+  const typeFrequency=new Map();
+  for(const c of starters)if(c.supertype==='Pokémon')
+   for(const type of c.types||[])if(type!=='Colorless')typeFrequency.set(type,(typeFrequency.get(type)||0)+1);
+  const primaryTypes=[...typeFrequency].sort((a,b)=>b[1]-a[1]).map(entry=>entry[0]);
+  const dualTypes=new Set([primaryTypes[0]||'Water',primaryTypes[1]||'Lightning']);
+  if(dualTypes.size===1)dualTypes.add(primaryTypes[0]==='Water'?'Lightning':'Water');
   const permittedPokemon=c=>c.supertype==='Pokémon'&&
-   (theme.format!=='monotype'||(c.types||[]).every(t=>t===theme.type||t==='Colorless'));
+   !(c.evolvesFrom&&(c.subtypes||[]).includes('Basic'))&&
+   (theme.format!=='monotype'||(c.types||[]).every(t=>t===theme.type||t==='Colorless'))&&
+   (theme.format!=='dual'||(c.types||[]).every(t=>t==='Colorless'||dualTypes.has(t)));
   const pokemonPool=pool.filter(permittedPokemon).sort(preferred);
   const basics=pokemonPool.filter(c=>(c.subtypes||[]).some(t=>t==='Basic'||t==='Baby'));
   const out=[],counts=new Map();
@@ -115,6 +123,12 @@
    out.push(c.id);counts.set(key,(counts.get(key)||0)+1);return true;
   };
   const chosen=new Set();
+  if(theme.format==='dual'){
+   for(const type of dualTypes){
+    const candidate=basics.find(c=>(c.types||[]).includes(type));
+    if(add(candidate))chosen.add(candidate.name);
+   }
+  }
   for(const c of basics){
    if(out.length>=12)break;
    if(add(c))chosen.add(c.name);
