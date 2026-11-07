@@ -237,6 +237,12 @@ function open(options={}){
   return config;
  }
  const dancer=isDaisy?root.NeoRpgSpriteDeformer?.create?.($('.nc-actor-canvas'),daisyMotionConfig()):null;
+ // Expression / overworld pose choreography is a presentation-only controller.
+ // Alternate art keeps its own sizing: never reuse Daisy's tuned deformation
+ // mask on a differently posed sprite.
+ const dancePoses=isDaisy?root.NeoRpgDancePoseController?.create?.($('.nc-dance-actor'),{
+  characterId:'daisy',baseCanvas:$('.nc-actor-canvas'),bpm:136,beatsPerBar:4,transitionMs:280
+ }):null;
 
  const RG=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
  function resetCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(2,root.devicePixelRatio||1);const w=Math.max(1,Math.floor(r.width*dpr)),h=Math.max(1,Math.floor(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}if(notesCanvas.width!==w||notesCanvas.height!==h){notesCanvas.width=w;notesCanvas.height=h;}ctx.setTransform(w/800,0,0,h/445,0,0);notesCtx.setTransform(w/800,0,0,h/445,0,0);}
@@ -322,7 +328,7 @@ function open(options={}){
  function scene(time){
   resetCanvas();
   if(dancer)dancer.render(time||0,session.fever/100);
-  if(isDaisy){drawDaisyStage(time||0);drawDaisyNotes(time||0);return;}
+  if(isDaisy){dancePoses?.render(time||0,{combo:session.combo,fever:session.fever/100});drawDaisyStage(time||0);drawDaisyNotes(time||0);return;}
   const bg=ctx.createLinearGradient(0,0,0,445);bg.addColorStop(0,'#08102b');bg.addColorStop(.7,'#170d36');bg.addColorStop(1,'#070b24');ctx.fillStyle=bg;ctx.fillRect(0,0,800,445);
   // Arcade room: atmospheric neon signs and cabinet silhouettes behind the lane.
   ctx.fillStyle='#160d38';for(let i=0;i<10;i++){const x=i*94-30;ctx.fillRect(x,80+(i%3)*15,60,240);ctx.fillStyle='#2d164a';ctx.fillRect(x+8,97+(i%3)*15,44,70);ctx.fillStyle='#170e34';}
@@ -372,10 +378,13 @@ function open(options={}){
   }
  }
  function RGOverlay(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r);}
- function cleanup(cancel){if(active!==session)return;session.audio?.stop();if(dancer)dancer.dispose();cancelAnimationFrame(session.frame);clearTimeout(session.feedbackTimer);document.removeEventListener('keydown',keydown,true);root.removeEventListener('resize',resize);host.remove();active=null;if(previous?.isConnected&&previous.focus)previous.focus({preventScroll:true});if(cancel)options.onCancel?.();}
+ function cleanup(cancel){if(active!==session)return;session.audio?.stop();dancePoses?.dispose();if(dancer)dancer.dispose();cancelAnimationFrame(session.frame);clearTimeout(session.feedbackTimer);document.removeEventListener('keydown',keydown,true);root.removeEventListener('resize',resize);host.remove();active=null;if(previous?.isConnected&&previous.focus)previous.focus({preventScroll:true});if(cancel)options.onCancel?.();}
  function hud(){if(isDaisy){$('.nc-fever-fill').style.width=session.fever+'%';$('.nc-fever-value').textContent=session.fever+'%';}$('.nc-score').textContent=String(session.score).padStart(6,'0');$('.nc-combo').textContent='× '+session.combo;$('.nc-accuracy').textContent=(session.hits+session.misses?Math.round(session.quality/(session.hits+session.misses)):100)+'%';}
  function feedback(message,good=true,lane=1){
   if(isDaisy){
+   const songTime=performance.now()-session.start;
+   if(!good&&message==='MISS')dancePoses?.react('miss',songTime);
+   else if(good&&session.combo>=12&&session.combo%12===0)dancePoses?.react('perfect',songTime);
    session.judgeFx={started:performance.now(),good,label:message,lane};
    const button=$$('.nc-pad')[lane];
    if(button){
@@ -422,7 +431,7 @@ function open(options={}){
  scene(elapsed);session.particles=session.particles.filter(p=>now-p.born<p.duration);
  $('.nc-meter-fill').style.width=Math.min(100,elapsed/session.duration*100)+'%';$('.nc-progress-text').textContent=asClock(Math.min(elapsed,session.duration))+' / '+asClock(session.duration);
  if(elapsed>=session.duration){finish();return;}session.frame=requestAnimationFrame(frame);}
- $('.nc-start').addEventListener('click',()=>{if(session.playing||session.finished)return;session.playing=true;$('.nc-overlay').hidden=true;session.start=performance.now();session.audio=startArcadeAudio(isDaisy?136:60000/STEP,LEAD);session.frame=requestAnimationFrame(frame);hud();},{once:true});
+ $('.nc-start').addEventListener('click',()=>{if(session.playing||session.finished)return;session.playing=true;dancePoses?.reset();$('.nc-overlay').hidden=true;session.start=performance.now();session.audio=startArcadeAudio(isDaisy?136:60000/STEP,LEAD);session.frame=requestAnimationFrame(frame);hud();},{once:true});
  scene(0);$('.nc-start').focus();return true;
 }
 // Character deformation is owned by rpg_sprite_deformer.js. The arcade
