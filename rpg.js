@@ -7,7 +7,7 @@ const ROMANCE=window.NeoRpgRomanceVisits||null;
 const TUTORIAL=window.NeoRpgTutorials||null;
 const INVITES=window.NeoRpgEventInvites||null,SCENE_CAST=window.NeoRpgSceneCast,MANDATORY=window.NeoRpgMandatoryEvents||null,REACT=window.NeoRpgReactivity,COMMUNITY=window.NeoRpgCommunity,CONSEQ=window.NeoRpgConsequences,NPC_DECKS=window.NeoRpgNpcDeckProgression,TIME=window.NeoRpgTimeCoordinator,REL=window.NeoRpgRelationships,MEM=window.NeoRpgDialogueMemory||null;
 const LIVE_NEW=window.NeoRpgLiveEverydayEvents||{events:[],art:{},followups:{},artAt:()=>null,finalArt:()=>null,fallback:()=>null,byId:()=>null};
-const {LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART,MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,MIA_WINE_MISUNDERSTANDING,MIA_WINE_REVEAL_ART,LIVE_MIA_CHOICE_EVENT,LIVE_MIA_CHOICE_ART,LIVE_MIA_NEXT_PERIOD_EVENT,LIVE_MIA_NEXT_PERIOD_ART}=window.NeoRpgLiveCampaignContent;
+const {LIVE_EVENTS,REPEATABLE_LIVE_EVENTS,REPEATABLE_LIVE_IDS,LIVE_ROTATING_EVENTS,LIVE_ROTATING_IDS,LIVE_EVENT_ART,LIVE_SPECIAL_EVENTS,LIVE_SPECIAL_IDS,LIVE_SPECIAL_ART,LIVE_FINAL_ART_2,LIVE_REPEAT_FINAL_ART_2,LIVE_AFTER_ART,LIVE_LYLA_PHOTO_EVENT,LIVE_DAY_FOLLOWUP,LIVE_AFTER_EVENT,LIVE_REPEAT_MORNING,LIVE_FOLLOWUPS,LIVE_AWAY_IDS,LIVE_HOME_CHECKIN,LIVE_HOME_CHECKIN_ART,MIA_EVENTS,MIA_IDS,MIA_EVENT_ART,MIA_PRIVATE_EVENT,MIA_PRIVATE_ART,MIA_SLEEP_EVENT,MIA_SLEEP_ART,MIA_COUCH_CHOICE_EVENT,MIA_COUCH_CHOICE_ART,MIA_KITCHEN_EVENTS,MIA_KITCHEN_ART,MIA_WINE_MISUNDERSTANDING,MIA_WINE_REVEAL_ART,LIVE_MIA_CHOICE_EVENT,LIVE_MIA_CHOICE_ART,LIVE_MIA_NEXT_PERIOD_EVENT,LIVE_MIA_NEXT_PERIOD_ART,MIA_ONLY_NEXT_PERIOD_EVENT,MIA_ONLY_NEXT_PERIOD_ART}=window.NeoRpgLiveCampaignContent;
 function startLiveGlanceMilestone(id){
  if(!LIVE_SPECIAL_IDS.has(id)||state.liveSpecialSeen?.[id])return;
  const active=state.mandatoryEventState?.active;
@@ -65,6 +65,7 @@ function liveEventArt(id){
    :LIVE_EVENT_ART.live_workout_wake_scare;
  if(id===LIVE_AFTER_EVENT.id)return LIVE_AFTER_ART;
  if(id===MIA_PRIVATE_EVENT.id)return MIA_PRIVATE_ART;
+ if(id===MIA_ONLY_NEXT_PERIOD_EVENT.id)return MIA_ONLY_NEXT_PERIOD_ART;
  if(id===LIVE_MIA_NEXT_PERIOD_EVENT.id)return (state.mandatoryEventState?.active?.index||0)>=5?LIVE_MIA_NEXT_PERIOD_ART.embrace:LIVE_MIA_NEXT_PERIOD_ART.together;
  if(id===LIVE_MIA_CHOICE_EVENT.id)return LIVE_MIA_CHOICE_ART[state.liveMiaChoiceStage='joint'||state.liveMiaChoiceStage==='bothEnding'?'both':state.liveMiaChoiceStage==='miaEnding'?'mia':'live'];
  if(id===MIA_SLEEP_EVENT.id)return MIA_SLEEP_ART;
@@ -131,7 +132,7 @@ const MIA_GOSSIP_EXTRA='/rpg-assets/characters/live/events/mia/a_highly_detailed
 function miaArt(id){return id==='mia_gossip'&&miaRomanceGossip()?MIA_GOSSIP_EXTRA:MIA_EVENT_ART[id];}
 Object.assign(LIVE_EVENT_ART,MIA_EVENT_ART);
 const MANDATORY_EVENTS=[...(window.NeoRpgSeasonEvents?.events||[]),...(window.NeoRpgCharacterPacks?.mandatoryEvents||[]).map(event=>
- event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,MIA_FIRST_TIME,...MIA_EVENTS,MIA_PRIVATE_EVENT,MIA_SLEEP_EVENT,MIA_COUCH_CHOICE_EVENT,...MIA_KITCHEN_EVENTS,MIA_WINE_MISUNDERSTANDING,LIVE_MIA_CHOICE_EVENT,LIVE_MIA_NEXT_PERIOD_EVENT,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
+ event.kind==='bond'?{...event,earliestDay:1}:event),...LIVE_EVENTS,MIA_FIRST_TIME,...MIA_EVENTS,MIA_PRIVATE_EVENT,MIA_SLEEP_EVENT,MIA_COUCH_CHOICE_EVENT,...MIA_KITCHEN_EVENTS,MIA_WINE_MISUNDERSTANDING,LIVE_MIA_CHOICE_EVENT,LIVE_MIA_NEXT_PERIOD_EVENT,MIA_ONLY_NEXT_PERIOD_EVENT,...REPEATABLE_LIVE_EVENTS,...LIVE_NEW.events,...LIVE_SPECIAL_EVENTS,LIVE_AFTER_EVENT,LIVE_LYLA_PHOTO_EVENT,LIVE_HOME_CHECKIN,LIVE_DAY_FOLLOWUP,LIVE_REPEAT_MORNING];
 const periods=['Morning','Afternoon','Evening'];
 const OUTFITS=window.NeoRpgOutfits,CG_SCENE=window.NeoRpgCGScene;
 const places={
@@ -472,7 +473,7 @@ function queueMandatory(){
  // invalidates an active Live event on every render and restarts it.
  MANDATORY.queue(state,MANDATORY_EVENTS);
  const m=state.mandatoryEventState;
- if(m?.pending)m.pending=m.pending.filter(item=>item.id!==LIVE_AFTER_EVENT.id&&item.id!==LIVE_MIA_CHOICE_EVENT.id&&item.id!==LIVE_MIA_NEXT_PERIOD_EVENT.id&&!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id&&item.id!==LIVE_LYLA_PHOTO_EVENT.id&&item.id!==LIVE_DAY_FOLLOWUP.id&&item.id!==LIVE_REPEAT_MORNING.id);
+ if(m?.pending)m.pending=m.pending.filter(item=>item.id!==LIVE_AFTER_EVENT.id&&item.id!==LIVE_MIA_CHOICE_EVENT.id&&item.id!==LIVE_MIA_NEXT_PERIOD_EVENT.id&&item.id!==MIA_ONLY_NEXT_PERIOD_EVENT.id&&!LIVE_EVENT_ART[item.id]&&!LIVE_SPECIAL_IDS.has(item.id)&&item.id!==LIVE_HOME_CHECKIN.id&&item.id!==LIVE_LYLA_PHOTO_EVENT.id&&item.id!==LIVE_DAY_FOLLOWUP.id&&item.id!==LIVE_REPEAT_MORNING.id);
 }
 function autoTravelForEvent(place){
  if(!place||!places[place]||state.location===place)return false;
@@ -609,6 +610,24 @@ function maybeStartMandatory(){
   state.miaLastSceneSlot=state.slot;
   state.liveLastEventDay=state.day;
   state.liveDayScene={day:state.day,id:MIA_PRIVATE_EVENT.id,cg:MIA_PRIVATE_ART,firstSlot:state.slot,lastSeenSlot:state.slot};
+  state.liveHomeActivityScene=null;
+  persist();return;
+ }
+ // Mia-only aftermath in the next available period after her private
+ // ending. Respect the same saved time boundary as the joint epilogue.
+ if(state.location==='home'&&state.day<=90&&
+    state.liveMiaFinalChoice==='mia'&&state.liveMiaChoiceEventSeen&&
+    !state.mandatoryEventState?.seen?.[MIA_ONLY_NEXT_PERIOD_EVENT.id]&&
+    (state.day>Number(state.liveMiaChoiceLastDay||0)||
+      (state.day===Number(state.liveMiaChoiceLastDay||0)&&
+       state.slot>Number(state.liveMiaChoiceLastSlot??0)))){
+  const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
+  m.active={id:MIA_ONLY_NEXT_PERIOD_EVENT.id,phase:'lines',index:0,choice:null};
+  state.liveLastEventDay=state.day;
+  state.miaLastSceneDay=state.day;
+  state.miaLastSceneSlot=state.slot;
+  state.liveDayScene={day:state.day,id:MIA_ONLY_NEXT_PERIOD_EVENT.id,cg:MIA_ONLY_NEXT_PERIOD_ART,
+   firstSlot:state.slot,lastSeenSlot:state.slot};
   state.liveHomeActivityScene=null;
   persist();return;
  }
@@ -779,7 +798,7 @@ function maybeStartMandatory(){
  // The non-Live scheduler runs only when no Live scene is active.
  // Exclude the replayable pool so it cannot accidentally start on every render.
  const started=MANDATORY.takeNext(state,MANDATORY_EVENTS.filter(e=>
-  !LIVE_EVENTS.includes(e)&&e.id!==MIA_FIRST_TIME.id&&e.id!==MIA_PRIVATE_EVENT.id&&e.id!==LIVE_MIA_CHOICE_EVENT.id&&e.id!==LIVE_MIA_NEXT_PERIOD_EVENT.id&&e.id!==MIA_SLEEP_EVENT.id&&e.id!==MIA_COUCH_CHOICE_EVENT.id&&e.id!==MIA_WINE_MISUNDERSTANDING.id&&!MIA_KITCHEN_ART[e.id]&&!miaStoryIds.has(e.id)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
+  !LIVE_EVENTS.includes(e)&&e.id!==MIA_FIRST_TIME.id&&e.id!==MIA_PRIVATE_EVENT.id&&e.id!==LIVE_MIA_CHOICE_EVENT.id&&e.id!==LIVE_MIA_NEXT_PERIOD_EVENT.id&&e.id!==MIA_ONLY_NEXT_PERIOD_EVENT.id&&e.id!==MIA_SLEEP_EVENT.id&&e.id!==MIA_COUCH_CHOICE_EVENT.id&&e.id!==MIA_WINE_MISUNDERSTANDING.id&&!MIA_KITCHEN_ART[e.id]&&!miaStoryIds.has(e.id)&&!REPEATABLE_LIVE_IDS.has(e.id)&&!LIVE_SPECIAL_IDS.has(e.id)&&e.id!==LIVE_HOME_CHECKIN.id&&e.id!==LIVE_LYLA_PHOTO_EVENT.id&&e.id!==LIVE_DAY_FOLLOWUP.id&&e.id!==LIVE_REPEAT_MORNING.id&&e.id!==LIVE_AFTER_EVENT.id));
  if(started){autoTravelForEvent(mandatoryDestination(MANDATORY_EVENTS.find(e=>e.id===started.id)));persist();}
 }
 function mandatoryText(value){
@@ -1206,6 +1225,31 @@ function liveMiaChoiceAction(action){
 }
 
 // Shared-route aftermath. CG1 is the happy reunion; CG2 is Live hugging Mia.
+function renderMiaOnlyNextPeriod(){
+ const a=state.mandatoryEventState?.active;
+ const lines=MIA_ONLY_NEXT_PERIOD_EVENT.lines;
+ const index=Math.max(0,Math.min(lines.length-1,Number(a?.index)||0));
+ const line=lines[index];
+ return {speaker:line.speaker==='Protagonist'?'You':line.speaker,
+  line:line.speaker==='Mia'?miaDialogueText(line.text):line.text,
+  choices:[[index===lines.length-1?'Continue':'Next ›','miaOnlyNextPeriodNext']]};
+}
+function miaOnlyNextPeriodAction(type){
+ if(type!=='miaOnlyNextPeriodNext')return true;
+ const m=state.mandatoryEventState,active=m?.active;
+ const last=MIA_ONLY_NEXT_PERIOD_EVENT.lines.length-1;
+ if((Number(active?.index)||0)<last)active.index=(Number(active.index)||0)+1;
+ else{
+  active.phase='choice';active.choice=null;
+  MANDATORY.choose(state,MANDATORY_EVENTS,0);
+  if(!MANDATORY.finish(state,MANDATORY_EVENTS))return true;
+  state.miaOnlyNextPeriodCompleted=true;
+  state.liveDayScene=null;state.liveHomeActivityScene=null;
+  state.liveLastEventDay=state.day;
+ }
+ persist();render();return true;
+}
+
 function renderLiveMiaNextPeriod(){
  const lines=[
   ['Narrator','Later, Live and Mia find you together in the apartment. They both look unusually cheerful.'],
@@ -1244,6 +1288,7 @@ function renderMandatory(){
  if(a?.id===MIA_PRIVATE_EVENT.id)return renderMiaPrivate();
  if(a?.id===LIVE_MIA_CHOICE_EVENT.id)return renderLiveMiaChoice();
  if(a?.id===LIVE_MIA_NEXT_PERIOD_EVENT.id)return renderLiveMiaNextPeriod();
+ if(a?.id===MIA_ONLY_NEXT_PERIOD_EVENT.id)return renderMiaOnlyNextPeriod();
  if(a?.id===MIA_SLEEP_EVENT.id)return renderMiaSleep();
  if(a?.id===MIA_COUCH_CHOICE_EVENT.id)return renderMiaCouchChoice();
  if(MIA_KITCHEN_ART[a?.id])return miaKitchenDialogue();
@@ -1338,6 +1383,8 @@ function mandatoryAction(type,id){
   return liveMiaChoiceAction(type);
  if(state.mandatoryEventState.active.id===LIVE_MIA_NEXT_PERIOD_EVENT.id)
   return liveMiaNextPeriodAction(type);
+ if(state.mandatoryEventState.active.id===MIA_ONLY_NEXT_PERIOD_EVENT.id)
+  return miaOnlyNextPeriodAction(type);
  if(state.mandatoryEventState.active.id===MIA_SLEEP_EVENT.id)
   return miaSleepAction(type);
  if(state.mandatoryEventState.active.id===MIA_COUCH_CHOICE_EVENT.id)
@@ -3614,7 +3661,7 @@ function syncSceneCG(){
  if(liveEventId===MIA_WINE_MISUNDERSTANDING.id&&state.miaWineStage!=='reveal'&&state.miaWineStage!=='blanket'){
   cgScenePresenter.clear();return;
  }
- const isLiveCg=!!liveEventId&&(liveEventId===MIA_PRIVATE_EVENT.id||liveEventId===LIVE_MIA_CHOICE_EVENT.id||liveEventId===LIVE_MIA_NEXT_PERIOD_EVENT.id||liveEventId===MIA_SLEEP_EVENT.id||liveEventId===MIA_COUCH_CHOICE_EVENT.id||liveEventId===MIA_WINE_MISUNDERSTANDING.id||!!MIA_KITCHEN_ART[liveEventId]||!!LIVE_EVENT_ART[liveEventId]||
+ const isLiveCg=!!liveEventId&&(liveEventId===MIA_PRIVATE_EVENT.id||liveEventId===LIVE_MIA_CHOICE_EVENT.id||liveEventId===LIVE_MIA_NEXT_PERIOD_EVENT.id||liveEventId===MIA_ONLY_NEXT_PERIOD_EVENT.id||liveEventId===MIA_SLEEP_EVENT.id||liveEventId===MIA_COUCH_CHOICE_EVENT.id||liveEventId===MIA_WINE_MISUNDERSTANDING.id||!!MIA_KITCHEN_ART[liveEventId]||!!LIVE_EVENT_ART[liveEventId]||
   LIVE_SPECIAL_IDS.has(liveEventId)||liveEventId===LIVE_HOME_CHECKIN.id||
   liveEventId===LIVE_DAY_FOLLOWUP.id||liveEventId===LIVE_REPEAT_MORNING.id||liveEventId===LIVE_AFTER_EVENT.id);
  const liveArt=isLiveCg?(liveDiscreetEnabled()?LIVE_DISCREET_PLACEHOLDER:
@@ -3641,6 +3688,10 @@ function syncSceneCG(){
   // Until the new approved CG pack is uploaded, existing Live art stays visible.
   const sourceId=liveEventId===LIVE_DAY_FOLLOWUP.id?state.liveDayScene?.id:liveEventId;
   const fallbackArt=LIVE_NEW.fallback(sourceId);
+  if(liveEventId===MIA_ONLY_NEXT_PERIOD_EVENT.id){
+   const fallback='/rpg-assets/characters/live/events/mia/1next_day_mia_only.png';
+   if(!paths.includes(fallback))paths.push(fallback);
+  }
   if(liveEventId===LIVE_MIA_NEXT_PERIOD_EVENT.id){
    const alternatives=[
     '/rpg-assets/characters/live/events/mia/a_cozy_living_room_morning_next_day_scene_with_two.png',
