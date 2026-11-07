@@ -5,7 +5,7 @@
  <meta name="viewport" content="width=device-width, initial-scale=1">
  <meta name="theme-color" content="#121a30">
  <title>Neo Campus — Barb Photo Session</title>
- <link rel="stylesheet" href="/rpg_photo_session.css?v=barb-photo-v1">
+ <link rel="stylesheet" id="neo-photo-session-style" href="/rpg_photo_session.css?v=barb-photo-v2">
  <style>
   *{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,-apple-system,sans-serif;color:#f8ecff;background:radial-gradient(circle at 50% 15%,#5b3d77 0,#15233c 54%,#080d1f 100%);min-height:100dvh;display:grid;place-items:center;padding:20px}
   main{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.9fr);gap:28px;align-items:center;max-width:970px;width:100%;border:1px solid #e6a9d766;border-radius:22px;padding:clamp(16px,3vw,35px);background:#111c33de;box-shadow:0 20px 70px #0008}
@@ -24,13 +24,13 @@
   <section>
    <small>NEO CAMPUS · INTERACTIVE DEMO</small>
    <h1>Photo Session with Barb</h1>
-   <p>Use <strong>Barb's real in-game illustrations</strong> from <code>expressionsv2</code> and <code>overworld</code>. Direct her mood, capture candid moments, move the camera, change lighting, and take three photos.</p>
+   <p>Take three photos of Barb. Each round has a clear <strong>photo brief</strong>: match her pose, zoom, and lighting; then press SNAP when the moment bar fills. You'll see live hints and can retry any shot before keeping it.</p>
    <p>The demo is free play. It doesn't use your campaign save, grant rewards, or advance the RPG clock. In the RPG, invite Barb at Riverside Park through <strong>Spend time → Photo Session</strong>.</p>
    <button id="start" type="button">📷 Start photo session</button>
    <p><a href="/rpg-overworld.html">← Back to Neo Campus RPG</a></p>
   </section>
  </main>
- <script src="/rpg_photo_session.js?v=barb-photo-v1"></script>
+ <script src="/rpg_photo_session.js?v=barb-photo-v2"></script>
  <script>
   document.getElementById('start').onclick=function(){
    if(!window.NeoRpgPhotoSession?.open) return;
