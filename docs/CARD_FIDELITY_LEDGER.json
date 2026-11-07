@@ -18790,7 +18790,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Bite",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only: Bite: empty effect text, 10 flat damage, Colorless cost; review weakness/resistance and turn ownership. No reducer execution; printed/errata/rulings not fully certified."
+          ],
+          "scope": "Source-only PARTIAL: call-path and catalogue review; no executable reducer scenarios."
         }
       ]
     },
@@ -18803,7 +18807,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Thunder Jolt",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only: Thunder Jolt: generic coin-recoil regex, tails 10 self-damage; check self-KO, opponent Prize and promotion. No reducer execution; printed/errata/rulings not fully certified."
+          ],
+          "scope": "Source-only PARTIAL: call-path and catalogue review; no executable reducer scenarios."
         }
       ]
     },
@@ -18816,7 +18824,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Confuse Ray",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only: Confuse Ray: generic coin-status regex, heads Confused after 10 damage; check KO suppression, existing status and Psychic typed cost. No reducer execution; printed/errata/rulings not fully certified."
+          ],
+          "scope": "Source-only PARTIAL: call-path and catalogue review; no executable reducer scenarios."
         }
       ]
     },
@@ -18829,7 +18841,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Bind",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only: Bind: generic coin-status regex, heads Paralyzed after 10 damage; Revive Fossil already partial, inspect coin, deck choice, Bench and shuffle on both outcomes. No reducer execution; printed/errata/rulings not fully certified."
+          ],
+          "scope": "Source-only PARTIAL: call-path and catalogue review; no executable reducer scenarios."
         },
         {
           "kind": "power",
@@ -18852,7 +18868,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Burst",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "2026-11-07 current-engine source-only: Burst: imported two-coin text independently matches Bulbapedia and Serebii. Neither neo_discovery_attack_core nor generic patterns recognizes its compound 2-coin self/Bench spread script; current reducer rejects unsupported attacks rather than treating them as flat 40. Requires dedicated implementation; no runtime execution. No reducer execution; printed/errata/rulings not fully certified."
+          ],
+          "scope": "Source-only PARTIAL: call-path and catalogue review; no executable reducer scenarios."
         }
       ]
     },
