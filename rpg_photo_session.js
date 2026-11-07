@@ -41,6 +41,39 @@
   {name:'Riverside silhouette',pose:'back-view',framing:'full',light:'warm',
    hint:'A scenic full-body shot from behind.'}
  ];
+
+ // Each prompt is a short performance with a genuine photo window.
+ // The requested pose appears only after the player's action, not from a checklist.
+ const REACTIONS=[
+  {id:'joke',label:'😄 Tell a joke',name:'Make her laugh',
+   frames:[{pose:'surprised',duration:1050,line:'Barb: "Wait, what?"'},
+    {pose:'happy',duration:1850,highlight:true,line:'Barb: "Pfft—okay, that was actually funny!"'},
+    {pose:'irritated',duration:1050,line:'Barb: "Don’t get too proud of yourself!"'}]},
+  {id:'walk',label:'🚶 Walk together',name:'A walk by the river',
+   frames:[{pose:'chatting',duration:1150,line:'Barb: "You set the pace!"'},
+    {pose:'walking',duration:2050,highlight:true,line:'Barb: "Quick, this is a good spot!"'},
+    {pose:'back-view',duration:1150,line:'Barb: "Look at the water from here."'}]},
+  {id:'designs',label:'✏️ Ask about designs',name:'A focused designer',
+   frames:[{pose:'neutral',duration:900,line:'Barb: "My latest idea?"'},
+    {pose:'determined',duration:1850,highlight:true,line:'Barb: "I know exactly how I want it to look."'},
+    {pose:'happy',duration:1250,line:'Barb: "Thanks for listening."'}]},
+  {id:'relax',label:'☕ Take a break',name:'Unposed and relaxed',
+   frames:[{pose:'chatting',duration:1000,line:'Barb: "We have time for a break, right?"'},
+    {pose:'lounge',duration:1950,highlight:true,line:'Barb: "This is actually pretty nice."'},
+    {pose:'neutral',duration:1200,line:'Barb: "One more photo?"'}]},
+  {id:'compliment',label:'💬 Compliment her',name:'A shy smile',
+   frames:[{pose:'surprised',duration:900,line:'Barb: "You mean that?"'},
+    {pose:'vulnerable',duration:1900,highlight:true,line:'Barb: "Okay… now I’m embarrassed."'},
+    {pose:'happy',duration:1200,line:'Barb: "You make this difficult!"'}]}
+ ];
+ const REACTION_TASKS=[
+  {name:'Catch a genuine laugh',pose:'happy',framing:'close',light:'warm',
+   hint:'Make Barb laugh. Get close and capture the smile before it fades.',action:'joke'},
+  {name:'A spontaneous riverside shot',pose:'walking',framing:'full',light:'bright',
+   hint:'Ask Barb to walk. Catch her mid-step in a wide frame.',action:'walk'},
+  {name:'The focused designer',pose:'determined',framing:'medium',light:'soft',
+   hint:'Ask about her designs. Catch her confident expression.',action:'designs'}
+ ];
  const frameZoom={close:1.9,medium:1.42,full:1.06};
  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
  const $=(el,q)=>el.querySelector(q);
@@ -49,7 +82,7 @@
   if(document.getElementById('neo-photo-session-style'))return;
   const link=document.createElement('link');
   link.id='neo-photo-session-style';link.rel='stylesheet';
-  link.href='/rpg_photo_session.css?v=barb-photo-v2';
+  link.href='/rpg_photo_session.css?v=barb-photo-v3';
   document.head.append(link);
  }
  function pickTasks(){
@@ -66,9 +99,11 @@
    name:options.name||'Barb',freePlay:!!options.freePlay,
    savedAlbum:Array.isArray(options.savedAlbum)?options.savedAlbum.slice(-24):[],
    onCancel:options.onCancel,onComplete:options.onComplete,closed:false,
-   mode:'portrait',poseId:'neutral',light:'warm',zoom:1.3,x:0,y:0,shots:[],
-   tasks:pickTasks(),auto:false,imageSequence:0,clock:null,interval:null,
-   available:true,animation:null,reviewOpen:false,begin:performance.now()
+   mode:'reactions',poseId:'neutral',light:'warm',zoom:1.3,x:0,y:0,shots:[],
+   tasks:REACTION_TASKS.slice(),auto:false,imageSequence:0,clock:null,interval:null,
+   available:true,animation:null,reviewOpen:false,begin:performance.now(),
+   reaction:null,reactionSerial:0,reactionBusy:false,reactionTimer:null,
+   motion:null,motionReady:false,motionResolve:null,preload:new Map()
   };
   active=session;
   const shell=document.createElement('div');
@@ -91,17 +126,23 @@
    '<span class="nps-check" data-check-moment>Moment</span></div></div>'+
    '<div class="nps-main"><div class="nps-stage" data-stage data-light="warm">'+
    '<img class="nps-actor" data-actor alt="Barb posing for the camera">'+
+   '<canvas class="nps-actor nps-motion-actor" data-motion aria-label="Barb animated pose"></canvas>'+
    '<div class="nps-silhouette" aria-label="Character artwork hidden">◇</div>'+
    '<div class="nps-frame" aria-hidden="true"></div><div class="nps-cross" aria-hidden="true"></div>'+
-   '<div class="nps-meter">✦ SHUTTER MOMENT<div class="nps-meter-track"><span data-meter></span></div><span class="nps-meter-label" data-meter-label>Wait for the bar to fill</span></div>'+
+   '<div class="nps-meter">✦ SHUTTER MOMENT<div class="nps-meter-track"><span data-meter></span></div><span class="nps-meter-label" data-meter-label>Start an interaction to catch a moment</span></div>'+
    '<div class="nps-caption" data-caption>Barb: "Ready when you are!"</div>'+
    '<div class="nps-loading" data-loading>Loading Barb’s artwork…</div></div>'+
    '<div class="nps-controls">'+
    '<section class="nps-section"><h3>📸 Session style</h3>'+
-   '<div class="nps-mode"><button class="nps-btn" data-mode="portrait">Directed</button>'+
+   '<div class="nps-mode"><button class="nps-btn" data-mode="reactions">🎭 Reactions</button>'+
+   '<button class="nps-btn" data-mode="portrait">Directed</button>'+
    '<button class="nps-btn" data-mode="candid">Candid</button></div>'+
-   '<div class="nps-camerarow"><button class="nps-btn" data-auto type="button">Auto poses: Off</button></div></section>'+
-   '<section class="nps-section"><h3>✦ Barb’s poses / moods</h3><div class="nps-choice-grid" data-poses></div></section>'+
+   '<div class="nps-camerarow" data-auto-wrap><button class="nps-btn" data-auto type="button">Auto poses: Off</button></div></section>'+
+   '<section class="nps-section nps-react-actions" data-reactions>'+
+   '<h3>💬 Interact with Barb</h3><p class="nps-hint">Choose what to say. Barb reacts in a short sequence. Capture the perfect expression!</p>'+
+   '<div class="nps-react-grid" data-reaction-actions></div>'+
+   '<p class="nps-react-status" data-reaction-status>Choose an interaction to begin.</p></section>'+
+   '<section class="nps-section" data-pose-section><h3>✦ Barb’s poses / moods</h3><div class="nps-choice-grid" data-poses></div></section>'+
    '<section class="nps-section"><h3>☀ Lighting</h3><div class="nps-choice-grid">'+
    '<button class="nps-btn" data-light="soft">Soft</button>'+
    '<button class="nps-btn" data-light="warm">Warm</button>'+
@@ -121,7 +162,7 @@
   session.shell=shell;
   const stage=$(shell,'[data-stage]'),actor=$(shell,'[data-actor]'),
    loading=$(shell,'[data-loading]'),poseBox=$(shell,'[data-poses]'),
-   zoomInput=$(shell,'[data-zoom]');
+   zoomInput=$(shell,'[data-zoom]'),motionCanvas=$(shell,'[data-motion]');
   function camera(){
    actor.style.setProperty('--zoom',String(session.zoom));
    actor.style.setProperty('--pan-x',session.x+'px');
