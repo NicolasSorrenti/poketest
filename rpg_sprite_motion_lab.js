@@ -35,8 +35,8 @@
   tilt:['Giro del cuerpo',0,.05,.001,'rad','0 impide que cuello y cabeza se inclinen.'],
   intensity:['Intensidad local',0,3,.05,'factor','Escala la expansión y los otros efectos locales.'],
   feverInflate:['Más expansión con Fever',0,2,.05,'factor','0 = mismo tamaño siempre; 0.4 = hasta 40% extra de expansión con Fever completo.'],
-  cropTop:['Recorte desde arriba',0,.25,.005,'pct','Porción recortada de la parte superior de la imagen.'],
-  cropHeight:['Alto del recorte',.50,1,.005,'pct','Fracción vertical usada del archivo.'],
+  cropTop:['Posición vertical de cámara',0,.25,.005,'pct','En modo Ventana no corta la imagen: decide qué parte se ve al principio.'],
+  cropHeight:['Alto visible / zoom',.50,1,.005,'pct','En modo Ventana, una fracción menor acerca la cámara sin destruir píxeles.'],
   energy:['Simular Fever',0,1,.01,'pct','Solo cambia la vista previa; no se exporta como ajuste.']
  };
  let state=clone(defaults);
@@ -56,6 +56,7 @@
      if(Number.isFinite(Number(raw.zones[side][key])))result.zones[side][key]=Number(raw.zones[side][key]);
    }
   }
+  if(raw.cameraMode==='viewport'||raw.cameraMode==='crop')result.cameraMode=raw.cameraMode;
   if(typeof raw.source==='string'&&raw.source.startsWith('/rpg-assets/'))result.source=raw.source;
   return result;
  }
@@ -103,8 +104,14 @@
   for(const key of zoneFields)slider($(holder),key,scope,side);
  }
  for(const key of globalFields)slider($('globalControls'),key,'global');
+ const cameraControl=document.createElement('div');cameraControl.className='control';
+ cameraControl.innerHTML='<label for="motionCameraMode">Modo de cámara</label><select id="motionCameraMode" style="width:100%;padding:9px;margin-top:8px;border:1px solid #94629f;border-radius:8px;background:#141124;color:#fff"><option value="viewport">Ventana (sin recortar el sprite)</option><option value="crop">Recorte tradicional</option></select><small>Ventana mantiene toda la imagen disponible; el rebote revela las partes inicialmente ocultas.</small>';
+ $('globalControls').prepend(cameraControl);
+ const cameraInput=$('motionCameraMode');
+ cameraInput.addEventListener('change',()=>{state.cameraMode=cameraInput.value;changed();});
  slider($('previewControls'),'energy','preview');
  function syncSliders(){
+  cameraInput.value=state.cameraMode==='crop'?'crop':'viewport';
   for(const {input,output,key,scope,side} of sliderInputs.values()){
    const v=scope==='zone'?state.zones[side][key]:scope==='preview'?energy:state[key];
    input.value=String(Number.isFinite(Number(v))?v:0);
@@ -201,6 +208,7 @@
  $('motionApply').addEventListener('click',()=>{
   const allowed={};
   for(const key of globalFields)allowed[key]=state[key];
+  allowed.cameraMode=state.cameraMode==='crop'?'crop':'viewport';
   allowed.zones=clone(state.zones);
   if(storageWrite(ACTIVE,allowed))message('Configuración aplicada a Dance Battle en este navegador. Abrí Free Play para verla.');
   else message('No se pudieron guardar los parámetros; copiá el JSON para conservarlos.',true);
