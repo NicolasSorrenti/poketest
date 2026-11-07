@@ -2518,10 +2518,11 @@ function startDuel(id,exhibition=null,arcEpisode=null,tournament=null,sideQuest=
  if(arcEpisode&&(!state.activeArc||state.activeArc.phase!=='choice'||!ARC.available(state,currentPeople()).some(e=>e.id===arcEpisode)))return;
  const c=cast[id];
  // Reuse existing starter lists and authored NPC recipes. Only compatible decks enter the pool.
- const themeBank=theme?[
-  ...COLLECT.starters.map(entry=>entry.cards),
-  ...Object.values(NPC_DECKS?.STARTING_RECIPES||{})
- ].filter(cards=>COMPETE.legalThemeDeck(cards,theme,COLLECT.packRarity).valid):null;
+ const eligibleThemeRecipes=theme?Object.values(NPC_DECKS?.STARTING_RECIPES||{})
+  .filter(cards=>COMPETE.legalThemeDeck(cards,theme,COLLECT.packRarity).valid):[];
+ const themeBank=theme?(eligibleThemeRecipes.length>=3?eligibleThemeRecipes:
+  COLLECT.starters.map(entry=>entry.cards)
+   .filter(cards=>COMPETE.legalThemeDeck(cards,theme,COLLECT.packRarity).valid)):null;
  const sharedThemeDeck=themeBank?.length?[...themeBank[(state.day+competition.round*3)%themeBank.length]]:null;
  if(theme&&!sharedThemeDeck){say('Tournament Desk','No legal CPU deck is available for these restrictions.');return;}
  const npcEditedCards=sharedThemeDeck||PARTNER.snapshot(state,id,c.deck);
