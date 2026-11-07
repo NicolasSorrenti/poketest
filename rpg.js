@@ -1337,7 +1337,11 @@ function liveMiaNextPeriodAction(type){
 // shared-route daytime follow-up. The original dual-CG ending is not replayed.
 function renderLiveMiaRepeat(){
  const mode=state.liveMiaRepeatMode||'mia',n=Math.max(0,Number(state.liveMiaRepeatStep)||0);
- const script=(mode==='mia'||mode==='afterMia')?[
+ const script=mode==='afterMia'?[
+  ['Mia','I am still smiling about yesterday. It meant so much to me.'],
+  ['You','I am glad we had that moment together.'],
+  ['Mia','Me too. I hope we can make plenty more memories like that.']
+ ]:mode==='mia'?[
   ['Mia','I am so glad you made time for me today. I missed having a moment just for us.'],
   ['You','I was looking forward to seeing you, too.'],
   ['Mia','Then let us keep making time for each other. It makes me happy.']
