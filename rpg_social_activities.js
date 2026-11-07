@@ -17,6 +17,7 @@
   {id:'park_riverside',place:'park',title:'Take a riverside walk',tag:'quiet',tone:'friendship',focus:5,credits:0,detail:'Unwind by the waterfront and talk about things beyond the circuit.'},
   {id:'park_explore',place:'park',title:'Explore the waterfront',tag:'adventure',tone:'friendship',focus:10,credits:0,detail:'Visit unfamiliar corners of Neo Harbor and find a new viewpoint.'},
   {id:'park_sketch',place:'park',title:'Sketch the riverside',tag:'creative',tone:'friendship',focus:7,credits:0,detail:'Make postcard-sized drawings of the view and exchange them.'},
+  {id:'park_photo_session',place:'park',npc:'barb',noDate:true,title:'Photo Session with Barb',tag:'playful',tone:'friendship',focus:8,credits:0,detail:'Direct and photograph Barb using her existing portraits and natural poses.'},
   {id:'cafe_trade',place:'cafe',title:'Share a favorite card story',tag:'collection',tone:'friendship',focus:5,credits:5,detail:'Tell each other which card matters most and why.'},
   {id:'cafe_break',place:'cafe',title:'Take an unhurried break',tag:'quiet',tone:'friendship',focus:5,credits:7,detail:'Share a snack and leave the tournament pressure outside.'},
   {id:'cafe_games',place:'cafe',title:'Make up a silly challenge',tag:'playful',tone:'friendship',focus:8,credits:5,detail:'Invent a harmless wager and see who cracks up first.'},
@@ -47,6 +48,7 @@
   park_riverside:'The river passes quietly beside you as the conversation wanders.',
   park_explore:'You find a tucked-away spot neither of you had noticed before.',
   park_sketch:'Your sketches look nothing alike, but somehow they belong together.',
+  park_photo_session:'You take three photographs by the river, and Barb laughs as you compare your favorite shots.',
   cafe_trade:'One treasured card leads to another story, and then another.',
   cafe_break:'The cups grow cold while you lose track of the time.',
   cafe_games:'Your invented rules become sillier with every round.',
@@ -145,7 +147,7 @@
      ||!places.has(s.location)||!cast[npc]||!present.includes(npc))return [];
   const spent=!!s.hungOut?.[s.day+':'+npc];
   const reserved=!!(s.pendingDuel||s.activeStory||s.activeSideQuest||s.activeEncounter||s.activeArc);
-  return activities.filter(x=>x.place===s.location).map(a=>{
+  return activities.filter(x=>x.place===s.location&&(!x.npc||x.npc===npc)).map(a=>{
    const disabledReason=reserved?'Finish your current scene first':spent?'Already spent time together today':
     (s.focus||0)<a.focus?'Not enough focus':(s.credits||0)<a.credits?'Not enough credits':null;
    return {...a,affinity:affinity(npc,a.tag,cast),disabledReason};
