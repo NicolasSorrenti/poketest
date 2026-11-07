@@ -18074,13 +18074,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Doubleslap",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Frog Song: headless_duel.js applies +40 after its Weakness/Resistance and other reduction pipeline when >3 Poliwag-line Pokémon in play across both sides; confirm timing relative to protective effects, status locks, zero-damage Doubleslap and KO. Doubleslap two flips and 0/40/80 damage require reducer execution."
+          ],
+          "scope": "Current live RPG/Classic source trace; reducer execution unavailable, printed/errata and historical rulings not independently certified."
         },
         {
           "kind": "power",
           "index": 0,
           "name": "Frog Song",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Frog Song: headless_duel.js applies +40 after its Weakness/Resistance and other reduction pipeline when >3 Poliwag-line Pokémon in play across both sides; confirm timing relative to protective effects, status locks, zero-damage Doubleslap and KO. Doubleslap two flips and 0/40/80 damage require reducer execution."
+          ],
+          "scope": "Current live RPG/Classic source trace; reducer execution unavailable, printed/errata and historical rulings not independently certified."
         }
       ]
     },
@@ -18093,13 +18101,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Corkscrew Punch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Corkscrew Punch is generic flat 30; Submission matches attack_effects_core.js recoil 70 with 20 self damage. Inspect simultaneous KO/Prize, Metal reductions, Weakness/Resistance and turn ownership in reducer."
+          ],
+          "scope": "Current live RPG/Classic source trace; reducer execution unavailable, printed/errata and historical rulings not independently certified."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Submission",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Corkscrew Punch is generic flat 30; Submission matches attack_effects_core.js recoil 70 with 20 self damage. Inspect simultaneous KO/Prize, Metal reductions, Weakness/Resistance and turn ownership in reducer."
+          ],
+          "scope": "Current live RPG/Classic source trace; reducer execution unavailable, printed/errata and historical rulings not independently certified."
         }
       ]
     },
@@ -18112,13 +18128,21 @@
           "kind": "attack",
           "index": 0,
           "name": "False Swipe",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "False Swipe half remaining HP rounded down to 10 requires dedicated handler; Double Claw catalogue damage '20+' conflicts with text '20 times number of heads', so exact print must be checked before fixing. Source-only potential compiler gap; 0/1/2 heads, residual HP and KO require reducer execution."
+          ],
+          "scope": "Current live RPG/Classic source trace; reducer execution unavailable, printed/errata and historical rulings not independently certified."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Double Claw",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "False Swipe half remaining HP rounded down to 10 requires dedicated handler; Double Claw catalogue damage '20+' conflicts with text '20 times number of heads', so exact print must be checked before fixing. Source-only potential compiler gap; 0/1/2 heads, residual HP and KO require reducer execution."
+          ],
+          "scope": "Current live RPG/Classic source trace; reducer execution unavailable, printed/errata and historical rulings not independently certified."
         }
       ]
     },
@@ -18131,7 +18155,11 @@
           "kind": "attack",
           "index": 0,
           "name": "Sketch",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Sketch is registered by neo_attack_batch_v050.js and headless_duel.js uses neo50LastAttack/neo50Observed with prior-turn serial and play-presence check; copyAllowed restricts effects. Verify attacker switches/evolves, costs bypass, copied interactive effects, KO and turn ownership."
+          ],
+          "scope": "Current live RPG/Classic source trace; reducer execution unavailable, printed/errata and historical rulings not independently certified."
         }
       ]
     },
@@ -18144,13 +18172,21 @@
           "kind": "attack",
           "index": 0,
           "name": "Slam",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Trample shares the neo_attack_batch_v048.js exact signature registration for neo2-12 and applies a separate coin for each Benched Pokémon on both sides in headless_duel.js; Slam generic two-coin. Verify multiple Bench KOs, Prizes and promotions."
+          ],
+          "scope": "Current live RPG/Classic source trace; reducer execution unavailable, printed/errata and historical rulings not independently certified."
         },
         {
           "kind": "attack",
           "index": 1,
           "name": "Trample",
-          "status": "unreviewed"
+          "status": "partial",
+          "evidence": [
+            "Trample shares the neo_attack_batch_v048.js exact signature registration for neo2-12 and applies a separate coin for each Benched Pokémon on both sides in headless_duel.js; Slam generic two-coin. Verify multiple Bench KOs, Prizes and promotions."
+          ],
+          "scope": "Current live RPG/Classic source trace; reducer execution unavailable, printed/errata and historical rulings not independently certified."
         }
       ]
     },
