@@ -74,6 +74,7 @@
   {name:'The focused designer',pose:'determined',framing:'medium',light:'soft',
    hint:'Ask about her designs. Catch her confident expression.',action:'designs'}
  ];
+ const PHOTO_BACKGROUND='/rpg-assets/eye-level/park-eye-level-v2.webp';
  const frameZoom={close:1.9,medium:1.42,full:1.06};
  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
  const $=(el,q)=>el.querySelector(q);
@@ -82,7 +83,7 @@
   if(document.getElementById('neo-photo-session-style'))return;
   const link=document.createElement('link');
   link.id='neo-photo-session-style';link.rel='stylesheet';
-  link.href='/rpg_photo_session.css?v=barb-photo-mobile-v5';
+  link.href='/rpg_photo_session.css?v=barb-photo-snapshot-v6';
   document.head.append(link);
  }
  function pickTasks(){
@@ -103,7 +104,8 @@
    tasks:REACTION_TASKS.slice(),auto:false,imageSequence:0,clock:null,interval:null,
    available:true,animation:null,reviewOpen:false,begin:performance.now(),
    reaction:null,reactionSerial:0,reactionBusy:false,reactionTimer:null,
-   motion:null,motionReady:false,motionResolve:null,preload:new Map()
+   motion:null,motionReady:false,motionResolve:null,preload:new Map(),
+   backdrop:null
   };
   active=session;
   const shell=document.createElement('div');
@@ -167,6 +169,13 @@
   const stage=$(shell,'[data-stage]'),actor=$(shell,'[data-actor]'),
    loading=$(shell,'[data-loading]'),poseBox=$(shell,'[data-poses]'),
    zoomInput=$(shell,'[data-zoom]'),motionCanvas=$(shell,'[data-motion]');
+  // Use the exact same ground-level park illustration as the active RPG
+  // eye-level scene, not the separate top-down map or legacy postcard panorama.
+  // Cache it before the player presses SNAP so we can render the actual frame.
+  const backdrop=new Image();
+  backdrop.decoding='async';
+  backdrop.src=PHOTO_BACKGROUND;
+  session.backdrop=backdrop;
   function camera(){
    actor.style.setProperty('--zoom',String(session.zoom));
    motionCanvas.style.setProperty('--zoom',String(session.zoom));
@@ -508,6 +517,84 @@
    const timing=Math.round(20*currentMeter());
    return {score:clamp(posePoints+comp+lightPoints+timing,0,100),
     pose:posePoints,framing:comp,light:lightPoints,moment:timing};
+  }
+
+  // Snapshot the stage *as presented*, without recreating its sprite zoom/pan
+  // inside the differently sized review card. Capture before stopping motion.
+  // Camera HUD (crosshair, grid, dialogue, timing bar) is deliberately excluded.
+  function captureStage(){
+   const sceneRect=stage.getBoundingClientRect();
+   if(!sceneRect.width||!sceneRect.height)throw Error('Camera is not visible');
+   if(!backdrop.complete||!backdrop.naturalWidth)
+    throw Error('The park background is still loading. Please try SNAP again.');
+   const ratio=Math.min(2,root.devicePixelRatio||1,1600/sceneRect.width);
+   const full=document.createElement('canvas');
+   full.width=Math.max(1,Math.round(sceneRect.width*ratio));
+   full.height=Math.max(1,Math.round(sceneRect.height*ratio));
+   const context=full.getContext('2d',{alpha:false});
+   if(!context)throw Error('Photo canvas unavailable');
+   context.scale(full.width/sceneRect.width,full.height/sceneRect.height);
+   const w=sceneRect.width,h=sceneRect.height;
+   context.fillStyle='#273a57';
+   context.fillRect(0,0,w,h);
+   // The stage CSS uses background-position:center and background-size:cover.
+   const bgScale=Math.max(w/backdrop.naturalWidth,h/backdrop.naturalHeight);
+   const bgW=backdrop.naturalWidth*bgScale,bgH=backdrop.naturalHeight*bgScale;
+   context.drawImage(backdrop,(w-bgW)/2,(h-bgH)/2,bgW,bgH);
+   // Use each element's *actual rendered DOM rectangle*. This includes zoom,
+   // pan, canvas sizing and CSS transforms in the original camera stage.
+   // Crucially, the captured image will never be transformed a second time.
+   function drawSprite(element){
+    const style=getComputedStyle(element);
+    if(style.display==='none'||style.visibility==='hidden')return;
+    const alpha=Number(style.opacity);
+    if(!Number.isFinite(alpha)||alpha<=0)return;
+    const isCanvas=element.tagName==='CANVAS';
+    const nw=isCanvas?element.width:element.naturalWidth;
+    const nh=isCanvas?element.height:element.naturalHeight;
+    if(!nw||!nh||!isCanvas&&!element.complete)return;
+    const rect=element.getBoundingClientRect();
+    if(!rect.width||!rect.height)return;
+    // Both the image and motion canvas use object-fit:contain. Preserve
+    // transparent letterboxing, and object-position:center bottom for PNGs.
+    const fit=Math.min(rect.width/nw,rect.height/nh);
+    const drawWidth=nw*fit,drawHeight=nh*fit;
+    const x=rect.left-sceneRect.left+(rect.width-drawWidth)/2;
+    const y=rect.top-sceneRect.top+(isCanvas?(rect.height-drawHeight)/2:rect.height-drawHeight);
+    context.save();
+    context.globalAlpha=alpha;
+    context.drawImage(element,x,y,drawWidth,drawHeight);
+    context.restore();
+   }
+   if(!shell.classList.contains('nps-discreet')){
+    drawSprite(actor);
+    drawSprite(motionCanvas);
+   }
+   // Match the camera's subtle environment grade and selected lighting.
+   const shade=context.createLinearGradient(0,0,0,h);
+   shade.addColorStop(0,'rgba(7,22,42,0)');
+   shade.addColorStop(1,'rgba(7,22,42,.208)');
+   context.fillStyle=shade;context.fillRect(0,0,w,h);
+   const tint={soft:'rgba(239,243,251,.106)',warm:'rgba(241,164,91,.149)',
+    bright:'rgba(255,255,255,.13)'}[session.light];
+   if(tint){context.fillStyle=tint;context.fillRect(0,0,w,h);}
+   // Full composition is retained only for this live session's review.
+   // Save a bounded copy in campaign metadata to avoid bloating cloud saves.
+   const fullImage=full.toDataURL('image/webp',.87);
+   let thumbnail='';
+   for(const targetWidth of [480,360,280]){
+    const thumb=document.createElement('canvas');
+    thumb.width=Math.round(Math.min(targetWidth,full.width));
+    thumb.height=Math.max(1,Math.round(thumb.width*full.height/full.width));
+    const tc=thumb.getContext('2d',{alpha:false});
+    if(!tc)continue;
+    tc.drawImage(full,0,0,thumb.width,thumb.height);
+    thumbnail=thumb.toDataURL('image/webp',.63);
+    if(!thumbnail.startsWith('data:image/webp'))
+     thumbnail=thumb.toDataURL('image/jpeg',.65);
+    if(thumbnail.length<51000)break;
+   }
+   return {fullImage,thumbnail};
   }
   function showAlbum(){
    const stored=session.savedAlbum.filter(p=>p?.character==='barb');
