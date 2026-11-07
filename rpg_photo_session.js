@@ -229,11 +229,13 @@
     card.append(strong,small);
     // Rebuild thumbnails from asset paths. Do not store large bitmap data in cloud saves.
     if(!shell.classList.contains('nps-discreet')){
+     const preview=document.createElement('div');
+     preview.style.cssText='position:relative;width:128px;height:94px;overflow:hidden;border-radius:7px;margin:0 auto 6px;background:#273a57 url(/rpg-assets/locations/panoramas/park-day.webp) center/cover';
      const image=document.createElement('img');image.src=pose(p.pose).src;
      image.alt=labels[p.pose]||'Barb pose';
      image.loading='lazy';
-     image.style.cssText='display:block;max-width:100px;height:115px;object-fit:contain;margin:0 auto 6px;';
-     card.prepend(image);
+     image.style.cssText='position:absolute;left:50%;bottom:-2%;height:99%;width:80%;object-fit:contain;object-position:bottom center;transform-origin:center 66%;transform:translate(calc(-50% + '+Math.round((p.x||0)*.25)+'px),'+Math.round((p.y||0)*.25)+'px) scale('+(p.zoom||1)+')';
+     preview.append(image);card.prepend(preview);
     }
     list.append(card);
    });
