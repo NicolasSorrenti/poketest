@@ -40,6 +40,16 @@
   </div>
   <p id="strategyStatus" class="strategy-status" role="status" aria-live="polite"></p>
  </details>
+ <section id="deckSlotsBar" aria-label="Saved deck slots" style="padding:12px 16px;margin:10px 0;border:1px solid #62718b66;border-radius:12px">
+  <strong>YOUR FIVE DECKS</strong>
+  <p style="margin:6px 0 12px;font-size:.9em">Switch decks freely. An empty slot starts as a copy of your current deck.</p>
+  <div id="deckSlotButtons" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap">
+   <label for="deckSlotName">Deck name</label>
+   <input id="deckSlotName" maxlength="36" aria-label="Name for selected deck" style="max-width:220px"/>
+   <button id="renameDeckSlot" type="button">Rename</button>
+  </div>
+ </section>
  <div id="rpgDeckBuilder" aria-label="RPG 60-card deck builder"></div>
  <div id="rpgBuilderActions" class="studio-actions">
   <p id="saveStatus" role="status" aria-live="polite">Your deck is saved.</p>
@@ -60,5 +70,5 @@
 <script src="/rpg_partner_deck_studio.js" defer></script>
 <script src="/rpg_cloud_save.js?v=2" defer></script>
 <script src="/rpg_tutorials.js?v=1"></script>
-<script src="/rpg_deck_studio.js?v=live-deck-sync-20261106" defer></script>
+<script src="/rpg_deck_studio.js?v=five-deck-slots-20261107" defer></script>
 </body></html>
