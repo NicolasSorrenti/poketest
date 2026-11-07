@@ -6,11 +6,12 @@
 // Never owns gameplay, affinity, scoring, RPG time or saves.
 (function(root){
  'use strict';
- if(root.NeoRpgDancePoseController?.version===2)return;
+ if(root.NeoRpgDancePoseController?.version===3)return;
  const DAISY_POSES=Object.freeze([
   {id:'primary',type:'base'},
   {id:'happy',src:'/rpg-assets/characters/daisy/expressionsv2/happy.png'},
-  {id:'walking',src:'/rpg-assets/characters/daisy/overworld/walking.png'},
+  {id:'walking',src:'/rpg-assets/characters/daisy/overworld/walking.png',framing:'overworld',cropTop:.04},
+  {id:'kneeling',src:'/rpg-assets/characters/daisy/overworld/kneeing.png',framing:'crouching',cropTop:0},
   {id:'determined',src:'/rpg-assets/characters/daisy/expressionsv2/determined.png'},
   {id:'victory',src:'/rpg-assets/characters/daisy/expressionsv2/battle-victory.png'},
   {id:'surprised',src:'/rpg-assets/characters/daisy/expressionsv2/surprised.png',reactionOnly:true}
@@ -21,7 +22,8 @@
  // The regions use coordinates IN THE VISIBLE DIALOGUE WINDOW, not full art.
  const DAISY_REGIONS=Object.freeze({
   happy:{left:[.32,.70,.165,.135],right:[.71,.71,.165,.132]},
-  walking:{left:[.35,.72,.14,.13],right:[.71,.72,.14,.13]},
+  walking:{left:[.35,.58,.145,.12],right:[.70,.58,.145,.12]},
+  kneeling:{left:[.47,.52,.11,.09],right:[.64,.52,.11,.09]},
   determined:{left:[.33,.70,.16,.135],right:[.70,.70,.16,.135]},
   victory:{left:[.33,.70,.15,.13],right:[.71,.70,.15,.13]},
   surprised:{left:[.34,.70,.16,.13],right:[.70,.70,.16,.13]}
@@ -61,9 +63,8 @@
   canvas.style.transition='opacity '+transitionMs+'ms ease-in-out';
   canvas.style.opacity='1';
   canvas.style.willChange='opacity';
-  // The original 278%-height VN bust crop is implemented in
-  // NeoRpgSpriteDeformer.cameraFit='dialogue-bust'. All canvases occupy the
-  // identical actor rect, preserving a stable head/upper-torso scale.
+  // Expressions use the dialogue bust; overworld/crouching poses preserve
+  // their body silhouette and do not collapse into a head close-up.
   function preload(entry){
    if(disposed||!engine||!entry.src||entry.type==='base')return;
    const layer=document.createElement('div');
@@ -79,7 +80,11 @@
     entry.motion=engine.create(poseCanvas,{
      source:entry.src,
      width:210,height:280,
-     cameraMode:'viewport',cameraFit:'dialogue-bust',dialogueBustScale:2.78,
+     cameraMode:'viewport',
+     cameraFit:entry.cameraFit||(entry.framing==='overworld'||entry.framing==='crouching'?'full-width':'dialogue-bust'),
+     cropTop:Number.isFinite(Number(entry.cropTop))?Number(entry.cropTop):0,
+     cropHeight:Number.isFinite(Number(entry.cropHeight))?Number(entry.cropHeight):1,
+     dialogueBustScale:Number(entry.dialogueBustScale)||2.78,
      tempo:Number(animationPreset.tempo)||119,
      speed:Number(animationPreset.speed)||.9,
      fps:Math.min(24,Number(animationPreset.fps)||22),
@@ -127,7 +132,7 @@
    const highFever=fever>=.7;
    // One transition every 8 beats, or 4 beats during high Fever.
    const bar=Math.floor(musicTime/(barTime*(highFever?1:2)));
-   const sequence=['primary','happy','walking','determined','happy','victory','walking','determined'];
+   const sequence=['primary','happy','walking','determined','happy','victory','kneeling','walking','determined'];
    let wanted=sequence[(bar+Math.floor(bar/5))%sequence.length];
    if(combo>=12&&bar%4===3)wanted='victory';
    return readyMap.get(wanted)|| (current.loaded?current:base);
@@ -182,6 +187,6 @@
   });
  }
  root.NeoRpgDancePoseController=Object.freeze({
-  version:2,create:make,presets:Object.freeze({daisy:DAISY_POSES})
+  version:3,create:make,presets:Object.freeze({daisy:DAISY_POSES})
  });
 })(window);
