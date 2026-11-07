@@ -351,3 +351,22 @@
   font-size:11px;padding:4px;touch-action:manipulation;
  }
 }
+
+
+/* Character-requested photo scene: the NPC directs the shot, not a menu. */
+.nps-story .nps-goal{border-bottom:2px solid #f0b8dc99}
+.nps-story .nps-brief-copy strong{color:#ffebaa}
+.nps-story [data-style-section],.nps-story [data-pose-section]{display:none!important}
+.nps-story .nps-react-actions{background:linear-gradient(130deg,#243859e8,#30243fe8);border-color:#bdb6ec7c}
+.nps-story .nps-react-grid{grid-template-columns:minmax(0,1fr)}
+.nps-story .nps-react-grid button{font-weight:850;text-align:center}
+.nps-story .nps-react-status{color:#fceabe}
+.nps-story .nps-caption{background:#1b2547eb;border-color:#fae3c0af}
+@media(max-width:740px),(max-height:530px) and (pointer:coarse){
+ .nps-story .nps-react-grid{display:flex}
+ .nps-story .nps-react-grid .nps-btn{
+  min-width:155px;max-width:none;flex:1;
+  background:#48385bd9;border-color:#e5b5e3
+ }
+ .nps-story .nps-brief-copy>p{max-height:40px;white-space:normal;line-height:1.25}
+}
