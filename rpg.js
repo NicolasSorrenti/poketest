@@ -549,7 +549,8 @@ function maybeStartMandatory(){
  // treat those as overdue instead of silently suppressing the event.
  const glanceMilestoneDay=Number(state.liveThirtyGlancesDay)||Math.max(1,state.day-1);
  if(state.location==='home'&&state.day<=90&&state.day>glanceMilestoneDay&&
-    Number(state.liveGlanceCount)>=11&&!state.mandatoryEventState?.seen?.live_glance_next_morning){
+    Number(state.liveGlanceCount)>=11&&!!state.liveSpecialSeen?.live_glance_talk_two&&
+    !state.mandatoryEventState?.seen?.live_glance_next_morning){
   const m=MANDATORY.hydrate(state,MANDATORY_EVENTS);
   m.active={id:'live_glance_next_morning',phase:'lines',index:0,choice:null};
   // Mark completion only after the scene finishes: reloads must never lose it.
