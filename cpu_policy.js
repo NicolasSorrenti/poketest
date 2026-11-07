@@ -324,7 +324,11 @@ function likelyOpponentBenchKnockout(o,unit,damage=unit.damage){
      !canPayEnergy(attack.cost||[],energyPool(enemy)))return false;
   const hit=program.energyBenchMultiplier!==undefined?
    (enemy.energies||[]).length*program.energyBenchMultiplier:program.benchDamage||0;
-  return hit>0&&hit>=hpRemaining({...unit,damage});
+  // A coin-dependent Bench hit is not a reliable knockout. The healing
+  // rescue bonus is reserved for threats with at least 75% likelihood;
+  // unknown flip-dependent Bench effects cannot satisfy that threshold.
+  const uncertain=/flip (?:a |one |\\d+ )?coins?|heads|tails/i.test(attack.text||'');
+  return !uncertain&&hit>0&&hit>=hpRemaining({...unit,damage});
  });
 }
 function hpRemaining(u){return Math.max(0,(Number(card(u?.id)?.hp)||60)-(u?.damage||0));}
