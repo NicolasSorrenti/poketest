@@ -444,5 +444,5 @@
   x.vouchers[set]--;x.packs++;
   return grant(x,ids,'gift',set,null);
  }
- return Object.freeze({starters,upgrade,ENERGY,SETS,SHOP_OFFERS,shopPacks,THEMED_PACKS,themedPacks,themeContains,randomThemedPack,selectThemePool,themeForCharacter,buyThemedPack,canOwn:id=>allAllowed.has(id),awardSignature,awardVoucher,redeemVoucher,CHARACTER_SETS,setForCharacter,randomPack,packRarity,PACK_POOLS,byId:id=>byId.get(id),fresh,hydrate,choose,check,cardName,isBasicEnergyId,draft,edit,change,save,cancel,reward,buyPack,rank});
+ return Object.freeze({starters,upgrade,ENERGY,SETS,SHOP_OFFERS,packRarity,shopPacks,THEMED_PACKS,themedPacks,themeContains,randomThemedPack,selectThemePool,themeForCharacter,buyThemedPack,canOwn:id=>allAllowed.has(id),awardSignature,awardVoucher,redeemVoucher,CHARACTER_SETS,setForCharacter,randomPack,packRarity,PACK_POOLS,byId:id=>byId.get(id),fresh,hydrate,choose,check,cardName,isBasicEnergyId,draft,edit,change,save,cancel,reward,buyPack,rank});
 });
