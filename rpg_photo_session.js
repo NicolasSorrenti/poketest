@@ -17,7 +17,7 @@
   if(document.getElementById('neo-photo-session-style'))return;
   const link=document.createElement('link');
   link.id='neo-photo-session-style';link.rel='stylesheet';
-  link.href='/rpg_photo_session.css?v=photo-subtitles-fab-v1-20261107';
+  link.href='/rpg_photo_session.css?v=subtitle-only-story-v1-20261107';
   document.head.append(link);
  }
  function open(options={}){
@@ -89,8 +89,7 @@
    '<div class="nps-subtitle-meta"><span data-story-speaker>'+session.name+'</span>'+
    '<span data-story-step>PHOTO 1 / 3</span></div>'+
    '<div class="nps-subtitle-context" data-story-context></div>'+
-   '<div class="nps-subtitle-line" data-story-line>Ready for the first picture?</div>'+
-   '<div class="nps-subtitle-request" data-story-request></div></div>'+
+   '<div class="nps-subtitle-line" data-story-line>Ready for the first picture?</div></div>'+
    '<div class="nps-loading" data-loading>Loading '+session.name+'’s artwork…</div></div>'+
    '<div class="nps-controls" id="nps-controls-panel">'+
    '<section class="nps-section" data-style-section><h3>📸 Session style</h3>'+
@@ -145,13 +144,7 @@
    $(panel,'[data-story-step]').textContent='PHOTO '+(Math.min(3,session.shots.length+1))+' / 3';
    $(panel,'[data-story-context]').textContent=task?.intro||session.narrative?.hook||'';
    $(panel,'[data-story-line]').textContent=plain||task?.dialogue||'Look toward the camera.';
-   const targetLabels={eyes:'EYES',hair:'HAIR',collar:'NECKLINE / COLLAR',
-    hands:'HANDS',skirt:'SKIRT HEM','back-detail':'BACK OF OUTFIT',
-    outfit:'FULL OUTFIT',shoulders:'SHOULDERS',waist:'WAIST / CLOTHING',
-    legs:'LEGS / POSE',lips:'SMILE',natural:'CANDID MOMENT'};
-   $(panel,'[data-story-request]').textContent=task?.dialogue?
-    'FOCUS  ·  '+(targetLabels[task.target?.region]||'PHOTO DETAIL')+
-    '  ·  Take your time':'';
+
   }
   const silhouette=$(shell,'.nps-silhouette');
   const cameraLayer=()=>shell.classList.contains('nps-discreet')?silhouette:actor;
