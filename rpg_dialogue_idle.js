@@ -30,7 +30,7 @@
    {x:.5,y:.54,rx:.39,ry:.19,inflateX:.002,inflateY:.002,moveY:.001,phase:.25}
   ];
   const motion=root.NeoRpgSpriteDeformer.create(canvas,{
-   source:src,width:w,height:h,fps:18,tempo:60,speed:.57,
+   source:src,width:w,height:h,fps:18,tempo:60,speed:.285,
    cameraMode:'crop',cropTop:0,cropHeight:1,fit:'contain',
    baseBounce:0,feverBounce:0,tilt:0,intensity:.8,
    zones,
