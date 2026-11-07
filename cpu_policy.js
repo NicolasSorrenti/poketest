@@ -347,8 +347,11 @@ function openingReadiness(cardId,hand){
   return isEnergy(energy)&&legalAttachment({card:energy,unit,
    cardName:pokemon?.name||''});
  });
- if(!moves.length||!energies.length)return 0;
- let readiness=0;
+ if(!moves.length)return 0;
+ // Zero-cost attacks remain playable with no Energy in the opening hand.
+ // Their readiness must not depend on finding an attachable Energy card.
+ let readiness=moves.some(move=>(move.cost||[]).length===0)?12:0;
+ if(!energies.length)return readiness;
  for(const e of energies){
   const provided=energyPool({energies:[e]});
   for(const move of moves){
