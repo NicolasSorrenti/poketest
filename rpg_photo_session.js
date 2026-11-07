@@ -49,7 +49,7 @@
   if(document.getElementById('neo-photo-session-style'))return;
   const link=document.createElement('link');
   link.id='neo-photo-session-style';link.rel='stylesheet';
-  link.href='/rpg_photo_session.css?v=barb-photo-v1';
+  link.href='/rpg_photo_session.css?v=barb-photo-v2';
   document.head.append(link);
  }
  function pickTasks(){
@@ -456,6 +456,7 @@
     root.NeoRpgErrorReport?.capture?.(error,{source:'photo-minigame',action:'callback'});}
   }
   $(shell,'[data-close]').onclick=()=>close(false);
+  $(shell,'[data-help]').onclick=showGuide;
   $(shell,'[data-snap]').onclick=snap;
   $(shell,'[data-album]').onclick=showAlbum;
   $(shell,'[data-reset]').onclick=()=>{session.x=0;session.y=0;setZoom(1.3);};
@@ -466,7 +467,7 @@
   $(shell,'[data-mode=candid]').onclick=()=>{session.mode='candid';setMood('walking');};
   $(shell,'[data-auto]').onclick=()=>{session.auto=!session.auto;drawChoices();};
   for(const b of shell.querySelectorAll('button[data-light]')){
-   b.onclick=()=>{session.light=b.dataset.light;stage.dataset.light=session.light;drawChoices();};
+   b.onclick=()=>{session.light=b.dataset.light;stage.dataset.light=session.light;drawChoices();updateFeedback();};
   }
   let pointer=null,pinchDist=0;
   const pointers=new Map();
@@ -496,7 +497,7 @@
   shell.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close(false);}});
   drawChoices();taskUI();camera();setMood(session.tasks[0].pose);startAuto();
   session.clock=requestAnimationFrame(tick);
-  $(shell,'[data-snap]').focus();
+  showGuide();
   return true;
  }
  root.NeoRpgPhotoSession=Object.freeze({open,isOpen:()=>!!active,poses:POSES.map(p=>({id:p.id,kind:p.kind,path:p.src}))});
