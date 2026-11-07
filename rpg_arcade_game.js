@@ -208,15 +208,15 @@ function open(options={}){
  const $=q=>host.querySelector(q),$$=q=>Array.from(host.querySelectorAll(q));
  if(isRina){
   // Reuse all the proven Dance Battle UI and controls without a second copy.
-  $('.nc-overline').textContent='✦ RINA / PIXEL PALACE';
-  $('.nc-song-sub').textContent='Rina · 136 BPM';
-  // The current Center Stage layout has no .nc-dance-tag; the visible
-  // heading and dialogue name are updated below instead.
-  $('.nc-dance-comment small').textContent='RINA ♡';
-  $('.nc-dance-comment-text').textContent='Follow the beat with me! ♡';
-  $('.nc-overlay .nc-chip').textContent='♫ ELECTRIC HEART · RINA · 136 BPM';
-  $('.nc-overlay h2').textContent='DANCE WITH RINA';
-  $('.nc-actor-canvas').setAttribute('aria-label','Rina dancing');
+  const setText=(selector,value)=>{const node=$(selector);if(node)node.textContent=value;};
+  setText('.nc-overline','✦ RINA / PIXEL PALACE');
+  setText('.nc-song-sub','Rina · 136 BPM');
+  // Center Stage intentionally has no .nc-dance-tag.
+  setText('.nc-dance-comment small','RINA ♡');
+  setText('.nc-dance-comment-text','Follow the beat with me! ♡');
+  setText('.nc-overlay .nc-chip','♫ ELECTRIC HEART · RINA · 136 BPM');
+  setText('.nc-overlay h2','DANCE WITH RINA');
+  $('.nc-actor-canvas')?.setAttribute('aria-label','Rina dancing');
   $('.nc-motion-lab-link')?.remove(); // Daisy-only calibrated editor
  }
  // Center Stage intentionally has no rival label; the classic cabinet still does.
