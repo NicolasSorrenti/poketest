@@ -680,9 +680,23 @@ function choiceValue(option,decision,o,cfg){
     (survives?32:-65);
   }
   if(/damage|attack|gust|opposing|opponent/i.test(ctx)){
-   const damage=strongestAffordableAttack(o.self.active,target,o.self.bench.length);
-   const lethal=damage>=hpRemaining(target)&&hpRemaining(target)>0;
-   return 100-hpRemaining(target)+damage*.8+(lethal?225:0);
+   // Gust and targeted-attack choices must not treat a Bench-only attack,
+   // an unfunded move, or an Amnesia-disabled move as immediate Active damage.
+   // After a Gust, the chosen Pokémon is the defending Active.
+   const attacker=o.self.active;
+   const attacks=attacker?.effectiveAttacks||card(attacker?.id)?.attacks||[];
+   const defenderHp=hpRemaining(target);
+   const legal=attacks.map((attack,index)=>({attack,index})).filter(({attack,index})=>
+    eligibleAttack(o,attacker,attack,index)&&
+    ATTACK.compile(attack)?.kind!=='bench-target'&&
+    canPayEnergy(attack.cost||[],energyPool(attacker)));
+   const damage=legal.reduce((best,{attack})=>Math.max(best,
+    estimatedDamage(attack,attacker,target,o.self.bench.length)*
+    (attacker.status==='Confused'?.5:1)),0);
+   const ko=legal.reduce((best,{attack})=>Math.max(best,
+    knockoutChance(attack,attacker,target,o.self.bench.length,
+     livePlusPowerBonus(o))*(attacker.status==='Confused'?.5:1)),0);
+   return 100-defenderHp+damage*.8+(defenderHp>0?ko*225:0);
   }
   return own?setupValue(target):110-hpRemaining(target);
  }
