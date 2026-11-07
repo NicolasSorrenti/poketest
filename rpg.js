@@ -1925,6 +1925,47 @@ function act(action,confirmedInvitationHandoff=false){
  if(type==='socialPlan')return planSharedActivity(id);
  if(type==='socialDo'){
   if(!cast[id]||!currentPeople().includes(id))return;
+  // Barb's photoshoot uses verified existing overworld and expressionsv2 art.
+  // Commit only after three shots and explicit Save; cancel leaves RPG state intact.
+  if(part==='park_photo_session'){
+   const available=SOCIAL.options(state,id,currentPeople(),cast).find(x=>x.id===part&&!x.disabledReason);
+   if(!available)return sayCharacterChoiceMenu(id,'SPEND TIME','This photoshoot is not available right now.',sharedActivityChoices(id));
+   if(!window.NeoRpgPhotoSession?.open)return sayCharacterChoiceMenu(id,'SPEND TIME','The camera is temporarily unavailable.',sharedActivityChoices(id));
+   if(!confirmTimeAdvance())return;
+   window.NeoRpgPhotoSession.open({
+    name:cast[id].name,characterId:id,savedAlbum:state.photoAlbum,
+    onCancel:()=>{},
+    onComplete:result=>{
+     try{
+      if(!SOCIAL.options(state,id,currentPeople(),cast).some(x=>x.id===part&&!x.disabledReason))
+       throw Error('The photoshoot is no longer available.');
+      const before=activityBalance(id);
+      const outcome=SOCIAL.complete(state,id,part,currentPeople(),cast);
+      const award=Math.max(0,Math.min(14,Number(result.credits)||0));
+      state.credits=Math.min(999999,(Number(state.credits)||0)+award);
+      const photos=Array.isArray(result.photos)?result.photos.filter(p=>p.character==='barb').slice(0,3):[];
+      state.photoAlbum=(Array.isArray(state.photoAlbum)?state.photoAlbum:[])
+       .concat(photos.map(p=>({...p,day:state.day}))).slice(-24);
+      state.photoRecords=state.photoRecords||{};
+      const previous=state.photoRecords[id]||{};
+      state.photoRecords[id]={lastDay:state.day,sessions:(previous.sessions||0)+1,
+       bestAverage:Math.max(previous.bestAverage||0,result.average||0),
+       lastAverage:result.average||0};
+      log('Photographed '+cast[id].name+' at Riverside Park: '+(result.average||0)+'/100 average.');
+      recordIntention('hangout');
+      const memories=recordCG('hangout',id);
+      activityOutcome(cast[id].name,'Your three photos averaged '+result.average+
+       '/100. '+(award?'Your photography earned '+award+' credits. ':'')+
+       outcome.line,before,id);
+      showCGMoment(memories[0]);
+     }catch(err){
+      window.NeoRpgErrorReport?.capture?.(err,{source:'photo-minigame',action:'complete'});
+      sayCharacterChoiceMenu(id,'SPEND TIME',err.message,sharedActivityChoices(id));
+     }
+    }
+   });
+   return;
+  }
   // Interactive arcade challenge: finish first; never charge time or currency on cancel.
   if(part==='arcade_highscore'){
    const available=SOCIAL.options(state,id,currentPeople(),cast).find(x=>x.id===part&&!x.disabledReason);
