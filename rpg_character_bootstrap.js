@@ -56,7 +56,7 @@
  "/rpg_sprite_inflate.js?v=independent-expansion-20261107",
  "/rpg_sprite_deformer.js?v=daisy-full-width-portrait-v5-20261107",
  "/rpg_dialogue_idle.js?v=native-resolution-v2-20261107",
- "/rpg_arcade_game.js?v=daisy-hit-feedback-right-side-20261107",
+ "/rpg_arcade_game.js?v=daisy-dialog-above-notes-20261107",
  "/rpg_photo_profiles.js?v=cast-photo-v1",
  "/rpg_photo_session.js?v=cast-photo-v2",
  "/rpg_planned_dates.js",
