@@ -22,6 +22,7 @@
   const fps=Number(options.bpm)||136;
   const beatsPerBar=Math.max(2,Math.round(Number(options.beatsPerBar)||4));
   const barTime=60000/fps*beatsPerBar;
+  const leadMs=Math.max(0,Number(options.leadMs)||0);
   const transitionMs=clamp(Number(options.transitionMs)||260,120,650);
   const defaultPoses=Array.isArray(options.poses)?options.poses:(options.characterId==='daisy'?DAISY_POSES:[{id:'primary',type:'base'}]);
   const entries=(defaultPoses||[]).map((item,i)=>({...item,index:i,loaded:item.type==='base',failed:false,image:null,frame:null,bounds:null})); 
@@ -139,12 +140,12 @@
    if(paused)return;
    const combo=Number(metrics.combo)||0,fever=clamp(Number(metrics.fever)||0,0,1);
    const timeMs=Math.max(0,Number(elapsed)||0);
-   const wanted=poseAt(timeMs,combo,fever);
+   const wanted=poseAt(timeMs-leadMs,combo,fever);
    activate(wanted);
    // Modest whole-body sway on alternate full-resolution images; no chest
    // deformation coordinates from the primary pose are reused here.
-   const wobble=Math.sin(timeMs/60000*fps*Math.PI*2)*(.8+1.9*fever);
-   const tilt=Math.sin(timeMs/60000*fps*Math.PI)*(.15+.3*fever);
+   const wobble=Math.sin((timeMs-leadMs)/60000*fps*Math.PI*2)*(.8+1.9*fever);
+   const tilt=Math.sin((timeMs-leadMs)/60000*fps*Math.PI)*(.15+.3*fever);
    for(const entry of entries)if(entry.frame&&entry.frame.style.opacity==='1'){
     entry.frame.style.transform='translate3d(0,'+wobble.toFixed(2)+'px,0) rotate('+tilt.toFixed(3)+'deg)';
    }
