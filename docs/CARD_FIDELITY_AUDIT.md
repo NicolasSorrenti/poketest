@@ -1397,3 +1397,15 @@ Active route: RPG UI integration via `rpg_duel_bridge.js` hands duel settlement 
 | neo4-72 | Reflected Sunlight: from hand choose up to two Energy cards for one own Pokemon (including zero and one), validate targeting, attach triggers, turn ends after attack; Solarbeam 40 requires three Grass. | PARTIAL: source-only; no reducer execution or independently confirmed historical ruling |
 
 These five records are not certified. Current import text is TCGdex-derived, not independent print/errata proof. Exact behavior of Neo extension dispatch and reducer decisions remains to be verified in an executable Node environment. No gameplay code or tests were changed.
+
+## 2026-11-07 — Five Neo Destiny printings (85–89), live source review and fix
+
+Active route: RPG UI → rpg_duel_bridge.js → classic_local_service.js → headless_duel.js (createGame/reduce) → attack_effects_core.js / classic_power_core.js. Classic match service also imports both effect modules. Legacy engine excluded. The headless reducer's use_power action calls CLASSIC_POWERS.begin, and the Bench-from-hand path calls CLASSIC_POWERS.played.
+
+- **neo4-85 Totodile — Water Gun:** 10+ with one Water cost, +10 per extra Energy beyond cost, +20 maximum according to imported card text. State sequence: one Water, then one/two/three extra Energy cards, mixed Special Energy, weakness, resistance, KO and Prize; compiler dispatch and live reducer unexecuted. **PARTIAL**.
+- **neo4-86 Unown [L] — [Laugh]:** Once per turn, heads shuffle each player's own deck; tails no change. Source: registered activated Power and coin branch in classic_power_core.js. State sequence: status Asleep, both decks, both coin outcomes, second activation rejection, turn ownership. **PARTIAL**.
+- **neo4-87 Unown [S] — [Search]:** Once per turn choose a face-down Prize and view it privately, then return face down. Source: prize-index decision and private log. State sequence: several Prizes, zero remaining, KO/prize choice and hand privacy. **PARTIAL**.
+- **neo4-88 Unown [T] — [Tell]:** Heads look at opponent hand and show own hand, tails no reveal. Source: two private-log branches and coin. State sequence: empty hands, both coin outcomes, status locks and once-per-turn. **PARTIAL**.
+- **neo4-89 Unown [V] — [Vanish]:** Confirmed live-engine omission: on-play Power absent from ONPLAY and powerPlan. Fixed directly on main in commits 79e9386f and 9ef85f08. Optional flip, heads optional return of another Unown, discard attached cards, support Active promotion. State sequence: Bench-from-hand, no other Unown, heads/tails, selected Active or Benched Unown with attached Energy, KO and promotion; reducer execution and historical ruling verification pending. **PARTIAL**.
+
+No new tests, CI, PRs, legacy changes or Apex changes. GitHub connector source access does not provide a runnable checkout; zero reducer scenarios executed. Historical printed/errata rulings have not been independently corroborated. Current ledger: 1 fully verified, 521 partial, 601 unreviewed; 1,122 not fully verified.
