@@ -197,6 +197,17 @@ function powerPlan(g,plan,h){
   if(!have(plan,'oppEngage')){choice(g,plan,'oppEngage',1-side,yesNo,{label:'Unown E: opponent may redraw'});return;}
   if(!have(plan,'ownEngage')){choice(g,plan,'ownEngage',side,yesNo,{label:'Unown E: you may redraw'});return;}
  }
+ if(name==='[Vanish]'){
+  if(choose('vanishUse',[{id:'choice:0',label:'Do not use Vanish'},{id:'choice:1',label:'Flip for Vanish'}],'Unown V: use Vanish?'))return;
+  if(s('vanishUse')===1){
+   if(!have(plan,'vanishHeads'))d.vanishHeads=h.flip(g);
+   if(d.vanishHeads){
+    const options=slotList(p,x=>x!==u&&card(x.id).name.startsWith('Unown'));
+    if(options.length&&choose('vanishTarget',options,'Vanish: return another Unown to hand',{min:0,max:1,optional:true}))return;
+    if(!options.length)d.vanishTarget=[];
+   }
+  }
+ }
  if(name==='[Search]'&&!have(plan,'prize')){if(choose('prize',indices(p.prizes,()=>true,'prize'),'Unown S: look at a Prize card'))return;}
  if(name==='[Increase]'&&!have(plan,'unown')){
   const found=indices(p.deck,c=>c.name.startsWith('Unown')&&c.subtypes?.includes('Basic'),'deck');
@@ -472,6 +483,20 @@ function doPower(g,plan,h){
    p.discard.push(...[removed.id,...removed.under.slice(0,-1),...removed.energies,...removed.attachedTrainers.map(x=>x.id)].filter((_,i)=>!(!removed.under.length&&i===0)));
    if(plan.slot===-1){if(!p.bench.length){g.over=true;g.winner=1-side;}else {g.pendingPromotions=[side];g.promotionAfter='direct';h.finishPromotions(g);}}break;
   }
+  case '[Vanish]':{
+   if(s('vanishUse')!==1||!d.vanishHeads||!selected(plan,'vanishTarget').length)break;
+   const slot=s('vanishTarget'),target=pokemon(p,slot);
+   if(!target||target===u||!card(target.id).name.startsWith('Unown'))throw Error('Vanish target must be another Unown');
+   const basic=target.under.length?target.under.at(-1):target.id;
+   p.hand.push(basic);
+   p.discard.push(...[target.id,...target.under.slice(0,-1),...target.energies,...target.attachedTrainers.map(x=>x.id)].filter((id,i)=>!(i===0&&!target.under.length)));
+   if(slot===-1){
+    p.active=null;
+    if(!p.bench.length){g.over=true;g.winner=1-side;}
+    else{g.pendingPromotions=[side];g.promotionAfter='direct';h.finishPromotions(g);}
+   }else p.bench.splice(slot,1);
+   break;
+  }
   case '[Laugh]':if(h.flip(g)){p.deck=h.shuffle(g,p.deck);f.deck=h.shuffle(g,f.deck);}break;
   case 'Pollen Stench':h.applyCondition(g,h.flip(g)?f.active:p.active,'Confused');break;
   case 'Long Distance Hypnosis':h.applyCondition(g,h.flip(g)?f.active:p.active,'Asleep');break;
@@ -512,7 +537,7 @@ function doPower(g,plan,h){
 }
 const ONCE=new Set(['Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Gather Fire','Heal','Step In','Curse','Shift','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Peek','Revive Fossil','Revive Friends','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning','Gaze','Submerge']);
 const ACTIVATED=new Set(['Shapeshift','Fragrance Trap','Soak Up','Natural Healing','Playful Punch','Emerge','Energy Charge','Rain Dance','Energy Trans','Gather Fire','Energy Burn','Damage Swap','Curse','Strange Behavior','Heal','Step In','Cowardice','Evolutionary Light','Matter Exchange','Pollen Stench','Long Distance Hypnosis','Trickery','Shift','Peek','Buzzap','Revive Fossil','Revive Friends','Downpour','Fire Recharge','Glaring Gaze','[Search]','[Tell]','[Laugh]','Solar Power','Observe','Special Delivery','[Find]','[Help]','[Join]','[Bear]','[Yield]','Cunning','Gaze','Submerge']);
-const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team','Berserk','Fire Boost']);
+const ONPLAY=new Set(['Call the Boss','Summon Minions','Sneak Attack','Reel In','[Increase]','[Engage]','Tag Team','Berserk','Fire Boost','[Vanish]']);
 const PASSIVE=new Set(['Rebirth','Energy Drain','Scram','Shock Blast','Gaseous Form','Healing Fire','Fortitude','Pollen Defense','Restless Sleep','Strange Barrier','Prehistoric Power','Toxic Gas','Hay Fever','Invisible Wall','Kabuto Armor','Transparency','Transform','Thick Skinned','Retreat Aid','Sticky Goo','Clairvoyance','Frenzy','Strikes Back','Sinkhole','Final Beam','Hydroelectric Power','Anger','Frog Song','Spikes','Energy Evolution','[Normal]','Magma Pool','Hot Plate','Psylink','Flee','Bench Guard','Shell Armor','Photosynthesis','Relaxing Scent','Rebellion','Darkness']);
 const UNSUPPORTED=new Set();
 function begin(g,side,payload,h){
